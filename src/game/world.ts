@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { GuardData, InteractiveObject } from "./types";
+import { buildHumanOfficer } from "./characters";
 
 export interface PrisonWorldData {
   scene: THREE.Scene;
@@ -139,7 +140,8 @@ function masonry() {
   const map = new THREE.CanvasTexture(canvas);
   map.colorSpace = THREE.SRGBColorSpace;
   map.wrapS = map.wrapT = THREE.RepeatWrapping;
-  map.repeat.set(3, 1);
+  map.repeat.set(1, 1);
+  map.anisotropy = 4;
   return new THREE.MeshStandardMaterial({
     map,
     bumpMap: map,
@@ -171,7 +173,7 @@ export function buildPhotorealisticBunkBed() {
         y +
           0.245 +
           Math.sin(z * 23 + x * 4) * 0.018 -
-          Math.max(0, Math.abs(x) - 0.52) * 2.1,
+          Math.max(0, Math.abs(x) - 0.565) * 2.5,
         z + 0.3,
       );
     }
@@ -226,70 +228,7 @@ export function buildPhotorealisticPorcelainToilet() {
   return group;
 }
 
-/** Human proportions, organic joints, facial features and separate articulated limbs. */
-export function buildPhotorealisticTacticalGuard(
-  captain = false,
-  inmate = false,
-) {
-  const group = new THREE.Group();
-  const skin = material(captain ? 0x9c7054 : 0xc39473, 0.7);
-  const uniform = material(
-    inmate ? 0x965a34 : captain ? 0x28323c : 0x3d5156,
-    0.93,
-  );
-  const pants = material(inmate ? 0x4c4a43 : 0x29363e, 0.93);
-  sphere(group, [0.28, 0.32, 0.16], [0, 1.22, 0], uniform);
-  box(group, [0.4, 0.32, 0.3], [0, 1.13, 0.015], uniform, 0.08);
-  box(group, [0.42, 0.065, 0.32], [0, 0.98, 0], dark, 0.02);
-  box(group, [0.06, 0.045, 0.025], [0, 0.98, 0.175], brass);
-  cylinder(group, 0.065, 0.16, [0, 1.57, 0], skin);
-  const head = new THREE.Group();
-  head.position.y = 1.7;
-  group.add(head);
-  sphere(head, [0.125, 0.17, 0.12], [0, 0.035, 0], skin);
-  sphere(head, [0.095, 0.075, 0.09], [0, -0.06, 0.034], skin);
-  sphere(head, [0.028, 0.043, 0.04], [0, 0.025, 0.12], skin);
-  for (const x of [-1, 1]) {
-    sphere(head, [0.025, 0.044, 0.02], [x * 0.126, 0.02, 0], skin);
-    sphere(head, [0.026, 0.012, 0.009], [x * 0.048, 0.055, 0.111], linen);
-    sphere(head, [0.01, 0.011, 0.006], [x * 0.048, 0.055, 0.12], dark);
-    box(head, [0.052, 0.009, 0.018], [x * 0.048, 0.08, 0.11], dark, 0.003);
-  }
-  box(
-    head,
-    [0.052, 0.007, 0.012],
-    [0, -0.037, 0.115],
-    material(0x75534b),
-    0.003,
-  );
-  sphere(head, [0.126, 0.065, 0.115], [0, 0.155, -0.01], dark);
-  if (!inmate) {
-    cylinder(head, 0.14, 0.065, [0, 0.165, 0], uniform);
-    box(head, [0.22, 0.018, 0.13], [0, 0.137, 0.12], dark, 0.03);
-    box(head, [0.035, 0.037, 0.015], [0, 0.175, 0.135], brass, 0.007);
-    box(group, [0.06, 0.09, 0.025], [-0.13, 1.32, 0.16], brass, 0.012);
-    box(group, [0.085, 0.13, 0.05], [0.14, 1.27, 0.16], dark, 0.015);
-    cylinder(group, 0.008, 0.13, [0.15, 1.39, 0.17], dark);
-  }
-  for (const side of [-1, 1]) {
-    const arm = new THREE.Group();
-    arm.position.set(side * 0.29, 1.4, 0);
-    group.add(arm);
-    sphere(arm, [0.095, 0.19, 0.095], [0, -0.13, 0], uniform);
-    sphere(arm, [0.067, 0.17, 0.065], [0, -0.41, 0.025], skin);
-    sphere(arm, [0.055, 0.085, 0.04], [0, -0.6, 0.04], skin);
-    const leg = new THREE.Group();
-    leg.position.set(side * 0.12, 0.95, 0);
-    group.add(leg);
-    sphere(leg, [0.105, 0.25, 0.11], [0, -0.2, 0], pants);
-    sphere(leg, [0.078, 0.23, 0.08], [0, -0.6, 0.018], pants);
-    box(leg, [0.16, 0.14, 0.29], [0, -0.86, 0.065], dark, 0.055);
-    group.userData[side < 0 ? "leftArm" : "rightArm"] = arm;
-    group.userData[side < 0 ? "leftLeg" : "rightLeg"] = leg;
-  }
-  group.userData.head = head;
-  return group;
-}
+export const buildPhotorealisticTacticalGuard = buildHumanOfficer;
 
 export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   scene.background = new THREE.Color(0x18252b);
@@ -301,10 +240,87 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   const doorColliders = new Map<string, THREE.Box3>();
   const interactables: InteractiveObject[] = [];
   const stone = masonry();
-  const plaster = material(0x69756e, 0.93);
-  const floor = material(0x535f60, 0.42, 0.1);
+  const plaster = material(0x8c9586, 0.93);
+  const paint = material(0x354e4c, 0.91);
+  const floorCanvas = document.createElement("canvas");
+  floorCanvas.width = floorCanvas.height = 512;
+  const floorCtx = floorCanvas.getContext("2d")!;
+  floorCtx.fillStyle = "#666c62";
+  floorCtx.fillRect(0, 0, 512, 512);
+  let randomSeed = 47;
+  const rand = () => {
+    randomSeed = (randomSeed * 16807) % 2147483647;
+    return randomSeed / 2147483647;
+  };
+  for (let i = 0; i < 32000; i++) {
+    floorCtx.fillStyle = rand() > 0.5 ? "#ffffff12" : "#00000016";
+    floorCtx.fillRect(rand() * 512, rand() * 512, rand() * 3 + 1, 1);
+  }
+  floorCtx.strokeStyle = "#272e2d";
+  floorCtx.lineWidth = 2;
+  for (let i = 0; i < 512; i += 128) {
+    floorCtx.beginPath();
+    floorCtx.moveTo(i, 0);
+    floorCtx.lineTo(i, 512);
+    floorCtx.moveTo(0, i);
+    floorCtx.lineTo(512, i);
+    floorCtx.stroke();
+  }
+  for (let i = 0; i < 14; i++) {
+    const x = rand() * 512,
+      y = rand() * 512;
+    const stain = floorCtx.createRadialGradient(
+      x,
+      y,
+      0,
+      x,
+      y,
+      rand() * 35 + 10,
+    );
+    stain.addColorStop(0, "#242b2350");
+    stain.addColorStop(1, "#242b2300");
+    floorCtx.fillStyle = stain;
+    floorCtx.fillRect(0, 0, 512, 512);
+  }
+  const floorMap = new THREE.CanvasTexture(floorCanvas);
+  floorMap.colorSpace = THREE.SRGBColorSpace;
+  floorMap.wrapS = floorMap.wrapT = THREE.RepeatWrapping;
+  floorMap.repeat.set(14, 7);
+  floorMap.anisotropy = 4;
+  const floor = new THREE.MeshStandardMaterial({
+    color: 0xa5aaa1,
+    map: floorMap,
+    bumpMap: floorMap,
+    bumpScale: 0.014,
+    roughness: 0.72,
+    metalness: 0.08,
+  });
   const wall = (size: number[], pos: number[], mat: THREE.Material = stone) => {
     const mesh = box(staticWorld, size, pos, mat);
+    if (size[1] > 3) {
+      const uv = mesh.geometry.getAttribute("uv"),
+        p = mesh.geometry.getAttribute("position"),
+        n = mesh.geometry.getAttribute("normal");
+      for (let i = 0; i < uv.count; i++)
+        uv.setXY(
+          i,
+          (Math.abs(n.getX(i)) > 0.5 ? p.getZ(i) : p.getX(i)) / 2,
+          p.getY(i) / 2,
+        );
+      const thinX = size[0] < 0.8;
+      box(
+        staticWorld,
+        [size[0] + (thinX ? 0.016 : 0), 1.35, size[2] + (thinX ? 0 : 0.016)],
+        [pos[0], 0.6, pos[2]],
+        paint,
+      );
+      box(
+        staticWorld,
+        [size[0] + (thinX ? 0.024 : 0), 0.025, size[2] + (thinX ? 0 : 0.024)],
+        [pos[0], 1.29, pos[2]],
+        iron,
+      );
+    }
     colliders.push(new THREE.Box3().setFromObject(mesh));
     return mesh;
   };
@@ -379,6 +395,70 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   prop(buildPhotorealisticBunkBed(), -4.25, -8.4);
   prop(buildPhotorealisticPorcelainToilet(), -7.65, -9.85);
   prop(buildPhotorealisticBunkBed(), -13, -8.4);
+  // A wall-mounted basin, tarnished mirror, meal tray and scuffed cell details.
+  const basin = new THREE.Mesh(
+    new THREE.SphereGeometry(
+      0.26,
+      20,
+      12,
+      0,
+      Math.PI * 2,
+      Math.PI / 2,
+      Math.PI / 2,
+    ),
+    ceramic,
+  );
+  basin.scale.set(1, 0.42, 0.7);
+  basin.position.set(-7.8, 0.92, -7.8);
+  basin.rotation.y = Math.PI / 2;
+  basin.updateMatrixWorld(true);
+  colliders.push(new THREE.Box3().setFromObject(basin));
+  staticWorld.add(basin);
+  cylinder(staticWorld, 0.018, 0.2, [-7.9, 1.04, -7.8], iron);
+  const tap = cylinder(staticWorld, 0.015, 0.16, [-7.84, 1.15, -7.8], iron);
+  tap.rotation.z = Math.PI / 2;
+  box(
+    staticWorld,
+    [0.035, 0.45, 0.38],
+    [-8.58, 1.65, -7.8],
+    new THREE.MeshStandardMaterial({
+      color: 0x758a88,
+      metalness: 0.8,
+      roughness: 0.38,
+    }),
+  );
+  box(staticWorld, [0.31, 0.025, 0.22], [-5.3, 0.025, -10.6], iron, 0.008);
+  box(staticWorld, [0.035, 0.09, 0.035], [-5.2, 0.075, -10.62], linen, 0.008);
+  // Ground contact decals and narrow window shadows are baked geometry, not extra realtime lights.
+  const contact = new THREE.MeshBasicMaterial({
+    color: 0x091416,
+    transparent: true,
+    opacity: 0.24,
+    depthWrite: false,
+  });
+  for (const [x, z, w, h] of [
+    [-4.25, -8.4, 1.5, 2.5],
+    [-7.65, -9.85, 0.8, 1],
+    [-13, -8.4, 1.5, 2.5],
+  ]) {
+    const shadow = new THREE.Mesh(new THREE.PlaneGeometry(w, h), contact);
+    shadow.rotation.x = -Math.PI / 2;
+    shadow.position.set(x, 0.004, z);
+    staticWorld.add(shadow);
+  }
+  const moonPatch = new THREE.MeshBasicMaterial({
+    color: 0xb3ced4,
+    transparent: true,
+    opacity: 0.065,
+    depthWrite: false,
+  });
+  for (let i = 0; i < 5; i++) {
+    const beam = new THREE.Mesh(new THREE.PlaneGeometry(0.18, 3), moonPatch);
+    beam.rotation.x = -Math.PI / 2;
+    beam.rotation.z = -0.2;
+    beam.position.set(-7 + i * 0.32, 0.008, -8.8);
+    staticWorld.add(beam);
+  }
   label(staticWorld, "C / 047", [-5.8, 3.65, -2]);
   label(staticWorld, "C / 046", [-11.4, 3.65, -2]);
   label(staticWorld, "DAY 412  /  LOW TIDE", [-6, 1.7, -11.19], 2.5);
@@ -643,6 +723,23 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   for (const z of [-1.6, 1.6])
     cylinder(staticWorld, 0.065, 42, [6, 3.6, z], rust).rotation.z =
       Math.PI / 2;
+  for (let x = -13; x < 15; x += 3) {
+    box(staticWorld, [0.65, 0.018, 0.18], [x, 0.008, 1.35], dark);
+    for (let slot = 0; slot < 7; slot++)
+      box(
+        staticWorld,
+        [0.035, 0.022, 0.16],
+        [x - 0.27 + slot * 0.09, 0.013, 1.35],
+        iron,
+      );
+  }
+  for (const x of [-8.4, -3.3, 8.2, 14.2]) {
+    cylinder(staticWorld, 0.025, 3.6, [x, 1.8, -10.9], rust);
+    for (const y of [0.25, 1.4, 2.7])
+      box(staticWorld, [0.09, 0.045, 0.06], [x, y, -10.86], iron);
+  }
+  label(staticWorld, "SILENCE / LIGHTS OUT 22:00", [-6.5, 2.7, 2.2], 2.2);
+  label(staticWorld, "BLOCK C / AUTHORIZED PERSONNEL", [4.8, 2.7, -1.78], 2.3);
   for (const [x, z, color] of [
     [-6, -6, 0xffc58a],
     [-11, -5, 0xeeb675],
@@ -776,6 +873,20 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     if (geometry !== transformed) transformed.dispose();
     geometry.deleteAttribute("uv1");
     geometry.deleteAttribute("tangent");
+    const vertexCount = geometry.getAttribute("position").count;
+    if (!geometry.getAttribute("uv"))
+      geometry.setAttribute(
+        "uv",
+        new THREE.Float32BufferAttribute(new Float32Array(vertexCount * 2), 2),
+      );
+    if (!geometry.getAttribute("color"))
+      geometry.setAttribute(
+        "color",
+        new THREE.Float32BufferAttribute(
+          new Float32Array(vertexCount * 3).fill(1),
+          3,
+        ),
+      );
     const list = batches.get(object.material) ?? [];
     list.push(geometry);
     batches.set(object.material, list);

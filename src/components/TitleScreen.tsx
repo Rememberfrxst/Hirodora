@@ -6,6 +6,7 @@ import {
   Headphones,
   Shield,
 } from "lucide-react";
+import { version } from "../../package.json";
 
 interface Props {
   onStart: () => void;
@@ -88,7 +89,7 @@ export function TitleScreen({
           WASD move <b>·</b> Mouse look <b>·</b> E interact <b>·</b> C crouch
         </span>
         <span className="mobile-guide">Touch to move · Drag to look</span>
-        <span>LOW TIDE / A WEB EXPERIENCE</span>
+        <span>LOW TIDE / v{version}</span>
       </footer>
       <div className="title-shade" />
       <div className="film-grain" />

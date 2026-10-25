@@ -42,6 +42,13 @@ export default function App() {
       return;
     }
     const key = (e: KeyboardEvent) => {
+      if (
+        (e.target as HTMLElement | null)?.closest(
+          "button, input, select, textarea",
+        ) &&
+        ["Space", "Enter"].includes(e.code)
+      )
+        return;
       if (e.repeat || engine.activeMiniGame) return;
       if (e.code === "Escape") setOverlay(null);
       else if (e.code === "KeyM")

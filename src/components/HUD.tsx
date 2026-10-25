@@ -13,6 +13,11 @@ import {
   Crosshair,
   Backpack,
   X,
+  ArrowUp,
+  Zap,
+  Hand,
+  Move,
+  PersonStanding,
 } from "lucide-react";
 
 interface Props {
@@ -38,6 +43,19 @@ export function HUD({ engine, onPause, onOpenMap, onOpenStory }: Props) {
     joystick.current = null;
     setStick([0, 0]);
     engine.setTouchMove(0, 0);
+  };
+  const moveStick = (clientX: number, clientY: number) => {
+    if (!joystick.current) return;
+    const x = (clientX - joystick.current.x) / 42,
+      y = (clientY - joystick.current.y) / 42;
+    const length = Math.hypot(x, y),
+      clamp = Math.max(1, length);
+    const magnitude = length < 0.13 ? 0 : Math.min(1, (length - 0.13) / 0.87);
+    engine.setTouchMove(
+      length ? (x / length) * magnitude : 0,
+      length ? (y / length) * magnitude : 0,
+    );
+    setStick([(x / clamp) * 29, (y / clamp) * 29]);
   };
   return (
     <div className="game-hud">
@@ -195,45 +213,71 @@ export function HUD({ engine, onPause, onOpenMap, onOpenStory }: Props) {
             role="region"
             aria-label="Movement joystick"
             onPointerDown={(e) => {
-              e.currentTarget.setPointerCapture(e.pointerId);
               const rect = e.currentTarget.getBoundingClientRect();
               joystick.current = {
                 id: e.pointerId,
                 x: rect.left + rect.width / 2,
                 y: rect.top + rect.height / 2,
               };
+              e.currentTarget.setPointerCapture(e.pointerId);
+              moveStick(e.clientX, e.clientY);
             }}
             onPointerMove={(e) => {
               if (joystick.current?.id !== e.pointerId) return;
-              const x = (e.clientX - joystick.current.x) / 44,
-                y = (e.clientY - joystick.current.y) / 44,
-                length = Math.max(1, Math.hypot(x, y));
-              engine.setTouchMove(x / length, y / length);
-              setStick([(x / length) * 30, (y / length) * 30]);
+              moveStick(e.clientX, e.clientY);
             }}
             onPointerUp={stop}
             onPointerCancel={stop}
             onLostPointerCapture={stop}
           >
-            <i
-              style={{ transform: `translate(${stick[0]}px, ${stick[1]}px)` }}
-            />
+            <div className="joystick-axis" />
+            <i style={{ transform: `translate(${stick[0]}px, ${stick[1]}px)` }}>
+              <Move size={18} />
+            </i>
             <span>MOVE</span>
           </div>
           <div className="touch-actions">
-            <button aria-label="Crouch" onClick={() => engine.toggleCrouch()}>
-              <Footprints size={20} />
-              <small>CROUCH</small>
+            <button
+              className="touch-sprint"
+              aria-label="Sprint"
+              aria-pressed={engine.touchSprint}
+              onClick={() => engine.toggleSprint()}
+            >
+              <Zap size={19} />
+              <small>SPRINT</small>
+            </button>
+            <button
+              className="touch-jump"
+              aria-label="Jump"
+              disabled={engine.jumpHeight > 0}
+              onClick={() => engine.jump()}
+            >
+              <ArrowUp size={22} />
+              <small>JUMP</small>
+            </button>
+            <button
+              className="touch-crouch"
+              aria-label="Crouch"
+              aria-pressed={stats.isCrouching}
+              onClick={() => engine.toggleCrouch()}
+            >
+              <PersonStanding size={21} />
+              <small>{stats.isCrouching ? "STAND" : "CROUCH"}</small>
             </button>
             <button
               aria-label="Interact"
               onClick={() => engine.interact()}
               className="touch-interact"
             >
-              E<small>INTERACT</small>
+              <Hand size={25} />
+              <small>INTERACT</small>
             </button>
             {engine.equippedItem && (
-              <button aria-label="Fire dart" onClick={() => engine.fireDart()}>
+              <button
+                className="touch-fire"
+                aria-label="Fire dart"
+                onClick={() => engine.fireDart()}
+              >
                 <Crosshair />
                 <small>DART</small>
               </button>

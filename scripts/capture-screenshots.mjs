@@ -14,6 +14,8 @@ const url = process.env.GAME_URL || "http://127.0.0.1:3000";
 await mkdir("docs/screenshots", { recursive: true });
 await page.goto(url);
 await page.getByRole("button", { name: "BEGIN THE ESCAPE" }).waitFor();
+await page.evaluate(() => window.__HIRODORA__.renderer.setPixelRatio(1));
+await page.waitForTimeout(200);
 await page.screenshot({ path: "docs/screenshots/title.png" });
 await page.getByRole("button", { name: "BEGIN THE ESCAPE" }).click();
 await page.evaluate(() => {
@@ -27,21 +29,51 @@ await page.screenshot({ path: "docs/screenshots/cell-47.png" });
 // An explicitly staged camera showcases the actual guard model and game geometry.
 await page.evaluate(() => {
   const e = window.__HIRODORA__;
-  e.playerPos = [-5, 0, 1.2];
+  e.playerPos = [-5, 0, 1.45];
   e.playerRotY = 0;
-  e.cameraPitch = -0.1;
+  e.cameraPitch = 0.18;
   const guard = e.worldData.guards[0];
   guard.position = [-5, 0, -1.2];
   guard.rotationY = 0;
-  guard.state = "searching";
+  guard.state = "knocked_out";
   guard.suspicion = 0;
-  guard.stateTimer = 100;
+  guard.stateTimer = 999;
   guard.investigationTarget = undefined;
+  const model = e.worldData.guardMeshes.get(guard.id);
+  model.position.set(...guard.position);
+  model.rotation.set(0, 0, 0);
+  for (const joint of [
+    "leftArm",
+    "rightArm",
+    "leftLeg",
+    "rightLeg",
+    "leftKnee",
+    "rightKnee",
+    "head",
+  ])
+    model.userData[joint].rotation.x = 0;
+  e.stats.subtitle = null;
   e.worldData.guards[1].state = "knocked_out";
   e.worldData.guards[1].stateTimer = 999;
 });
 await page.waitForTimeout(250);
 await page.screenshot({ path: "docs/screenshots/guard.png" });
+console.log(
+  "Render diagnostics:",
+  await page.evaluate(() => ({
+    drawCalls: window.__HIRODORA__.renderer.info.render.calls,
+    triangles: window.__HIRODORA__.renderer.info.render.triangles,
+  })),
+);
+await page.evaluate(() => {
+  const e = window.__HIRODORA__;
+  e.playerPos = [-5, 0, -0.05];
+  e.cameraPitch = 0.02;
+});
+await page.waitForTimeout(200);
+await page.screenshot({ path: "docs/screenshots/guard-detail.png" });
+// Finish the high-resolution desktop renderer before creating the mobile scene.
+await page.close();
 const mobileContext = await browser.newContext({
   viewport: { width: 844, height: 390 },
   isMobile: true,
@@ -52,6 +84,7 @@ await mobile.goto(url);
 await mobile.getByRole("button", { name: "BEGIN THE ESCAPE" }).tap();
 await mobile.evaluate(() => {
   window.__HIRODORA__.stats.subtitle = null;
+  window.__HIRODORA__.renderer.setPixelRatio(1);
 });
 await mobile.waitForTimeout(250);
 await mobile.screenshot({ path: "docs/screenshots/mobile.png" });

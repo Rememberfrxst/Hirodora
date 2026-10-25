@@ -303,6 +303,9 @@ button:active {
   inset: 0;
   z-index: 4;
   pointer-events: none;
+  text-shadow:
+    0 1px 3px #000,
+    0 0 12px #0009;
 }
 .game-hud button {
   pointer-events: auto;
@@ -318,9 +321,9 @@ button:active {
 }
 .objective {
   max-width: 435px;
-  padding: 13px 18px;
-  border-left: 2px solid var(--gold);
-  background: linear-gradient(90deg, #0b191edb, #0b191e55);
+  padding: 4px 0;
+  border: 0;
+  background: none;
 }
 .objective .eyebrow {
   font-size: 8px;
@@ -342,10 +345,10 @@ button:active {
   gap: 5px;
 }
 .hud-tools button {
-  border: 1px solid #b8c9ba25;
-  background: #0b191ead;
-  width: 39px;
-  height: 39px;
+  border: 0;
+  background: none;
+  width: 44px;
+  height: 44px;
   display: grid;
   place-items: center;
   color: #bfcbc4;
@@ -354,7 +357,11 @@ button:active {
   width: 15px;
 }
 .hud-tools button:hover {
-  background: #2a3d3f;
+  color: var(--gold);
+  background: none;
+}
+.hud-tools svg {
+  filter: drop-shadow(0 1px 3px #000);
 }
 .stealth-state {
   position: absolute;
@@ -364,13 +371,13 @@ button:active {
   font: 8px monospace;
   letter-spacing: 2px;
   color: #d2e0d0;
-  background: #10202688;
+  background: none;
   padding: 8px 14px;
   white-space: nowrap;
 }
 .stealth-state.danger {
   color: #ffd5aa;
-  background: #703b2ccc;
+  background: none;
 }
 .reticle {
   position: absolute;
@@ -401,7 +408,7 @@ button:active {
 }
 .stealth-meters {
   width: 260px;
-  background: linear-gradient(90deg, #09181dd9, #09181d66);
+  background: none;
   padding: 15px;
 }
 .meter-label {
@@ -470,8 +477,8 @@ button:active {
   display: flex;
   align-items: center;
   gap: 14px;
-  background: #0a191ecc;
-  border: 1px solid #ffffff22;
+  background: none;
+  border: 0;
   padding: 14px 18px;
   color: var(--gold);
   font: 10px monospace;
@@ -496,13 +503,7 @@ button:active {
   width: 75%;
   text-align: center;
   padding: 13px 22px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    #09181ddd 20%,
-    #09181ddd 80%,
-    transparent
-  );
+  background: none;
 }
 .subtitle span {
   font: 8px monospace;
@@ -524,8 +525,8 @@ button:active {
   display: flex;
   gap: 14px;
   align-items: center;
-  background: #0e2127ed;
-  border: 1px solid #d2b87a55;
+  background: none;
+  border: 0;
   padding: 12px 20px;
   font-size: 12px;
   color: #efe3c8;
@@ -536,9 +537,11 @@ button:active {
 }
 kbd {
   font: 9px monospace;
-  background: var(--gold);
-  color: #17252a;
-  padding: 7px 9px;
+  background: none;
+  color: var(--gold);
+  border: 1px solid #d0b47d90;
+  border-radius: 50%;
+  padding: 8px;
 }
 .hint-toast {
   position: absolute;
@@ -546,8 +549,8 @@ kbd {
   left: 50%;
   transform: translateX(-50%);
   width: min(500px, 85%);
-  background: #152a2df2;
-  border-left: 2px solid var(--gold);
+  background: none;
+  border: 0;
   padding: 16px 20px;
 }
 .hint-toast p {
@@ -613,62 +616,136 @@ kbd {
 }
 .joystick {
   position: absolute;
-  left: 25px;
-  bottom: 28px;
-  border: 1px solid #c0cdb64d;
+  left: max(28px, env(safe-area-inset-left));
+  bottom: max(28px, env(safe-area-inset-bottom));
+  width: 120px;
+  height: 120px;
+  border: 1px solid #f1e4c35c;
   border-radius: 50%;
-  background: #10272b88;
-  width: 115px;
-  height: 115px;
+  background: none;
   pointer-events: auto;
   touch-action: none;
   display: grid;
   place-items: center;
+  box-shadow:
+    0 0 0 9px #ffffff08,
+    inset 0 0 20px #06121920;
+}
+.joystick::after {
+  content: "";
+  position: absolute;
+  inset: 17px;
+  border: 1px dashed #e0d5bc38;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.joystick-axis {
+  position: absolute;
+  width: 1px;
+  height: 84px;
+  background: #e5dfce26;
+}
+.joystick-axis::after {
+  content: "";
+  position: absolute;
+  width: 84px;
+  height: 1px;
+  background: #e5dfce26;
+  left: -42px;
+  top: 42px;
 }
 .joystick i {
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
+  border: 1.5px solid #ead39ac9;
   border-radius: 50%;
-  border: 1px solid #ddca9b88;
-  background: #cfb58033;
+  background: radial-gradient(circle, #d1ba8340, #1b2b2e18);
+  display: grid;
+  place-items: center;
+  color: #efdfb8;
+  box-shadow: 0 3px 14px #0004;
+  z-index: 1;
+  font-style: normal;
+  will-change: transform;
 }
 .joystick span {
   position: absolute;
-  bottom: 8px;
-  font: 7px monospace;
-  color: #c1d3c1;
-  letter-spacing: 2px;
+  bottom: -23px;
+  font: 8px monospace;
+  letter-spacing: 2.5px;
+  color: #d0d4c7;
 }
 .touch-actions {
   position: absolute;
-  right: 24px;
-  bottom: 35px;
-  display: flex;
+  right: max(26px, env(safe-area-inset-right));
+  bottom: max(30px, env(safe-area-inset-bottom));
+  width: 158px;
+  height: 158px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
   gap: 12px;
-  align-items: flex-end;
+  place-items: center;
 }
 .touch-actions button {
-  background: #0d252bcc;
-  border: 1px solid #b9c4ac66;
+  width: 64px;
+  height: 64px;
+  border: 1px solid #d1d8c99c;
   border-radius: 50%;
-  width: 59px;
-  height: 59px;
+  background: radial-gradient(circle, #07141a0a, #07141a25);
+  color: #f1eddb;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: #e6dcc0;
-  font: 18px monospace;
+  gap: 5px;
+  touch-action: manipulation;
+  box-shadow: 0 2px 10px #0002;
+}
+.touch-actions svg {
+  filter: drop-shadow(0 1px 2px #0009);
 }
 .touch-actions small {
-  font: 6px monospace;
-  margin-top: 5px;
+  font: 7px monospace;
+  letter-spacing: 1px;
+  margin: 0;
+}
+.touch-actions button[aria-pressed="true"] {
+  color: #f3d28d;
+  border-color: #e8ca8c;
+  box-shadow: 0 0 0 3px #d9bb6826;
+}
+.touch-actions button:active {
+  transform: scale(0.94);
+  border-color: #ffe6b4;
 }
 .touch-actions .touch-interact {
-  width: 72px;
-  height: 72px;
-  background: #cdb47ddb;
-  color: #11232a;
+  grid-column: 2;
+  grid-row: 2;
+  width: 74px;
+  height: 74px;
+  border: 1.5px solid #edd29b;
+  background: radial-gradient(circle, #d3ba7544, #d3ba7510);
+  color: #ffe7b2;
+}
+.touch-sprint {
+  grid-column: 1;
+  grid-row: 1;
+}
+.touch-jump {
+  grid-column: 2;
+  grid-row: 1;
+}
+.touch-crouch {
+  grid-column: 1;
+  grid-row: 2;
+}
+.touch-actions .touch-fire {
+  position: absolute;
+  right: 170px;
+  bottom: 0;
+  color: #f3ba9b;
+  border-color: #dcab8a;
 }
 .modal-backdrop {
   position: absolute;
@@ -1289,4 +1366,221 @@ input[type="range"] {
   width: 60px;
   height: 40px;
   font: 12px monospace;
+}
+
+/* v0.2: unobstructed field of view and safe thumb zones. */
+@media (pointer: coarse) {
+  .hud-tools button {
+    width: 44px;
+    height: 44px;
+  }
+  .hud-tools svg {
+    width: 18px;
+    height: 18px;
+  }
+  .hud-top {
+    left: max(20px, env(safe-area-inset-left));
+    right: max(16px, env(safe-area-inset-right));
+    gap: 10px;
+  }
+  .objective {
+    padding: 0;
+    max-width: 52%;
+  }
+  .objective .eyebrow {
+    font-size: 8px;
+  }
+  .objective p {
+    font-size: 11px;
+    line-height: 1.5;
+  }
+  .stealth-state {
+    top: 104px;
+    font-size: 8px;
+  }
+  .hud-bottom {
+    bottom: 202px;
+    left: 22px;
+    right: 24px;
+  }
+  .stealth-meters {
+    padding: 0;
+    width: 175px;
+  }
+  .satchel-button {
+    margin: 0 !important;
+    padding: 10px 0 !important;
+    min-height: 44px;
+  }
+  .interact-prompt {
+    bottom: 210px;
+    left: 57%;
+    max-width: 66%;
+    text-align: left;
+    padding: 8px;
+    font-size: 11px;
+  }
+  .subtitle {
+    bottom: 290px;
+    width: 88%;
+  }
+}
+@media (pointer: coarse) and (max-height: 550px) {
+  .hud-tools button {
+    width: 40px;
+    height: 40px;
+  }
+  .hud-top {
+    top: 14px;
+  }
+  .objective {
+    max-width: 360px;
+  }
+  .objective .eyebrow {
+    font-size: 8px;
+  }
+  .objective p {
+    font-size: 10px;
+  }
+  .stealth-state {
+    top: 69px;
+    left: 63%;
+    font-size: 7px;
+  }
+  .touch-controls .joystick {
+    width: 106px;
+    height: 106px;
+    left: 27px;
+    bottom: 37px;
+  }
+  .joystick span {
+    font-size: 7px;
+    bottom: -20px;
+  }
+  .touch-actions {
+    width: 140px;
+    height: 140px;
+    gap: 8px;
+    right: 24px;
+    bottom: 24px;
+  }
+  .touch-actions button {
+    width: 57px;
+    height: 57px;
+  }
+  .touch-actions .touch-interact {
+    width: 66px;
+    height: 66px;
+  }
+  .touch-actions .touch-fire {
+    right: 148px;
+    bottom: 66px;
+  }
+  .hud-bottom {
+    left: 163px;
+    right: 205px;
+    bottom: 26px;
+  }
+  .stealth-meters {
+    width: 168px;
+    padding: 0;
+  }
+  .meter-label {
+    font-size: 7px;
+  }
+  .awareness {
+    font-size: 6px;
+  }
+  .interact-prompt {
+    left: 53%;
+    bottom: 102px;
+    max-width: 45%;
+    font-size: 10px;
+  }
+  .subtitle {
+    left: 51%;
+    bottom: 156px;
+    width: 48%;
+    padding: 0;
+  }
+  .subtitle p {
+    font-size: 11px;
+  }
+  .hint-toast {
+    top: 94px;
+    width: 60%;
+    padding: 0;
+  }
+  .satchel-panel {
+    right: 195px;
+    bottom: 90px;
+    max-height: 60vh;
+  }
+}
+@media (pointer: coarse) and (max-width: 480px) {
+  .hud-top {
+    left: 18px;
+    right: 12px;
+    top: max(20px, env(safe-area-inset-top));
+  }
+  .hud-tools {
+    display: grid;
+    grid-template-columns: repeat(3, 40px);
+    gap: 0;
+  }
+  .hud-tools button {
+    width: 40px;
+    height: 40px;
+  }
+  .objective {
+    max-width: 58%;
+  }
+  .objective p {
+    font-size: 11px;
+  }
+  .touch-actions {
+    right: 20px;
+    bottom: 40px;
+    width: 144px;
+    height: 144px;
+    gap: 8px;
+  }
+  .touch-actions button {
+    width: 58px;
+    height: 58px;
+  }
+  .touch-actions .touch-interact {
+    width: 68px;
+    height: 68px;
+  }
+  .touch-controls .joystick {
+    left: 26px;
+    bottom: 62px;
+    width: 108px;
+    height: 108px;
+  }
+  .touch-actions .touch-fire {
+    right: 0;
+    bottom: 155px;
+  }
+  .hud-bottom {
+    left: 22px;
+    right: 22px;
+    bottom: 218px;
+  }
+  .stealth-state {
+    top: 132px;
+    left: 50%;
+  }
+  .interact-prompt {
+    bottom: 290px;
+    left: 50%;
+    max-width: 92%;
+    width: max-content;
+  }
+  .subtitle {
+    bottom: 345px;
+    width: 90%;
+    padding: 0;
+  }
 }

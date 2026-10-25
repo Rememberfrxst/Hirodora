@@ -4,6 +4,17 @@ export type Obstacle = {
   max: { x: number; z: number };
 };
 
+/** Low hop: horizontal wall clearance never changes, so jumping cannot bypass gates. */
+export function stepJump(height: number, velocity: number, dt: number) {
+  const nextVelocity = velocity - 14 * dt;
+  const nextHeight = Math.max(0, height + nextVelocity * dt);
+  return {
+    height: nextHeight,
+    velocity: nextHeight === 0 ? 0 : nextVelocity,
+    landed: height > 0 && nextHeight === 0,
+  };
+}
+
 export function isBlocked(
   x: number,
   z: number,

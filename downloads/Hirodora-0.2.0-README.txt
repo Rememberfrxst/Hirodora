@@ -1,0 +1,13 @@
+HIRODORA 0.2.0 - OFFLINE WEB EDITION
+
+Extract the ZIP and open Hirodora-0.2.0.html in a WebGL 2 browser. All code, styles, geometry and sound are embedded; no server, API key or network is needed.
+
+Android: download, extract in Files, then choose Open with Chrome or another WebGL 2-capable browser. File handlers differ by device. If your file viewer blocks JavaScript, open the file in a full browser.
+
+iPhone/iPad: local HTML viewers may block scripts; use the hosted PWA and Add to Home Screen instead. This is not an APK or IPA.
+
+Desktop: open the HTML in Chrome, Edge or Firefox.
+
+Controls: WASD / joystick, mouse / drag look, Space / Jump, C / Crouch, Shift / Sprint, E / Interact.
+
+Human head: adapted from MakeHuman CC0 hm08 anatomy. See https://github.com/Rememberfrxst/Hirodora/blob/main/docs/ASSETS.md

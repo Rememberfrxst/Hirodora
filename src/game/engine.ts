@@ -27,7 +27,7 @@ import {
 } from "./rules";
 import { buildPrisonWorld, PrisonWorldData } from "./world";
 import { sound } from "./audio";
-import { findPath, isBlocked, movementVector } from "./navigation";
+import { findPath, isBlocked, movementVector, stepJump } from "./navigation";
 
 export const ALL_ITEMS: Record<ItemId, InventoryItem> = {
   small_key: {
@@ -143,6 +143,18 @@ export class GameEngine {
   private elapsed = 0;
   private ambienceTime = 0;
   private footTime = 0;
+  public jumpHeight = 0;
+  private jumpVelocity = 0;
+  public touchSprint = false;
+  private lightBudgetTime = 0;
+  private frameAverage = 24;
+  private renderScale = 1;
+  private scratchFrom = new THREE.Vector3();
+  private scratchTo = new THREE.Vector3();
+  private scratchHit = new THREE.Vector3();
+  private visibilityRay = new THREE.Ray();
+  private collisionSignature = -1;
+  private collisionCache: THREE.Box3[] = [];
   private lastRender = 0;
   private softwareRenderer = false;
   private lights: THREE.PointLight[] = [];
@@ -213,6 +225,7 @@ export class GameEngine {
         ? 0.65
         : Math.min(devicePixelRatio, this.mobile ? 1.35 : 1.75),
     );
+    this.renderScale = this.renderer.getPixelRatio();
     const { clientWidth: w, clientHeight: h } = mountEl;
     this.renderer.setSize(w || innerWidth, h || innerHeight);
     this.camera = new THREE.PerspectiveCamera(
@@ -236,6 +249,10 @@ export class GameEngine {
     window.addEventListener(
       "keydown",
       (e) => {
+        const target = e.target as HTMLElement | null;
+        if (target?.matches("input, textarea, select")) return;
+        if (target?.closest("button") && ["Space", "Enter"].includes(e.code))
+          return;
         if (["Tab", "Space", "ArrowUp", "ArrowDown"].includes(e.code))
           e.preventDefault();
         if (e.repeat) return;
@@ -257,6 +274,7 @@ export class GameEngine {
           return;
         if (e.code === "KeyE") this.interact();
         if (e.code === "KeyC") this.toggleCrouch();
+        if (e.code === "Space") this.jump();
         if (e.code === "KeyH") this.triggerMunshiHint();
         if (e.code === "KeyU") {
           sound.toggleMute();
@@ -414,9 +432,31 @@ export class GameEngine {
     this.keys = {};
     this.touchMove = [0, 0];
     this.drag = null;
+    this.touchSprint = false;
   }
   public setTouchMove(x: number, z: number) {
     this.touchMove = [x, z];
+  }
+  public toggleSprint() {
+    if (this.gameState !== "playing" || this.activeMiniGame || this.overlayOpen)
+      return;
+    this.touchSprint = !this.touchSprint;
+    if (this.touchSprint) this.stats.isCrouching = false;
+    this.emitChange();
+  }
+  public jump() {
+    if (
+      this.gameState !== "playing" ||
+      this.activeMiniGame ||
+      this.overlayOpen ||
+      this.stats.isInHidingSpot ||
+      this.jumpHeight > 0
+    )
+      return;
+    this.stats.isCrouching = false;
+    this.jumpVelocity = 4.3;
+    sound.playObject("cloth", 0, 0.4);
+    this.emitChange();
   }
   public startGame() {
     sound.init();
@@ -498,6 +538,7 @@ export class GameEngine {
     )
       return;
     this.stats.isCrouching = !this.stats.isCrouching;
+    this.touchSprint = false;
     sound.playObject("cloth");
     this.emitChange();
   }
@@ -541,6 +582,11 @@ export class GameEngine {
   }
 
   private blockers() {
+    const signature =
+      (this.gameFlags.locker_open ? 1 : 0) |
+      (this.gameFlags.master_door_unlocked ? 2 : 0) |
+      (this.gameFlags.sea_gate_open ? 4 : 0);
+    if (signature === this.collisionSignature) return this.collisionCache;
     const blocks = [...this.worldData.colliders];
     for (const [id, bounds] of this.worldData.doorColliders) {
       const open =
@@ -553,15 +599,17 @@ export class GameEngine {
               : false;
       if (!open) blocks.push(bounds);
     }
+    this.collisionSignature = signature;
+    this.collisionCache = blocks;
     return blocks;
   }
   private obstructed(a: [number, number, number], b: [number, number, number]) {
-    const origin = new THREE.Vector3(a[0], 1.45, a[2]),
-      target = new THREE.Vector3(b[0], 1.45, b[2]);
+    const origin = this.scratchFrom.set(a[0], 1.45, a[2]),
+      target = this.scratchTo.set(b[0], 1.45, b[2]);
     const distance = origin.distanceTo(target),
-      ray = new THREE.Ray(origin, target.sub(origin).normalize());
+      ray = this.visibilityRay.set(origin, target.sub(origin).normalize());
     return this.blockers().some((box) => {
-      const hit = ray.intersectBox(box, new THREE.Vector3());
+      const hit = ray.intersectBox(box, this.scratchHit);
       return hit !== null && hit.distanceTo(origin) < distance - 0.25;
     });
   }
@@ -878,6 +926,8 @@ export class GameEngine {
     } catch {}
   }
   public restoreCheckpoint(cp: GameCheckpoint) {
+    this.jumpHeight = 0;
+    this.jumpVelocity = 0;
     const caught = this.stats.timesCaught;
     this.stats = {
       ...this.freshStats(),
@@ -1015,15 +1065,32 @@ export class GameEngine {
       now - this.lastRender > (this.mobile || this.softwareRenderer ? 33 : 16)
     ) {
       this.lastRender = now;
-      const nearest = [...this.lights].sort(
-        (a, b) =>
-          a.position.distanceToSquared(this.camera.position) -
-          b.position.distanceToSquared(this.camera.position),
-      );
-      this.lights.forEach((light) => {
-        light.visible = nearest.indexOf(light) < 4;
-      });
+      this.lightBudgetTime -= dt;
+      if (this.lightBudgetTime <= 0) {
+        this.lightBudgetTime = 0.4;
+        const nearest = [...this.lights].sort(
+          (a, b) =>
+            a.position.distanceToSquared(this.camera.position) -
+            b.position.distanceToSquared(this.camera.position),
+        );
+        this.lights.forEach((light) => {
+          light.visible = nearest.indexOf(light) < 4;
+        });
+      }
+      const renderStart = performance.now();
       this.renderer.render(this.scene, this.camera);
+      this.frameAverage =
+        this.frameAverage * 0.95 + (performance.now() - renderStart) * 0.05;
+      if (
+        this.mobile &&
+        !this.softwareRenderer &&
+        this.frameAverage > 27 &&
+        this.renderScale > 0.8
+      ) {
+        this.renderScale = Math.max(0.8, this.renderScale - 0.1);
+        this.renderer.setPixelRatio(this.renderScale);
+        this.frameAverage = 20;
+      }
     }
     if (simulationActive && now - this.hudTime > 120) {
       this.hudTime = now;
@@ -1037,7 +1104,20 @@ export class GameEngine {
       (this.keys.KeyS ? 1 : 0) - (this.keys.KeyW ? 1 : 0) + this.touchMove[1],
     ];
     const moving = Math.hypot(mx, mz) > 0.08 && !this.stats.isInHidingSpot;
-    this.stats.isSprinting = !!this.keys.ShiftLeft && !this.stats.isCrouching;
+    this.stats.isSprinting =
+      (!!this.keys.ShiftLeft || !!this.keys.ShiftRight || this.touchSprint) &&
+      !this.stats.isCrouching &&
+      !this.stats.isInHidingSpot;
+    const hop = stepJump(this.jumpHeight, this.jumpVelocity, dt);
+    this.jumpHeight = hop.height;
+    this.jumpVelocity = hop.velocity;
+    if (hop.landed) {
+      this.stats.noiseLevel = Math.max(
+        this.stats.noiseLevel,
+        NOISE_CONSTANTS.JUMP_LANDING,
+      );
+      sound.playObject(this.playerPos[0] > 15 ? "water" : "boot", 0, 0.9);
+    }
     if (moving) {
       const speed = this.stats.isCrouching
         ? 1.6
@@ -1086,7 +1166,7 @@ export class GameEngine {
         : 0;
     this.camera.position.set(
       this.playerPos[0],
-      height + bob,
+      height + bob + this.jumpHeight,
       this.playerPos[2],
     );
     this.camera.rotation.order = "YXZ";
@@ -1241,6 +1321,18 @@ export class GameEngine {
           : 0;
       mesh.userData.head.rotation.y =
         guard.state === "chase" ? 0 : Math.sin(phase * 0.3) * 0.2;
+      if (mesh.userData.leftKnee) {
+        mesh.userData.leftKnee.rotation.x = moved
+          ? Math.max(0, -Math.sin(phase)) * 0.42
+          : 0.025;
+        mesh.userData.rightKnee.rotation.x = moved
+          ? Math.max(0, Math.sin(phase)) * 0.42
+          : 0.025;
+        mesh.userData.leftElbow.rotation.x =
+          -0.12 - (moved ? Math.max(0, Math.sin(phase)) * 0.16 : 0);
+        mesh.userData.rightElbow.rotation.x =
+          -0.12 - (moved ? Math.max(0, -Math.sin(phase)) * 0.16 : 0);
+      }
       const distance = Math.hypot(
         guard.position[0] - this.playerPos[0],
         guard.position[2] - this.playerPos[2],

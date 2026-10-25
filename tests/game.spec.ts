@@ -1,5 +1,7 @@
 import { test, expect, Page } from "@playwright/test";
 import type { GameEngine } from "../src/game/engine";
+import { resolve } from "node:path";
+import { readFile } from "node:fs/promises";
 declare global {
   interface Window {
     __HIRODORA__: GameEngine;
@@ -44,13 +46,31 @@ test("desktop starts, moves, crouches, pauses and closes intel without stuck inp
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await start(page);
+  const surfaces = await page
+    .locator(
+      ".objective, .stealth-state, .hud-tools button, .stealth-meters, .satchel-button, .subtitle",
+    )
+    .evaluateAll((elements) =>
+      elements.map((element) => ({
+        color: getComputedStyle(element).backgroundColor,
+        image: getComputedStyle(element).backgroundImage,
+      })),
+    );
+  expect(
+    surfaces.every(
+      (surface) =>
+        surface.color === "rgba(0, 0, 0, 0)" && surface.image === "none",
+    ),
+  ).toBe(true);
   const before = await page.evaluate(() => window.__HIRODORA__.playerPos[2]);
   await page.keyboard.down("KeyW");
-  await page.waitForTimeout(250);
-  await page.keyboard.up("KeyW");
-  expect(
-    await page.evaluate(() => window.__HIRODORA__.playerPos[2]),
-  ).toBeLessThan(before);
+  try {
+    await expect
+      .poll(() => page.evaluate(() => window.__HIRODORA__.playerPos[2]))
+      .toBeLessThan(before);
+  } finally {
+    await page.keyboard.up("KeyW");
+  }
   await page.keyboard.press("KeyC");
   expect(await page.evaluate(() => window.__HIRODORA__.stats.isCrouching)).toBe(
     true,
@@ -264,6 +284,38 @@ test("mobile joystick, drag look, crouch and release work in portrait and landsc
   expect(await page.evaluate(() => window.__HIRODORA__.stats.isCrouching)).toBe(
     true,
   );
+  await page.getByRole("button", { name: "Jump", exact: true }).tap();
+  await expect
+    .poll(() => page.evaluate(() => window.__HIRODORA__.jumpHeight))
+    .toBeGreaterThan(0);
+  await expect
+    .poll(() => page.evaluate(() => window.__HIRODORA__.jumpHeight))
+    .toBe(0);
+  await page.getByRole("button", { name: "Sprint", exact: true }).tap();
+  expect(await page.evaluate(() => window.__HIRODORA__.touchSprint)).toBe(true);
+  await expect(
+    page.getByRole("button", { name: "Sprint", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
+  const actions = await page
+    .locator(".touch-actions button")
+    .evaluateAll((buttons) =>
+      buttons.map((button) => {
+        const r = button.getBoundingClientRect();
+        return { x: r.x, y: r.y, w: r.width, h: r.height };
+      }),
+    );
+  expect(actions.every((rect) => rect.w >= 44 && rect.h >= 44)).toBe(true);
+  for (let i = 0; i < actions.length; i++)
+    for (let j = i + 1; j < actions.length; j++) {
+      const a = actions[i],
+        b = actions[j];
+      expect(
+        a.x + a.w <= b.x ||
+          b.x + b.w <= a.x ||
+          a.y + a.h <= b.y ||
+          b.y + b.h <= a.y,
+      ).toBe(true);
+    }
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(
     page.getByRole("button", { name: "Interact", exact: true }),
@@ -297,5 +349,37 @@ test("production assets load from a subdirectory and the game reloads offline", 
   await expect(
     page.getByRole("button", { name: "Pause game", exact: true }),
   ).toBeVisible();
+  await context.close();
+});
+
+test("downloaded standalone HTML runs in an offline browser without network requests", async ({
+  browser,
+}) => {
+  const context = await browser.newContext({
+    viewport: { width: 844, height: 390 },
+    isMobile: true,
+    hasTouch: true,
+  });
+  const page = await context.newPage(),
+    requests: string[] = [],
+    errors: string[] = [];
+  page.on("request", (request) => {
+    if (/^https?:/.test(request.url())) requests.push(request.url());
+  });
+  page.on("pageerror", (error) => errors.push(error.message));
+  await context.setOffline(true);
+  // The managed test browser blocks file:// navigation by administrator policy.
+  // Load the unmodified downloaded document into an offline blank page to validate its self-containment.
+  await page.setContent(
+    await readFile(resolve("downloads/Hirodora-0.2.0.html"), "utf8"),
+  );
+  await page.getByRole("button", { name: "BEGIN THE ESCAPE" }).tap();
+  await expect(
+    page.getByRole("button", { name: "Jump", exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Pause game", exact: true }).tap();
+  await expect(page.getByText("The night can wait.")).toBeVisible();
+  expect(requests).toEqual([]);
+  expect(errors).toEqual([]);
   await context.close();
 });

@@ -5,6 +5,7 @@ import {
   FileText,
   Headphones,
   Shield,
+  Expand,
 } from "lucide-react";
 import { version } from "../../package.json";
 
@@ -17,6 +18,7 @@ interface Props {
   ready: boolean;
   loadError: string;
   onRetry: () => void;
+  onFullscreen?: () => void;
 }
 
 export function TitleScreen({
@@ -28,6 +30,7 @@ export function TitleScreen({
   ready,
   loadError,
   onRetry,
+  onFullscreen,
 }: Props) {
   return (
     <main className="title-screen">
@@ -77,6 +80,11 @@ export function TitleScreen({
           </div>
         )}
         <div className="title-links">
+          {onFullscreen && (
+            <button onClick={onFullscreen}>
+              <Expand size={15} /> Fullscreen / landscape
+            </button>
+          )}
           <button onClick={onOpenStory}>
             <FileText size={15} /> Read the dossier <ArrowUpRight size={13} />
           </button>

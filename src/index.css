@@ -68,6 +68,102 @@ button:active {
   position: absolute;
   inset: 0;
 }
+.game-content {
+  position: absolute;
+  inset: 0;
+}
+.rotate-screen {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  overflow-y: auto;
+  padding: max(28px, env(safe-area-inset-top))
+    max(24px, env(safe-area-inset-right)) max(28px, env(safe-area-inset-bottom))
+    max(24px, env(safe-area-inset-left));
+  background: radial-gradient(ellipse at 50% 30%, #1d353c, #091317 75%);
+}
+.rotate-card {
+  max-width: 390px;
+  text-align: center;
+  margin: auto;
+}
+.rotate-card .eyebrow {
+  justify-content: center;
+  font-size: 9px;
+}
+.rotate-symbol {
+  position: relative;
+  margin: 38px auto 26px;
+  width: 110px;
+  color: var(--gold);
+}
+.rotate-symbol > svg:first-child {
+  margin: auto;
+  transform: rotate(90deg);
+}
+.rotate-symbol > svg:last-child {
+  position: absolute;
+  top: -12px;
+  right: 0;
+}
+.rotate-card h1 {
+  font:
+    36px/1.12 Georgia,
+    serif;
+  color: #eee5d2;
+  margin: 0 0 18px;
+}
+.rotate-card p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #b5c2bd;
+}
+.rotate-card .rotate-safety {
+  color: #d2bd91;
+  font-size: 12px;
+  margin: 22px 0;
+}
+.rotate-card .primary-button {
+  min-height: 50px;
+  min-width: 0;
+  width: 100%;
+  justify-content: center;
+}
+.rotate-card .rotate-help {
+  font-size: 11px;
+  margin-top: 22px;
+}
+.display-status {
+  position: absolute;
+  z-index: 55;
+  max-width: min(520px, 80vw);
+  left: 50%;
+  bottom: max(12px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 8px 12px;
+  color: #e0d2ac;
+  background: #091317ed;
+  font-size: 11px;
+  text-align: center;
+  pointer-events: none;
+}
+@media (pointer: coarse) and (orientation: landscape) {
+  .app-shell .touch-controls .joystick {
+    left: max(27px, env(safe-area-inset-left));
+    bottom: max(37px, env(safe-area-inset-bottom));
+  }
+  .app-shell .touch-controls .touch-actions {
+    right: max(24px, env(safe-area-inset-right));
+    bottom: max(24px, env(safe-area-inset-bottom));
+  }
+  .app-shell .title-screen {
+    padding-left: max(5vw, env(safe-area-inset-left));
+    padding-right: max(5vw, env(safe-area-inset-right));
+  }
+}
 .game-viewport canvas {
   display: block;
   touch-action: none;

@@ -13,6 +13,7 @@ interface Props {
   onComplete: (success: boolean) => void;
   onCancel: () => void;
   onNoiseSpike: (amount: number) => void;
+  paused?: boolean;
 }
 function Shell({
   title,
@@ -52,6 +53,7 @@ export function MiniGames(props: Props) {
   callbacks.current = props;
   const done = useRef(false);
   const finish = (success: boolean) => {
+    if (callbacks.current.paused) return;
     if (!done.current) {
       done.current = true;
       callbacks.current.onComplete(success);
@@ -61,6 +63,7 @@ export function MiniGames(props: Props) {
     finish,
     cancel: props.onCancel,
     noise: (n: number) => callbacks.current.onNoiseSpike(n),
+    paused: !!props.paused,
   };
   switch (props.miniGame?.type) {
     case "vent_bolts":
@@ -79,8 +82,9 @@ interface Puzzle {
   finish: (success: boolean) => void;
   cancel: () => void;
   noise: (n: number) => void;
+  paused: boolean;
 }
-function Vent({ finish, cancel, noise }: Puzzle) {
+function Vent({ finish, cancel, noise, paused }: Puzzle) {
   const [bolts, setBolts] = useState(0),
     [progress, setProgress] = useState(0),
     [holding, setHolding] = useState(false);
@@ -98,14 +102,17 @@ function Vent({ finish, cancel, noise }: Puzzle) {
     if (state.current.bolts === 4) latest.current.finish(true);
   };
   useEffect(() => {
-    if (!holding) return;
+    if (!holding || paused) return;
     const timer = setInterval(() => {
       state.current.progress += 5;
       setProgress(state.current.progress);
       if (state.current.progress >= 100) loosen(false);
     }, 70);
     return () => clearInterval(timer);
-  }, [holding]);
+  }, [holding, paused]);
+  useEffect(() => {
+    if (paused) setHolding(false);
+  }, [paused]);
   useEffect(() => {
     const release = () => setHolding(false);
     window.addEventListener("blur", release);
@@ -156,7 +163,7 @@ function Vent({ finish, cancel, noise }: Puzzle) {
     </Shell>
   );
 }
-function Arm({ finish, cancel, noise }: Puzzle) {
+function Arm({ finish, cancel, noise, paused }: Puzzle) {
   const [progress, setProgress] = useState(50),
     [surge, setSurge] = useState(false),
     [warning, setWarning] = useState(false);
@@ -165,6 +172,7 @@ function Arm({ finish, cancel, noise }: Puzzle) {
     latest = useRef({ finish, noise });
   latest.current = { finish, noise };
   useEffect(() => {
+    if (paused) return;
     const timer = setInterval(() => {
       elapsed.current += 0.05;
       const step = stepArmWrestling(current.current, 0, elapsed.current, 0.05);
@@ -179,7 +187,7 @@ function Arm({ finish, cancel, noise }: Puzzle) {
       }
     }, 50);
     return () => clearInterval(timer);
-  }, []);
+  }, [paused]);
   const push = () => {
     current.current = Math.min(100, current.current + 5.5);
     setProgress(current.current);

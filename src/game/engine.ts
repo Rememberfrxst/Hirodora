@@ -158,6 +158,9 @@ export class GameEngine {
   private collisionCache: THREE.Box3[] = [];
   private lastRender = 0;
   private softwareRenderer = false;
+  private resizeObserver?: ResizeObserver;
+  private viewportWidth = 0;
+  private viewportHeight = 0;
   private lights: THREE.PointLight[] = [];
   private hintTime = -30;
   private touchMove: [number, number] = [0, 0];
@@ -190,6 +193,7 @@ export class GameEngine {
   public gameFlags: Record<string, boolean> = {};
   public overlayOpen = false;
   public mobile = matchMedia("(pointer: coarse)").matches;
+  public orientationBlocked = false;
   public sensitivity = 0.0022;
   public reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
   public stats: PlayerStats = this.freshStats();
@@ -257,6 +261,7 @@ export class GameEngine {
     });
     this.loadCheckpoint();
     this.setupInputs();
+    this.updateViewport();
     this.frameId = requestAnimationFrame(this.tick);
     void this.loadGuardAssets();
   }
@@ -305,6 +310,7 @@ export class GameEngine {
     window.addEventListener(
       "keydown",
       (e) => {
+        if (this.orientationBlocked) return;
         const target = e.target as HTMLElement | null;
         if (target?.matches("input, textarea, select")) return;
         if (target?.closest("button") && ["Space", "Enter"].includes(e.code))
@@ -452,17 +458,11 @@ export class GameEngine {
       },
       { signal },
     );
-    window.addEventListener(
-      "resize",
-      () => {
-        const w = mountElWidth(this.mountEl),
-          h = this.mountEl.clientHeight || innerHeight;
-        this.camera.aspect = w / h;
-        this.camera.updateProjectionMatrix();
-        this.renderer.setSize(w, h);
-      },
-      { signal },
-    );
+    window.addEventListener("resize", this.updateViewport, { signal });
+    if (typeof ResizeObserver !== "undefined") {
+      this.resizeObserver = new ResizeObserver(this.updateViewport);
+      this.resizeObserver.observe(this.mountEl);
+    }
     canvas.addEventListener(
       "webglcontextlost",
       (e) => {
@@ -475,6 +475,26 @@ export class GameEngine {
       { signal },
     );
   }
+
+  private updateViewport = () => {
+    if (this.disposed) return;
+    const w = mountElWidth(this.mountEl),
+      h = this.mountEl.clientHeight || innerHeight;
+    if (w !== this.viewportWidth || h !== this.viewportHeight) {
+      this.viewportWidth = w;
+      this.viewportHeight = h;
+      this.camera.aspect = w / h;
+      this.camera.updateProjectionMatrix();
+      this.renderer.setSize(w, h);
+    }
+    const blocked = this.mobile && h > w;
+    if (blocked !== this.orientationBlocked) {
+      this.orientationBlocked = blocked;
+      this.clearInput();
+      if (blocked && this.gameState === "playing") this.pauseGame();
+      this.emitChange();
+    }
+  };
 
   private look(dx: number, dy: number) {
     this.playerRotY -= dx * this.sensitivity;
@@ -491,6 +511,7 @@ export class GameEngine {
     this.touchSprint = false;
   }
   public setTouchMove(x: number, z: number) {
+    if (this.orientationBlocked || this.gameState !== "playing") return;
     this.touchMove = [x, z];
   }
   public toggleSprint() {
@@ -515,7 +536,7 @@ export class GameEngine {
     this.emitChange();
   }
   public startGame() {
-    if (!this.guardsReady) return;
+    if (!this.guardsReady || this.orientationBlocked) return;
     sound.init();
     sound.resume();
     if (this.checkpoint) this.restoreCheckpoint(this.checkpoint);
@@ -539,6 +560,7 @@ export class GameEngine {
     this.emitChange();
   }
   public resumeGame() {
+    if (this.orientationBlocked) return;
     this.gameState = "playing";
     this.clearInput();
     sound.resume();
@@ -1099,6 +1121,10 @@ export class GameEngine {
   private tick = (now: number) => {
     const dt = Math.min((now - this.lastTime) / 1000, 0.05);
     this.lastTime = now;
+    if (this.orientationBlocked) {
+      this.frameId = requestAnimationFrame(this.tick);
+      return;
+    }
     if (
       this.gameState === "playing" &&
       !this.activeMiniGame &&
@@ -1450,6 +1476,7 @@ export class GameEngine {
   }
   public dispose() {
     this.disposed = true;
+    this.resizeObserver?.disconnect();
     this.events.abort();
     cancelAnimationFrame(this.frameId);
     this.clearInput();

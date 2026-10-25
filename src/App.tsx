@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { GameEngine } from "./game/engine";
 import { sound } from "./game/audio";
+import { requestLandscape } from "./game/display";
+import { Expand, RotateCw, Smartphone } from "lucide-react";
 import { TitleScreen } from "./components/TitleScreen";
 import { HUD } from "./components/HUD";
 import { MiniGames } from "./components/MiniGames";
@@ -19,6 +21,8 @@ export default function App() {
   const [error, setError] = useState("");
   const [volume, setVolume] = useState(70);
   const [sensitivity, setSensitivity] = useState(22);
+  const [displayPending, setDisplayPending] = useState(false);
+  const [displayMessage, setDisplayMessage] = useState("");
   const [reduced, setReduced] = useState(
     matchMedia("(prefers-reduced-motion: reduce)").matches,
   );
@@ -42,6 +46,7 @@ export default function App() {
       return;
     }
     const key = (e: KeyboardEvent) => {
+      if (engine.orientationBlocked) return;
       if (
         (e.target as HTMLElement | null)?.closest(
           "button, input, select, textarea",
@@ -79,181 +84,256 @@ export default function App() {
   }, [overlay]);
 
   const engine = engineRef.current;
+  const portrait = !!engine?.orientationBlocked;
+  useEffect(() => {
+    if (!displayMessage || portrait) return;
+    const timer = window.setTimeout(() => setDisplayMessage(""), 8000);
+    return () => window.clearTimeout(timer);
+  }, [displayMessage, portrait]);
+  const openLandscape = async () => {
+    if (displayPending) return;
+    setDisplayPending(true);
+    const result = await requestLandscape();
+    setDisplayMessage(
+      result.locked
+        ? "Landscape mode enabled. Rotate your phone if the screen has not turned yet."
+        : "Turn your phone sideways. If it stays upright, switch off your phone’s portrait rotation lock. Automatic rotation is not supported in every browser.",
+    );
+    setDisplayPending(false);
+  };
   return (
     <div className="app-shell">
-      <div
-        ref={mountRef}
-        data-testid="game-viewport"
-        className="game-viewport"
-      />
-      <div className="cinematic-vignette" />
-      {error ? (
-        <div className="modal-backdrop">
-          <div className="game-panel">
-            <span className="eyebrow">GRAPHICS UNAVAILABLE</span>
-            <h2>A different way in.</h2>
-            <p>{error}</p>
-            <button
-              className="primary-button"
-              onClick={() => location.reload()}
-            >
-              Try again
-            </button>
+      <div className="game-content" inert={portrait}>
+        <div
+          ref={mountRef}
+          data-testid="game-viewport"
+          className="game-viewport"
+        />
+        <div className="cinematic-vignette" />
+        {error ? (
+          <div className="modal-backdrop">
+            <div className="game-panel">
+              <span className="eyebrow">GRAPHICS UNAVAILABLE</span>
+              <h2>A different way in.</h2>
+              <p>{error}</p>
+              <button
+                className="primary-button"
+                onClick={() => location.reload()}
+              >
+                Try again
+              </button>
+            </div>
           </div>
-        </div>
-      ) : !engine ? (
-        <div className="loading-screen">PREPARING THE NIGHT SHIFT…</div>
-      ) : (
-        <>
-          {engine.gameState === "title" && (
-            <TitleScreen
-              hasSave={engine.hasSave}
-              ready={engine.guardsReady}
-              loadError={engine.guardLoadError}
-              onRetry={() => void engine.loadGuardAssets()}
-              onStart={() => engine.startGame()}
-              onNewGame={() => engine.newGame()}
-              onOpenMap={() => setOverlay("map")}
-              onOpenStory={() => setOverlay("story")}
-            />
-          )}
-          {engine.gameState === "playing" &&
-            !engine.activeMiniGame &&
-            !overlay && (
-              <HUD
-                engine={engine}
-                onPause={() => engine.pauseGame()}
-                onRestart={() => engine.restartGame()}
+        ) : !engine ? (
+          <div className="loading-screen">PREPARING THE NIGHT SHIFT…</div>
+        ) : (
+          <>
+            {engine.gameState === "title" && (
+              <TitleScreen
+                hasSave={engine.hasSave}
+                ready={engine.guardsReady}
+                loadError={engine.guardLoadError}
+                onRetry={() => void engine.loadGuardAssets()}
+                onFullscreen={engine.mobile ? openLandscape : undefined}
+                onStart={() => engine.startGame()}
+                onNewGame={() => engine.newGame()}
                 onOpenMap={() => setOverlay("map")}
                 onOpenStory={() => setOverlay("story")}
               />
             )}
-          {overlay === "story" && (
-            <StoryPrologueModal onClose={() => setOverlay(null)} />
-          )}
-          {overlay === "map" && (
-            <TacticalMapModal
-              onClose={() => setOverlay(null)}
-              playerPos={engine.playerPos}
-              act={engine.stats.act}
-            />
-          )}
-          {engine.activeMiniGame && engine.gameState === "playing" && (
-            <MiniGames
-              miniGame={engine.activeMiniGame}
-              onComplete={(success) => engine.completeMiniGame(success)}
-              onCancel={() => engine.cancelMiniGame()}
-              onNoiseSpike={(amount) => {
-                engine.stats.noiseLevel = Math.min(
-                  100,
-                  engine.stats.noiseLevel + amount,
-                );
-                engine.stats.peakNoise = Math.max(
-                  engine.stats.peakNoise,
-                  engine.stats.noiseLevel,
-                );
-                engine.emitChange();
-              }}
-            />
-          )}
-          {engine.gameState === "paused" && !overlay && (
-            <div className="modal-backdrop">
-              <section className="game-panel pause-panel">
-                <span className="eyebrow">HIRODORA / TAKE A BREATH</span>
-                <h2>The night can wait.</h2>
-                <p>
-                  Your escape is paused. Headphones help you locate nearby
-                  guards.
-                </p>
-                <label>
-                  MASTER VOLUME <span>{volume}%</span>
-                  <input
-                    aria-label="Master volume"
-                    type="range"
-                    min="0"
-                    max="100"
-                    value={volume}
-                    onChange={(e) => {
-                      const value = +e.target.value;
-                      setVolume(value);
-                      sound.setVolume(value / 100);
-                    }}
-                  />
-                </label>
-                <label>
-                  LOOK SENSITIVITY <span>{sensitivity}</span>
-                  <input
-                    aria-label="Look sensitivity"
-                    type="range"
-                    min="5"
-                    max="50"
-                    value={sensitivity}
-                    onChange={(e) => {
-                      setSensitivity(+e.target.value);
-                      engine.sensitivity = +e.target.value / 10000;
-                    }}
-                  />
-                </label>
-                <label>
-                  OFFICER QUALITY
-                  <select
-                    aria-label="Officer quality"
-                    value={engine.guardQuality}
-                    onChange={(e) =>
-                      engine.setGuardQuality(
-                        e.target.value as "auto" | "desktop" | "mobile",
-                      )
-                    }
+            {engine.gameState === "playing" &&
+              !engine.activeMiniGame &&
+              !overlay && (
+                <HUD
+                  engine={engine}
+                  onPause={() => engine.pauseGame()}
+                  onRestart={() => engine.restartGame()}
+                  onOpenMap={() => setOverlay("map")}
+                  onOpenStory={() => setOverlay("story")}
+                />
+              )}
+            {overlay === "story" && (
+              <StoryPrologueModal onClose={() => setOverlay(null)} />
+            )}
+            {overlay === "map" && (
+              <TacticalMapModal
+                onClose={() => setOverlay(null)}
+                playerPos={engine.playerPos}
+                act={engine.stats.act}
+              />
+            )}
+            {engine.activeMiniGame && (
+              <div hidden={engine.gameState !== "playing"}>
+                <MiniGames
+                  miniGame={engine.activeMiniGame}
+                  paused={engine.gameState !== "playing" || portrait}
+                  onComplete={(success) => engine.completeMiniGame(success)}
+                  onCancel={() => engine.cancelMiniGame()}
+                  onNoiseSpike={(amount) => {
+                    engine.stats.noiseLevel = Math.min(
+                      100,
+                      engine.stats.noiseLevel + amount,
+                    );
+                    engine.stats.peakNoise = Math.max(
+                      engine.stats.peakNoise,
+                      engine.stats.noiseLevel,
+                    );
+                    engine.emitChange();
+                  }}
+                />
+              </div>
+            )}
+            {engine.gameState === "paused" && !overlay && (
+              <div className="modal-backdrop">
+                <section className="game-panel pause-panel">
+                  <span className="eyebrow">HIRODORA / TAKE A BREATH</span>
+                  <h2>The night can wait.</h2>
+                  <p>
+                    Your escape is paused. Headphones help you locate nearby
+                    guards.
+                  </p>
+                  <label>
+                    MASTER VOLUME <span>{volume}%</span>
+                    <input
+                      aria-label="Master volume"
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={volume}
+                      onChange={(e) => {
+                        const value = +e.target.value;
+                        setVolume(value);
+                        sound.setVolume(value / 100);
+                      }}
+                    />
+                  </label>
+                  <label>
+                    LOOK SENSITIVITY <span>{sensitivity}</span>
+                    <input
+                      aria-label="Look sensitivity"
+                      type="range"
+                      min="5"
+                      max="50"
+                      value={sensitivity}
+                      onChange={(e) => {
+                        setSensitivity(+e.target.value);
+                        engine.sensitivity = +e.target.value / 10000;
+                      }}
+                    />
+                  </label>
+                  <label>
+                    OFFICER QUALITY
+                    <select
+                      aria-label="Officer quality"
+                      value={engine.guardQuality}
+                      onChange={(e) =>
+                        engine.setGuardQuality(
+                          e.target.value as "auto" | "desktop" | "mobile",
+                        )
+                      }
+                    >
+                      <option value="auto">Automatic · device optimized</option>
+                      <option value="desktop">
+                        Desktop · hero detail + shadows
+                      </option>
+                      <option value="mobile">Mobile · balanced detail</option>
+                    </select>
+                  </label>
+                  <label className="check-label">
+                    <input
+                      type="checkbox"
+                      checked={reduced}
+                      onChange={(e) => {
+                        setReduced(e.target.checked);
+                        engine.reducedMotion = e.target.checked;
+                      }}
+                    />{" "}
+                    REDUCE CAMERA MOTION
+                  </label>
+                  <button
+                    className="primary-button"
+                    onClick={() => engine.resumeGame()}
                   >
-                    <option value="auto">Automatic · device optimized</option>
-                    <option value="desktop">
-                      Desktop · hero detail + shadows
-                    </option>
-                    <option value="mobile">Mobile · balanced detail</option>
-                  </select>
-                </label>
-                <label className="check-label">
-                  <input
-                    type="checkbox"
-                    checked={reduced}
-                    onChange={(e) => {
-                      setReduced(e.target.checked);
-                      engine.reducedMotion = e.target.checked;
-                    }}
-                  />{" "}
-                  REDUCE CAMERA MOTION
-                </label>
-                <button
-                  className="primary-button"
-                  onClick={() => engine.resumeGame()}
-                >
-                  Resume escape <span>→</span>
-                </button>
-                <div className="panel-actions">
-                  <button onClick={() => engine.restartGame()}>
-                    Retry checkpoint
+                    Resume escape <span>→</span>
                   </button>
-                  <button onClick={() => engine.returnToTitle()}>
-                    Main menu
-                  </button>
-                </div>
-              </section>
+                  <div className="panel-actions">
+                    {engine.mobile && (
+                      <button onClick={openLandscape} disabled={displayPending}>
+                        <Expand size={16} /> Fullscreen / landscape
+                      </button>
+                    )}
+                    <button onClick={() => engine.restartGame()}>
+                      Retry checkpoint
+                    </button>
+                    <button onClick={() => engine.returnToTitle()}>
+                      Main menu
+                    </button>
+                  </div>
+                </section>
+              </div>
+            )}
+            {engine.gameState === "gameover" && (
+              <GameOverModal
+                reason={engine.gameOverReason}
+                onRetry={() => engine.restartGame()}
+              />
+            )}
+            {engine.gameState === "victory" && engine.endingType && (
+              <VictoryModal
+                ending={engine.endingType}
+                stats={engine.stats}
+                onPlayAgain={() => engine.newGame()}
+              />
+            )}
+          </>
+        )}
+      </div>
+      {displayMessage && !portrait && (
+        <p className="display-status" role="status">
+          {displayMessage}
+        </p>
+      )}
+      {portrait && !error && (
+        <section
+          className="rotate-screen"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="rotate-title"
+          aria-describedby="rotate-copy"
+        >
+          <div className="rotate-card">
+            <span className="eyebrow">HIRODORA / LANDSCAPE PLAY</span>
+            <div className="rotate-symbol" aria-hidden="true">
+              <Smartphone size={68} strokeWidth={1} />
+              <RotateCw size={26} />
             </div>
-          )}
-          {engine.gameState === "gameover" && (
-            <GameOverModal
-              reason={engine.gameOverReason}
-              onRetry={() => engine.restartGame()}
-            />
-          )}
-          {engine.gameState === "victory" && engine.endingType && (
-            <VictoryModal
-              ending={engine.endingType}
-              stats={engine.stats}
-              onPlayAgain={() => engine.newGame()}
-            />
-          )}
-        </>
+            <h1 id="rotate-title">Turn your phone sideways.</h1>
+            <p id="rotate-copy">
+              Hirodora plays horizontally. Rotate to landscape for the full view
+              and comfortable touch controls.
+            </p>
+            <p className="rotate-safety">
+              {engine.gameState === "paused"
+                ? "Your escape is paused. Rotate back, then tap Resume escape."
+                : "Rotate your phone to begin your escape."}
+            </p>
+            <button
+              className="primary-button"
+              onClick={openLandscape}
+              disabled={displayPending}
+              autoFocus
+            >
+              <Expand size={18} />
+              {displayPending
+                ? "Opening fullscreen…"
+                : "Try fullscreen & landscape"}
+            </button>
+            <p className="rotate-help" role="status">
+              {displayMessage ||
+                "If your phone stays upright, disable its portrait rotation lock. Some browsers require manual rotation."}
+            </p>
+          </div>
+        </section>
       )}
     </div>
   );

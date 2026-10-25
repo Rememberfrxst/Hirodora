@@ -8,13 +8,13 @@
 
 **Some walls keep you in. These walls keep a secret.**
 
-**v0.3.0 · The Human Element**
+**v0.3.1 · Landscape-ready escape**
 
 An original first-person prison escape · Acoustic stealth · Three endings
 
-**[↓ DOWNLOAD THE LATEST OFFLINE GAME — v0.3.0 ZIP](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.3.0-offline.zip)**
+**[↓ DOWNLOAD THE LATEST OFFLINE GAME — v0.3.1 ZIP](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.3.1-offline.zip)**
 
-[Single-file HTML](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.3.0.html) · [Mobile setup](#play-on-mobile) · [Checksums](downloads/latest.json)
+[Single-file HTML](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.3.1.html) · [Mobile setup](#play-on-mobile) · [Checksums](downloads/latest.json)
 
 [The experience](#the-experience) · [Play on mobile](#play-on-mobile) · [Development](#development) · [Quality](#quality-and-release-status)
 
@@ -53,7 +53,9 @@ Find the sharpened spoon. Open the service duct. Earn Boulder’s respect at the
 <tr><td align="center"><sub>IN GAME · PATROL SIMULATION RUNNING</sub></td><td align="center"><sub>MOBILE · LANDSCAPE RECOMMENDED</sub></td></tr>
 </table>
 
-All screenshots are actual v0.3.0 browser renders. Front/side/detail showcases stage the camera and pose inside the real prison; the gameplay shot runs guard AI. The old primitive patrol bodies are replaced by embedded, skinned GLBs with detailed fingers, eyes, short hair, authored clothing and textures. Radio, identification, handcuffs and keys follow their attachment bones. [Sources, licenses and implementation](docs/GUARD-ASSETS.md).
+<img src="docs/screenshots/mobile-rotate.png" width="260" alt="Hirodora portrait rotate screen pauses the game until the phone is horizontal" />
+
+All screenshots are actual v0.3.1 browser renders. Front/side/detail showcases stage the camera and pose inside the real prison; the gameplay shot runs guard AI. The old primitive patrol bodies are replaced by embedded, skinned GLBs with detailed fingers, eyes, short hair, authored clothing and textures. Radio, identification, handcuffs and keys follow their attachment bones. [Sources, licenses and implementation](docs/GUARD-ASSETS.md).
 
 <details><summary>Inspect the new guard face and duty uniform</summary>
 
@@ -71,13 +73,15 @@ All screenshots are actual v0.3.0 browser renders. Front/side/detail showcases s
 
 ## Play on mobile
 
-### Download v0.3.0 — offline edition
+### Download v0.3.1 — offline edition
 
-**[Download Hirodora v0.3.0 for offline play (.zip, approximately 4.6 MiB)](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.3.0-offline.zip)**
+**[Download Hirodora v0.3.1 for offline play (.zip)](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.3.1-offline.zip)**
 
 1. Download the ZIP from the link above and extract it in your device’s Files app.
-2. Open **`Hirodora-0.3.0.html` in a full WebGL 2 browser**, such as Chrome on Android. If your file viewer displays text or blocks scripts, choose “Open with” a full browser. File handling depends on the device/browser.
-3. Play in landscape: left joystick to move, drag the scene to look, then use **Jump**, **Crouch / Stand**, **Sprint**, **Interact** and the contextual action prompt.
+2. Open **`Hirodora-0.3.1.html` in a full WebGL 2 browser**, such as Chrome on Android. If your file viewer displays text or blocks scripts, choose “Open with” a full browser. File handling depends on the device/browser.
+3. Play in landscape: left joystick to move, drag the scene to look, then use **Jump**, **Crouch / Stand**, **Sprint**, **Interact** and the contextual action prompt. Portrait now shows a Rotate screen and pauses gameplay; rotate back to landscape and tap **Resume escape**. Puzzle progress is kept.
+
+Use **Fullscreen / landscape** on the title screen or pause menu to request fullscreen and landscape on supported Android browsers. Browser security prevents a web game from forcing rotation everywhere: if it remains portrait, disable the phone’s portrait-orientation lock and rotate manually. iPhone/iPad browsers may require manual rotation.
 
 The single HTML embeds the engine, **all three officer GLBs and textures**, styles and synthesized audio. It needs **no server, API key, external model download or network**. Wait for officer model preparation to finish before starting. The unmodified standalone document is tested in offline Chromium mobile emulation with zero HTTP requests. Direct file navigation is blocked by this cloud browser’s administrator policy, so device file-opening behavior still needs physical-phone testing. This is a web game, **not an APK or IPA**.
 
@@ -148,8 +152,8 @@ The quality workflow checks pull requests and pushes, packages the offline HTML,
 
 This is a working, substantially rebuilt **playable web slice**, with automated regression coverage. It is not a guarantee of zero defects or a claim of completed device certification.
 
-- **20 asset/logic tests** cover embedded PBR maps, skin weights, bone indices, clips, animation selection, stealth, puzzles, crafting, endings, movement, routing clearance and the jump arc.
-- **Eight browser scenarios** exercise independent rigs, shared geometry, real joint movement, patrol, LOD, darts/collapse, checkpoint reset, failed-download retry, desktop/touch controls, transparent HUD, all puzzles, progression and both hosted/downloaded offline play.
+- **23 asset/logic tests** cover embedded PBR maps, skin weights, bone indices, clips, animation selection, display-orientation fallback, stealth, puzzles, crafting, endings, movement, routing clearance and the jump arc.
+- **Nine browser scenarios** exercise independent rigs, shared geometry, real joint movement, patrol, LOD, darts/collapse, checkpoint reset, failed-download retry, desktop/touch controls, portrait-to-landscape safety, transparent HUD, all puzzles, progression and both hosted/downloaded offline play.
 - The progression integration test uses legal approach-position fixtures with patrols suspended; it is not a full unassisted stealth playthrough.
 - Physical Android/iPhone testing, Safari/Firefox checks, sustained performance testing and player-led difficulty balancing remain release gates.
 

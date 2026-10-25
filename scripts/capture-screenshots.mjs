@@ -113,9 +113,14 @@ await mobile.evaluate(() => {
 });
 await mobile.waitForTimeout(250);
 await mobile.screenshot({ path: "docs/screenshots/mobile.png" });
+await mobile.setViewportSize({ width: 390, height: 844 });
+await mobile
+  .getByRole("dialog", { name: "Turn your phone sideways." })
+  .waitFor();
+await mobile.screenshot({ path: "docs/screenshots/mobile-rotate.png" });
 await context.close();
 await browser.close();
 if (errors.length) throw new Error(errors.join("\n"));
 console.log(
-  "Captured real front, side, detail, patrol gameplay, cell, title and mobile renders.",
+  "Captured real front, side, detail, patrol gameplay, cell, title and mobile landscape/rotate renders.",
 );

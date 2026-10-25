@@ -392,7 +392,7 @@ test("closed walls block guard sight and movement; all required rooms have route
   expect(result.reachable).toEqual([true, true, true, true, true, true]);
 });
 
-test("mobile joystick, drag look, crouch and release work in portrait and landscape", async ({
+test("mobile landscape controls work and portrait rotation safely pauses without stuck input", async ({
   browser,
 }) => {
   const context = await browser.newContext({
@@ -464,13 +464,96 @@ test("mobile joystick, drag look, crouch and release work in portrait and landsc
     }
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(
+    page.getByRole("dialog", { name: "Turn your phone sideways." }),
+  ).toBeVisible();
+  expect(await page.evaluate(() => window.__HIRODORA__.gameState)).toBe(
+    "paused",
+  );
+  expect(await page.evaluate(() => window.__HIRODORA__.touchSprint)).toBe(
+    false,
+  );
+  const pausedPosition = await page.evaluate(() => [
+    ...window.__HIRODORA__.playerPos,
+  ]);
+  await page.keyboard.press("KeyP");
+  await page.keyboard.press("Enter");
+  await page.waitForTimeout(200);
+  expect(await page.evaluate(() => window.__HIRODORA__.gameState)).toBe(
+    "paused",
+  );
+  expect(await page.evaluate(() => window.__HIRODORA__.playerPos)).toEqual(
+    pausedPosition,
+  );
+  await page.setViewportSize({ width: 844, height: 390 });
+  await expect(
+    page.getByRole("dialog", { name: "Turn your phone sideways." }),
+  ).toHaveCount(0);
+  await page.getByRole("button", { name: "Resume escape" }).tap();
+  await expect(
     page.getByRole("button", { name: "Interact", exact: true }),
   ).toBeInViewport();
+  await page.waitForTimeout(200);
+  expect(await page.evaluate(() => window.__HIRODORA__.playerPos)).toEqual(
+    pausedPosition,
+  );
+  const canvas = await page.locator("canvas").boundingBox();
+  expect(canvas!.width).toBe(844);
+  expect(canvas!.height).toBe(390);
+  expect(
+    await page.evaluate(() => (window.__HIRODORA__ as any).camera.aspect),
+  ).toBeCloseTo(844 / 390);
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBe(true);
+  await context.close();
+});
+
+test("portrait mobile launch gates play and handles denied fullscreen/unsupported rotation", async ({
+  browser,
+}) => {
+  const context = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+    isMobile: true,
+    hasTouch: true,
+  });
+  const page = await context.newPage();
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.addInitScript(() => {
+    Object.defineProperty(HTMLElement.prototype, "requestFullscreen", {
+      configurable: true,
+      value: () =>
+        Promise.reject(
+          new DOMException("Fullscreen denied", "NotAllowedError"),
+        ),
+    });
+    Object.defineProperty(screen, "orientation", {
+      configurable: true,
+      value: { type: "portrait-primary" },
+    });
+  });
+  await page.goto("/");
+  await expect(
+    page.getByRole("dialog", { name: "Turn your phone sideways." }),
+  ).toBeVisible();
+  await expect(page.locator(".game-content")).toHaveAttribute("inert", "");
+  await page.keyboard.press("Enter");
+  expect(await page.evaluate(() => window.__HIRODORA__.gameState)).toBe(
+    "title",
+  );
+  await page.getByRole("button", { name: "Try fullscreen & landscape" }).tap();
+  await expect(page.getByRole("status")).toContainText(
+    "Automatic rotation is not supported",
+  );
+  await page.setViewportSize({ width: 844, height: 390 });
+  await expect(page.locator(".rotate-screen")).toHaveCount(0);
+  await page.locator("[data-start]").tap();
+  await expect(
+    page.getByRole("button", { name: "Jump", exact: true }),
+  ).toBeVisible();
+  expect(errors).toEqual([]);
   await context.close();
 });
 

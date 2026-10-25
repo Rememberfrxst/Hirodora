@@ -1,0 +1,15 @@
+HIRODORA 0.3.1 - OFFLINE WEB EDITION
+
+Extract the ZIP and open Hirodora-0.3.1.html in a WebGL 2 browser. All code, styles, GLB models, textures and sound are embedded; no server, API key or network is needed. Wait for officer model preparation to finish before starting.
+
+Mobile: play in landscape. In portrait the game pauses behind a Rotate screen; turn the phone sideways, then tap Resume. The Fullscreen / landscape button can request it on supported Android browsers. If it does not rotate automatically, turn off the phone's portrait-orientation lock and rotate manually.
+
+Android: download, extract in Files, then choose Open with Chrome or another WebGL 2-capable browser. File handlers differ by device. If your file viewer blocks JavaScript, open the file in a full browser.
+
+iPhone/iPad: local HTML viewers may block scripts; use the hosted PWA and Add to Home Screen instead. This is not an APK or IPA.
+
+Desktop: open the HTML in Chrome, Edge or Firefox.
+
+Controls: WASD / joystick, mouse / drag look, Space / Jump, C / Crouch, Shift / Sprint, E / Interact. Officer quality: Pause > Automatic / Desktop / Mobile.
+
+Officer assets: MakeHuman CC0 1.0 (Data Collection AB, Joel Palmius, Jonas Hauquier), adapted through the MIT Ara 3D Gen pipeline. Walk/run: CMU Graphics Lab Motion Capture Database. The data used in this project was obtained from mocap.cs.cmu.edu. The database was created with funding from NSF EIA-0196217. Motion data may not be resold on its own. Sources and terms: https://github.com/Rememberfrxst/Hirodora/blob/main/docs/GUARD-ASSETS.md

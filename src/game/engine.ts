@@ -131,6 +131,8 @@ export const ALL_ITEMS: Record<ItemId, InventoryItem> = {
   },
 };
 
+export type GraphicsPreset = "low" | "medium" | "high" | "ultra";
+
 export class GameEngine {
   private renderer: THREE.WebGLRenderer;
   private scene = new THREE.Scene();
@@ -175,6 +177,7 @@ export class GameEngine {
   public guardsReady = false;
   public guardLoadError = "";
   public guardQuality: GuardQuality = "auto";
+  public graphicsPreset: GraphicsPreset = "high";
   public guardActors = new Map<string, GuardActor>();
   private guardAssets = new GuardAssetPool();
   private disposed = false;
@@ -256,6 +259,9 @@ export class GameEngine {
     this.guardKey.shadow.normalBias = 0.025;
     this.scene.add(this.guardKey, this.guardKey.target);
     this.setGuardQuality("auto");
+    this.setGraphicsPreset(
+      this.mobile || this.softwareRenderer ? "medium" : "high",
+    );
     this.scene.traverse((object) => {
       if (object instanceof THREE.PointLight) this.lights.push(object);
     });
@@ -302,6 +308,28 @@ export class GameEngine {
     this.renderer.shadowMap.enabled = shadows;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.guardKey.castShadow = shadows;
+    this.emitChange();
+  }
+
+  public setGraphicsPreset(preset: GraphicsPreset) {
+    this.graphicsPreset = preset;
+    const settings: Record<GraphicsPreset, [number, boolean, number]> = {
+      low: [0.8, false, 0.98],
+      medium: [1, false, 1.04],
+      high: [Math.min(devicePixelRatio, 1.5), true, 1.1],
+      ultra: [Math.min(devicePixelRatio, 1.85), true, 1.16],
+    };
+    const [scale, shadows, exposure] = settings[preset];
+    this.renderScale = this.softwareRenderer ? Math.min(scale, 0.8) : scale;
+    this.renderer.setPixelRatio(this.renderScale);
+    this.renderer.shadowMap.enabled = shadows;
+    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    this.guardKey.castShadow = shadows;
+    this.guardKey.shadow.mapSize.set(
+      preset === "ultra" ? 2048 : 1024,
+      preset === "ultra" ? 2048 : 1024,
+    );
+    this.renderer.toneMappingExposure = exposure;
     this.emitChange();
   }
 

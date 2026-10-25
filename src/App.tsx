@@ -222,6 +222,23 @@ export default function App() {
                     />
                   </label>
                   <label>
+                    GRAPHICS PRESET
+                    <select
+                      aria-label="Graphics preset"
+                      value={engine.graphicsPreset}
+                      onChange={(e) =>
+                        engine.setGraphicsPreset(
+                          e.target.value as "low" | "medium" | "high" | "ultra",
+                        )
+                      }
+                    >
+                      <option value="low">Low · maximum performance</option>
+                      <option value="medium">Medium · balanced</option>
+                      <option value="high">High · cinematic shadows</option>
+                      <option value="ultra">Ultra · highest fidelity</option>
+                    </select>
+                  </label>
+                  <label>
                     OFFICER QUALITY
                     <select
                       aria-label="Officer quality"

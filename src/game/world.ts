@@ -35,6 +35,11 @@ const lightMat = new THREE.MeshStandardMaterial({
   emissive: 0xffbf6a,
   emissiveIntensity: 2,
 });
+const concrete = new THREE.MeshStandardMaterial({
+  color: 0x616862,
+  roughness: 0.96,
+  metalness: 0,
+});
 
 function box(
   parent: THREE.Object3D,
@@ -160,6 +165,9 @@ export function buildPhotorealisticBunkBed() {
   for (const y of [0.42, 1.55]) {
     box(group, [1.22, 0.09, 2.25], [0, y, 0], iron, 0.025);
     box(group, [1.12, 0.16, 2.12], [0, y + 0.13, 0], linen, 0.065);
+    // Steel slats remain visible under the mattress at first-person distance.
+    for (let z = -0.82; z <= 0.82; z += 0.24)
+      box(group, [1.06, 0.035, 0.055], [0, y + 0.03, z], iron, 0.008);
     box(group, [0.82, 0.15, 0.44], [0, y + 0.28, -0.76], linen, 0.07);
     // A subdivided, draped blanket rather than a rigid cuboid.
     const geometry = new THREE.PlaneGeometry(1.3, 1.4, 14, 16);
@@ -187,10 +195,19 @@ export function buildPhotorealisticBunkBed() {
       }),
     );
     group.add(blanket);
+    // Creased mattress edge and a seam make the bedding read as fabric, not foam boxes.
+    for (const x of [-0.52, 0.52])
+      box(group, [0.018, 0.11, 1.86], [x, y + 0.13, 0.02], wool, 0.006);
   }
   for (const y of [0.5, 0.8, 1.1, 1.4])
     box(group, [0.4, 0.035, 0.035], [0.38, y, -1.15], iron, 0.012);
   box(group, [0.035, 0.25, 1.8], [0.6, 1.85, 0.1], iron, 0.015);
+  // Guard rail, wall brackets and ladder stiles are separate welded parts.
+  box(group, [1.16, 0.05, 0.05], [0, 1.93, 1.07], iron, 0.012);
+  for (const x of [-0.48, 0.48])
+    box(group, [0.05, 0.38, 0.05], [x, 1.74, 1.07], iron, 0.012);
+  for (const z of [-1.02, 1.02])
+    box(group, [0.12, 0.05, 0.08], [-0.6, 0.42, z], rust, 0.01);
   return group;
 }
 
@@ -215,9 +232,24 @@ export function buildPhotorealisticPorcelainToilet() {
   seat.scale.y = 1.25;
   seat.position.y = 0.51;
   group.add(seat);
+  const water = new THREE.Mesh(
+    new THREE.CircleGeometry(0.18, 24),
+    new THREE.MeshStandardMaterial({
+      color: 0x253f43,
+      roughness: 0.12,
+      metalness: 0.25,
+    }),
+  );
+  water.rotation.x = -Math.PI / 2;
+  water.scale.y = 1.22;
+  water.position.y = 0.49;
+  group.add(water);
   box(group, [0.46, 0.47, 0.19], [0, 0.72, -0.34], ceramic, 0.04);
   box(group, [0.5, 0.055, 0.23], [0, 0.97, -0.34], ceramic, 0.025);
   box(group, [0.09, 0.035, 0.035], [-0.2, 0.83, -0.22], iron, 0.01);
+  for (const x of [-0.13, 0.13])
+    cylinder(group, 0.018, 0.08, [x, 0.55, -0.16], iron).rotation.z =
+      Math.PI / 2;
   cylinder(group, 0.02, 0.7, [0.3, 0.4, -0.35], rust);
   const valve = new THREE.Mesh(
     new THREE.TorusGeometry(0.06, 0.012, 6, 16),
@@ -352,7 +384,13 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     });
   };
   box(staticWorld, [46, 0.3, 23], [7, -0.2, 0], floor);
-  box(staticWorld, [46, 0.3, 23], [7, 4.2, 0], material(0x253538));
+  // A concrete ceiling closes the cell volume; beams and conduits give the formerly
+  // black void a readable institutional structure without altering walkable space.
+  box(staticWorld, [46, 0.22, 23], [7, 4.18, 0], concrete);
+  for (const x of [-13.5, -8.5, -3.5, 1.5, 6.5, 11.5, 16.5, 21.5, 26.5])
+    box(staticWorld, [0.22, 0.34, 22.4], [x, 4.0, 0], iron, 0.015);
+  for (const z of [-9.4, -4.4, 0.6, 5.6, 10.1])
+    box(staticWorld, [45.4, 0.09, 0.13], [7, 3.92, z], rust, 0.008);
   wall([0.5, 4.3, 23], [-16, 2, 0]);
   wall([46, 4.3, 0.5], [7, 2, -11.5]);
   wall([46, 4.3, 0.5], [7, 2, 11.5]);
@@ -763,18 +801,29 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   moon.position.set(-8, 9, -7);
   scene.add(moon);
   for (const x of [-7, -12]) {
+    // The blue exterior is recessed behind a concrete reveal, not a glowing plane.
     box(
       staticWorld,
-      [1.6, 1.1, 0.035],
-      [x, 2.9, -11.2],
+      [1.58, 1.08, 0.035],
+      [x, 2.9, -11.255],
       new THREE.MeshStandardMaterial({
-        color: 0x8fb5ca,
-        emissive: 0x577f94,
-        emissiveIntensity: 0.8,
+        color: 0x1e3741,
+        emissive: 0x162a32,
+        emissiveIntensity: 0.35,
+        roughness: 0.58,
       }),
     );
+    // Four reveal strips visually cut into the concrete surround.
+    for (const [dx, dy, w, h] of [
+      [0, 0.67, 1.82, 0.11],
+      [0, -0.67, 1.82, 0.11],
+      [-0.86, 0, 0.11, 1.45],
+      [0.86, 0, 0.11, 1.45],
+    ])
+      box(staticWorld, [w, h, 0.1], [x + dx, 2.9 + dy, -11.34], iron, 0.006);
     for (let dx = -0.6; dx <= 0.6; dx += 0.3)
-      box(staticWorld, [0.035, 1.2, 0.08], [x + dx, 2.9, -11.15], iron);
+      box(staticWorld, [0.045, 1.24, 0.12], [x + dx, 2.9, -11.39], iron, 0.006);
+    box(staticWorld, [1.68, 0.075, 0.18], [x, 2.2, -11.37], rust, 0.012);
   }
   const waterMesh = new THREE.Mesh(
     new THREE.PlaneGeometry(15, 4.7, 20, 8),

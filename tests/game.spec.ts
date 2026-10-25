@@ -2,6 +2,9 @@ import { test, expect, Page } from "@playwright/test";
 import type { GameEngine } from "../src/game/engine";
 import { resolve } from "node:path";
 import { readFile } from "node:fs/promises";
+const { version } = JSON.parse(
+  await readFile(new URL("../package.json", import.meta.url), "utf8"),
+);
 declare global {
   interface Window {
     __HIRODORA__: GameEngine;
@@ -84,8 +87,151 @@ test("desktop starts, moves, crouches, pauses and closes intel without stuck inp
   await page.getByRole("button", { name: "Pause game", exact: true }).click();
   await expect(page.getByText("The night can wait.")).toBeVisible();
   await page.getByLabel("Master volume").fill("35");
+  await page.getByLabel("Officer quality").selectOption("mobile");
+  expect(await page.evaluate(() => window.__HIRODORA__.guardQuality)).toBe(
+    "mobile",
+  );
   await page.getByRole("button", { name: "Resume escape" }).click();
   expect(errors).toEqual([]);
+});
+
+test("rigged officers animate independently, patrol, switch LOD and retain non-lethal dart hits", async ({
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  page.on("console", (msg) => {
+    if (
+      msg.type() === "warning" &&
+      /PropertyBinding|No target node/.test(msg.text())
+    )
+      errors.push(msg.text());
+  });
+  await start(page);
+  const result = await page.evaluate(async () => {
+    const e = window.__HIRODORA__ as any;
+    const Bounds = e.worldData.colliders[0].constructor;
+    e.overlayOpen = true;
+    e.stats.isInHidingSpot = true;
+    e.stats.noiseLevel = 0;
+    const g = e.worldData.guards[0],
+      actor = e.guardActors.get(g.id);
+    g.position = [-5, 0, 0];
+    g.rotationY = Math.PI / 2;
+    g.state = "patrol";
+    g.currentWaypoint = 1;
+    actor.root.rotation.y = Math.PI / 2;
+    e.camera.position.set(-5, 1.6, 3);
+    e.camera.lookAt(-5, 1, 0);
+    e.camera.updateMatrixWorld();
+    const initial = g.position[0];
+    for (let i = 0; i < 60; i++) e.updateGuards(1 / 60);
+    const moved = g.position[0] - initial,
+      patrolClip = actor.animation;
+    const a = actor.views.get("hero"),
+      b = e.guardActors.get(e.worldData.guards[1].id).views.get("hero");
+    const meshes = (root: any) => {
+      const list: any[] = [];
+      root.traverse((o: any) => {
+        if (o.isSkinnedMesh) list.push(o);
+      });
+      return list;
+    };
+    const am = meshes(a.root)[0],
+      bm = meshes(b.root)[0];
+    const sharedGeometry = am.geometry === bm.geometry,
+      separateSkeleton =
+        am.skeleton !== bm.skeleton &&
+        am.skeleton.bones[0] !== bm.skeleton.bones[0];
+    const leg = a.root.getObjectByName("LeftLeg");
+    const before = leg.quaternion.clone();
+    actor.update(g, 1.3, 0.25, e.camera, "desktop", false);
+    const jointMoved = before.angleTo(leg.quaternion) > 0.01;
+    actor.update(g, 1.3, 0.05, e.camera, "mobile", true);
+    const mobileTier = actor.tier;
+    e.camera.position.set(-5, 1.6, 23);
+    e.camera.lookAt(-5, 1, 0);
+    e.camera.updateMatrixWorld();
+    actor.update(g, 1.3, 0.05, e.camera, "desktop", false);
+    const farTier = actor.tier;
+    g.position = [-5, 0, 0];
+    g.rotationY = 0;
+    g.state = "patrol";
+    actor.root.rotation.y = 0;
+    e.playerPos = [-5, 0, 2];
+    e.camera.position.set(-5, 1.55, 2);
+    e.camera.lookAt(-5, 1.1, 0);
+    e.camera.updateMatrixWorld();
+    actor.update(g, 0, 0.1, e.camera, "desktop", false);
+    e.scene.updateMatrixWorld(true);
+    e.equippedItem = "dart_pistol";
+    e.inventory.push("dart_pistol");
+    e.stats.dartAmmo = 3;
+    e.overlayOpen = false;
+    e.fireDart();
+    e.overlayOpen = true;
+    const dartState = g.state;
+    for (let i = 0; i < 40; i++)
+      actor.update(g, 0, 0.05, e.camera, "desktop", false);
+    e.scene.updateMatrixWorld(true);
+    const collapseBounds = new Bounds().setFromObject(actor.hitTarget, true);
+    const collapseClip = actor.animation;
+    e.restoreCheckpoint({
+      name: "Cell 47",
+      act: 1,
+      playerPosition: [-6, 0, -6],
+      playerRotationY: 0,
+      inventory: ["small_key", "note_from_unknown"],
+      flags: {},
+    });
+    actor.update(g, 0, 0.05, e.camera, "desktop", false);
+    return {
+      moved,
+      patrolClip,
+      sharedGeometry,
+      separateSkeleton,
+      jointMoved,
+      mobileTier,
+      farTier,
+      dartState,
+      collapseClip,
+      collapseHeight: collapseBounds.max.y - collapseBounds.min.y,
+      reset: g.state,
+    };
+  });
+  expect(result.moved).toBeGreaterThan(1.1);
+  expect(result.patrolClip).toBe("Walk");
+  expect(
+    result.sharedGeometry && result.separateSkeleton && result.jointMoved,
+  ).toBe(true);
+  expect(result.mobileTier).toBe("mobile");
+  expect(result.farTier).toBe("distant");
+  expect(result.dartState).toBe("knocked_out");
+  expect(result.collapseClip).toBe("Collapse");
+  expect(result.collapseHeight).toBeLessThan(0.8);
+  expect(result.reset).toBe("patrol");
+  expect(errors).toEqual([]);
+});
+
+test("failed officer downloads block play and can be retried without a primitive fallback", async ({
+  page,
+}) => {
+  await page.route("**/*.glb", (route) => route.abort());
+  await page.goto("/");
+  await expect(
+    page.getByRole("button", { name: "Retry model download" }),
+  ).toBeVisible();
+  await expect(page.locator("[data-start]")).toBeDisabled();
+  expect(await page.evaluate(() => window.__HIRODORA__.guardActors.size)).toBe(
+    0,
+  );
+  await page.unroute("**/*.glb");
+  await page.getByRole("button", { name: "Retry model download" }).click();
+  await expect(page.locator("[data-start]")).toBeEnabled({ timeout: 60_000 });
+  await page.locator("[data-start]").click();
+  await expect(
+    page.getByRole("button", { name: "Pause game", exact: true }),
+  ).toBeVisible();
 });
 
 test("tool requirements, all four puzzles, crafting, checkpoints and Brotherhood ending", async ({
@@ -371,7 +517,7 @@ test("downloaded standalone HTML runs in an offline browser without network requ
   // The managed test browser blocks file:// navigation by administrator policy.
   // Load the unmodified downloaded document into an offline blank page to validate its self-containment.
   await page.setContent(
-    await readFile(resolve("downloads/Hirodora-0.2.0.html"), "utf8"),
+    await readFile(resolve(`downloads/Hirodora-${version}.html`), "utf8"),
   );
   await page.getByRole("button", { name: "BEGIN THE ESCAPE" }).tap();
   await expect(

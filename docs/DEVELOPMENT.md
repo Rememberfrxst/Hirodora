@@ -10,8 +10,10 @@ The implementation now uses explicit gate collision, geometry-based visibility c
 
 | Module                       | Responsibility                                                                                       |
 | ---------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `src/game/world.ts`          | Procedural environment, articulated humans, material batches, colliders and interactable placement   |
-| `src/game/characters.ts`     | CC0 anatomical heads, independently built police equipment and batched articulated limbs             |
+| `src/game/world.ts`          | Environment, stable guard roots, material batches, colliders and interactable placement              |
+| `src/game/characters.ts`     | Legacy supporting NPCs (Boulder/Iyer), not the patrol officers                                       |
+| `src/game/guard-actor.ts`    | GLB preload/cache, independently cloned rigs, LOD, mixers, blinking/head tracking and cleanup         |
+| `src/game/guard-motion.ts`   | Pure visual animation selection; never changes AI/perception                                        |
 | `src/game/engine.ts`         | Input, game state, progression, persistence, perception, movement, weapon hits and renderer lifetime |
 | `src/game/navigation.ts`     | Collision clearance, bounded routing, normalized player movement                                     |
 | `src/game/rules.ts`          | Deterministic stealth, crafting, puzzle mechanics and endings                                        |
@@ -24,7 +26,7 @@ The attached teardown is reference material for an original story, not an implem
 
 ## Validation scope
 
-`npm run check` checks TypeScript, runs 15 deterministic rules/navigation tests, builds the client and enforces the playable offline payload budget. Run `node scripts/package-mobile.mjs` after the build to refresh the standalone download. `npm run test:e2e` runs six browser scenarios covering transparent HUD surfaces, desktop controls, prerequisite failures, the four puzzles, crafting, checkpoint reload, an ending, navigation reachability, real touch input, jump/sprint, production offline reload under `/Hirodora/`, and the standalone document with networking disabled.
+`npm run check` checks TypeScript, runs 20 asset/logic/navigation tests, builds the client and enforces the 8 MiB playable offline budget. Run `node scripts/package-mobile.mjs` after the build to refresh the standalone download. `npm run test:e2e` runs eight browser scenarios covering independent animated rigs, geometry reuse, patrol, LOD, darts/collapse/reset, failed-download retry, transparent HUD, desktop/touch controls, all puzzles, progression, reachability and hosted/downloaded offline play. See [officer pipeline details](GUARD-ASSETS.md).
 
 The managed cloud browser blocks `file://` navigation by administrator policy. The standalone test reads the unmodified release HTML into an offline blank browser document; it validates a self-contained payload without changing that policy, and does not certify local file-handler behavior on Android or iOS.
 
@@ -35,7 +37,7 @@ The progression test places the player at legal approach points and suspends pat
 - Run on representative Android and iOS devices: touch handling, GPU limits, thermal throttling, orientation changes, Home Screen installation and offline relaunch.
 - Test Safari and Firefox in addition to Chromium; check audio interruptions and WebGL context recovery.
 - Balance patrol routes, puzzle difficulty, hints and tide timing with players unfamiliar with the level.
-- Review the CC0 anatomical head and original uniforms on physical devices. Cinematic AAA character quality and full motion-capture animation are not claimed.
+- Review all three full-body officer LODs on physical devices. Walk/run use CMU mocap; turns, reactions and other poses are keyframed. AAA parity is not claimed.
 - Verify GitHub Actions, Pages permissions and deployed service-worker upgrades in the owner's repository.
 
 ## Reproduce screenshots

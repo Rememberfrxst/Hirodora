@@ -1,0 +1,118 @@
+{
+  "sourceRevision": "8e2cc69f529a4a384951c78312c134e31f456c04",
+  "makeHumanRevision": "a8bc2d54ff0ac92e78ff71431b1023eda42bf482",
+  "assetPackSha256": "b542127a8e25547c7c29c19f2d1d2adb9a664c80396ecd694095dbc8028a0107",
+  "params": {
+    "name": "HirodoraOfficer",
+    "seed": 47,
+    "gender": 1,
+    "age": 0.63,
+    "muscle": 0.56,
+    "weight": 0.5,
+    "height": 0.5,
+    "proportions": 0.7,
+    "african": 0.12,
+    "asian": 0.08,
+    "caucasian": 0.8,
+    "breastSize": 0.5,
+    "breastFirmness": 0.5,
+    "modifiers": {
+      "nose/nose-flaring": 0.08,
+      "chin/chin-prominent": 0.12
+    },
+    "skin": "auto",
+    "skinTint": "#ffffff",
+    "eyes": "brownlight",
+    "eyebrows": "eyebrow003",
+    "eyelashes": "eyelashes01",
+    "hair": "short01",
+    "hairTint": "#55504b",
+    "hairColor": "#2a1e16",
+    "facialHair": "stubble",
+    "beardColor": "#40372f",
+    "tattoos": [],
+    "tattooInk": "#1c2128",
+    "earrings": "none",
+    "earringMetal": "gold",
+    "outfit": "male_casualsuit01",
+    "top": "uniform_shirt_long",
+    "bottom": "uniform_trousers",
+    "underwear": true,
+    "accessories": [
+      "tactical_vest",
+      "utility_belt"
+    ],
+    "garmentStyles": {
+      "uniform_shirt_long": {
+        "pattern": "solid",
+        "color": "#293c54",
+        "color2": "#526075"
+      },
+      "uniform_trousers": {
+        "pattern": "solid",
+        "color": "#25344b",
+        "color2": "#43526b"
+      },
+      "tactical_vest": {
+        "pattern": "molle",
+        "color": "#202a35",
+        "color2": "#3f4c58"
+      },
+      "utility_belt": {
+        "pattern": "leather",
+        "color": "#171c24",
+        "color2": "#3e434a"
+      }
+    },
+    "shoes": "combat_boots",
+    "hat": "none",
+    "outfitTint": "#8ba9d0",
+    "detail": "medium",
+    "rig": "game",
+    "faceBones": true,
+    "restPose": "A",
+    "animations": true,
+    "weapon": "none",
+    "expression": "neutral",
+    "faceShapes": true,
+    "speechShapes": false,
+    "teeth": "teeth_base",
+    "tongue": true
+  },
+  "lods": [
+    {
+      "tier": "hero",
+      "triangles": 193378,
+      "bones": 69,
+      "height": 1.7629483222961426,
+      "animations": [
+        "Idle",
+        "Walk",
+        "Run",
+        "Turn left 45°",
+        "Turn right 45°",
+        "Investigate",
+        "Search",
+        "Alert",
+        "Collapse"
+      ],
+      "file": "src/assets/guards/officer-hero.glb"
+    },
+    {
+      "tier": "mobile",
+      "triangles": 63526,
+      "bones": 69,
+      "height": 1.7633933067321779,
+      "animations": [],
+      "file": "src/assets/guards/officer-mobile.glb"
+    },
+    {
+      "tier": "distant",
+      "triangles": 16627,
+      "bones": 69,
+      "height": 1.763389015197754,
+      "animations": [],
+      "file": "src/assets/guards/officer-distant.glb"
+    }
+  ]
+}

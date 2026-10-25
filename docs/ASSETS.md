@@ -1,8 +1,16 @@
 # Asset provenance
 
+## Full-body patrol guards (v0.3.0)
+
+Patrol guards now use authored MakeHuman CC0 full-body assets, photo skin,
+fitted clothing and a 69-bone skeleton exported through the pinned MIT Ara
+pipeline. Read [the complete provenance, licenses, build recipe and rendering
+details](GUARD-ASSETS.md). Embedded GLBs, including every texture and nine
+skeletal clips, are committed in `src/assets/guards/`.
+
 ## Human head anatomy (v0.2.0)
 
-The guard head surface is adapted from MakeHuman's **hm08 base mesh**. Only head/neck geometry is distributed, as `src/assets/human-head.json`. `scripts/prepare-human-head.mjs` extracts this region, computes smooth normals and transforms it to the game's character coordinates. Skin shading, eyes, uniforms, accessories and animation are original game code.
+The older supporting NPC head surface is adapted from MakeHuman's **hm08 base mesh**. This legacy head/neck geometry remains as `src/assets/human-head.json` for Boulder and Iyer; patrol officers no longer use its primitive body. `scripts/prepare-human-head.mjs` extracts this region, computes smooth normals and transforms it to the game's character coordinates. Legacy skin shading, eyes, uniforms, accessories and animation are original game code.
 
 - Source: https://github.com/makehumancommunity/makehuman/blob/master/makehuman/data/3dobjs/base.obj
 - Upstream revision observed: `a8bc2d54ff0ac92e78ff71431b1023eda42bf482`.

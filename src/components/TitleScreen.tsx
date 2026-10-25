@@ -14,6 +14,9 @@ interface Props {
   onOpenStory: () => void;
   hasSave?: boolean;
   onNewGame: () => void;
+  ready: boolean;
+  loadError: string;
+  onRetry: () => void;
 }
 
 export function TitleScreen({
@@ -22,6 +25,9 @@ export function TitleScreen({
   onOpenStory,
   hasSave,
   onNewGame,
+  ready,
+  loadError,
+  onRetry,
 }: Props) {
   return (
     <main className="title-screen">
@@ -52,10 +58,24 @@ export function TitleScreen({
           <br />
           One ledger. One ally. One chance before high tide.
         </p>
-        <button data-start="true" onClick={onStart} className="primary-button">
+        <button
+          data-start="true"
+          disabled={!ready}
+          aria-busy={!ready && !loadError}
+          onClick={onStart}
+          className="primary-button"
+        >
           {hasSave ? "CONTINUE ESCAPE" : "BEGIN THE ESCAPE"}
           <ArrowRight size={20} />
         </button>
+        {!ready && (
+          <div className="asset-status" role={loadError ? "alert" : "status"}>
+            {loadError || "Preparing officer models and textures…"}
+            {loadError && (
+              <button onClick={onRetry}>Retry model download</button>
+            )}
+          </div>
+        )}
         <div className="title-links">
           <button onClick={onOpenStory}>
             <FileText size={15} /> Read the dossier <ArrowUpRight size={13} />

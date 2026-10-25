@@ -228,7 +228,8 @@ export function buildPhotorealisticPorcelainToilet() {
   return group;
 }
 
-export const buildPhotorealisticTacticalGuard = buildHumanOfficer;
+// Legacy supporting NPCs remain outside the patrol-officer overhaul.
+const buildSupportingNPC = buildHumanOfficer;
 
 export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   scene.background = new THREE.Color(0x18252b);
@@ -496,7 +497,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     -10.7,
     "interact",
   );
-  const boulder = buildPhotorealisticTacticalGuard(false, true);
+  const boulder = buildSupportingNPC(false, true);
   boulder.position.set(-10.7, 0, -6.6);
   staticWorld.add(boulder);
   box(staticWorld, [0.9, 0.08, 0.75], [-10.7, 0.9, -5.75], wood, 0.02);
@@ -695,7 +696,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     "interact",
   );
   box(staticWorld, [2.1, 0.2, 0.2], [20, 0.45, 1.5], wood).rotation.z = 0.2;
-  const rescuedBoulder = buildPhotorealisticTacticalGuard(false, true);
+  const rescuedBoulder = buildSupportingNPC(false, true);
   rescuedBoulder.position.set(20.5, 0.22, 1.6);
   rescuedBoulder.rotation.z = Math.PI / 2;
   scene.add(rescuedBoulder);
@@ -709,7 +710,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     "warden_ledger",
   );
   box(staticWorld, [2.4, 0.3, 1.6], [28, 0.1, 0], wood, 0.1);
-  const iyer = buildPhotorealisticTacticalGuard();
+  const iyer = buildSupportingNPC();
   iyer.position.set(28, 0.2, -0.6);
   iyer.rotation.y = -Math.PI / 2;
   staticWorld.add(iyer);
@@ -853,7 +854,9 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   ];
   const guardMeshes = new Map<string, THREE.Group>();
   for (const g of guards) {
-    const mesh = buildPhotorealisticTacticalGuard(g.type === "night_captain");
+    // Stable gameplay root; the preloaded skinned GLB is attached by GameEngine.
+    const mesh = new THREE.Group();
+    mesh.name = g.id;
     mesh.position.set(...g.position);
     scene.add(mesh);
     guardMeshes.set(g.id, mesh);

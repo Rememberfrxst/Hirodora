@@ -15,7 +15,7 @@ const files = [
   "index.html",
   ...publicFiles,
   ...(await readdir("dist/assets"))
-    .filter((name) => /\.(js|css)$/.test(name))
+    .filter((name) => /\.(js|css|glb)$/.test(name))
     .map((name) => "assets/" + name),
 ];
 const hash = createHash("sha256");

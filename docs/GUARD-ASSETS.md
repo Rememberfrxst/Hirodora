@@ -1,0 +1,67 @@
+# Officer asset pipeline · v0.3.0
+
+The patrol guards are now **full-body, 69-bone skinned GLBs**, not the old capsule/box bodies. MakeHuman supplies authored human anatomy, fitted clothing, photo skin, eyes, brows, lashes and hair. The game adds a navy correctional uniform treatment, fitted vest, radio, embroidered identification, belt pouches, cuffs and keys. This is an independently produced browser-game character—not a Rockstar asset or a claim of GTA 6 fidelity.
+
+## Sources and redistribution
+
+| Input | Pinned source / license |
+| --- | --- |
+| MakeHuman base, targets and rig | [`makehumancommunity/makehuman`](https://github.com/makehumancommunity/makehuman), revision `a8bc2d54ff0ac92e78ff71431b1023eda42bf482`; asset data CC0 1.0 |
+| Official system asset pack | [Actual downloaded ZIP](https://files.makehumancommunity.org/asset_packs/makehuman_system_assets/makehuman_system_assets_cc0.zip), 280,737,770 bytes; CC0 1.0 |
+| Offline fitting/export pipeline | [`olatunde85/3d-gen`](https://github.com/olatunde85/3d-gen), revision `8e2cc69f529a4a384951c78312c134e31f456c04`; MIT code, CC0 MakeHuman data |
+| Walk/run motion | CMU Graphics Lab Motion Capture Database via the pinned pipeline's baked data; commercial game use allowed, not resale of motion data on its own |
+| Additional animation and equipment | Pipeline keyframed idle/turn/collapse; project-authored investigate/search/alert poses, ID, radio, cuffs and keys |
+
+Official pack SHA-256:
+
+```text
+b542127a8e25547c7c29c19f2d1d2adb9a664c80396ecd694095dbc8028a0107
+```
+
+The official pack was downloaded through the configured environment proxy, with normal TLS verification, then checked for archive integrity and unsafe paths before extraction. The former domain denial is resolved; no proxy bypass or environment restart was needed.
+
+CC0 attribution, preserved voluntarily: **Data Collection AB, Joel Palmius and Jonas Hauquier**, September 2020. [CC0 1.0 legal text](https://creativecommons.org/publicdomain/zero/1.0/legalcode).
+
+CMU acknowledgement: **The data used in this project was obtained from mocap.cs.cmu.edu. The database was created with funding from NSF EIA-0196217.** See [CMU usage terms](http://mocap.cs.cmu.edu/). Animation is distributed embedded in the playable character/game, not as a separately sold motion library.
+
+The upstream MIT notice is preserved in [licenses/ARA-3D-GEN.txt](licenses/ARA-3D-GEN.txt). No MakeHuman application code is shipped in the game. Raw source packs are not committed.
+
+## Rebuild the assets
+
+Normal installation, tests, production builds and offline play use the committed GLBs. They do **not** require MakeHuman, Blender, Python, a model server or this large source pack.
+
+For asset authoring only:
+
+1. Clone the pinned 3d-gen revision, install its dependencies with `npm ci`, and place the pinned MakeHuman repository at its `vendor/mh` directory.
+2. Download and checksum the official CC0 ZIP, then extract its contents to `vendor/sys`. Do not rename the downloaded asset directories.
+3. Run `npm run build-assets` in the pipeline repository. This creates `public/assets` from the authored source data; optional CMU downloads are not needed because the pinned revision already contains the baked walk/run motion.
+4. In Hirodora, run:
+
+```sh
+HIRODORA_CHARACTER_SOURCE=/absolute/path/to/3d-gen HIRODORA_ASSET_PACK=/absolute/path/to/makehuman_system_assets_cc0.zip node --import tsx scripts/build-guard-assets.mjs
+npm run check
+```
+
+The authoring script verifies both pinned Git revisions and the archive SHA-256 before executing the upstream pipeline. Pass `--verify-sources` to check only those prerequisites. `src/assets/guards/manifest.json` records every body/appearance parameter, source hash, LOD triangle count and clip name. No source-directory paths enter the browser bundle.
+
+## Runtime and quality
+
+| Tier | Geometry | Texture budget | Selection |
+| --- | --- | --- | --- |
+| Hero | 193,378 triangles | 2K skin and uniform; smaller hair/interiors | Desktop close-ups |
+| Mobile | 63,526 triangles | 1K maximum; smaller hair/interiors | Coarse-pointer mobile / Mobile preset |
+| Distant | 16,627 triangles | 256px maximum | Beyond 17m, returns near below 14m |
+
+All tiers retain the same rig, finger/eye bones and face targets. Lower tiers reuse the hero's nine clips: Idle, Walk, Run, left/right turn, Investigate, Search, Alert, Collapse. `GLTFLoader` decodes embedded WebP and Meshopt-compressed buffers; no remote texture paths remain. Meshopt is geometry compression, WebP reduces transfer size; WebP is **not** GPU-native compressed texture storage.
+
+Base-color maps use sRGB; normals and packed occlusion/roughness/metallic maps are linear glTF data. Fabric and leather have normal relief and varied roughness, metal has a separate metallic response. AO is restrained **normal-derived microcavity**, not a ray-traced bake or full-screen SSAO. Anisotropy is capped at 8. Desktop quality adds one 1024px practical-fixture shadow map; automatic mode disables shadows on mobile/software renderers. ACES tone mapping remains consistent with the prison scene.
+
+`GuardAssetPool` preloads each tier once per engine. Instances share geometry/materials/textures but have separate skeletons and mixers. The AI's authoritative position, navigation clearance and sight angle are unchanged. Visual heading smoothing, speed-matched walk/run, cross-fades, blinking and limited head tracking do not influence perception. Darts raycast only the active LOD. Non-lethal cooldowns remain unchanged; a grounded skeletal collapse replaces tipping the whole rigid body.
+
+Offscreen mixers skip pose work; distant animation is throttled to 15Hz. Cleanup stops/uncaches mixers, disposes skeleton textures and releases shared GPU assets once after all instances are removed. Loading failure blocks starting the game with an actionable retry instead of silently falling back to a primitive guard.
+
+## Verification boundaries
+
+Automated asset checks validate embedded images, PBR maps, skin weights, bone indices and all nine clips. Browser coverage checks independent skeletons with shared geometry, actual animated joints, patrol movement, quality/LOD changes, non-lethal ray hits, collapse, checkpoint reset, download failure/retry, puzzle progression, touch controls and offline play.
+
+Screenshots are actual game renders. Front/side/detail images stage the camera and pose in the real prison with the Desktop quality preset; `guard-gameplay.png` runs the patrol simulation. Reproduce with `scripts/capture-screenshots.mjs` against the development server. Physical-phone performance, Safari/Firefox and extended playtesting remain release gates; headless Chromium software rendering is not a mobile FPS benchmark.

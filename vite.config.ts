@@ -5,6 +5,7 @@ import { defineConfig } from "vite";
 export default defineConfig(({ command }) => {
   return {
     base: "./",
+    assetsInclude: ["**/*.glb"],
     publicDir: command === "build" ? (false as const) : "public",
     plugins: [react(), tailwindcss()],
     resolve: {

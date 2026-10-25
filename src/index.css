@@ -204,6 +204,33 @@ button:active {
 .primary-button:hover {
   background: #e6cea2;
 }
+.primary-button:disabled {
+  opacity: 0.55;
+  cursor: progress;
+}
+.asset-status {
+  max-width: 350px;
+  margin-top: 12px;
+  color: #c8be9c;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.asset-status button {
+  display: block;
+  color: #e1c584;
+  padding: 8px 0;
+  text-decoration: underline;
+}
+.pause-panel select {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px;
+  color: #eee4cb;
+  background: #12242a;
+  border: 1px solid #647276;
+  border-radius: 4px;
+}
 .title-links {
   display: flex;
   gap: 23px;

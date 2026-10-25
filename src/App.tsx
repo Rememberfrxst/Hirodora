@@ -108,6 +108,9 @@ export default function App() {
           {engine.gameState === "title" && (
             <TitleScreen
               hasSave={engine.hasSave}
+              ready={engine.guardsReady}
+              loadError={engine.guardLoadError}
+              onRetry={() => void engine.loadGuardAssets()}
               onStart={() => engine.startGame()}
               onNewGame={() => engine.newGame()}
               onOpenMap={() => setOverlay("map")}
@@ -190,6 +193,24 @@ export default function App() {
                       engine.sensitivity = +e.target.value / 10000;
                     }}
                   />
+                </label>
+                <label>
+                  OFFICER QUALITY
+                  <select
+                    aria-label="Officer quality"
+                    value={engine.guardQuality}
+                    onChange={(e) =>
+                      engine.setGuardQuality(
+                        e.target.value as "auto" | "desktop" | "mobile",
+                      )
+                    }
+                  >
+                    <option value="auto">Automatic · device optimized</option>
+                    <option value="desktop">
+                      Desktop · hero detail + shadows
+                    </option>
+                    <option value="mobile">Mobile · balanced detail</option>
+                  </select>
                 </label>
                 <label className="check-label">
                   <input

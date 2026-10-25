@@ -12,6 +12,7 @@ import { resolve } from "node:path";
 
 const { version } = JSON.parse(await readFile("package.json", "utf8"));
 const basename = `Hirodora-${version}`;
+const assetCredits = `Officer assets: MakeHuman CC0 1.0 (Data Collection AB, Joel Palmius, Jonas Hauquier), adapted through the MIT Ara 3D Gen pipeline. Walk/run: CMU Graphics Lab Motion Capture Database. The data used in this project was obtained from mocap.cs.cmu.edu. The database was created with funding from NSF EIA-0196217. Motion data may not be resold on its own. Sources and terms: https://github.com/Rememberfrxst/Hirodora/blob/main/docs/GUARD-ASSETS.md`;
 const result = await build({
   entryPoints: ["src/main.tsx"],
   bundle: true,
@@ -21,6 +22,7 @@ const result = await build({
   jsx: "automatic",
   minify: true,
   write: false,
+  loader: { ".glb": "dataurl" },
   define: {
     "import.meta.env.PROD": "true",
     "import.meta.env.DEV": "false",
@@ -47,12 +49,12 @@ const css = await readFile("dist/assets/" + cssName, "utf8");
 const icon =
   "data:image/png;base64," +
   (await readFile("public/icon-192.png")).toString("base64");
-const html = `<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#12262d"><title>Hirodora ${version} · Offline Edition</title><link rel="icon" href="${icon}"><style>${css}</style></head><body><div id="root"></div><script>${js}</script></body></html>`;
+const html = `<!doctype html><!-- ${assetCredits} --><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#12262d"><title>Hirodora ${version} · Offline Edition</title><link rel="icon" href="${icon}"><style>${css}</style></head><body><div id="root"></div><script>${js}</script></body></html>`;
 await mkdir("downloads", { recursive: true });
 await writeFile(`downloads/${basename}.html`, html);
 await writeFile(
   `downloads/${basename}-README.txt`,
-  `HIRODORA ${version} - OFFLINE WEB EDITION\n\nExtract the ZIP and open ${basename}.html in a WebGL 2 browser. All code, styles, geometry and sound are embedded; no server, API key or network is needed.\n\nAndroid: download, extract in Files, then choose Open with Chrome or another WebGL 2-capable browser. File handlers differ by device. If your file viewer blocks JavaScript, open the file in a full browser.\n\niPhone/iPad: local HTML viewers may block scripts; use the hosted PWA and Add to Home Screen instead. This is not an APK or IPA.\n\nDesktop: open the HTML in Chrome, Edge or Firefox.\n\nControls: WASD / joystick, mouse / drag look, Space / Jump, C / Crouch, Shift / Sprint, E / Interact.\n\nHuman head: adapted from MakeHuman CC0 hm08 anatomy. See https://github.com/Rememberfrxst/Hirodora/blob/main/docs/ASSETS.md\n`,
+  `HIRODORA ${version} - OFFLINE WEB EDITION\n\nExtract the ZIP and open ${basename}.html in a WebGL 2 browser. All code, styles, GLB models, textures and sound are embedded; no server, API key or network is needed. Wait for officer model preparation to finish before starting.\n\nAndroid: download, extract in Files, then choose Open with Chrome or another WebGL 2-capable browser. File handlers differ by device. If your file viewer blocks JavaScript, open the file in a full browser.\n\niPhone/iPad: local HTML viewers may block scripts; use the hosted PWA and Add to Home Screen instead. This is not an APK or IPA.\n\nDesktop: open the HTML in Chrome, Edge or Firefox.\n\nControls: WASD / joystick, mouse / drag look, Space / Jump, C / Crouch, Shift / Sprint, E / Interact. Officer quality: Pause > Automatic / Desktop / Mobile.\n\n${assetCredits}\n`,
 );
 const destination = resolve(`downloads/${basename}-offline.zip`);
 // zip updates exactly these two generated release files; no source or credentials enter the archive.

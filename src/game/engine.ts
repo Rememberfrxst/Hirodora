@@ -28,6 +28,7 @@ import {
 import { buildPrisonWorld, PrisonWorldData } from "./world";
 import { sound } from "./audio";
 import { findPath, isBlocked, movementVector, stepJump } from "./navigation";
+import { GuardAssetPool, GuardActor, type GuardQuality } from "./guard-actor";
 
 export const ALL_ITEMS: Record<ItemId, InventoryItem> = {
   small_key: {
@@ -168,6 +169,13 @@ export class GameEngine {
   private noticeUntil = 0;
   public onStateChange?: () => void;
   public gameState: GameState = "title";
+  public guardsReady = false;
+  public guardLoadError = "";
+  public guardQuality: GuardQuality = "auto";
+  public guardActors = new Map<string, GuardActor>();
+  private guardAssets = new GuardAssetPool();
+  private disposed = false;
+  private guardKey = new THREE.SpotLight(0xe5d5ba, 32, 10, 0.7, 0.75, 2);
   public endingType: EndingType | null = null;
   public gameOverReason = "";
   public playerPos: [number, number, number] = [-6, 0, -6];
@@ -236,12 +244,60 @@ export class GameEngine {
     );
     mountEl.appendChild(this.renderer.domElement);
     this.worldData = buildPrisonWorld(this.scene);
+    this.guardKey.position.set(-5, 3.1, 0);
+    this.guardKey.target.position.set(-5, 0, 0);
+    this.guardKey.shadow.mapSize.set(1024, 1024);
+    this.guardKey.shadow.camera.near = 0.2;
+    this.guardKey.shadow.camera.far = 10;
+    this.guardKey.shadow.normalBias = 0.025;
+    this.scene.add(this.guardKey, this.guardKey.target);
+    this.setGuardQuality("auto");
     this.scene.traverse((object) => {
       if (object instanceof THREE.PointLight) this.lights.push(object);
     });
     this.loadCheckpoint();
     this.setupInputs();
     this.frameId = requestAnimationFrame(this.tick);
+    void this.loadGuardAssets();
+  }
+
+  public async loadGuardAssets() {
+    if (this.guardsReady || this.disposed) return;
+    this.guardLoadError = "";
+    this.emitChange();
+    try {
+      await this.guardAssets.preload(
+        Math.min(8, this.renderer.capabilities.getMaxAnisotropy()),
+      );
+      if (this.disposed || this.guardsReady) return;
+      for (const guard of this.worldData.guards) {
+        const actor = this.guardAssets.create(
+          this.worldData.guardMeshes.get(guard.id)!,
+          guard.type === "night_captain",
+        );
+        this.guardActors.set(guard.id, actor);
+        actor.update(guard, 0, 0, this.camera, this.guardQuality, this.mobile);
+      }
+      this.guardsReady = true;
+    } catch (error) {
+      if (!this.disposed) {
+        console.error("Officer asset preload failed", error);
+        this.guardLoadError =
+          "The officer model could not load. Check your connection or reload the complete offline edition.";
+      }
+    }
+    if (!this.disposed) this.emitChange();
+  }
+
+  public setGuardQuality(quality: GuardQuality) {
+    this.guardQuality = quality;
+    const shadows =
+      quality === "desktop" ||
+      (!this.softwareRenderer && quality === "auto" && !this.mobile);
+    this.renderer.shadowMap.enabled = shadows;
+    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    this.guardKey.castShadow = shadows;
+    this.emitChange();
   }
 
   private setupInputs() {
@@ -459,6 +515,7 @@ export class GameEngine {
     this.emitChange();
   }
   public startGame() {
+    if (!this.guardsReady) return;
     sound.init();
     sound.resume();
     if (this.checkpoint) this.restoreCheckpoint(this.checkpoint);
@@ -960,6 +1017,7 @@ export class GameEngine {
       const mesh = this.worldData.guardMeshes.get(g.id)!;
       mesh.rotation.x = 0;
       mesh.position.set(...g.position);
+      this.guardActors.get(g.id)?.reset();
     }
     this.paths.clear();
     this.syncWorld();
@@ -995,7 +1053,8 @@ export class GameEngine {
       .map((g) => ({
         g,
         hit: ray.intersectObject(
-          this.worldData.guardMeshes.get(g.id)!,
+          this.guardActors.get(g.id)?.hitTarget ||
+            this.worldData.guardMeshes.get(g.id)!,
           true,
         )[0],
       }))
@@ -1006,9 +1065,7 @@ export class GameEngine {
       guard.state = "knocked_out";
       guard.stateTimer = 90;
       guard.suspicion = 0;
-      const mesh = this.worldData.guardMeshes.get(guard.id)!;
-      mesh.rotation.x = -Math.PI / 2;
-      mesh.position.y = 0.2;
+      // The visual rig plays a grounded collapse; AI cooldown/collision stay unchanged.
       sound.playObject("cloth");
     }
     this.emitChange();
@@ -1057,6 +1114,10 @@ export class GameEngine {
       const t = this.reducedMotion ? 0 : now * 0.00008;
       this.camera.position.set(-6.7 + Math.sin(t) * 0.3, 1.7, -4.3);
       this.camera.lookAt(-4.4, 1.2, -8.7);
+      for (const guard of this.worldData.guards)
+        this.guardActors
+          .get(guard.id)
+          ?.update(guard, 0, dt, this.camera, this.guardQuality, this.mobile);
     }
     const simulationActive =
       this.gameState === "playing" && !this.activeMiniGame && !this.overlayOpen;
@@ -1072,6 +1133,13 @@ export class GameEngine {
           (a, b) =>
             a.position.distanceToSquared(this.camera.position) -
             b.position.distanceToSquared(this.camera.position),
+        );
+        // The shadow key belongs to an actual ceiling fixture, not to a moving NPC.
+        this.guardKey.position.copy(nearest[0].position).y -= 0.12;
+        this.guardKey.target.position.set(
+          nearest[0].position.x,
+          0,
+          nearest[0].position.z,
         );
         this.lights.forEach((light) => {
           light.visible = nearest.indexOf(light) < 4;
@@ -1191,6 +1259,9 @@ export class GameEngine {
           mesh.rotation.x = 0;
           mesh.position.y = 0;
         }
+        this.guardActors
+          .get(guard.id)
+          ?.update(guard, 0, dt, this.camera, this.guardQuality, this.mobile);
         continue;
       }
       const wall = this.obstructed(guard.position, this.playerPos);
@@ -1247,8 +1318,8 @@ export class GameEngine {
         guard.state === "patrol"
           ? guard.patrolRoute[guard.currentWaypoint]
           : guard.investigationTarget;
-      if (!target) continue;
       if (
+        target &&
         Math.hypot(
           target[0] - guard.position[0],
           target[2] - guard.position[2],
@@ -1260,6 +1331,8 @@ export class GameEngine {
         target = undefined;
       }
       let moved = false;
+      const beforeX = guard.position[0],
+        beforeZ = guard.position[2];
       if (target) {
         let destination: [number, number] = [target[0], target[2]];
         if (this.obstructed(guard.position, target)) {
@@ -1309,30 +1382,16 @@ export class GameEngine {
         (mesh.userData.phase ?? 0) + dt * (guard.state === "chase" ? 11 : 5);
       mesh.userData.phase = phase;
       mesh.position.set(...guard.position);
-      mesh.rotation.y = guard.rotationY;
-      for (const [name, sign] of [
-        ["leftLeg", 1],
-        ["rightLeg", -1],
-        ["leftArm", -1],
-        ["rightArm", 1],
-      ] as const)
-        mesh.userData[name].rotation.x = moved
-          ? Math.sin(phase) * 0.32 * sign
+      const speed =
+        dt > 0
+          ? Math.hypot(
+              guard.position[0] - beforeX,
+              guard.position[2] - beforeZ,
+            ) / dt
           : 0;
-      mesh.userData.head.rotation.y =
-        guard.state === "chase" ? 0 : Math.sin(phase * 0.3) * 0.2;
-      if (mesh.userData.leftKnee) {
-        mesh.userData.leftKnee.rotation.x = moved
-          ? Math.max(0, -Math.sin(phase)) * 0.42
-          : 0.025;
-        mesh.userData.rightKnee.rotation.x = moved
-          ? Math.max(0, Math.sin(phase)) * 0.42
-          : 0.025;
-        mesh.userData.leftElbow.rotation.x =
-          -0.12 - (moved ? Math.max(0, Math.sin(phase)) * 0.16 : 0);
-        mesh.userData.rightElbow.rotation.x =
-          -0.12 - (moved ? Math.max(0, -Math.sin(phase)) * 0.16 : 0);
-      }
+      this.guardActors
+        .get(guard.id)
+        ?.update(guard, speed, dt, this.camera, this.guardQuality, this.mobile);
       const distance = Math.hypot(
         guard.position[0] - this.playerPos[0],
         guard.position[2] - this.playerPos[2],
@@ -1390,10 +1449,15 @@ export class GameEngine {
     this.onStateChange?.();
   }
   public dispose() {
+    this.disposed = true;
     this.events.abort();
     cancelAnimationFrame(this.frameId);
     this.clearInput();
     sound.suspend();
+    this.guardActors.forEach((actor) => actor.dispose());
+    this.guardActors.clear();
+    this.guardAssets.dispose();
+    this.guardKey.shadow.dispose();
     const geometries = new Set<THREE.BufferGeometry>(),
       materials = new Set<THREE.Material>(),
       textures = new Set<THREE.Texture>();

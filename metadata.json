@@ -1,0 +1,6 @@
+{
+  "name": "Low Tide: Prison Escape 3D",
+  "description": "Hirodora: The Obsidian Penitentiary - A tense 3D cinematic stealth thriller featuring realistic tactical guards, tactile cell environments, and acoustic stealth.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

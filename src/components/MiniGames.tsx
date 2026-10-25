@@ -1,494 +1,342 @@
-import React, { useEffect, useState } from 'react';
-import { ActiveMiniGame } from '../game/types';
-import { sound } from '../game/audio';
-import { checkLockpickPin, checkSafeDial, stepArmWrestling } from '../game/rules';
+import { useEffect, useRef, useState, ReactNode } from "react";
+import { X, LockKeyhole, Wrench, Activity, Hand } from "lucide-react";
+import { ActiveMiniGame } from "../game/types";
+import { sound } from "../game/audio";
+import {
+  checkLockpickPin,
+  checkSafeDial,
+  stepArmWrestling,
+} from "../game/rules";
 
-interface MiniGamesProps {
+interface Props {
   miniGame: ActiveMiniGame;
   onComplete: (success: boolean) => void;
   onCancel: () => void;
   onNoiseSpike: (amount: number) => void;
 }
-
-export const MiniGames: React.FC<MiniGamesProps> = ({
-  miniGame,
-  onComplete,
-  onCancel,
-  onNoiseSpike,
-}) => {
-  if (!miniGame) return null;
-
-  if (miniGame.type === 'vent_bolts') {
-    return <VentBoltsModal onComplete={onComplete} onCancel={onCancel} onNoiseSpike={onNoiseSpike} />;
-  }
-
-  if (miniGame.type === 'arm_wrestling') {
-    return (
-      <ArmWrestlingModal
-        onComplete={onComplete}
-        onCancel={onCancel}
-        onNoiseSpike={onNoiseSpike}
-      />
-    );
-  }
-
-  if (miniGame.type === 'lockpick') {
-    return <LockpickModal onComplete={onComplete} onCancel={onCancel} />;
-  }
-
-  if (miniGame.type === 'safe_crack') {
-    return <SafeCrackModal onComplete={onComplete} onCancel={onCancel} />;
-  }
-
-  return null;
-};
-
-// 1. VENT BOLTS MINI-GAME
-const VentBoltsModal: React.FC<{
-  onComplete: (success: boolean) => void;
-  onCancel: () => void;
-  onNoiseSpike: (amount: number) => void;
-}> = ({ onComplete, onCancel, onNoiseSpike }) => {
-  const [boltsLeft, setBoltsLeft] = useState(4);
-  const [turnProgress, setTurnProgress] = useState(0);
-  const [isHoldingSteady, setIsHoldingSteady] = useState(false);
-
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (isHoldingSteady) {
-      interval = setInterval(() => {
-        setTurnProgress((p) => {
-          if (p >= 100) {
-            sound.playBoltTurn(false);
-            onNoiseSpike(8);
-            setBoltsLeft((b) => {
-              if (b <= 1) {
-                onComplete(true);
-                return 0;
-              }
-              return b - 1;
-            });
-            return 0;
-          }
-          return p + 16;
-        });
-      }, 100);
-    }
-    return () => clearInterval(interval);
-  }, [isHoldingSteady, onComplete, onNoiseSpike]);
-
-  const handleRushTurn = () => {
-    sound.playBoltTurn(true);
-    onNoiseSpike(38); // Risky loud noise!
-    setBoltsLeft((b) => {
-      if (b <= 1) {
-        onComplete(true);
-        return 0;
-      }
-      return b - 1;
-    });
-  };
-
+function Shell({
+  title,
+  children,
+  cancel,
+  icon,
+}: {
+  title: string;
+  children: ReactNode;
+  cancel: () => void;
+  icon: ReactNode;
+}) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 pointer-events-auto select-none">
-      <div className="w-full max-w-md bg-[#131920] border-2 border-[#334155] p-6 shadow-2xl text-stone-200">
-        <div className="flex justify-between items-center border-b border-[#334155] pb-3 mb-4">
-          <h2 className="text-xl font-bold tracking-wider text-[#e2e8f0] font-['Teko'] uppercase text-2xl">
-            Toilet Vent Grate · Hex Bolts ({boltsLeft} Remaining)
-          </h2>
-          <button
-            onClick={onCancel}
-            className="text-stone-400 hover:text-white px-2 py-1 text-sm bg-stone-800 rounded"
-          >
-            Esc
-          </button>
-        </div>
-
-        <p className="text-sm text-stone-400 mb-6 font-['Work_Sans']">
-          Use the modified dining spoon to loosen the rusted ventilation bolts. Turning slowly is quiet; wrenching quickly generates dangerous noise!
-        </p>
-
-        {/* Bolts Visual */}
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          {[1, 2, 3, 4].map((i) => (
-            <div
-              key={i}
-              className={`h-16 flex items-center justify-center border ${
-                i <= 4 - boltsLeft
-                  ? 'border-emerald-600 bg-emerald-950/30 text-emerald-400'
-                  : 'border-[#475569] bg-[#1e293b] text-stone-300'
-              } font-mono text-sm uppercase tracking-wide font-semibold`}
-            >
-              {i <= 4 - boltsLeft ? '✓ Loosened' : `Bolt #${i}`}
-            </div>
-          ))}
-        </div>
-
-        {/* Progress Bar */}
-        <div className="mb-6">
-          <div className="flex justify-between text-xs text-stone-400 mb-1">
-            <span>Spoon Turn Tension</span>
-            <span>{Math.round(turnProgress)}%</span>
-          </div>
-          <div className="w-full h-3 bg-stone-800 rounded-none overflow-hidden border border-stone-700">
-            <div
-              className="h-full bg-amber-500 transition-all duration-100"
-              style={{ width: `${turnProgress}%` }}
-            />
-          </div>
-        </div>
-
-        <div className="flex gap-3">
-          <button
-            onMouseDown={() => setIsHoldingSteady(true)}
-            onMouseUp={() => setIsHoldingSteady(false)}
-            onMouseLeave={() => setIsHoldingSteady(false)}
-            className="flex-1 py-3 px-4 bg-[#2563eb] hover:bg-[#1d4ed8] active:bg-[#1e40af] text-white font-bold text-sm tracking-wider uppercase transition-colors"
-          >
-            Hold Steady (Quiet · 8 Noise)
-          </button>
-          <button
-            onClick={handleRushTurn}
-            className="py-3 px-4 bg-red-900/60 hover:bg-red-800 text-red-200 border border-red-700 font-bold text-sm tracking-wider uppercase transition-colors"
-          >
-            Rush (Loud · +38 Noise)
-          </button>
-        </div>
-      </div>
+    <div className="modal-backdrop">
+      <section
+        className="game-panel puzzle-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+      >
+        <button
+          className="close-button"
+          aria-label="Cancel puzzle"
+          onClick={cancel}
+        >
+          <X />
+        </button>
+        <span className="eyebrow">{icon} WORK QUIETLY / STAY ALIVE</span>
+        <h2>{title}</h2>
+        {children}
+      </section>
     </div>
   );
-};
-
-// 2. ARM WRESTLING WITH BOULDER
-const ArmWrestlingModal: React.FC<{
-  onComplete: (success: boolean) => void;
-  onCancel: () => void;
-  onNoiseSpike: (amount: number) => void;
-}> = ({ onComplete, onCancel, onNoiseSpike }) => {
-  const [progress, setProgress] = useState(50);
-  const [isTelegraphing, setIsTelegraphing] = useState(false);
-  const [isSurging, setIsSurging] = useState(false);
-
+}
+export function MiniGames(props: Props) {
+  const callbacks = useRef(props);
+  callbacks.current = props;
+  const done = useRef(false);
+  const finish = (success: boolean) => {
+    if (!done.current) {
+      done.current = true;
+      callbacks.current.onComplete(success);
+    }
+  };
+  const shared = {
+    finish,
+    cancel: props.onCancel,
+    noise: (n: number) => callbacks.current.onNoiseSpike(n),
+  };
+  switch (props.miniGame?.type) {
+    case "vent_bolts":
+      return <Vent {...shared} />;
+    case "arm_wrestling":
+      return <Arm {...shared} />;
+    case "lockpick":
+      return <Lock {...shared} />;
+    case "safe_crack":
+      return <Safe {...shared} />;
+    default:
+      return null;
+  }
+}
+interface Puzzle {
+  finish: (success: boolean) => void;
+  cancel: () => void;
+  noise: (n: number) => void;
+}
+function Vent({ finish, cancel, noise }: Puzzle) {
+  const [bolts, setBolts] = useState(0),
+    [progress, setProgress] = useState(0),
+    [holding, setHolding] = useState(false);
+  const state = useRef({ bolts: 0, progress: 0 });
+  const latest = useRef({ finish, noise });
+  latest.current = { finish, noise };
+  const loosen = (rushed: boolean) => {
+    if (state.current.bolts >= 4) return;
+    sound.playBoltTurn(rushed);
+    latest.current.noise(rushed ? 38 : 8);
+    state.current.bolts++;
+    state.current.progress = 0;
+    setBolts(state.current.bolts);
+    setProgress(0);
+    if (state.current.bolts === 4) latest.current.finish(true);
+  };
   useEffect(() => {
-    let startTime = performance.now();
-    const interval = setInterval(() => {
-      const elapsed = (performance.now() - startTime) / 1000;
-      const step = stepArmWrestling(progress, 0, elapsed, 0.05);
-
+    if (!holding) return;
+    const timer = setInterval(() => {
+      state.current.progress += 5;
+      setProgress(state.current.progress);
+      if (state.current.progress >= 100) loosen(false);
+    }, 70);
+    return () => clearInterval(timer);
+  }, [holding]);
+  useEffect(() => {
+    const release = () => setHolding(false);
+    window.addEventListener("blur", release);
+    return () => window.removeEventListener("blur", release);
+  }, []);
+  return (
+    <Shell
+      title="A quiet way through."
+      cancel={cancel}
+      icon={<Wrench size={14} />}
+    >
+      <p>
+        Four rusted bolts stand between you and Cell 46. Hold the spoon steady,
+        or rush and risk being heard.
+      </p>
+      <div className="puzzle-pins">
+        {[0, 1, 2, 3].map((i) => (
+          <span key={i} className={i < bolts ? "solved" : ""}>
+            {i < bolts ? "✓" : "⬡"}
+            <small>BOLT 0{i + 1}</small>
+          </span>
+        ))}
+      </div>
+      <div className="puzzle-progress">
+        <i style={{ width: progress + "%" }} />
+      </div>
+      <div className="puzzle-actions">
+        <button
+          className="primary-button"
+          onPointerDown={(e) => {
+            e.currentTarget.setPointerCapture(e.pointerId);
+            setHolding(true);
+          }}
+          onPointerUp={() => setHolding(false)}
+          onPointerCancel={() => setHolding(false)}
+          onLostPointerCapture={() => setHolding(false)}
+          onKeyDown={(e) => {
+            if (e.code === "Space" || e.code === "Enter") setHolding(true);
+          }}
+          onKeyUp={() => setHolding(false)}
+        >
+          Hold steady <small>QUIET / +8</small>
+        </button>
+        <button className="secondary-button" onClick={() => loosen(true)}>
+          Rush bolt <small>LOUD / +38</small>
+        </button>
+      </div>
+    </Shell>
+  );
+}
+function Arm({ finish, cancel, noise }: Puzzle) {
+  const [progress, setProgress] = useState(50),
+    [surge, setSurge] = useState(false),
+    [warning, setWarning] = useState(false);
+  const current = useRef(50),
+    elapsed = useRef(0),
+    latest = useRef({ finish, noise });
+  latest.current = { finish, noise };
+  useEffect(() => {
+    const timer = setInterval(() => {
+      elapsed.current += 0.05;
+      const step = stepArmWrestling(current.current, 0, elapsed.current, 0.05);
+      current.current = step.newProgress;
       setProgress(step.newProgress);
-      setIsTelegraphing(step.isTelegraphing);
-      setIsSurging(step.isSurging);
-
-      if (step.status === 'win') {
-        sound.playVictoryFanfare();
-        onComplete(true);
-      } else if (step.status === 'lose') {
-        sound.playDefeatSting();
-        onNoiseSpike(40); // Boulder roars in victory!
-        onComplete(false);
+      setSurge(step.isSurging);
+      setWarning(step.isTelegraphing);
+      if (step.status !== "active") {
+        clearInterval(timer);
+        if (step.status === "lose") latest.current.noise(40);
+        latest.current.finish(step.status === "win");
       }
     }, 50);
-
-    return () => clearInterval(interval);
-  }, [progress, onComplete, onNoiseSpike]);
-
-  const handlePlayerTap = () => {
-    sound.playBoltTurn(false);
-    setProgress((p) => Math.min(100, p + 5.5));
+    return () => clearInterval(timer);
+  }, []);
+  const push = () => {
+    current.current = Math.min(100, current.current + 5.5);
+    setProgress(current.current);
+    sound.playObject("cloth");
+    if (current.current >= 100) finish(true);
   };
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 pointer-events-auto select-none">
-      <div className="w-full max-w-lg bg-[#141820] border-2 border-stone-600 p-6 shadow-2xl text-stone-200">
-        <div className="flex justify-between items-center border-b border-stone-700 pb-3 mb-4">
-          <div>
-            <h2 className="text-3xl font-bold tracking-wider text-amber-500 font-['Teko'] uppercase">
-              Contest of Respect · Arm Wrestling
-            </h2>
-            <p className="text-xs text-stone-400">Opponent: Boulder (Cell 46 Enforcer)</p>
-          </div>
-          <button
-            onClick={onCancel}
-            className="text-stone-400 hover:text-white px-2 py-1 text-sm bg-stone-800 rounded"
-          >
-            Forfeit
-          </button>
+    <Shell title="Earn his respect." cancel={cancel} icon={<Hand size={14} />}>
+      <p>
+        Boulder doesn’t trust words. Tap to push his arm down. Keep your rhythm
+        when he surges.
+      </p>
+      <div className="opponent">
+        <span>046</span>
+        <div>
+          BOULDER
+          <small>
+            {surge
+              ? "SURGING — PUSH BACK"
+              : warning
+                ? "HE’S TENSING UP…"
+                : "HOLD YOUR GROUND"}
+          </small>
         </div>
-
-        <div className="mb-6 text-center">
-          {isSurging ? (
-            <div className="py-2 px-4 bg-red-600/30 border border-red-500 text-red-400 font-bold tracking-wider uppercase animate-pulse">
-              ⚠ Boulder is SURGING! Counter immediately!
-            </div>
-          ) : isTelegraphing ? (
-            <div className="py-2 px-4 bg-amber-600/30 border border-amber-500 text-amber-300 font-bold tracking-wider uppercase">
-              Notice: Boulder tensing his forearm...
-            </div>
-          ) : (
-            <div className="py-2 px-4 bg-stone-800 text-stone-300 text-sm">
-              Tap rapidly to overpower Boulder's grip and earn his silence.
-            </div>
-          )}
-        </div>
-
-        {/* Tug-of-war Bar */}
-        <div className="mb-6">
-          <div className="flex justify-between text-xs text-stone-400 mb-1 font-mono">
-            <span>BOULDER (DEFEAT)</span>
-            <span>{Math.round(progress)} / 100</span>
-            <span>KABIR (WIN)</span>
-          </div>
-          <div className="w-full h-8 bg-stone-900 border-2 border-stone-700 relative overflow-hidden">
-            <div
-              className={`h-full transition-all duration-75 ${
-                progress > 50 ? 'bg-emerald-600' : 'bg-red-600'
-              }`}
-              style={{ width: `${progress}%` }}
-            />
-            {/* Center target indicator */}
-            <div className="absolute top-0 bottom-0 left-1/2 w-1 bg-white opacity-40 -translate-x-1/2" />
-          </div>
-        </div>
-
-        <button
-          onClick={handlePlayerTap}
-          className="w-full py-4 bg-amber-600 hover:bg-amber-500 active:bg-amber-700 text-stone-950 font-black text-xl tracking-widest uppercase shadow-lg transition-transform active:scale-95"
-        >
-          PUSH / TUG (CLICK RAPIDLY)
-        </button>
       </div>
-    </div>
+      <div className="puzzle-progress arm-progress">
+        <i style={{ width: progress + "%" }} />
+      </div>
+      <div className="puzzle-scale">
+        <span>BOULDER</span>
+        <span>{Math.round(progress)} / 100</span>
+        <span>KABIR</span>
+      </div>
+      <button className="primary-button" onClick={push}>
+        Push back <span>↗</span>
+      </button>
+    </Shell>
   );
-};
-
-// 3. LOCKPICKING MINI-GAME
-const LockpickModal: React.FC<{
-  onComplete: (success: boolean) => void;
-  onCancel: () => void;
-}> = ({ onComplete, onCancel }) => {
-  const [pickAngle, setPickAngle] = useState(0);
-  const [solvedPins, setSolvedPins] = useState(0);
-  const totalPins = 3;
-  const sweetSpots = [35, -42, 18];
-
-  const currentSweetSpot = sweetSpots[solvedPins] || 0;
-  const pinStatus = checkLockpickPin(pickAngle, currentSweetSpot, 7);
-
-  const handleTestTension = () => {
-    if (pinStatus.isSweetSpot) {
-      sound.playLockClick(true);
-      const nextSolved = solvedPins + 1;
-      setSolvedPins(nextSolved);
-      setPickAngle(0);
-      if (nextSolved >= totalPins) {
-        onComplete(true);
-      }
-    } else {
-      sound.playLockClick(false);
-      // Slight reset penalty
-      setPickAngle((a) => (a > 0 ? a - 8 : a + 8));
-    }
-  };
-
+}
+function Lock({ finish, cancel }: Puzzle) {
+  const [angle, setAngle] = useState(0),
+    [pin, setPin] = useState(0);
+  const result = checkLockpickPin(angle, [35, -42, 18][pin] ?? 0, 7);
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 pointer-events-auto select-none">
-      <div className="w-full max-w-md bg-[#131a24] border-2 border-stone-600 p-6 shadow-2xl text-stone-200">
-        <div className="flex justify-between items-center border-b border-stone-700 pb-3 mb-4">
-          <h2 className="text-2xl font-bold tracking-wider text-stone-200 font-['Teko'] uppercase">
-            Tension Lockpick · Pins ({solvedPins}/{totalPins})
-          </h2>
-          <button
-            onClick={onCancel}
-            className="text-stone-400 hover:text-white px-2 py-1 text-sm bg-stone-800 rounded"
-          >
-            Esc
-          </button>
-        </div>
-
-        <p className="text-xs text-stone-400 mb-6">
-          Rotate the torsion pick with the slider. Feel the cylinder vibration as you near the pin shear-line, then apply tension to set the tumbler.
-        </p>
-
-        {/* Tumbler Pins Visual */}
-        <div className="flex justify-center gap-6 mb-8">
-          {[0, 1, 2].map((idx) => (
-            <div
-              key={idx}
-              className={`w-14 h-24 border-2 flex flex-col items-center justify-end p-2 ${
-                idx < solvedPins
-                  ? 'border-emerald-500 bg-emerald-950/40 text-emerald-300'
-                  : idx === solvedPins
-                  ? 'border-amber-500 bg-amber-950/20 text-amber-200'
-                  : 'border-stone-700 bg-stone-900 text-stone-600'
-              }`}
-            >
-              <div
-                className="w-4 bg-current mb-2 transition-all"
-                style={{
-                  height: idx < solvedPins ? '60px' : idx === solvedPins ? `${20 + pinStatus.vibrationIntensity * 35}px` : '15px',
-                }}
-              />
-              <span className="text-[10px] font-mono uppercase">Pin {idx + 1}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Angle Slider */}
-        <div className="mb-6">
-          <div className="flex justify-between text-xs text-stone-400 mb-2 font-mono">
-            <span>PICK ANGLE: {pickAngle}°</span>
-            <span
-              className={
-                pinStatus.isSweetSpot
-                  ? 'text-emerald-400 font-bold'
-                  : pinStatus.vibrationIntensity > 0.4
-                  ? 'text-amber-400'
-                  : 'text-stone-500'
-              }
-            >
-              {pinStatus.isSweetSpot
-                ? '★ SHEAR ALIGNED'
-                : pinStatus.vibrationIntensity > 0.4
-                ? '≈ PIN RESISTANCE'
-                : 'FREE ROTATION'}
-            </span>
-          </div>
-          <input
-            type="range"
-            min="-90"
-            max="90"
-            value={pickAngle}
-            onChange={(e) => setPickAngle(parseInt(e.target.value))}
-            className="w-full accent-amber-500 h-2 bg-stone-800 cursor-pointer"
-          />
-        </div>
-
-        <button
-          onClick={handleTestTension}
-          className="w-full py-3 bg-[#2563eb] hover:bg-[#1d4ed8] text-white font-bold text-sm tracking-widest uppercase transition-colors"
-        >
-          APPLY TENSION WRENCH
-        </button>
+    <Shell
+      title="Feel the resistance."
+      cancel={cancel}
+      icon={<LockKeyhole size={14} />}
+    >
+      <p>
+        Rotate the pick until the pin lines up. The visual indicator mirrors the
+        sound, so headphones are optional.
+      </p>
+      <div className="puzzle-pins">
+        {[0, 1, 2].map((i) => (
+          <span key={i} className={i < pin ? "solved" : ""}>
+            {i < pin ? "✓" : "│"}
+            <small>PIN 0{i + 1}</small>
+          </span>
+        ))}
       </div>
-    </div>
+      <div className="puzzle-scale">
+        <span>PICK / {angle}°</span>
+        <span>
+          {result.isSweetSpot
+            ? "ALIGNED"
+            : result.vibrationIntensity > 0.3
+              ? "RESISTANCE"
+              : "FREE ROTATION"}
+        </span>
+      </div>
+      <input
+        aria-label="Pick angle"
+        type="range"
+        min="-90"
+        max="90"
+        value={angle}
+        onChange={(e) => {
+          setAngle(+e.target.value);
+          sound.playSafeClick(result.vibrationIntensity * 0.2);
+        }}
+      />
+      <button
+        className="primary-button"
+        onClick={() => {
+          sound.playLockClick(result.isSweetSpot);
+          if (result.isSweetSpot) {
+            if (pin === 2) finish(true);
+            else {
+              setPin(pin + 1);
+              setAngle(0);
+            }
+          }
+        }}
+      >
+        Apply tension <span>→</span>
+      </button>
+    </Shell>
   );
-};
-
-// 4. SAFE CRACKING MINI-GAME
-const SafeCrackModal: React.FC<{
-  onComplete: (success: boolean) => void;
-  onCancel: () => void;
-}> = ({ onComplete, onCancel }) => {
-  const [dialNumber, setDialNumber] = useState(0);
-  const [solvedDials, setSolvedDials] = useState<number[]>([]);
-  const targetCombination = [24, 68, 42];
-
-  const currentTarget = targetCombination[solvedDials.length] || 0;
-  const dialCheck = checkSafeDial(dialNumber * 3.6, currentTarget, 1);
-
-  const handleDialTurn = (delta: number) => {
-    const next = (dialNumber + delta + 100) % 100;
-    setDialNumber(next);
-    const check = checkSafeDial(next * 3.6, currentTarget, 1);
-    sound.playSafeClick(check.audioClickVolume);
+}
+function Safe({ finish, cancel }: Puzzle) {
+  const [dial, setDial] = useState(0),
+    [solved, setSolved] = useState<number[]>([]);
+  const result = checkSafeDial(dial * 3.6, [24, 68, 42][solved.length] ?? 0, 1);
+  const turn = (delta: number) => {
+    const value = (dial + delta + 100) % 100;
+    setDial(value);
+    sound.playSafeClick(
+      checkSafeDial(value * 3.6, [24, 68, 42][solved.length], 1)
+        .audioClickVolume,
+    );
   };
-
-  const handleSetTumbler = () => {
-    if (dialCheck.isAligned) {
-      sound.playLockClick(true);
-      const nextSolved = [...solvedDials, dialNumber];
-      setSolvedDials(nextSolved);
-      if (nextSolved.length >= 3) {
-        onComplete(true);
-      }
-    } else {
-      sound.playLockClick(false);
-    }
-  };
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 pointer-events-auto select-none">
-      <div className="w-full max-w-md bg-[#161c24] border-2 border-stone-600 p-6 shadow-2xl text-stone-200">
-        <div className="flex justify-between items-center border-b border-stone-700 pb-3 mb-4">
-          <h2 className="text-2xl font-bold tracking-wider text-amber-500 font-['Teko'] uppercase">
-            Warden's Master Vault · Safe Tumbler
-          </h2>
-          <button
-            onClick={onCancel}
-            className="text-stone-400 hover:text-white px-2 py-1 text-sm bg-stone-800 rounded"
-          >
-            Esc
-          </button>
-        </div>
-
-        <p className="text-xs text-stone-400 mb-6">
-          Acoustic stethoscope active. Turn the dial and listen closely to tumbler clicks. The click pitch deepens when approaching the true combination number.
-        </p>
-
-        {/* Dial Display */}
-        <div className="flex flex-col items-center justify-center mb-6">
-          <div className="w-44 h-44 rounded-full border-4 border-stone-500 bg-[#0f141a] flex flex-col items-center justify-center relative shadow-inner">
-            <span className="text-5xl font-mono font-bold text-amber-400">{dialNumber}</span>
-            <span className="text-[10px] text-stone-500 font-mono mt-1">TUMBLER DIAL</span>
-            {/* Stethoscope needle cue */}
-            <div
-              className={`absolute top-2 w-2 h-2 rounded-full ${
-                dialCheck.isAligned ? 'bg-emerald-500' : 'bg-red-500'
-              }`}
-            />
-          </div>
-
-          <div className="flex gap-4 mt-6">
-            <button
-              onClick={() => handleDialTurn(-5)}
-              className="px-3 py-2 bg-stone-800 hover:bg-stone-700 text-stone-300 font-mono text-xs"
-            >
-              -5
-            </button>
-            <button
-              onClick={() => handleDialTurn(-1)}
-              className="px-4 py-2 bg-stone-800 hover:bg-stone-700 text-stone-200 font-mono text-sm font-bold"
-            >
-              ◀ -1
-            </button>
-            <button
-              onClick={() => handleDialTurn(1)}
-              className="px-4 py-2 bg-stone-800 hover:bg-stone-700 text-stone-200 font-mono text-sm font-bold"
-            >
-              +1 ▶
-            </button>
-            <button
-              onClick={() => handleDialTurn(5)}
-              className="px-3 py-2 bg-stone-800 hover:bg-stone-700 text-stone-300 font-mono text-xs"
-            >
-              +5
-            </button>
-          </div>
-        </div>
-
-        {/* Tumbler Progress */}
-        <div className="flex justify-center gap-3 mb-6">
-          {[0, 1, 2].map((idx) => (
-            <div
-              key={idx}
-              className={`px-4 py-2 border font-mono text-xs ${
-                idx < solvedDials.length
-                  ? 'border-emerald-500 bg-emerald-950/40 text-emerald-400'
-                  : 'border-stone-700 bg-stone-900 text-stone-500'
-              }`}
-            >
-              {idx < solvedDials.length ? `[✓ ${solvedDials[idx]}]` : `Tumbler #${idx + 1}`}
-            </div>
-          ))}
-        </div>
-
-        <button
-          onClick={handleSetTumbler}
-          className="w-full py-3 bg-amber-600 hover:bg-amber-500 text-stone-950 font-black text-sm tracking-widest uppercase transition-colors"
-        >
-          ENGAGE TUMBLER DOG
-        </button>
+    <Shell
+      title="Your own design."
+      cancel={cancel}
+      icon={<Activity size={14} />}
+    >
+      <p>
+        Voss kept the vault you installed. Use the stethoscope: stronger clicks
+        lead you toward each tumbler. A light confirms alignment.
+      </p>
+      <div className={"safe-dial " + (result.isAligned ? "aligned" : "")}>
+        <span>{dial.toString().padStart(2, "0")}</span>
+        <small>{result.isAligned ? "TUMBLER ALIGNED" : "LISTEN CLOSELY"}</small>
       </div>
-    </div>
+      <div className="dial-buttons">
+        {[-5, -1, 1, 5].map((n) => (
+          <button
+            key={n}
+            aria-label={`Turn dial ${n > 0 ? "plus" : "minus"} ${Math.abs(n)}`}
+            onClick={() => turn(n)}
+          >
+            {n > 0 ? "+" : ""}
+            {n}
+          </button>
+        ))}
+      </div>
+      <div className="puzzle-scale">
+        <span>TUMBLERS</span>
+        <span>
+          {solved.map((n) => n.toString().padStart(2, "0")).join(" / ")}{" "}
+          {solved.length < 3 ? " / —" : ""}
+        </span>
+      </div>
+      <button
+        className="primary-button"
+        onClick={() => {
+          sound.playLockClick(result.isAligned);
+          if (result.isAligned) {
+            if (solved.length === 2) finish(true);
+            else setSolved([...solved, dial]);
+          }
+        }}
+      >
+        Set tumbler <span>→</span>
+      </button>
+    </Shell>
   );
-};
+}

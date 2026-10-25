@@ -1,0 +1,22 @@
+{
+  "id": "./",
+  "name": "Hirodora: The Obsidian Penitentiary",
+  "short_name": "Hirodora",
+  "description": "An original prison escape. Every sound has a consequence.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#12262d",
+  "theme_color": "#12262d",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

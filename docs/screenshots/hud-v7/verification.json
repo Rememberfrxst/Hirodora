@@ -1,0 +1,20 @@
+{
+  "version": "0.7.0",
+  "baselineCommit": "25ab5436e708cbebdf5457902ec6a22992aad100",
+  "typecheck": "passed",
+  "unitAndAssetTests": 32,
+  "browserScenariosPassed": 18,
+  "browserRuns": {
+    "fullRegression": "16 passed; HUD test had an incorrect exact Resume button accessible-name locator",
+    "afterLocatorCorrection": "3 passed: mobile landscape controls, all HUD presets on 640x360, drag/resize/save/cancel/reload"
+  },
+  "productionBuild": "passed",
+  "android": "Gradle assembleRelease and lintRelease passed; APK v2 signed with existing app certificate; zipalign passed",
+  "apkPayload": "See apk-assets-smoke.json for exact APK hash; 79 local assets, no missing requests, script errors or service workers",
+  "captures": "Actual Chromium game renders; High preset for staged portraits and HUD gallery; not physical-device screenshots",
+  "pending": [
+    "Original jump.png, sport.png and position.png unavailable in workspace; temporary authored SVG silhouettes used",
+    "Exact Rock Wall 17 PBR images absent from uploaded blend; dl.polyhaven.org proxy CONNECT HTTP 403",
+    "Physical Android gameplay and thermal/performance QA"
+  ]
+}

@@ -1,10 +1,12 @@
-# Hirodora Android 0.6.0
+# Hirodora Android 0.7.0
 
 The APK is an installable, signed Android application. It embeds the existing Three.js game inside a hardware-accelerated Android System WebView; Java handles the Android lifecycle, local asset delivery, landscape orientation, immersive display and Android Back. This release does not migrate the renderer to Unity or C++.
 
-Download `downloads/Hirodora-0.6.0-android.apk` from GitHub, allow installation from your browser/Files application when Android prompts, then install. Requires Android 8.0+, an updated Android System WebView and WebGL 2 support. The complete game is packaged locally. The manifest requests **no Internet, storage, microphone or tracking permissions**. Saves stay in app-local WebView storage; uninstalling clears them. Browser saves do not automatically transfer to the Android app.
+Download `downloads/Hirodora-0.7.0-android.apk` from GitHub, allow installation from your browser/Files application when Android prompts, then install. Requires Android 8.0+, an updated Android System WebView and WebGL 2 support. The complete game is packaged locally. The manifest requests **no Internet, storage, microphone or tracking permissions**. Saves stay in app-local WebView storage; uninstalling clears them. Browser saves do not automatically transfer to the Android app. Version 0.7 uses the existing release certificate and versionCode 700, preserving in-place upgrade compatibility with 0.6 (600).
 
 The application opens horizontally. Android Back pauses and offers an exit confirmation. App backgrounding pauses play/audio; return and tap Resume. The HUD restart icon offers checkpoint retry, and Pause → Start new game replaces the current escape after confirmation. The title menu also offers New escape when a save exists.
+
+Pause → Custom HUD offers Compact, Left-handed and Large buttons presets plus drag/resize/save/cancel/reset. Layout persists in app-local storage independently from New Game. Version 0.7 also ships newly authored CC0-derived officer anatomy/uniform GLBs with nine gameplay animations and lighter geometry. Exact supplied PNG icons and Rock Wall 17 image maps remain pending, as documented in [HUD-V7.md](HUD-V7.md); temporary silhouette icons and the existing licensed concrete are used.
 
 ## Rebuild
 
@@ -34,9 +36,9 @@ Guard recordings have noise reduction, duration-preserving pitch lowering, prese
 
 ## Verification and limits
 
-TypeScript, 30 asset/unit tests, production build and all 16 browser regression scenarios passed. After the final scene-audio reset change, the two restart/audio cases passed again; the final hosted/standalone offline cases also passed. Gradle Android lint (zero errors), zip alignment and APK v2 signature verification passed. `scripts/verify-apk-assets.mjs` extracts the actual APK and runs its bundled game at the native HTTPS origin in mobile Chromium with all requests served locally: gameplay and New Game reset pass, 79 local assets load, there are no missing files, script errors or service-worker registrations. Its report records the tested APK hash. This verifies the packaged game payload, rather than certifying Android-device performance.
+Validation commands are `npm run check`, `npm run test:e2e`, `npm run package:android` and `CAPTURE_DIR=docs/screenshots/hud-v7 node scripts/verify-apk-assets.mjs`. The suite includes 32 unit/asset checks and 18 browser scenarios. Gradle runs Android lint and APK v2 signature verification. The APK smoke tool extracts the actual package and runs its bundled game at the native HTTPS origin in mobile Chromium with all requests served locally, exercising gameplay and New Game reset. Its JSON report records the exact tested APK hash, loaded files, errors and worker count. This verifies the packaged game payload, rather than certifying Android-device performance.
 
-Actual game renders are in `docs/screenshots/android-v6/`; camera-matched 0.5 images remain in `docs/screenshots/opening/`. Officer portraits stage the real rig in the game for visual inspection.
+Current game renders are in `docs/screenshots/hud-v7/`; camera-matched 0.6 officer and Cell 47 images remain in `docs/screenshots/android-v6/`. Officer portraits stage the real rig in the game for visual inspection. Earlier 0.5 images remain in `docs/screenshots/opening/`.
 
 An API 35 AOSP emulator accepted installation and started the Activity. This cloud instance has no `/dev/kvm`; its software-emulated Android system suffered service restarts and a WebView `CrRendererMain` SIGTRAP inside `libwebviewchromium.so`. End-to-end Android gameplay has therefore not been certified. The native host now handles `onRenderProcessGone` by destroying the failed WebView and offering a Retry screen while retaining the saved checkpoint. The packaged-payload Chromium test above is a separate successful check, not a substitute for physical Android QA.
 

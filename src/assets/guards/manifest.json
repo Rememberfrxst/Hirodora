@@ -3,12 +3,12 @@
   "makeHumanRevision": "a8bc2d54ff0ac92e78ff71431b1023eda42bf482",
   "assetPackSha256": "b542127a8e25547c7c29c19f2d1d2adb9a664c80396ecd694095dbc8028a0107",
   "params": {
-    "name": "HirodoraOfficer",
-    "seed": 47,
+    "name": "HirodoraOfficerDunneV7",
+    "seed": 147,
     "gender": 1,
-    "age": 0.63,
-    "muscle": 0.56,
-    "weight": 0.5,
+    "age": 0.58,
+    "muscle": 0.44,
+    "weight": 0.56,
     "height": 0.5,
     "proportions": 0.7,
     "african": 0.12,
@@ -17,16 +17,16 @@
     "breastSize": 0.5,
     "breastFirmness": 0.5,
     "modifiers": {
-      "nose/nose-flaring": 0.08,
-      "chin/chin-prominent": 0.12
+      "nose/nose-flaring": 0.16,
+      "chin/chin-prominent": 0.28
     },
-    "skin": "auto",
+    "skin": "middleage_caucasian_male",
     "skinTint": "#ffffff",
     "eyes": "brownlight",
     "eyebrows": "eyebrow003",
     "eyelashes": "eyelashes01",
-    "hair": "short01",
-    "hairTint": "#55504b",
+    "hair": "short04",
+    "hairTint": "#84786b",
     "hairColor": "#2a1e16",
     "facialHair": "stubble",
     "beardColor": "#40372f",
@@ -39,7 +39,6 @@
     "bottom": "uniform_trousers",
     "underwear": true,
     "accessories": [
-      "tactical_vest",
       "utility_belt"
     ],
     "garmentStyles": {
@@ -64,9 +63,9 @@
         "color2": "#3e434a"
       }
     },
-    "shoes": "combat_boots",
+    "shoes": "shoes03",
     "hat": "none",
-    "outfitTint": "#8ba9d0",
+    "outfitTint": "#7593b7",
     "detail": "medium",
     "rig": "game",
     "faceBones": true,
@@ -82,9 +81,9 @@
   "lods": [
     {
       "tier": "hero",
-      "triangles": 193378,
+      "triangles": 179390,
       "bones": 69,
-      "height": 1.7629483222961426,
+      "height": 1.7654755592346192,
       "animations": [
         "Idle",
         "Walk",
@@ -100,17 +99,17 @@
     },
     {
       "tier": "mobile",
-      "triangles": 63526,
+      "triangles": 58346,
       "bones": 69,
-      "height": 1.7633933067321779,
+      "height": 1.7660154342651369,
       "animations": [],
       "file": "src/assets/guards/officer-mobile.glb"
     },
     {
       "tier": "distant",
-      "triangles": 16627,
+      "triangles": 14515,
       "bones": 69,
-      "height": 1.763389015197754,
+      "height": 1.7657227516174316,
       "animations": [],
       "file": "src/assets/guards/officer-distant.glb"
     }

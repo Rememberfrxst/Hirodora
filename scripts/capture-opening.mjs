@@ -124,7 +124,7 @@ for (const phase of ["before", "after"].filter(phase => !process.argv[2] || proc
     }));
     await writeFile(
       dir + "/capture.json",
-      JSON.stringify({ baseline: "1e463ed", cameras, diagnostics }, null, 2),
+      JSON.stringify({ baseline: process.env.BEFORE_COMMIT || "25ab543", cameras, diagnostics }, null, 2),
     );
     if (!diagnostics.flags.passage_open)
       throw Error("Screenshot flow did not open the actual passage");

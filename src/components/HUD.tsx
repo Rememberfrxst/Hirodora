@@ -1,6 +1,8 @@
 import { useRef, useState } from "react";
 import { GameEngine, ALL_ITEMS } from "../game/engine";
 import { sound } from "../game/audio";
+import { loadLayout, placementStyle } from "../game/hud-layout";
+import { ControlIcon } from "./ControlIcon";
 import {
   Eye,
   Volume2,
@@ -44,7 +46,13 @@ export function HUD({
       .map((g) => g.suspicion),
   );
   const [satchel, setSatchel] = useState(false);
-  const joystick = useRef<{ id: number; x: number; y: number } | null>(null);
+  const [layout] = useState(loadLayout);
+  const joystick = useRef<{
+    id: number;
+    x: number;
+    y: number;
+    radius: number;
+  } | null>(null);
   const [stick, setStick] = useState([0, 0]);
   const stop = () => {
     joystick.current = null;
@@ -53,8 +61,8 @@ export function HUD({
   };
   const moveStick = (clientX: number, clientY: number) => {
     if (!joystick.current) return;
-    const x = (clientX - joystick.current.x) / 42,
-      y = (clientY - joystick.current.y) / 42;
+    const x = (clientX - joystick.current.x) / joystick.current.radius,
+      y = (clientY - joystick.current.y) / joystick.current.radius;
     const length = Math.hypot(x, y),
       clamp = Math.max(1, length);
     const magnitude = length < 0.13 ? 0 : Math.min(1, (length - 0.13) / 0.87);
@@ -62,7 +70,10 @@ export function HUD({
       length ? (x / length) * magnitude : 0,
       length ? (y / length) * magnitude : 0,
     );
-    setStick([(x / clamp) * 29, (y / clamp) * 29]);
+    setStick([
+      (x / clamp) * joystick.current.radius,
+      (y / clamp) * joystick.current.radius,
+    ]);
   };
   return (
     <div className="game-hud">
@@ -256,18 +267,31 @@ export function HUD({
               <X size={18} />
             </button>
           </header>
-          {engine.inventory.map((id) => (
-            <div key={id}>
-              <strong>{engine.getItem(id).name}</strong>
-              <p>{engine.getItem(id).description}</p>
+          {engine.inventory.length === 0 && (
+            <div className="satchel-empty">
+              <Backpack size={28} />
+              <strong>Your pockets are empty.</strong>
+              <p>Tools, keys and evidence you collect will appear here.</p>
+            </div>
+          )}
+          {engine.inventory.map((id, index) => (
+            <div key={id} className="inventory-card">
+              <span className="item-index">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <div>
+                <strong>{engine.getItem(id).name}</strong>
+                <p>{engine.getItem(id).description}</p>
+              </div>
             </div>
           ))}
         </div>
       )}
       {engine.mobile && !satchel && (
-        <div className="touch-controls">
+        <div className="touch-controls custom-touch-area">
           <div
-            className="joystick"
+            className="custom-control custom-joystick"
+            style={placementStyle(layout.controls.move)}
             role="region"
             aria-label="Movement joystick"
             onPointerDown={(e) => {
@@ -276,6 +300,7 @@ export function HUD({
                 id: e.pointerId,
                 x: rect.left + rect.width / 2,
                 y: rect.top + rect.height / 2,
+                radius: rect.width * 0.27,
               };
               e.currentTarget.setPointerCapture(e.pointerId);
               moveStick(e.clientX, e.clientY);
@@ -288,38 +313,40 @@ export function HUD({
             onPointerCancel={stop}
             onLostPointerCapture={stop}
           >
-            <div className="joystick-axis" />
-            <i style={{ transform: `translate(${stick[0]}px, ${stick[1]}px)` }}>
-              <Move size={18} />
-            </i>
-            <span>MOVE</span>
+            <i
+              className="thumb-dot"
+              style={{ transform: `translate(${stick[0]}px, ${stick[1]}px)` }}
+            />
           </div>
-          <div className="touch-actions">
+          <div className="custom-actions">
             <button
-              className="touch-sprint"
+              className="custom-control touch-sprint"
+              style={placementStyle(layout.controls.sprint)}
               aria-label="Sprint"
               aria-pressed={engine.touchSprint}
               onClick={() => engine.toggleSprint()}
             >
-              <Zap size={19} />
+              <ControlIcon id="sprint" />
               <small>SPRINT</small>
             </button>
             <button
-              className="touch-jump"
+              className="custom-control touch-jump"
+              style={placementStyle(layout.controls.jump)}
               aria-label="Jump"
               disabled={engine.jumpHeight > 0}
               onClick={() => engine.jump()}
             >
-              <ArrowUp size={22} />
+              <ControlIcon id="jump" />
               <small>JUMP</small>
             </button>
             <button
-              className="touch-crouch"
+              className="custom-control touch-crouch"
+              style={placementStyle(layout.controls.crouch)}
               aria-label="Crouch"
               aria-pressed={stats.isCrouching}
               onClick={() => engine.toggleCrouch()}
             >
-              <PersonStanding size={21} />
+              <ControlIcon id="crouch" />
               <small>{stats.isCrouching ? "STAND" : "CROUCH"}</small>
             </button>
             <button
@@ -331,14 +358,16 @@ export function HUD({
               onPointerUp={() => engine.endInteract()}
               onPointerCancel={() => engine.endInteract()}
               onLostPointerCapture={() => engine.endInteract()}
-              className="touch-interact"
+              className="custom-control touch-interact"
+              style={placementStyle(layout.controls.interact)}
             >
               <Hand size={25} />
               <small>INTERACT</small>
             </button>
             {engine.equippedItem && (
               <button
-                className="touch-fire"
+                className="custom-control touch-fire"
+                style={placementStyle(layout.controls.fire)}
                 aria-label="Fire dart"
                 onClick={() => engine.fireDart()}
               >

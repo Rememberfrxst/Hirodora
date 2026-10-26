@@ -5,6 +5,7 @@ import { requestLandscape } from "./game/display";
 import { Expand, RotateCw, Smartphone } from "lucide-react";
 import { TitleScreen } from "./components/TitleScreen";
 import { HUD } from "./components/HUD";
+import { HudEditor } from "./components/HudEditor";
 import { MiniGames } from "./components/MiniGames";
 import {
   GameOverModal,
@@ -19,6 +20,7 @@ export default function App() {
   const [, render] = useState(0);
   const [overlay, setOverlay] = useState<"map" | "story" | null>(null);
   const [error, setError] = useState("");
+  const [hudEditor, setHudEditor] = useState(false);
   const [restart, setRestart] = useState<"checkpoint" | "new" | null>(null);
   const [volume, setVolume] = useState(70);
   const [sensitivity, setSensitivity] = useState(22);
@@ -79,10 +81,10 @@ export default function App() {
   useEffect(() => {
     const engine = engineRef.current;
     if (!engine) return;
-    engine.overlayOpen = !!overlay;
+    engine.overlayOpen = !!overlay || hudEditor;
     engine.clearInput();
     if (overlay) document.exitPointerLock?.();
-  }, [overlay]);
+  }, [overlay, hudEditor]);
 
   const engine = engineRef.current;
   const portrait = !!engine?.orientationBlocked;
@@ -191,7 +193,10 @@ export default function App() {
                 />
               </div>
             )}
-            {engine.gameState === "paused" && !overlay && (
+            {hudEditor && engine.gameState === "paused" && (
+              <HudEditor onClose={() => setHudEditor(false)} />
+            )}
+            {engine.gameState === "paused" && !overlay && !hudEditor && (
               <div className="modal-backdrop">
                 <section className="game-panel pause-panel">
                   <span className="eyebrow">HIRODORA / TAKE A BREATH</span>
@@ -261,6 +266,15 @@ export default function App() {
                       <option value="ultra">Ultra · highest fidelity</option>
                     </select>
                   </label>
+                  <button
+                    className="secondary-button"
+                    onClick={() => {
+                      engine.clearInput();
+                      setHudEditor(true);
+                    }}
+                  >
+                    Custom HUD
+                  </button>
                   <label>
                     OFFICER QUALITY
                     <select

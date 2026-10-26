@@ -556,13 +556,14 @@ test("mobile landscape controls work and portrait rotation safely pauses without
     page.getByRole("button", { name: "Sprint", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
   const actions = await page
-    .locator(".touch-actions button")
+    .locator(".custom-actions button")
     .evaluateAll((buttons) =>
       buttons.map((button) => {
         const r = button.getBoundingClientRect();
         return { x: r.x, y: r.y, w: r.width, h: r.height };
       }),
     );
+  expect(actions.length).toBeGreaterThanOrEqual(4);
   expect(actions.every((rect) => rect.w >= 44 && rect.h >= 44)).toBe(true);
   for (let i = 0; i < actions.length; i++)
     for (let j = i + 1; j < actions.length; j++) {

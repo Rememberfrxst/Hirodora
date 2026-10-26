@@ -1,10 +1,12 @@
 import { chromium } from "@playwright/test";
 import { execFileSync } from "node:child_process";
-import { mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, writeFile, mkdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { createHash } from "node:crypto";
 import { join, extname } from "node:path";
 const { version } = JSON.parse(await readFile("package.json", "utf8"));
+const captureDir = process.env.CAPTURE_DIR || "docs/screenshots/android-v6";
+await mkdir(captureDir, {recursive:true});
 const directory = await mkdtemp(join(tmpdir(), "hirodora-apk-smoke-"));
 execFileSync("unzip", [
   "-q",
@@ -67,7 +69,7 @@ await page.goto(host + "/assets/game/index.html");
 await page.locator("[data-start]").tap({ timeout: 120000 });
 await page.getByRole("button", { name: "Pause game", exact: true }).waitFor();
 await page.screenshot({
-  path: "docs/screenshots/android-v6/apk-assets-gameplay.png",
+  path: `${captureDir}/apk-assets-gameplay.png`,
 });
 await page.getByRole("button", { name: "Pause game", exact: true }).tap();
 await page.getByRole("button", { name: "Start new game", exact: true }).tap();
@@ -95,7 +97,7 @@ const report = {
   serviceWorkers: workers,
 };
 await writeFile(
-  "docs/screenshots/android-v6/apk-assets-smoke.json",
+  `${captureDir}/apk-assets-smoke.json`,
   JSON.stringify(report, null, 2) + "\n",
 );
 if (errors.length || unavailable.length || workers)

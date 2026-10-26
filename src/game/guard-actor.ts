@@ -288,8 +288,16 @@ export class GuardActor {
     view.root.visible = true;
     if (!this.current || nextClip !== this.animation) {
       const previous = this.current;
+      const locomotion = (clip: string) => clip === "Walk" || clip === "Run";
+      const stridePhase =
+        previous && locomotion(this.animation) && locomotion(nextClip)
+          ? (previous.time % previous.getClip().duration) /
+            previous.getClip().duration
+          : undefined;
       this.current = view.actions.get(nextClip)!;
       this.current.reset().setEffectiveWeight(1).play();
+      if (stridePhase !== undefined)
+        this.current.time = stridePhase * this.current.getClip().duration;
       if (changedTier && nextClip === this.animation)
         this.current.time = Math.min(
           previousTime,

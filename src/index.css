@@ -162,7 +162,9 @@ button:active {
 .performance-readout span {
   color: var(--gold);
 }
-.restart-confirmation { z-index: 95; }
+.restart-confirmation {
+  z-index: 95;
+}
 @media (pointer: coarse) and (orientation: landscape) {
   .app-shell .touch-controls .joystick {
     left: max(27px, env(safe-area-inset-left));
@@ -1765,4 +1767,254 @@ input[type="range"] {
   flex-direction: column;
   align-items: center;
   gap: 5px;
+}
+/* Adjustable touch layer: positions are local to the display's safe area. */
+.custom-touch-area {
+  position: absolute;
+  inset: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right))
+    max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
+  pointer-events: none;
+}
+.custom-control {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 2px;
+  border-radius: 50%;
+  border: 1px solid #eef1e9a0;
+  background: radial-gradient(circle at 40% 30%, #c2d3ce12, #05121828);
+  box-shadow:
+    inset 0 0 0 3px #fff05,
+    0 2px 8px #0003;
+  color: #fffdf4;
+  pointer-events: auto;
+  touch-action: none;
+  padding: 5px;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.custom-control > svg {
+  width: 50%;
+  height: 50%;
+  filter: drop-shadow(0 1px 2px #0009);
+}
+.custom-control .action-silhouette {
+  fill: currentColor;
+  stroke: none;
+}
+.custom-control small {
+  font: 7px/1 monospace;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+.custom-control[aria-pressed="true"],
+.custom-control:active {
+  color: #ffe2a6;
+  border-color: #f6d598;
+  background: #b78d3e30;
+}
+.custom-control:disabled {
+  opacity: 0.45;
+}
+.custom-control.touch-interact {
+  border-color: #e3c990;
+  color: #ffe7ad;
+}
+.custom-joystick {
+  border: 2px solid #f1f1e79c;
+  box-shadow:
+    inset 0 0 0 6px #ffffff08,
+    0 0 0 5px #07151b24;
+  background: #06171c15;
+}
+.custom-joystick::after {
+  content: "";
+  position: absolute;
+  inset: 14%;
+  border: 1px solid #fff2;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.custom-joystick .thumb-dot {
+  display: block;
+  width: 43%;
+  height: 43%;
+  background: #e8e4d7;
+  border: 2px solid #fff9;
+  border-radius: 50%;
+  box-shadow: 0 3px 10px #0006;
+  will-change: transform;
+}
+.custom-actions {
+  display: contents;
+}
+.hud-editor {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  background: #06121a9c;
+  color: #e8eee7;
+}
+.hud-editor-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(#ffffff07 1px, transparent 1px),
+    linear-gradient(90deg, #ffffff07 1px, transparent 1px);
+  background-size: 5% 10%;
+  pointer-events: none;
+}
+.hud-editor-toolbar {
+  position: absolute;
+  z-index: 2;
+  top: max(8px, env(safe-area-inset-top));
+  left: max(12px, env(safe-area-inset-left));
+  right: max(12px, env(safe-area-inset-right));
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 12px 16px;
+  background: #101e25f5;
+  border: 1px solid #81978c55;
+  border-radius: 14px;
+  box-shadow: 0 8px 30px #0004;
+}
+.hud-editor-toolbar > div {
+  display: grid;
+  gap: 3px;
+  margin-right: auto;
+}
+.hud-editor-toolbar strong {
+  font:
+    23px Georgia,
+    serif;
+}
+.hud-editor-toolbar small {
+  font-size: 10px;
+  color: #aebeb8;
+}
+.hud-editor-toolbar label {
+  display: grid;
+  gap: 6px;
+  font: 10px monospace;
+  max-width: 170px;
+}
+.hud-editor-toolbar select {
+  background: #1c3038;
+  color: #eee9dc;
+  padding: 8px;
+  border: 1px solid #70877d77;
+  border-radius: 6px;
+}
+.hud-editor-toolbar button {
+  border: 1px solid #7d938b77;
+  border-radius: 8px;
+  background: transparent;
+  color: #e4e4d5;
+  min-height: 44px;
+  padding: 8px 12px;
+  font-size: 11px;
+}
+.hud-editor-toolbar .primary-button {
+  background: #ddc38b;
+  color: #172426;
+  min-width: 0;
+  width: auto;
+  letter-spacing: .5px;
+}
+.editor-control {
+  cursor: grab;
+}
+.editor-control[aria-pressed="true"] {
+  outline: 2px dashed #f4d497;
+  outline-offset: 5px;
+}
+.editor-control.custom-joystick small {
+  position: absolute;
+  bottom: -18px;
+}
+.hud-editor-note {
+  position: absolute;
+  bottom: 0;
+  left: 22%;
+  right: 22%;
+  text-align: center;
+  font-size: 10px;
+  color: #cad8cf;
+  pointer-events: none;
+}
+.satchel-panel {
+  border-radius: 16px;
+  border-color: #94aa994d;
+  background: linear-gradient(145deg, #172a30f5, #0b191ef5);
+  box-shadow: 0 16px 50px #0006;
+}
+.satchel-panel > div {
+  margin-top: 8px;
+  padding: 12px;
+  border: 1px solid #a5b19b20;
+  border-radius: 9px;
+  background: #ffffff04;
+}
+.game-panel {
+  border-radius: 18px;
+  border-color: #acb89e40;
+}
+.pause-panel .secondary-button {
+  width: 100%;
+  border-radius: 8px;
+  margin: 10px 0;
+}
+.inventory-card {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.inventory-card .item-index {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 36px;
+  border: 1px solid #b9a37455;
+  color: #ddc58e;
+  font: 12px monospace;
+  border-radius: 7px;
+  background: #bb9e5710;
+}
+.inventory-card p {
+  margin-bottom: 0;
+}
+.satchel-empty {
+  text-align: center;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  color: #b3c5bd;
+}
+@media (max-height: 500px) {
+  .hud-editor-toolbar {
+    gap: 8px;
+    padding: 8px;
+  }
+  .hud-editor-toolbar strong {
+    font-size: 18px;
+  }
+  .hud-editor-toolbar .eyebrow {
+    display: none;
+  }
+  .hud-editor-toolbar label {
+    max-width: 135px;
+    font-size: 9px;
+  }
+  .hud-editor-toolbar small {
+    font-size: 8px;
+  }
+}
+@media (max-width: 700px) {
+  .hud-editor-toolbar > div { display: none; }
+  .hud-editor-toolbar label { min-width: 90px; flex: 1; }
+  .hud-editor-toolbar button { padding: 8px; flex-shrink: 0; }
 }

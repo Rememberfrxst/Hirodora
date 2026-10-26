@@ -84,28 +84,29 @@ const io = new NodeIO()
   });
 const params = {
   ...DEFAULT_PARAMS,
-  name: "HirodoraOfficer",
-  seed: 47,
-  age: 0.63,
-  muscle: 0.56,
-  weight: 0.5,
+  name: "HirodoraOfficerDunneV7",
+  seed: 147,
+  age: 0.58,
+  muscle: 0.44,
+  weight: 0.56,
   height: 0.5,
   african: 0.12,
   asian: 0.08,
   caucasian: 0.8,
-  modifiers: { "nose/nose-flaring": 0.08, "chin/chin-prominent": 0.12 },
-  hair: "short01",
-  hairTint: "#55504b",
+  modifiers: { "nose/nose-flaring": 0.16, "chin/chin-prominent": 0.28 },
+  skin: "middleage_caucasian_male",
+  hair: "short04",
+  hairTint: "#84786b",
   facialHair: "stubble",
   beardColor: "#40372f",
   eyebrows: "eyebrow003",
   eyes: "brownlight",
   outfit: "male_casualsuit01",
-  outfitTint: "#8ba9d0",
+  outfitTint: "#7593b7",
   top: "uniform_shirt_long",
   bottom: "uniform_trousers",
-  shoes: "combat_boots",
-  accessories: ["tactical_vest", "utility_belt"],
+  shoes: "shoes03",
+  accessories: ["utility_belt"],
   garmentStyles: {
     uniform_shirt_long: {
       pattern: "solid",
@@ -220,7 +221,57 @@ function equip(ch, distant) {
     });
   };
   const box = (size) => new RoundedBoxGeometry(...size, distant ? 1 : 2, 0.004);
-  add(box([0.19, 0.084, 0.006]), [0, 1.43, 0.177], 0);
+  // Flat embroidered name strip over the fitted CC0 work shirt; remove the
+  // former bulky muscle-shaped vest so the shirt and human silhouette read.
+  add(box([0.13, 0.042, 0.004]), [-0.084, 1.38, 0.156], 0);
+  // Curved breast shield with recessed border, sized to the shirt instead of
+  // a floating oversized chest card. Perimeter rings follow a shield outline.
+  const outline = [
+    [-0.023, 0.027],
+    [0, 0.035],
+    [0.023, 0.027],
+    [0.021, -0.006],
+    [0, -0.035],
+    [-0.021, -0.006],
+  ];
+  const vertices = [],
+    indices = [],
+    uvs = [];
+  for (const scale of [1, 0.78, 0])
+    for (const [x, y] of outline) {
+      vertices.push(
+        x * scale,
+        y * scale,
+        scale === 0.78 ? 0.004 : scale === 0 ? 0.002 : 0,
+      );
+      uvs.push(x / 0.05 + 0.5, y / 0.08 + 0.5);
+    }
+  for (let ring = 0; ring < 2; ring++)
+    for (let i = 0; i < 6; i++) {
+      const a = ring * 6 + i,
+        b = ring * 6 + ((i + 1) % 6),
+        c = a + 6,
+        d = b + 6;
+      indices.push(a, c, b, b, c, d);
+    }
+  const shield = new THREE.BufferGeometry();
+  shield.setAttribute(
+    "position",
+    new THREE.Float32BufferAttribute(vertices, 3),
+  );
+  shield.setAttribute("uv", new THREE.Float32BufferAttribute(uvs, 2));
+  shield.setIndex(indices);
+  shield.computeVertexNormals();
+  add(shield, [0.085, 1.405, 0.153], 2);
+  // Sewn epaulettes sit on the shoulder slope and follow upper-arm joints.
+  for (const side of [-1, 1])
+    add(
+      box([0.064, 0.009, 0.058]),
+      [side * 0.18, 1.505, 0.015],
+      1,
+      side < 0 ? "RightArm" : "LeftArm",
+      [0, 0, side * -0.18],
+    );
   add(box([0.046, 0.088, 0.032]), [0.146, 1.49, 0.14], 1);
   add(
     new THREE.CylinderGeometry(0.003, 0.004, 0.11, 8),
@@ -371,6 +422,12 @@ for (const [tier, detail, resolution] of [
   // Packed linear ORM: restrained normal-derived microcavity occlusion,
   // varied roughness and metallic response. Not a claim of ray-traced AO.
   for (const mat of doc.getRoot().listMaterials()) {
+    if (mat.getName() === "Skin") {
+      mat.setBaseColorFactor([1, 0.97, 0.95, 1]);
+      mat.setNormalScale(0.45);
+      mat.setRoughnessFactor(0.72);
+    }
+    if (mat.getName() === "Eyes") mat.setRoughnessFactor(0.22);
     const size = 64,
       data = Buffer.alloc(size * size * 3);
     const normal = mat.getNormalTexture();

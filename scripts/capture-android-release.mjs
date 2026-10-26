@@ -1,6 +1,6 @@
 import { chromium } from "@playwright/test";
 import { mkdir } from "node:fs/promises";
-const dir = "docs/screenshots/android-v6";
+const dir = process.env.CAPTURE_DIR || "docs/screenshots/android-v6";
 await mkdir(dir, { recursive: true });
 const browser = await chromium.launch({
   executablePath:

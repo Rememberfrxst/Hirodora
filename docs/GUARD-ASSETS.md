@@ -1,6 +1,8 @@
-# Officer asset pipeline · v0.3.0
+# Officer asset pipeline · v0.7.0
 
-The patrol guards are now **full-body, 69-bone skinned GLBs**, not the old capsule/box bodies. MakeHuman supplies authored human anatomy, fitted clothing, photo skin, eyes, brows, lashes and hair. The game adds a navy correctional uniform treatment, fitted vest, radio, embroidered identification, belt pouches, cuffs and keys. This is an independently produced browser-game character—not a Rockstar asset or a claim of GTA 6 fidelity.
+Version 0.7 rebuilds a new officer from the same pinned CC0 source library, rather than downloading an unrelated third-party character. New authored parameters select middle-aged photographic skin, short04 hair, revised anatomy and fitted navy clothing. The former bulky tactical vest and generated boot shafts are removed; a modeled curved breast shield, stitched name strip and shoulder epaulettes supplement the existing radio, belt, cuffs and keys. The project source script reproduces all three GLBs. Animation blending preserves the normalized walk/run stride phase. Before/after portraits use the same game camera in `docs/screenshots/android-v6/officer.png` and `docs/screenshots/hud-v7/officer.png`.
+
+The patrol guards are **full-body, 69-bone skinned GLBs**. MakeHuman supplies authored human anatomy, fitted clothing, photo skin, eyes, brows, lashes and hair. The game adds a navy correctional uniform treatment, breast shield, radio, embroidered identification, epaulettes, belt pouches, cuffs and keys. This is an independently produced browser-game character, without Rockstar assets or a claim of GTA 6 fidelity.
 
 ## Sources and redistribution
 
@@ -48,9 +50,9 @@ The authoring script verifies both pinned Git revisions and the archive SHA-256 
 
 | Tier | Geometry | Texture budget | Selection |
 | --- | --- | --- | --- |
-| Hero | 193,378 triangles | 2K skin and uniform; smaller hair/interiors | Desktop close-ups |
-| Mobile | 63,526 triangles | 1K maximum; smaller hair/interiors | Coarse-pointer mobile / Mobile preset |
-| Distant | 16,627 triangles | 256px maximum | Beyond 17m, returns near below 14m |
+| Hero | 179,390 triangles | 2K skin and uniform; smaller hair/interiors | Desktop close-ups |
+| Mobile | 58,346 triangles | 1K maximum; smaller hair/interiors | Coarse-pointer mobile / Mobile preset |
+| Distant | 14,515 triangles | 256px maximum | Beyond 17m, returns near below 14m |
 
 All tiers retain the same rig, finger/eye bones and face targets. Lower tiers reuse the hero's nine clips: Idle, Walk, Run, left/right turn, Investigate, Search, Alert, Collapse. `GLTFLoader` decodes embedded WebP and Meshopt-compressed buffers; no remote texture paths remain. Meshopt is geometry compression, WebP reduces transfer size; WebP is **not** GPU-native compressed texture storage.
 

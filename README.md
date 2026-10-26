@@ -8,19 +8,27 @@
 
 **Some walls keep you in. These walls keep a secret.**
 
-**v0.3.1 · Landscape-ready escape**
+**v0.4.0 · Cell 47 environment preview**
 
 An original first-person prison escape · Acoustic stealth · Three endings
 
-**[↓ DOWNLOAD THE LATEST OFFLINE GAME — v0.3.1 ZIP](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.3.1-offline.zip)**
+**[↓ DOWNLOAD THE LATEST OFFLINE GAME — v0.4.0 ZIP](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/codex/cell47-environment-overhaul/downloads/Hirodora-0.4.0-offline.zip)**
 
-[Single-file HTML](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.3.1.html) · [Mobile setup](#play-on-mobile) · [Checksums](downloads/latest.json)
+[Single-file HTML](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/codex/cell47-environment-overhaul/downloads/Hirodora-0.4.0.html) · [Mobile setup](#play-on-mobile) · [Checksums](downloads/latest.json)
 
 [The experience](#the-experience) · [Play on mobile](#play-on-mobile) · [Development](#development) · [Quality](#quality-and-release-status)
 
 ![Hirodora title screen, rendered in the game](docs/screenshots/title.png)
 
 </div>
+
+## Cell 47 environment preview
+
+The feature branch now includes authored Blender/GLB cell furniture, sourced PBR masonry/metal/fabric maps, real window apertures and a window shadow light. [Sources, licenses, matched renders and remaining work](docs/ENVIRONMENT-ASSETS.md).
+
+![Cell 47: 5a21adc baseline on the left, environment preview on the right](docs/screenshots/environment/comparison.png)
+
+Dedicated concrete scans remain blocked at the libraries' download hosts; the current painted/floor finish adapts the documented worn-surface maps. This is an environment preview, with physical-phone QA still open.
 
 ## One ledger. One ally. One chance.
 
@@ -55,7 +63,7 @@ Find the sharpened spoon. Open the service duct. Earn Boulder’s respect at the
 
 <img src="docs/screenshots/mobile-rotate.png" width="260" alt="Hirodora portrait rotate screen pauses the game until the phone is horizontal" />
 
-All screenshots are actual v0.3.1 browser renders. Front/side/detail showcases stage the camera and pose inside the real prison; the gameplay shot runs guard AI. The old primitive patrol bodies are replaced by embedded, skinned GLBs with detailed fingers, eyes, short hair, authored clothing and textures. Radio, identification, handcuffs and keys follow their attachment bones. [Sources, licenses and implementation](docs/GUARD-ASSETS.md).
+The older gallery above shows the v0.3.1 baseline. The v0.4.0 environment comparison and detailed captures are linked above. Front/side/detail showcases stage the camera and pose inside the real prison; the gameplay shot runs guard AI. The old primitive patrol bodies are replaced by embedded, skinned GLBs with detailed fingers, eyes, short hair, authored clothing and textures. Radio, identification, handcuffs and keys follow their attachment bones. [Sources, licenses and implementation](docs/GUARD-ASSETS.md).
 
 <details><summary>Inspect the new guard face and duty uniform</summary>
 
@@ -73,12 +81,12 @@ All screenshots are actual v0.3.1 browser renders. Front/side/detail showcases s
 
 ## Play on mobile
 
-### Download v0.3.1 — offline edition
+### Download v0.4.0 — offline edition
 
-**[Download Hirodora v0.3.1 for offline play (.zip)](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.3.1-offline.zip)**
+**[Download Hirodora v0.4.0 for offline play (.zip)](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/codex/cell47-environment-overhaul/downloads/Hirodora-0.4.0-offline.zip)**
 
 1. Download the ZIP from the link above and extract it in your device’s Files app.
-2. Open **`Hirodora-0.3.1.html` in a full WebGL 2 browser**, such as Chrome on Android. If your file viewer displays text or blocks scripts, choose “Open with” a full browser. File handling depends on the device/browser.
+2. Open **`Hirodora-0.4.0.html` in a full WebGL 2 browser**, such as Chrome on Android. If your file viewer displays text or blocks scripts, choose “Open with” a full browser. File handling depends on the device/browser.
 3. Play in landscape: left joystick to move, drag the scene to look, then use **Jump**, **Crouch / Stand**, **Sprint**, **Interact** and the contextual action prompt. Portrait now shows a Rotate screen and pauses gameplay; rotate back to landscape and tap **Resume escape**. Puzzle progress is kept.
 
 Use **Fullscreen / landscape** on the title screen or pause menu to request fullscreen and landscape on supported Android browsers. Browser security prevents a web game from forcing rotation everywhere: if it remains portrait, disable the phone’s portrait-orientation lock and rotate manually. iPhone/iPad browsers may require manual rotation.
@@ -144,7 +152,7 @@ For an existing system Chromium, set `PLAYWRIGHT_CHROMIUM_EXECUTABLE=/path/to/ch
 
 ### Build and distribute
 
-`npm run build` produces `dist/`, a content-versioned service worker, relative asset paths for GitHub Pages subdirectories, embedded-texture GLBs, PNG app icons and the install manifest. Only assets required by the game are copied into the playable build. The offline payload is approximately **7.02 MiB uncompressed** in this revision; the build still fails if it exceeds **8 MiB**.
+`npm run build` produces `dist/`, a content-versioned service worker, relative asset paths for GitHub Pages subdirectories, embedded-texture GLBs, PNG app icons and the install manifest. Only assets required by the game are copied into the playable build. The offline payload is approximately **7.95 MiB uncompressed** in this revision; the build still fails if it exceeds **8 MiB**.
 
 The quality workflow checks pull requests and pushes, packages the offline HTML, runs browser tests and uploads both builds. Static surfaces are batched, Meshopt/WebP reduce model transfer size, instances share GPU resources, distant animations are throttled and offscreen pose work is skipped. Light selection is throttled, collision bounds are cached and mobile resolution scales down under sustained rendering load. The Pages workflow is manual so publishing remains an explicit release action. Normal builds use committed assets; [rebuilding the officer GLBs](docs/GUARD-ASSETS.md#rebuild-the-assets) is a separate offline-authoring step.
 
@@ -152,8 +160,8 @@ The quality workflow checks pull requests and pushes, packages the offline HTML,
 
 This is a working, substantially rebuilt **playable web slice**, with automated regression coverage. It is not a guarantee of zero defects or a claim of completed device certification.
 
-- **23 asset/logic tests** cover embedded PBR maps, skin weights, bone indices, clips, animation selection, display-orientation fallback, stealth, puzzles, crafting, endings, movement, routing clearance and the jump arc.
-- **Nine browser scenarios** exercise independent rigs, shared geometry, real joint movement, patrol, LOD, darts/collapse, checkpoint reset, failed-download retry, desktop/touch controls, portrait-to-landscape safety, transparent HUD, all puzzles, progression and both hosted/downloaded offline play.
+- **25 asset/logic tests** cover embedded PBR maps, skin weights, bone indices, clips, animation selection, display-orientation fallback, stealth, puzzles, crafting, endings, movement, routing clearance and the jump arc.
+- **Ten browser scenarios** exercise independent rigs, shared geometry, real joint movement, patrol, LOD, darts/collapse, checkpoint reset, failed-download retry, desktop/touch controls, portrait-to-landscape safety, transparent HUD, all puzzles, progression and both hosted/downloaded offline play.
 - The progression integration test uses legal approach-position fixtures with patrols suspended; it is not a full unassisted stealth playthrough.
 - Physical Android/iPhone testing, Safari/Firefox checks, sustained performance testing and player-led difficulty balancing remain release gates.
 

@@ -20,7 +20,8 @@ export function guardClip(
 ): GuardClip {
   if (state === "knocked_out") return "Collapse";
   if (speed > 2.2) return "Run";
-  if (Math.abs(turn) > 0.65)
+  // In-place turn clips must not replace the stride while the AI is translating.
+  if (speed <= 0.08 && Math.abs(turn) > 0.65)
     return turn > 0 ? "Turn left 45°" : "Turn right 45°";
   if (speed > 0.08) return "Walk";
   if (state === "chase") return "Alert";

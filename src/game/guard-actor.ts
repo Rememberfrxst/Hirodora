@@ -73,6 +73,18 @@ export class GuardAssetPool {
           for (const mat of Array.isArray(object.material)
             ? object.material
             : [object.material]) {
+            if (mat instanceof THREE.MeshStandardMaterial) {
+              // Packed ORM maps remain authoritative; biological/fabric surfaces
+              // are dielectric even when a source export uses a factor of one.
+              if (
+                /Skin|Eyes|Eyebrow|Eyelash|Hair|Teeth|Tongue|Outfit|vest|Pouches|Boot shafts/i.test(
+                  mat.name,
+                )
+              )
+                mat.metalness = 0;
+              if (mat.name === "Outfit") mat.normalScale.set(0.65, 0.65);
+              if (mat.name === "Skin") mat.normalScale.set(0.7, 0.7);
+            }
             for (const value of Object.values(mat))
               if (value instanceof THREE.Texture) value.anisotropy = anisotropy;
           }

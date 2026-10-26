@@ -1,0 +1,79 @@
+{
+  "authoring": "scripts/author-cell-assets.py + scripts/prepare-environment.mjs",
+  "sources": {
+    "godot": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1",
+    "tps": "a82f15448e9b015440d3bbdf5e10801b260c4e9f"
+  },
+  "assets": [
+    {
+      "name": "cell-props.glb",
+      "bytes": 370464,
+      "sha256": "d25fe6cb4d11a6298d8f3eb963ecaff3c62b4cd9427cd2aaa5a9e82d6821c9d4"
+    },
+    {
+      "name": "masonry-albedo.webp",
+      "bytes": 82638,
+      "sha256": "a2286c1ccf67f7ec184603725a249fdbb5c100069a23f90532c28a1ce68ae9e3"
+    },
+    {
+      "name": "masonry-normal.webp",
+      "bytes": 139474,
+      "sha256": "496add966904486b2592d9d70b826a6ebee5e4ee78772d5a2cd627efcc6e6fea"
+    },
+    {
+      "name": "masonry-orm.webp",
+      "bytes": 93182,
+      "sha256": "236e6c7bd10b086d4c1b441d211b9f230247b74cc30cf47409ce6a6f6b830865"
+    },
+    {
+      "name": "metal-albedo.webp",
+      "bytes": 7750,
+      "sha256": "8902af88901cc44f9bead8baa0c6fffbc7db49194657242ae65d7c336f587b59"
+    },
+    {
+      "name": "metal-normal.webp",
+      "bytes": 2464,
+      "sha256": "a984bb2a5abd1b2f5c7a8749d7a6db5ad23160cc07057962e3aeff08e9f52bd4"
+    },
+    {
+      "name": "metal-orm.webp",
+      "bytes": 21812,
+      "sha256": "c8170636f5e36fc1f99f0b6eaf7ab7be55cb680000b3adeca3917740c287e305"
+    },
+    {
+      "name": "concrete-albedo.webp",
+      "bytes": 6626,
+      "sha256": "a298f86c9619b2cd99c7df9f4b1c2ac22f39cb1d505020266f8fa295bc316764"
+    },
+    {
+      "name": "concrete-normal.webp",
+      "bytes": 1538,
+      "sha256": "321ef311bc88eb463ac9aceace3762fd53f25302fa0f829e1ae644a94fcd88b6"
+    },
+    {
+      "name": "concrete-orm.webp",
+      "bytes": 9684,
+      "sha256": "32ef553ceeb8714675612b91aac9bfded5a6f94f5a21a2885c9884b0a8394cdd"
+    },
+    {
+      "name": "wool-albedo.webp",
+      "bytes": 32314,
+      "sha256": "5ba4bf7f45af562b3dab10aaed5f590b17775254d33cb3b89bcc03ac09535979"
+    },
+    {
+      "name": "wool-normal.webp",
+      "bytes": 151724,
+      "sha256": "9389ddabbb925536099ce584f5d487d25bc53e9e00ebd516feb3c7d0b8995922"
+    },
+    {
+      "name": "water-stain.webp",
+      "bytes": 32870,
+      "sha256": "2ad2541da0018b77fff695f24844ac30e1948e4212a4333ca40d0e6d62a47604"
+    },
+    {
+      "name": "exterior.webp",
+      "bytes": 2074,
+      "sha256": "9b752005e8ff0e3290af365526937c7687d8610515825fc7485febe0c2e21c63"
+    }
+  ]
+}

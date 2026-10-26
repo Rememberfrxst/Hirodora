@@ -3,9 +3,13 @@ import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeom
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { GuardData, InteractiveObject } from "./types";
 import { buildHumanOfficer } from "./characters";
+import { createEnvironment } from "./environment";
 
 export interface PrisonWorldData {
   scene: THREE.Scene;
+  loadEnvironment: () => Promise<void>;
+  disposeEnvironment: () => void;
+  windowLight: THREE.SpotLight;
   colliders: THREE.Box3[];
   doors: Map<string, THREE.Group>;
   doorColliders: Map<string, THREE.Box3>;
@@ -30,16 +34,6 @@ const ceramic = material(0xc8cfbc, 0.28);
 const wood = material(0x584234, 0.88);
 const dark = material(0x161d22, 0.62);
 const brass = material(0xc9a669, 0.35, 0.65);
-const lightMat = new THREE.MeshStandardMaterial({
-  color: 0xffdca0,
-  emissive: 0xffbf6a,
-  emissiveIntensity: 2,
-});
-const concrete = new THREE.MeshStandardMaterial({
-  color: 0x616862,
-  roughness: 0.96,
-  metalness: 0,
-});
 
 function box(
   parent: THREE.Object3D,
@@ -120,42 +114,7 @@ function label(
   );
 }
 
-function masonry() {
-  const canvas = document.createElement("canvas");
-  canvas.width = canvas.height = 512;
-  const ctx = canvas.getContext("2d")!;
-  ctx.fillStyle = "#202c2d";
-  ctx.fillRect(0, 0, 512, 512);
-  let seed = 47;
-  const rand = () => {
-    seed = (seed * 16807) % 2147483647;
-    return seed / 2147483647;
-  };
-  for (let row = 0; row < 8; row++) {
-    for (let col = -1; col < 5; col++) {
-      const shade = 55 + Math.floor(rand() * 30);
-      ctx.fillStyle = `rgb(${shade},${shade + 7},${shade + 4})`;
-      ctx.fillRect(col * 128 + (row % 2) * 64 + 3, row * 64 + 3, 122, 58);
-    }
-  }
-  for (let i = 0; i < 28000; i++) {
-    ctx.fillStyle = rand() > 0.5 ? "#ffffff0b" : "#00000015";
-    ctx.fillRect(rand() * 512, rand() * 512, 2, 3);
-  }
-  const map = new THREE.CanvasTexture(canvas);
-  map.colorSpace = THREE.SRGBColorSpace;
-  map.wrapS = map.wrapT = THREE.RepeatWrapping;
-  map.repeat.set(1, 1);
-  map.anisotropy = 4;
-  return new THREE.MeshStandardMaterial({
-    map,
-    bumpMap: map,
-    bumpScale: 0.055,
-    roughness: 0.94,
-  });
-}
-
-export function buildPhotorealisticBunkBed() {
+function buildLegacyBunkBounds() {
   const group = new THREE.Group();
   for (const x of [-0.6, 0.6])
     for (const z of [-1.1, 1.1]) {
@@ -211,7 +170,7 @@ export function buildPhotorealisticBunkBed() {
   return group;
 }
 
-export function buildPhotorealisticPorcelainToilet() {
+function buildLegacyToiletBounds() {
   const group = new THREE.Group();
   const profile = [
     [0.12, 0],
@@ -272,81 +231,27 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   const doors = new Map<string, THREE.Group>();
   const doorColliders = new Map<string, THREE.Box3>();
   const interactables: InteractiveObject[] = [];
-  const stone = masonry();
-  const plaster = material(0x8c9586, 0.93);
-  const paint = material(0x354e4c, 0.91);
-  const floorCanvas = document.createElement("canvas");
-  floorCanvas.width = floorCanvas.height = 512;
-  const floorCtx = floorCanvas.getContext("2d")!;
-  floorCtx.fillStyle = "#666c62";
-  floorCtx.fillRect(0, 0, 512, 512);
-  let randomSeed = 47;
-  const rand = () => {
-    randomSeed = (randomSeed * 16807) % 2147483647;
-    return randomSeed / 2147483647;
-  };
-  for (let i = 0; i < 32000; i++) {
-    floorCtx.fillStyle = rand() > 0.5 ? "#ffffff12" : "#00000016";
-    floorCtx.fillRect(rand() * 512, rand() * 512, rand() * 3 + 1, 1);
-  }
-  floorCtx.strokeStyle = "#272e2d";
-  floorCtx.lineWidth = 2;
-  for (let i = 0; i < 512; i += 128) {
-    floorCtx.beginPath();
-    floorCtx.moveTo(i, 0);
-    floorCtx.lineTo(i, 512);
-    floorCtx.moveTo(0, i);
-    floorCtx.lineTo(512, i);
-    floorCtx.stroke();
-  }
-  for (let i = 0; i < 14; i++) {
-    const x = rand() * 512,
-      y = rand() * 512;
-    const stain = floorCtx.createRadialGradient(
-      x,
-      y,
-      0,
-      x,
-      y,
-      rand() * 35 + 10,
-    );
-    stain.addColorStop(0, "#242b2350");
-    stain.addColorStop(1, "#242b2300");
-    floorCtx.fillStyle = stain;
-    floorCtx.fillRect(0, 0, 512, 512);
-  }
-  const floorMap = new THREE.CanvasTexture(floorCanvas);
-  floorMap.colorSpace = THREE.SRGBColorSpace;
-  floorMap.wrapS = floorMap.wrapT = THREE.RepeatWrapping;
-  floorMap.repeat.set(14, 7);
-  floorMap.anisotropy = 4;
-  const floor = new THREE.MeshStandardMaterial({
-    color: 0xa5aaa1,
-    map: floorMap,
-    bumpMap: floorMap,
-    bumpScale: 0.014,
-    roughness: 0.72,
-    metalness: 0.08,
-  });
+  const environment = createEnvironment(scene);
+  const stone = environment.masonry;
+  const concrete = environment.concrete;
+  iron.copy(environment.metal);
+  const plaster = concrete.clone();
+  plaster.color.set(0xa6aaa0);
+  const paint = concrete.clone();
+  paint.color.set(0xabb6a5);
+  const floor = environment.floor;
   const wall = (size: number[], pos: number[], mat: THREE.Material = stone) => {
     const mesh = box(staticWorld, size, pos, mat);
     if (size[1] > 3) {
-      const uv = mesh.geometry.getAttribute("uv"),
-        p = mesh.geometry.getAttribute("position"),
-        n = mesh.geometry.getAttribute("normal");
-      for (let i = 0; i < uv.count; i++)
-        uv.setXY(
-          i,
-          (Math.abs(n.getX(i)) > 0.5 ? p.getZ(i) : p.getX(i)) / 2,
-          p.getY(i) / 2,
-        );
+      projectUV(mesh, 2);
       const thinX = size[0] < 0.8;
-      box(
+      const lowerWall = box(
         staticWorld,
         [size[0] + (thinX ? 0.016 : 0), 1.35, size[2] + (thinX ? 0 : 0.016)],
         [pos[0], 0.6, pos[2]],
         paint,
       );
+      projectUV(lowerWall, 2);
       box(
         staticWorld,
         [size[0] + (thinX ? 0.024 : 0), 0.025, size[2] + (thinX ? 0 : 0.024)],
@@ -360,8 +265,11 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   const prop = (model: THREE.Group, x: number, z: number, rotation = 0) => {
     model.position.set(x, 0, z);
     model.rotation.y = rotation;
-    staticWorld.add(model);
+    // Retain the exact legacy gameplay bounds; the new GLB supplies the visible furniture.
     colliders.push(new THREE.Box3().setFromObject(model));
+    model.traverse((o) => {
+      if (o instanceof THREE.Mesh) o.geometry.dispose();
+    });
     return model;
   };
   const interaction = (
@@ -383,16 +291,52 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
       actionRequiredItem,
     });
   };
-  box(staticWorld, [46, 0.3, 23], [7, -0.2, 0], floor);
+  const ground = box(staticWorld, [46, 0.3, 23], [7, -0.2, 0], floor);
+  const projectUV = (mesh: THREE.Mesh, scale: number) => {
+    const p = mesh.geometry.getAttribute("position"),
+      n = mesh.geometry.getAttribute("normal"),
+      uv = mesh.geometry.getAttribute("uv");
+    for (let i = 0; i < p.count; i++)
+      uv.setXY(
+        i,
+        (Math.abs(n.getX(i)) > 0.5
+          ? p.getZ(i) + mesh.position.z
+          : p.getX(i) + mesh.position.x) / scale,
+        (Math.abs(n.getY(i)) > 0.5
+          ? p.getZ(i) + mesh.position.z
+          : p.getY(i) + mesh.position.y) / scale,
+      );
+  };
+  projectUV(ground, 3);
   // A concrete ceiling closes the cell volume; beams and conduits give the formerly
   // black void a readable institutional structure without altering walkable space.
-  box(staticWorld, [46, 0.22, 23], [7, 4.18, 0], concrete);
+  projectUV(box(staticWorld, [46, 0.22, 23], [7, 4.18, 0], concrete), 2.5);
   for (const x of [-13.5, -8.5, -3.5, 1.5, 6.5, 11.5, 16.5, 21.5, 26.5])
     box(staticWorld, [0.22, 0.34, 22.4], [x, 4.0, 0], iron, 0.015);
   for (const z of [-9.4, -4.4, 0.6, 5.6, 10.1])
     box(staticWorld, [45.4, 0.09, 0.13], [7, 3.92, z], rust, 0.008);
   wall([0.5, 4.3, 23], [-16, 2, 0]);
-  wall([46, 4.3, 0.5], [7, 2, -11.5]);
+  const rearWall = wall([46, 4.3, 0.5], [7, 2, -11.5]);
+  // Keep the original solid gameplay/vision collider, but cut real visual apertures.
+  staticWorld.remove(rearWall);
+  for (const [left, right] of [
+    [-16, -12.8],
+    [-11.2, -7.8],
+    [-6.2, 30],
+  ])
+    projectUV(
+      box(
+        staticWorld,
+        [right - left, 4.3, 0.5],
+        [(left + right) / 2, 2, -11.5],
+        stone,
+      ),
+      2,
+    );
+  for (const x of [-12, -7]) {
+    projectUV(box(staticWorld, [1.6, 2.35, 0.5], [x, 1.025, -11.5], stone), 2);
+    projectUV(box(staticWorld, [1.6, 0.7, 0.5], [x, 3.8, -11.5], stone), 2);
+  }
   wall([46, 4.3, 0.5], [7, 2, 11.5]);
   wall([0.5, 4.3, 23], [30, 2, 0]);
   // Cell partitions. The only escape from Cell 47 is the serviced ventilation duct.
@@ -431,10 +375,14 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   bars(-7.3, -2, 2.6);
   bars(-3.8, -2, 1.1);
   door("cell_47_door", -6, -2, 1.4);
-  prop(buildPhotorealisticBunkBed(), -4.25, -8.4);
-  prop(buildPhotorealisticPorcelainToilet(), -7.65, -9.85);
-  prop(buildPhotorealisticBunkBed(), -13, -8.4);
-  // A wall-mounted basin, tarnished mirror, meal tray and scuffed cell details.
+  prop(buildLegacyBunkBounds(), -4.25, -8.4);
+  prop(buildLegacyToiletBounds(), -7.65, -9.85);
+  prop(buildLegacyBunkBounds(), -13, -8.4);
+  environment.add("Bunk", -4.25, -0.05, -8.4, Math.PI);
+  environment.add("Bunk", -13, -0.05, -8.4, Math.PI);
+  environment.add("Toilet", -7.65, -0.05, -9.85, Math.PI);
+  environment.add("Sink", -8.27, 0, -7.8, -Math.PI / 2);
+  // Keep the original basin collider; the replacement is wall mounted.
   const basin = new THREE.Mesh(
     new THREE.SphereGeometry(
       0.26,
@@ -452,27 +400,23 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   basin.rotation.y = Math.PI / 2;
   basin.updateMatrixWorld(true);
   colliders.push(new THREE.Box3().setFromObject(basin));
-  staticWorld.add(basin);
-  cylinder(staticWorld, 0.018, 0.2, [-7.9, 1.04, -7.8], iron);
-  const tap = cylinder(staticWorld, 0.015, 0.16, [-7.84, 1.15, -7.8], iron);
-  tap.rotation.z = Math.PI / 2;
-  box(
-    staticWorld,
-    [0.035, 0.45, 0.38],
-    [-8.58, 1.65, -7.8],
-    new THREE.MeshStandardMaterial({
-      color: 0x758a88,
-      metalness: 0.8,
-      roughness: 0.38,
-    }),
-  );
+  basin.geometry.dispose();
   box(staticWorld, [0.31, 0.025, 0.22], [-5.3, 0.025, -10.6], iron, 0.008);
   box(staticWorld, [0.035, 0.09, 0.035], [-5.2, 0.075, -10.62], linen, 0.008);
   // Ground contact decals and narrow window shadows are baked geometry, not extra realtime lights.
+  const contactCanvas = document.createElement("canvas");
+  contactCanvas.width = contactCanvas.height = 64;
+  const contactCtx = contactCanvas.getContext("2d")!;
+  const gradient = contactCtx.createRadialGradient(32, 32, 4, 32, 32, 32);
+  gradient.addColorStop(0, "rgba(0,0,0,.55)");
+  gradient.addColorStop(1, "rgba(0,0,0,0)");
+  contactCtx.fillStyle = gradient;
+  contactCtx.fillRect(0, 0, 64, 64);
   const contact = new THREE.MeshBasicMaterial({
+    map: new THREE.CanvasTexture(contactCanvas),
     color: 0x091416,
     transparent: true,
-    opacity: 0.24,
+    opacity: 0.6,
     depthWrite: false,
   });
   for (const [x, z, w, h] of [
@@ -482,21 +426,8 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   ]) {
     const shadow = new THREE.Mesh(new THREE.PlaneGeometry(w, h), contact);
     shadow.rotation.x = -Math.PI / 2;
-    shadow.position.set(x, 0.004, z);
+    shadow.position.set(x, -0.044, z);
     staticWorld.add(shadow);
-  }
-  const moonPatch = new THREE.MeshBasicMaterial({
-    color: 0xb3ced4,
-    transparent: true,
-    opacity: 0.065,
-    depthWrite: false,
-  });
-  for (let i = 0; i < 5; i++) {
-    const beam = new THREE.Mesh(new THREE.PlaneGeometry(0.18, 3), moonPatch);
-    beam.rotation.x = -Math.PI / 2;
-    beam.rotation.z = -0.2;
-    beam.position.set(-7 + i * 0.32, 0.008, -8.8);
-    staticWorld.add(beam);
   }
   label(staticWorld, "C / 047", [-5.8, 3.65, -2]);
   label(staticWorld, "C / 046", [-11.4, 3.65, -2]);
@@ -757,7 +688,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     for (const z of [-1.8, 1.8])
       box(staticWorld, [0.18, 4, 0.18], [x, 2, z], iron);
     box(staticWorld, [0.2, 0.2, 4], [x, 3.9, 0], iron);
-    box(staticWorld, [0.8, 0.07, 0.2], [x + 2, 3.7, 0], lightMat);
+    environment.add("Luminaire", x + 2, 3.7, 0);
   }
   for (const z of [-1.6, 1.6])
     cylinder(staticWorld, 0.065, 42, [6, 3.6, z], rust).rotation.z =
@@ -794,37 +725,25 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     const light = new THREE.PointLight(color, 14, 11, 2);
     light.position.set(x, 3.2, z);
     scene.add(light);
-    box(staticWorld, [0.35, 0.05, 0.15], [x, 3.3, z], lightMat);
+    environment.add("Luminaire", x, 3.32, z);
   }
-  scene.add(new THREE.HemisphereLight(0xa6c6d0, 0x4b4233, 1.45));
-  const moon = new THREE.DirectionalLight(0xa1c6dc, 2.1);
+  scene.add(new THREE.HemisphereLight(0xc8d5df, 0x5d5547, 0.85));
+  const moon = new THREE.DirectionalLight(0xb4c8db, 0.5);
   moon.position.set(-8, 9, -7);
   scene.add(moon);
   for (const x of [-7, -12]) {
-    // The blue exterior is recessed behind a concrete reveal, not a glowing plane.
-    box(
-      staticWorld,
-      [1.58, 1.08, 0.035],
-      [x, 2.9, -11.255],
-      new THREE.MeshStandardMaterial({
-        color: 0x1e3741,
-        emissive: 0x162a32,
-        emissiveIntensity: 0.35,
-        roughness: 0.58,
-      }),
-    );
-    // Four reveal strips visually cut into the concrete surround.
-    for (const [dx, dy, w, h] of [
-      [0, 0.67, 1.82, 0.11],
-      [0, -0.67, 1.82, 0.11],
-      [-0.86, 0, 0.11, 1.45],
-      [0.86, 0, 0.11, 1.45],
-    ])
-      box(staticWorld, [w, h, 0.1], [x + dx, 2.9 + dy, -11.34], iron, 0.006);
-    for (let dx = -0.6; dx <= 0.6; dx += 0.3)
-      box(staticWorld, [0.045, 1.24, 0.12], [x + dx, 2.9, -11.39], iron, 0.006);
-    box(staticWorld, [1.68, 0.075, 0.18], [x, 2.2, -11.37], rust, 0.012);
+    // Exterior sky sits behind the actual aperture; the frame and bars occlude it.
+    environment.add("Window", x, 2.9, -11.12);
   }
+  const windowLight = new THREE.SpotLight(0xb2c7df, 42, 17, 0.48, 0.35, 2);
+  windowLight.position.set(-7.8, 4.5, -13.8);
+  windowLight.target.position.set(-5.7, 0, -6.2);
+  windowLight.shadow.camera.near = 0.2;
+  windowLight.shadow.camera.far = 18;
+  windowLight.shadow.normalBias = 0.015;
+  windowLight.shadow.bias = -0.00015;
+  windowLight.shadow.mapSize.set(1024, 1024);
+  scene.add(windowLight, windowLight.target);
   const waterMesh = new THREE.Mesh(
     new THREE.PlaneGeometry(15, 4.7, 20, 8),
     new THREE.MeshStandardMaterial({
@@ -948,13 +867,18 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     const merged = mergeGeometries(geometries, false);
     if (merged) {
       const mesh = new THREE.Mesh(merged, mat);
-      mesh.castShadow = mesh.receiveShadow = true;
+      mesh.castShadow =
+        !mat.transparent && !(mat instanceof THREE.MeshBasicMaterial);
+      mesh.receiveShadow = true;
       scene.add(mesh);
     }
     for (const geometry of geometries) geometry.dispose();
   }
   return {
     scene,
+    loadEnvironment: environment.load,
+    disposeEnvironment: environment.dispose,
+    windowLight,
     colliders,
     doors,
     doorColliders,

@@ -13,11 +13,18 @@ for (const name of publicFiles)
   await copyFile(join("public", name), join("dist", name));
 const files = [
   "index.html",
+  "ENVIRONMENT-LICENSES.txt",
   ...publicFiles,
   ...(await readdir("dist/assets"))
-    .filter((name) => /\.(js|css|glb)$/.test(name))
+    .filter((name) => /\.(js|css|glb|webp)$/.test(name))
     .map((name) => "assets/" + name),
 ];
+await writeFile(
+  "dist/ENVIRONMENT-LICENSES.txt",
+  (await readFile("src/assets/environment/GODOT-MIT-LICENSE.txt", "utf8")) +
+    "\n" +
+    (await readFile("src/assets/environment/TPS-ASSET-LICENSE.txt", "utf8")),
+);
 const hash = createHash("sha256");
 let bytes = 0;
 for (const name of files) {

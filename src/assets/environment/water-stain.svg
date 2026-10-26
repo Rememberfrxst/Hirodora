@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+<defs><linearGradient id="leak" x2="0" y2="1"><stop stop-color="#544631" stop-opacity=".45"/><stop offset="1" stop-color="#675d43" stop-opacity="0"/></linearGradient><filter id="soft"><feGaussianBlur stdDeviation="3"/></filter></defs>
+<!-- Authored run-off from the sill, with a concentrated damp edge and gravity streaks. -->
+<g fill="url(#leak)" filter="url(#soft)"><path d="M23 28Q140 47 248 24T490 30L472 102Q450 77 436 129L416 420L404 190Q392 78 372 95L346 250L327 122Q295 58 278 111L261 490L239 197Q214 67 202 101L177 357L160 143Q144 67 123 88L106 300L87 111L51 167Z"/><path d="M75 28L90 430L105 72ZM311 30L318 390L340 52Z"/></g>
+</svg>

@@ -234,6 +234,60 @@ test("failed officer downloads block play and can be retried without a primitive
   ).toBeVisible();
 });
 
+test("authored environment loads locally and graphics presets preserve collision and gameplay state", async ({
+  page,
+}) => {
+  await start(page);
+  const baseline=JSON.parse(await readFile(new URL('../docs/screenshots/environment/before/capture.json',import.meta.url),'utf8'));
+  const geometry=await page.evaluate(()=>{
+    const e=window.__HIRODORA__;
+    return JSON.stringify({colliders:e.worldData.colliders.map(b=>[...b.min.toArray(),...b.max.toArray()]),interactions:e.worldData.interactables.map(({id,position,radius,actionRequiredItem,actionType})=>({id,position,radius,actionRequiredItem,actionType})),doors:[...e.worldData.doorColliders].map(([id,b])=>[id,...b.min.toArray(),...b.max.toArray()])});
+  });
+  expect(JSON.parse(geometry)).toEqual(baseline.gameplay);
+  const before = await page.evaluate(() => ({
+    position: window.__HIRODORA__.playerPos,
+    inventory: window.__HIRODORA__.inventory,
+    flags: window.__HIRODORA__.gameFlags,
+  }));
+  await page.getByRole("button", { name: "Pause game", exact: true }).click();
+  const assets = await page.evaluate(() => {
+    const e = window.__HIRODORA__ as any;
+    const names: string[] = [];
+    e.scene.traverse((o: any) => {
+      if (o.name.startsWith("CellAsset_")) names.push(o.name);
+    });
+    return names;
+  });
+  expect(assets.filter((n) => n === "CellAsset_Bunk")).toHaveLength(2);
+  expect(assets).toContain("CellAsset_Toilet");
+  expect(assets).toContain("CellAsset_Sink");
+  expect(assets.filter((n) => n === "CellAsset_Window")).toHaveLength(2);
+  for (const preset of ["low", "medium", "high", "ultra"]) {
+    await page.getByLabel("Graphics preset").selectOption(preset);
+    const config = await page.evaluate(() => {
+      const e = window.__HIRODORA__ as any;
+      return {
+        preset: e.graphicsPreset,
+        shadows: e.renderer.shadowMap.enabled,
+        windowShadow: e.worldData.windowLight.castShadow,
+        size: e.guardKey.shadow.mapSize.x,
+        position: e.playerPos,
+        inventory: e.inventory,
+        flags: e.gameFlags,
+      };
+    });
+    expect(config.preset).toBe(preset);
+    expect(config.shadows).toBe(["high", "ultra"].includes(preset));
+    expect(config.windowShadow).toBe(config.shadows);
+    expect(config.size).toBe(preset === "ultra" ? 2048 : 1024);
+    expect({
+      position: config.position,
+      inventory: config.inventory,
+      flags: config.flags,
+    }).toEqual(before);
+  }
+});
+
 test("tool requirements, all four puzzles, crafting, checkpoints and Brotherhood ending", async ({
   page,
 }) => {

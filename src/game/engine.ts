@@ -4,6 +4,7 @@
  */
 
 import * as THREE from "three";
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import {
   ActiveMiniGame,
   EndingType,
@@ -135,6 +136,7 @@ export type GraphicsPreset = "low" | "medium" | "high" | "ultra";
 
 export class GameEngine {
   private renderer: THREE.WebGLRenderer;
+  private environmentTarget?: THREE.WebGLRenderTarget;
   private scene = new THREE.Scene();
   private camera: THREE.PerspectiveCamera;
   public worldData: PrisonWorldData;
@@ -251,12 +253,19 @@ export class GameEngine {
     );
     mountEl.appendChild(this.renderer.domElement);
     this.worldData = buildPrisonWorld(this.scene);
+    const pmrem = new THREE.PMREMGenerator(this.renderer),
+      room = new RoomEnvironment();
+    this.environmentTarget = pmrem.fromScene(room, 0.04);
+    this.scene.environment = this.environmentTarget.texture;
+    this.scene.environmentIntensity = 0.12;
+    room.dispose();
+    pmrem.dispose();
     this.guardKey.position.set(-5, 3.1, 0);
     this.guardKey.target.position.set(-5, 0, 0);
     this.guardKey.shadow.mapSize.set(1024, 1024);
     this.guardKey.shadow.camera.near = 0.2;
     this.guardKey.shadow.camera.far = 10;
-    this.guardKey.shadow.normalBias = 0.025;
+    this.guardKey.shadow.normalBias = 0.012;
     this.scene.add(this.guardKey, this.guardKey.target);
     this.setGuardQuality("auto");
     this.setGraphicsPreset(
@@ -277,6 +286,7 @@ export class GameEngine {
     this.guardLoadError = "";
     this.emitChange();
     try {
+      await this.worldData.loadEnvironment();
       await this.guardAssets.preload(
         Math.min(8, this.renderer.capabilities.getMaxAnisotropy()),
       );
@@ -294,7 +304,7 @@ export class GameEngine {
       if (!this.disposed) {
         console.error("Officer asset preload failed", error);
         this.guardLoadError =
-          "The officer model could not load. Check your connection or reload the complete offline edition.";
+          "Game assets could not load. Check your connection or reload the complete offline edition.";
       }
     }
     if (!this.disposed) this.emitChange();
@@ -302,13 +312,7 @@ export class GameEngine {
 
   public setGuardQuality(quality: GuardQuality) {
     this.guardQuality = quality;
-    const shadows =
-      quality === "desktop" ||
-      (!this.softwareRenderer && quality === "auto" && !this.mobile);
-    this.renderer.shadowMap.enabled = shadows;
-    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    this.guardKey.castShadow = shadows;
-    this.emitChange();
+    this.setGraphicsPreset(this.graphicsPreset);
   }
 
   public setGraphicsPreset(preset: GraphicsPreset) {
@@ -325,6 +329,12 @@ export class GameEngine {
     this.renderer.shadowMap.enabled = shadows;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.guardKey.castShadow = shadows;
+    this.worldData.windowLight.castShadow = shadows;
+    const shadowSize = preset === "ultra" ? 2048 : 1024;
+    if (this.guardKey.shadow.mapSize.x !== shadowSize) {
+      this.guardKey.shadow.map?.dispose();
+      this.guardKey.shadow.map = null;
+    }
     this.guardKey.shadow.mapSize.set(
       preset === "ultra" ? 2048 : 1024,
       preset === "ultra" ? 2048 : 1024,
@@ -1513,6 +1523,9 @@ export class GameEngine {
     this.guardActors.clear();
     this.guardAssets.dispose();
     this.guardKey.shadow.dispose();
+    this.worldData.windowLight.shadow.dispose();
+    this.worldData.disposeEnvironment();
+    this.environmentTarget?.dispose();
     const geometries = new Set<THREE.BufferGeometry>(),
       materials = new Set<THREE.Material>(),
       textures = new Set<THREE.Texture>();

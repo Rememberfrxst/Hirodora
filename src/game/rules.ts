@@ -3,7 +3,7 @@
  * Decoupled logic designed for high-performance deterministic execution and unit testing.
  */
 
-import { EndingType, GuardData, GuardState, ItemId } from './types';
+import { EndingType, ItemId } from './types';
 
 export const NOISE_CONSTANTS = {
   CROUCH_WALK: 3,
@@ -120,112 +120,8 @@ export function isPlayerInGuardVision(
   return angleDiff <= halfFovRad;
 }
 
-/**
- * Updates guard state machine based on perception
- */
-export function updateGuardSuspicionAndState(
-  guard: GuardData,
-  heardNoise: number,
-  canSeePlayer: boolean,
-  playerPos: [number, number, number],
-  dt: number
-): {
-  nextState: GuardState;
-  nextSuspicion: number;
-  nextStateTimer: number;
-  investigationTarget?: [number, number, number];
-  caughtPlayer: boolean;
-} {
-  let suspicion = guard.suspicion;
-  let state = guard.state;
-  let stateTimer = guard.stateTimer;
-  let investigationTarget = guard.investigationTarget;
-  let caughtPlayer = false;
-
-  // Distance check for catch during chase
-  const distToPlayer = Math.hypot(playerPos[0] - guard.position[0], playerPos[2] - guard.position[2]);
-
-  if (state === 'knocked_out') {
-    return {
-      nextState: 'knocked_out',
-      nextSuspicion: 0,
-      nextStateTimer: Math.max(0, stateTimer - dt),
-      caughtPlayer: false,
-    };
-  }
-
-  // Vision triggers immediate alert or accelerates suspicion
-  if (canSeePlayer) {
-    suspicion = Math.min(100, suspicion + 65 * dt);
-    investigationTarget = [...playerPos];
-  } else if (heardNoise > 2) {
-    suspicion = Math.min(
-      100,
-      suspicion + heardNoise * GUARD_CONSTANTS.SUSPICION_GAIN_RATE * dt
-    );
-    investigationTarget = [...playerPos];
-  } else {
-    suspicion = Math.max(0, suspicion - GUARD_CONSTANTS.SUSPICION_DECAY_RATE * dt);
-  }
-
-  // State machine logic
-  switch (state) {
-    case 'patrol':
-      if (canSeePlayer && suspicion >= 40) {
-        state = 'chase';
-      } else if (suspicion >= 70) {
-        state = 'searching';
-        stateTimer = GUARD_CONSTANTS.SEARCH_TIME;
-      } else if (suspicion >= 35) {
-        state = 'suspicious';
-        stateTimer = 4.0;
-      }
-      break;
-
-    case 'suspicious':
-      if (canSeePlayer && suspicion >= 60) {
-        state = 'chase';
-      } else if (suspicion >= 80) {
-        state = 'searching';
-        stateTimer = GUARD_CONSTANTS.SEARCH_TIME;
-      } else if (suspicion <= 15) {
-        state = 'patrol';
-      }
-      break;
-
-    case 'searching':
-      stateTimer -= dt;
-      if (canSeePlayer) {
-        state = 'chase';
-      } else if (stateTimer <= 0 && suspicion < 40) {
-        state = 'patrol';
-      }
-      break;
-
-    case 'chase':
-      if (distToPlayer <= GUARD_CONSTANTS.CATCH_DISTANCE) {
-        caughtPlayer = true;
-      }
-      if (!canSeePlayer) {
-        stateTimer -= dt;
-        if (stateTimer <= 0) {
-          state = 'searching';
-          stateTimer = GUARD_CONSTANTS.SEARCH_TIME;
-        }
-      } else {
-        stateTimer = GUARD_CONSTANTS.LOST_TIME;
-      }
-      break;
-  }
-
-  return {
-    nextState: state,
-    nextSuspicion: suspicion,
-    nextStateTimer: stateTimer,
-    investigationTarget,
-    caughtPlayer,
-  };
-}
+// Compatibility export; authoritative decisions live in the dedicated AI layer.
+export { updateGuardSuspicionAndState } from "./guard-ai";
 
 /**
  * Check if player has the ingredients to craft a silencer

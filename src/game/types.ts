@@ -40,6 +40,13 @@ export interface GuardData {
   investigationTarget?: [number, number, number];
   examining?: boolean;
   cinematicAim?: boolean;
+  lastKnownPosition?: [number, number, number];
+  lastHeardPosition?: [number, number, number];
+  lookTarget?: [number, number, number];
+  unseenTime?: number;
+  scanTime?: number;
+  scanOriginYaw?: number;
+  lastNoiseId?: number;
 }
 
 export type ItemId =

@@ -1,0 +1,21 @@
+{
+  "resize": {
+    "mean": 0,
+    "scale": 0.75,
+    "width": 825,
+    "blank": true
+  },
+  "errors": [],
+  "gripCamera": {
+    "position": [
+      -5.7,
+      1.65,
+      -1.2
+    ],
+    "target": [
+      -4.25,
+      1.4,
+      0.2
+    ]
+  }
+}

@@ -30,6 +30,35 @@ export function isBlocked(
   );
 }
 
+/** Navigation sees low furniture as well as walls, with body-radius clearance. */
+export function pathObstructed(
+  a: Point,
+  b: Point,
+  obstacles: Obstacle[],
+  radius = 0.22,
+) {
+  return obstacles.some((box) => {
+    let lo = 0.001,
+      hi = 0.999;
+    for (const [i, axis] of (["x", "z"] as const).entries()) {
+      const delta = b[i] - a[i],
+        min = box.min[axis] - radius,
+        max = box.max[axis] + radius;
+      if (Math.abs(delta) < 1e-8) {
+        if (a[i] < min || a[i] > max) return false;
+        continue;
+      }
+      let t0 = (min - a[i]) / delta,
+        t1 = (max - a[i]) / delta;
+      if (t0 > t1) [t0, t1] = [t1, t0];
+      lo = Math.max(lo, t0);
+      hi = Math.min(hi, t1);
+      if (lo > hi) return false;
+    }
+    return true;
+  });
+}
+
 /** Bounded grid search with no diagonal corner cutting. Replan only when needed. */
 export function findPath(
   start: Point,

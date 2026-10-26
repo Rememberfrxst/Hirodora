@@ -195,6 +195,10 @@ test("hard pushing alerts the examining guard, then he returns to the body witho
     const alarmed = g.state !== "patrol",
       noise = e.stats.peakNoise;
     e.stats.noiseLevel = 0;
+    // Bars now transmit sight. Retreat and crouch beyond his reduced sight range
+    // rather than standing in plain view and expecting him to forget the player.
+    e.playerPos = [-8.3, 0, -10.7];
+    e.stats.isCrouching = true;
     let closestZ = g.position[2];
     for (let i = 0; i < 1800; i++) {
       e.updateGuards(1 / 30);

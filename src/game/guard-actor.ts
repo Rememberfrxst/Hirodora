@@ -133,6 +133,8 @@ export class GuardActor {
   private lookEuler = new THREE.Euler();
   private targetYaw = 0;
   private lookYaw = 0;
+  private handRest = new Map<THREE.Object3D, THREE.Quaternion>();
+  private gripping = false;
   public get hitTarget() {
     return this.views.get(this.tier)!.root;
   }
@@ -297,6 +299,8 @@ export class GuardActor {
       }
       const faces: THREE.SkinnedMesh[] = [];
       model.traverse((o) => {
+        if (/^(Left|Right)Hand/.test(o.name))
+          this.handRest.set(o, o.quaternion.clone());
         if (o instanceof THREE.SkinnedMesh && o.morphTargetDictionary)
           faces.push(o);
       });
@@ -392,15 +396,23 @@ export class GuardActor {
       return;
     view.mixer.update(this.accumulated);
     this.accumulated = 0;
+    if (!guard.cinematicAim && this.gripping) {
+      for (const [bone, rest] of this.handRest) {
+        if (bone.name.includes("Hand") && /\d$/.test(bone.name))
+          bone.quaternion.copy(rest);
+      }
+      this.gripping = false;
+    }
     if (guard.state !== "knocked_out") {
       // Limited visual head tracking: never alters AI sight direction/perception.
       this.targetYaw =
-        guard.state === "chase" || guard.state === "suspicious"
+        guard.lookTarget &&
+        (guard.state === "chase" || guard.state === "suspicious")
           ? THREE.MathUtils.clamp(
               angleDelta(
                 Math.atan2(
-                  camera.position.x - guard.position[0],
-                  camera.position.z - guard.position[2],
+                  guard.lookTarget[0] - guard.position[0],
+                  guard.lookTarget[2] - guard.position[2],
                 ),
                 this.root.rotation.y,
               ),
@@ -421,6 +433,147 @@ export class GuardActor {
           if (index !== undefined) face.morphTargetInfluences![index] = blink;
         }
     }
+  }
+  /** Visual two-bone IK: the weapon follows the palm, both hands close on its grip. */
+  weaponGrip(target: THREE.Vector3) {
+    this.gripping = true;
+    const model = this.views.get(this.tier)!.root;
+    const bone = (name: string) => model.getObjectByName(name)!;
+    model.updateMatrixWorld(true);
+    const rightShoulder = bone("RightArm").getWorldPosition(
+        new THREE.Vector3(),
+      ),
+      leftShoulder = bone("LeftArm").getWorldPosition(new THREE.Vector3());
+    const center = rightShoulder.clone().add(leftShoulder).multiplyScalar(0.5);
+    const forward = target.clone().sub(center).normalize(),
+      up = new THREE.Vector3(0, 1, 0),
+      right = forward.clone().cross(up).normalize();
+    const orient = (joint: THREE.Object3D, q: THREE.Quaternion) => {
+      joint.quaternion.copy(
+        joint
+          .parent!.getWorldQuaternion(new THREE.Quaternion())
+          .invert()
+          .multiply(q),
+      );
+      joint.updateMatrixWorld(true);
+    };
+    const align = (
+      joint: THREE.Object3D,
+      child: THREE.Object3D,
+      destination: THREE.Vector3,
+    ) => {
+      const a = joint.getWorldPosition(new THREE.Vector3()),
+        from = child.getWorldPosition(new THREE.Vector3()).sub(a).normalize(),
+        to = destination.clone().sub(a).normalize();
+      const delta = new THREE.Quaternion().setFromUnitVectors(from, to);
+      orient(
+        joint,
+        delta.multiply(joint.getWorldQuaternion(new THREE.Quaternion())),
+      );
+    };
+    const arm = (side: string, wrist: THREE.Vector3, pole: THREE.Vector3) => {
+      const shoulder = bone(side + "Arm"),
+        elbow = bone(side + "ForeArm"),
+        hand = bone(side + "Hand");
+      const a = shoulder.getWorldPosition(new THREE.Vector3()),
+        b = elbow.getWorldPosition(new THREE.Vector3()),
+        c = hand.getWorldPosition(new THREE.Vector3());
+      const upper = a.distanceTo(b),
+        lower = b.distanceTo(c),
+        direction = wrist.clone().sub(a),
+        distance = THREE.MathUtils.clamp(
+          direction.length(),
+          Math.abs(upper - lower) + 0.005,
+          upper + lower - 0.005,
+        );
+      direction.normalize();
+      const out = pole
+        .clone()
+        .addScaledVector(direction, -pole.dot(direction))
+        .normalize();
+      const cosine = THREE.MathUtils.clamp(
+        (upper * upper + distance * distance - lower * lower) /
+          (2 * upper * distance),
+        -1,
+        1,
+      );
+      const bend = a
+        .clone()
+        .addScaledVector(direction, upper * cosine)
+        .addScaledVector(out, upper * Math.sqrt(1 - cosine * cosine));
+      align(shoulder, elbow, bend);
+      align(elbow, hand, a.clone().addScaledVector(direction, distance));
+    };
+    const wrist = center
+      .clone()
+      .addScaledVector(forward, 0.43)
+      .addScaledVector(right, 0.07)
+      .addScaledVector(up, -0.06);
+    arm(
+      "Right",
+      wrist,
+      right.clone().multiplyScalar(0.55).addScaledVector(up, -1),
+    );
+    const rightHand = bone("RightHand"),
+      rightWrist = rightHand.getWorldPosition(new THREE.Vector3());
+    const grip = rightWrist
+      .clone()
+      .addScaledVector(forward, 0.06)
+      .addScaledVector(up, -0.015);
+    const support = grip
+      .clone()
+      .addScaledVector(right, -0.065)
+      .addScaledVector(forward, -0.075)
+      .addScaledVector(up, -0.025);
+    arm(
+      "Left",
+      support,
+      right.clone().multiplyScalar(-0.55).addScaledVector(up, -1),
+    );
+    for (const side of ["Right", "Left"]) {
+      const y = forward.clone();
+      if (side === "Left") y.addScaledVector(right, 0.35).normalize();
+      const z = right.clone().multiplyScalar(side === "Right" ? -1 : 1);
+      z.addScaledVector(y, -z.dot(y)).normalize();
+      const x = y.clone().cross(z).normalize();
+      orient(
+        bone(side + "Hand"),
+        new THREE.Quaternion().setFromRotationMatrix(
+          new THREE.Matrix4().makeBasis(x, y, z),
+        ),
+      );
+      for (const finger of ["Thumb", "Index", "Middle", "Ring", "Pinky"])
+        for (let i = 1; i <= 3; i++) {
+          const joint = model.getObjectByName(side + "Hand" + finger + i);
+          if (!joint) continue;
+          const curl =
+            finger === "Thumb"
+              ? 0.6
+              : side === "Right" && finger === "Index"
+                ? i === 1
+                  ? 0.2
+                  : 0.85
+                : i === 1
+                  ? 1.05
+                  : 1.2;
+          joint.quaternion
+            .copy(this.handRest.get(joint)!)
+            .multiply(
+              new THREE.Quaternion().setFromEuler(new THREE.Euler(curl, 0, 0)),
+            );
+        }
+    }
+    model.updateMatrixWorld(true);
+    const x = up.clone().cross(forward).normalize(),
+      y = forward.clone().cross(x).normalize();
+    return {
+      position: grip,
+      quaternion: new THREE.Quaternion().setFromRotationMatrix(
+        new THREE.Matrix4().makeBasis(x, y, forward),
+      ),
+      rightWrist,
+      leftWrist: bone("LeftHand").getWorldPosition(new THREE.Vector3()),
+    };
   }
   reset() {
     this.views.forEach((v) => v.mixer.stopAllAction());

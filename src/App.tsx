@@ -187,14 +187,7 @@ export default function App() {
                   onComplete={(success) => engine.completeMiniGame(success)}
                   onCancel={() => engine.cancelMiniGame()}
                   onNoiseSpike={(amount) => {
-                    engine.stats.noiseLevel = Math.min(
-                      100,
-                      engine.stats.noiseLevel + amount,
-                    );
-                    engine.stats.peakNoise = Math.max(
-                      engine.stats.peakNoise,
-                      engine.stats.noiseLevel,
-                    );
+                    engine.emitNoise(amount, "puzzle");
                     engine.emitChange();
                   }}
                 />

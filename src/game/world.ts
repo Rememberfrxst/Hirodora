@@ -11,6 +11,7 @@ export interface PrisonWorldData {
   disposeEnvironment: () => void;
   windowLight: THREE.SpotLight;
   colliders: THREE.Box3[];
+  visionColliders: THREE.Box3[];
   doors: Map<string, THREE.Group>;
   doorColliders: Map<string, THREE.Box3>;
   interactables: InteractiveObject[];
@@ -238,6 +239,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   const staticWorld = new THREE.Group();
   scene.add(staticWorld);
   const colliders: THREE.Box3[] = [];
+  const barredFaces = new Set<THREE.Box3>();
   const doors = new Map<string, THREE.Group>();
   const doorColliders = new Map<string, THREE.Box3>();
   const interactables: InteractiveObject[] = [];
@@ -314,14 +316,29 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   projectUV(ground, 3);
   // A concrete ceiling closes the cell volume; beams and conduits give the formerly
   // black void a readable institutional structure without altering walkable space.
-  projectUV(box(staticWorld, [46, 0.22, 23], [7, 4.18, 0], environment.ceiling), 2.5);
+  projectUV(
+    box(staticWorld, [46, 0.22, 23], [7, 4.18, 0], environment.ceiling),
+    2.5,
+  );
   for (const x of [-13.5, -3.5, 6.5, 16.5, 26.5])
-    projectUV(box(staticWorld, [0.22, 0.34, 22.4], [x, 4.0, 0], environment.ceiling, 0.015),2);
+    projectUV(
+      box(
+        staticWorld,
+        [0.22, 0.34, 22.4],
+        [x, 4.0, 0],
+        environment.ceiling,
+        0.015,
+      ),
+      2,
+    );
   for (const z of [-9.4, 0.6, 10.1])
     box(staticWorld, [45.4, 0.09, 0.13], [7, 3.92, z], rust, 0.008);
   wall([0.5, 4.3, 23], [-37, 2, 0]);
   projectUV(box(staticWorld, [21, 0.3, 23], [-26.5, -0.2, 0], floor), 3);
-  projectUV(box(staticWorld, [21, 0.22, 23], [-26.5, 4.18, 0], environment.ceiling), 2.5);
+  projectUV(
+    box(staticWorld, [21, 0.22, 23], [-26.5, 4.18, 0], environment.ceiling),
+    2.5,
+  );
   wall([21, 4.3, 0.5], [-26.5, 2, -11.5]);
   wall([21, 4.3, 0.5], [-26.5, 2, 11.5]);
   const rearWall = wall([46, 4.3, 0.5], [7, 2, -11.5]);
@@ -364,12 +381,12 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     for (let bx = x - width / 2; bx <= x + width / 2; bx += 0.21)
       cylinder(staticWorld, 0.022, 3.7, [bx, 1.85, z]);
     box(staticWorld, [width, 0.12, 0.12], [x, 3.7, z], iron);
-    colliders.push(
-      new THREE.Box3(
-        new THREE.Vector3(x - width / 2, 0, z - 0.08),
-        new THREE.Vector3(x + width / 2, 3.8, z + 0.08),
-      ),
+    const face = new THREE.Box3(
+      new THREE.Vector3(x - width / 2, 0, z - 0.08),
+      new THREE.Vector3(x + width / 2, 3.8, z + 0.08),
     );
+    colliders.push(face);
+    barredFaces.add(face);
   }
   function door(id: string, x: number, z: number, width = 1.4, across = false) {
     const group = new THREE.Group();
@@ -1028,6 +1045,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     disposeEnvironment: environment.dispose,
     windowLight,
     colliders,
+    visionColliders: colliders.filter((b) => !barredFaces.has(b)),
     doors,
     doorColliders,
     interactables,

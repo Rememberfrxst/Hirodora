@@ -108,7 +108,9 @@ test('Guard state transitions from patrol to suspicious and chase on sight', () 
   // When guard sees player, suspicion spikes rapidly
   const update1 = updateGuardSuspicionAndState(mockGuard, 0, true, playerPos, 0.5);
   assert.ok(update1.nextSuspicion > mockGuard.suspicion);
-  assert.equal(update1.nextState, 'chase');
+  assert.equal(update1.nextState, 'suspicious');
+  const update2=updateGuardSuspicionAndState({...mockGuard,state:update1.nextState,suspicion:update1.nextSuspicion,stateTimer:update1.nextStateTimer},0,true,playerPos,1);
+  assert.equal(update2.nextState,'chase');
 });
 
 test('Silencer crafting combines pipe, steel wool, and rubber washer', () => {

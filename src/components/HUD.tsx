@@ -45,6 +45,13 @@ export function HUD({
       .filter((g) => g.state !== "knocked_out")
       .map((g) => g.suspicion),
   );
+  const chasing = engine.worldData.guards.some((g) => g.state === "chase");
+  const searching = engine.worldData.guards.some(
+    (g) => g.state === "searching",
+  );
+  const investigating = engine.worldData.guards.some(
+    (g) => g.state === "suspicious",
+  );
   const [satchel, setSatchel] = useState(false);
   const [layout] = useState(loadLayout);
   const joystick = useRef<{
@@ -119,14 +126,18 @@ export function HUD({
           </button>
         </nav>
       </header>
-      <div className={"stealth-state " + (suspicion > 40 ? "danger" : "")}>
+      <div className={"stealth-state " + (chasing ? "danger" : "")}>
         {stats.isInHidingSpot
           ? "◈ CONCEALED · E TO LEAVE"
-          : suspicion > 40
+          : chasing
             ? "▲ DETECTED · BREAK LINE OF SIGHT"
-            : suspicion > 10
-              ? "◇ SUSPICION RISING"
-              : "◇ KEEP A LOW PROFILE"}
+            : searching
+              ? "◇ SEARCHING · STAY OUT OF SIGHT"
+              : investigating
+                ? "◇ INVESTIGATING · KEEP QUIET"
+                : suspicion > 10
+                  ? "◇ SUSPICION RISING"
+                  : "◇ KEEP A LOW PROFILE"}
       </div>
       <div className="reticle">
         <span />

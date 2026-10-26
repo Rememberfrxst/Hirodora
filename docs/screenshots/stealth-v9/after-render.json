@@ -1,0 +1,42 @@
+{
+  "resize": {
+    "mean": 46.37870856715301,
+    "scale": 0.75,
+    "width": 825,
+    "blank": false
+  },
+  "errors": [],
+  "ai": {
+    "investigating": {
+      "state": "suspicious",
+      "suspicion": 39.98673767735895,
+      "target": [
+        -6,
+        0,
+        -3
+      ]
+    },
+    "searching": {
+      "state": "searching",
+      "suspicion": 40.0530377916978,
+      "target": [
+        -6,
+        0,
+        -3
+      ],
+      "scan": 0.7999999999999999
+    }
+  },
+  "gripCamera": {
+    "position": [
+      -5.7,
+      1.65,
+      -1.2
+    ],
+    "target": [
+      -4.25,
+      1.4,
+      0.2
+    ]
+  }
+}

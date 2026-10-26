@@ -1,6 +1,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { findPath, isBlocked, movementVector, stepJump } from "./navigation";
+import {
+  findPath,
+  isBlocked,
+  pathObstructed,
+  movementVector,
+  stepJump,
+} from "./navigation";
 
 test("diagonal movement is no faster than forward movement", () => {
   assert.ok(Math.abs(Math.hypot(...movementVector(1, 1, 0.7, 3)) - 3) < 1e-8);
@@ -20,6 +26,13 @@ test("path search routes around a wall without cutting corners", () => {
 test("a sealed destination has no manufactured route through walls", () => {
   const walls = [{ min: { x: -0.8, z: -0.8 }, max: { x: 1, z: 1 } }];
   assert.deepEqual(findPath([-3, 0], [0, 0], walls), []);
+});
+
+test("navigation avoids furniture at any height and reserves body-radius clearance", () => {
+  const furniture = [{ min: { x: 1, z: -0.2 }, max: { x: 2, z: 0.2 } }];
+  assert.equal(pathObstructed([0, 0], [3, 0], furniture), true);
+  assert.equal(pathObstructed([0, 0.3], [3, 0.3], furniture), true);
+  assert.equal(pathObstructed([0, 0.5], [3, 0.5], furniture), false);
 });
 
 test("jump has a bounded arc and lands once without sinking below the floor", () => {

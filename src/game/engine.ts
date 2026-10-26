@@ -18,16 +18,18 @@ import {
 import {
   applySoundMasking,
   calculateDecayedNoise,
-  calculateHeardNoise,
   canCraftSilencer,
   craftSilencer,
   determineEnding,
-  isPlayerInGuardVision,
   NOISE_CONSTANTS,
-  updateGuardSuspicionAndState,
 } from "./rules";
 import { buildPrisonWorld, PrisonWorldData } from "./world";
 import { sound } from "./audio";
+import { decideGuard } from "./guard-ai";
+import { sightEvidence, strongestNoise, type NoiseEvent } from "./perception";
+import { PracticalLightPool } from "./lighting";
+import { pathObstructed } from "./navigation";
+import { angleDelta } from "./guard-motion";
 import { PrisonerActor } from "./prisoner";
 import { OpeningCinematic } from "./cinematic";
 import { INTRO_DURATION } from "./intro";
@@ -184,7 +186,12 @@ export class GameEngine {
   public jumpHeight = 0;
   private jumpVelocity = 0;
   public touchSprint = false;
-  private lightBudgetTime = 0;
+  private practicalLights?: PracticalLightPool;
+  private noiseEvents: NoiseEvent[] = [];
+  private noiseClock = 0;
+  private noiseId = 0;
+  private lastNoiseEmit = new Map<string, number>();
+  private pathGoals = new Map<string, [number, number]>();
   private frameAverage = 24;
   private renderScale = 1;
   private renderBounds: RenderScaleBounds = { initial: 1, min: 0.7, max: 1 };
@@ -322,8 +329,8 @@ export class GameEngine {
     this.scene.environmentIntensity = 0.12;
     room.dispose();
     pmrem.dispose();
-    this.guardKey.position.set(-5, 3.1, 0);
-    this.guardKey.target.position.set(-5, 0, 0);
+    this.guardKey.position.set(-6, 3.08, 0);
+    this.guardKey.target.position.set(-6, 0, 0);
     this.guardKey.shadow.mapSize.set(1024, 1024);
     this.guardKey.shadow.camera.near = 0.2;
     this.guardKey.shadow.camera.far = 10;
@@ -344,6 +351,11 @@ export class GameEngine {
     this.scene.traverse((object) => {
       if (object instanceof THREE.PointLight) this.lights.push(object);
     });
+    this.practicalLights = new PracticalLightPool(
+      this.scene,
+      this.lights,
+      new THREE.Vector3(-6, 1.65, -6),
+    );
     this.loadCheckpoint();
     this.applySettings(loadSettings());
     this.setupInputs();
@@ -432,6 +444,7 @@ export class GameEngine {
       preset === "ultra" ? 2048 : 1024,
     );
     this.renderer.toneMappingExposure = exposure;
+    if (this.guardsReady) this.renderer.render(this.scene, this.camera);
     this.emitChange();
   }
 
@@ -665,6 +678,7 @@ export class GameEngine {
       this.camera.aspect = w / h;
       this.camera.updateProjectionMatrix();
       this.renderer.setSize(w, h);
+      if (this.guardsReady) this.renderer.render(this.scene, this.camera);
     }
     const blocked = this.mobile && h > w;
     if (blocked !== this.orientationBlocked) {
@@ -1071,6 +1085,7 @@ export class GameEngine {
       this.activeObjective =
         "Leave Cell 46. Unlock the Block C gate to the east.";
       sound.playDoorOpen();
+      this.emitNoise(26, "door");
     } else if (obj.id === "vent_bolts_interact")
       this.startMiniGame({ type: "vent_bolts", progress: 0, noiseSpike: 0 });
     else if (obj.id === "boulder_npc")
@@ -1299,6 +1314,12 @@ export class GameEngine {
     this.stats.noiseLevel = Math.max(
       this.stats.noiseLevel,
       this.hardPush ? 85 : action === "toilet_move" ? 13 : 5,
+    );
+    this.emitNoise(
+      this.hardPush ? 85 : action === "toilet_move" ? 13 : 5,
+      action,
+      this.worldData.interactables.find((o) => o.id === action)?.position ??
+        this.playerPos,
     );
     this.actionSoundTime -= dt;
     if (this.actionSoundTime <= 0) {
@@ -1574,6 +1595,9 @@ export class GameEngine {
   public restoreCheckpoint(cp: GameCheckpoint) {
     this.jumpHeight = 0;
     this.jumpVelocity = 0;
+    this.noiseEvents = [];
+    this.lastNoiseEmit.clear();
+    this.pathGoals.clear();
     const caught = this.stats.timesCaught;
     this.stats = {
       ...this.freshStats(),
@@ -1623,6 +1647,14 @@ export class GameEngine {
     this.activeMiniGame = null;
     this.munshiHint = null;
     for (const g of this.worldData.guards) {
+      g.lastKnownPosition = undefined;
+      g.lastHeardPosition = undefined;
+      g.investigationTarget = undefined;
+      g.lookTarget = undefined;
+      g.unseenTime = 0;
+      g.scanTime = 0;
+      g.scanOriginYaw = undefined;
+      g.lastNoiseId = undefined;
       g.state = "patrol";
       g.suspicion = 0;
       g.currentWaypoint = 1;
@@ -1660,6 +1692,7 @@ export class GameEngine {
     const silenced = this.inventory.includes("silencer");
     sound.playDartShot(silenced);
     this.stats.noiseLevel = silenced ? 20 : 100;
+    this.emitNoise(silenced ? 20 : 100, "dart");
     if (!silenced) this.stats.alarmsTriggered++;
     const ray = new THREE.Raycaster();
     ray.setFromCamera(new THREE.Vector2(), this.camera);
@@ -1722,14 +1755,16 @@ export class GameEngine {
       this.frameId = requestAnimationFrame(this.tick);
       return;
     }
-    if (
-      this.gameState === "playing" &&
-      !this.activeMiniGame &&
-      !this.overlayOpen
-    ) {
+    if (this.gameState === "playing" && !this.overlayOpen) {
       this.elapsed += dt;
-      this.updateOpening(dt);
-      this.move(dt);
+      if (!this.activeMiniGame) {
+        this.updateOpening(dt);
+        this.move(dt);
+      } else
+        this.stats.noiseLevel = calculateDecayedNoise(
+          this.stats.noiseLevel,
+          dt,
+        );
       this.updateGuards(dt);
       this.updateEnvironment(dt);
       if (this.munshiHint && this.elapsed > this.noticeUntil)
@@ -1756,8 +1791,7 @@ export class GameEngine {
             this.mobile,
           );
     }
-    const simulationActive =
-      this.gameState === "playing" && !this.activeMiniGame && !this.overlayOpen;
+    const simulationActive = this.gameState === "playing" && !this.overlayOpen;
     if (
       (simulationActive ||
         this.gameState === "title" ||
@@ -1769,31 +1803,7 @@ export class GameEngine {
         this.displayedFrameMs =
           this.displayedFrameMs * 0.9 + renderInterval * 0.1;
       this.lastRender = now;
-      this.lightBudgetTime -= dt;
-      if (this.lightBudgetTime <= 0) {
-        this.lightBudgetTime = 0.4;
-        const nearest = [...this.lights].sort(
-          (a, b) =>
-            a.position.distanceToSquared(this.camera.position) -
-            b.position.distanceToSquared(this.camera.position),
-        );
-        // The shadow key belongs to an actual ceiling fixture, not to a moving NPC.
-        this.guardKey.position.copy(nearest[0].position).y -= 0.12;
-        this.guardKey.target.position.set(
-          nearest[0].position.x,
-          0,
-          nearest[0].position.z,
-        );
-        this.lights.forEach((light) => {
-          light.visible = nearest.indexOf(light) < 4;
-        });
-      }
-      const renderStart = performance.now();
-      this.renderer.render(this.scene, this.camera);
-      this.frameAverage =
-        this.frameAverage * 0.95 + (performance.now() - renderStart) * 0.05;
-      this.drawCalls = this.renderer.info.render.calls;
-      this.triangles = this.renderer.info.render.triangles;
+      this.practicalLights?.update(this.camera.position, dt);
       this.adaptiveScaleTime -= dt;
       if (this.adaptiveScaleTime <= 0) {
         this.adaptiveScaleTime = 1.25;
@@ -1809,6 +1819,12 @@ export class GameEngine {
           this.renderer.setPixelRatio(this.renderScale * this.userRenderScale);
         }
       }
+      const renderStart = performance.now();
+      this.renderer.render(this.scene, this.camera);
+      this.frameAverage =
+        this.frameAverage * 0.95 + (performance.now() - renderStart) * 0.05;
+      this.drawCalls = this.renderer.info.render.calls;
+      this.triangles = this.renderer.info.render.triangles;
     }
     if (
       (simulationActive || this.gameState === "intro") &&
@@ -1842,6 +1858,7 @@ export class GameEngine {
         NOISE_CONSTANTS.JUMP_LANDING,
       );
       sound.playObject(this.playerPos[0] > 15 ? "water" : "boot", 0, 0.9);
+      this.emitNoise(NOISE_CONSTANTS.JUMP_LANDING, "landing");
     }
     if (moving) {
       const beforeX = this.playerPos[0],
@@ -1877,6 +1894,10 @@ export class GameEngine {
         (this.stats.isCrouching ? 1.05 : this.stats.isSprinting ? 1.4 : 1.35)
       ) {
         this.footTime = 0;
+        this.emitNoise(
+          this.stats.isCrouching ? 3 : this.stats.isSprinting ? 30 : 12,
+          "footstep",
+        );
         sound.playFootstep(
           this.stats.isCrouching,
           this.stats.isSprinting,
@@ -1910,74 +1931,107 @@ export class GameEngine {
       ? "Leave cover"
       : (closest?.prompt ?? null);
   }
+  public emitNoise(
+    loudness: number,
+    kind = "impact",
+    position: [number, number, number] = this.playerPos,
+  ) {
+    const level = applySoundMasking(
+      loudness * (this.stats.isInHidingSpot ? 0.15 : 1),
+      position,
+      this.worldData.soundMaskingMachinePos,
+    );
+    this.stats.noiseLevel = Math.max(this.stats.noiseLevel, level);
+    this.stats.peakNoise = Math.max(this.stats.peakNoise, level);
+    if (this.noiseClock - (this.lastNoiseEmit.get(kind) ?? -100) < 0.3) return;
+    this.lastNoiseEmit.set(kind, this.noiseClock);
+    this.noiseEvents.push({
+      id: ++this.noiseId,
+      position: [...position],
+      loudness: level,
+      age: 0,
+      kind,
+    });
+    if (this.noiseEvents.length > 48) this.noiseEvents.shift();
+  }
   private updateGuards(dt: number) {
+    this.noiseClock += dt;
+    this.noiseEvents = this.noiseEvents.filter(
+      (event) => (event.age += dt) < 1.6,
+    );
     this.pathTime -= dt;
     const replan = this.pathTime <= 0;
     if (replan) this.pathTime = 0.65;
     const blocks = this.blockers();
+    const opaque = this.gameFlags.passage_open
+      ? this.worldData.visionColliders
+      : [
+          ...this.worldData.visionColliders,
+          this.worldData.opening.passageBounds,
+        ];
     for (const guard of this.worldData.guards) {
       const mesh = this.worldData.guardMeshes.get(guard.id)!;
-      const examiner = this.gameFlags.opening_v3 && guard.id === "guard_dunne";
-      if (guard.state === "knocked_out") {
-        guard.stateTimer -= dt;
-        if (guard.stateTimer <= 0) {
-          guard.state = "searching";
-          guard.stateTimer = 8;
-          mesh.rotation.x = 0;
-          mesh.position.y = 0;
-        }
-        this.guardActors
-          .get(guard.id)
-          ?.update(guard, 0, dt, this.camera, this.guardQuality, this.mobile);
-        continue;
-      }
-      const wall = this.obstructed(guard.position, this.playerPos);
-      const canSee =
-        !wall &&
-        isPlayerInGuardVision(
-          guard.position,
-          guard.rotationY,
-          guard.visionAngle,
-          guard.visionRange,
-          this.playerPos,
-          this.stats.isCrouching,
-          this.stats.isInHidingSpot,
-        );
-      const heard = this.stats.isInHidingSpot
-        ? 0
-        : calculateHeardNoise(
-            this.stats.noiseLevel,
-            guard.position,
-            this.playerPos,
-            wall,
-            guard.hearingMultiplier,
-          );
-      const prev = guard.state;
-      const update = updateGuardSuspicionAndState(
+      const examiner =
+        !!this.gameFlags.opening_v3 && guard.id === "guard_dunne";
+      const approach = (
+        point: [number, number, number] | undefined,
+      ): [number, number, number] | undefined => {
+        // An unlocked Cell 46 must remain reachable through its real doorway.
+        const openCell46 =
+          point &&
+          this.gameFlags.locker_open &&
+          point[0] > -14.2 &&
+          point[0] < -8.8;
+        if (
+          point &&
+          !openCell46 &&
+          guard.position[2] > -1.8 &&
+          point[2] < -2 &&
+          point[0] < -3.1
+        )
+          return [THREE.MathUtils.clamp(point[0], -35.5, -4), 0, -1.5];
+        return point;
+      };
+      const oldTarget = approach(guard.investigationTarget);
+      const vision = sightEvidence(
         guard,
-        heard,
-        canSee,
         this.playerPos,
+        this.stats.isCrouching,
+        this.stats.isInHidingSpot,
+        this.stats.isSprinting,
+        opaque,
+      );
+      const heard = strongestNoise(guard, this.noiseEvents, opaque);
+      const wall = this.obstructed(guard.position, this.playerPos);
+      const prev = guard.state;
+      const decision = decideGuard(
+        guard,
+        {
+          vision,
+          player: this.playerPos,
+          noise: heard,
+          captureClear: !wall && !this.stats.isInHidingSpot,
+          atTarget:
+            !!oldTarget &&
+            Math.hypot(
+              oldTarget[0] - guard.position[0],
+              oldTarget[2] - guard.position[2],
+            ) < 0.4,
+          dutyPoint: examiner ? [-5.7, 0, -0.7] : undefined,
+        },
         dt,
       );
-      Object.assign(guard, {
-        state: update.nextState,
-        suspicion: update.nextSuspicion,
-        stateTimer: update.nextStateTimer,
-        investigationTarget: update.investigationTarget,
-      });
+      Object.assign(guard, decision.next);
       if (guard.state === "chase" && prev !== "chase") {
         this.stats.alarmsTriggered++;
-        sound.playGuardAlert();
         this.triggerSubtitle(
           guard.name.toUpperCase() + " · RADIO",
           sound.guardVoice("chase", guard.position),
           "radio",
         );
-      }
-      if (
-        (guard.state === "suspicious" || guard.state === "searching") &&
-        prev === "patrol"
+      } else if (
+        prev === "patrol" &&
+        (guard.state === "suspicious" || guard.state === "searching")
       ) {
         this.triggerSubtitle(
           guard.name.toUpperCase(),
@@ -1986,101 +2040,80 @@ export class GameEngine {
           5,
         );
       }
-      if (update.caughtPlayer && !wall && !this.stats.isInHidingSpot) {
+      if (decision.caughtPlayer) {
         this.triggerGameOver(
           "Intercepted by " + guard.name + ". Your checkpoint is safe.",
         );
         break;
       }
-      let target =
-        guard.state === "patrol"
-          ? examiner
-            ? ([-5.7, 0, -0.7] as [number, number, number])
-            : guard.patrolRoute[guard.currentWaypoint]
-          : guard.investigationTarget;
-      if (
-        examiner &&
-        guard.state !== "patrol" &&
-        target &&
-        target[2] < -2 &&
-        target[0] > -8.8 &&
-        target[0] < -3.1
-      ) {
-        target = [THREE.MathUtils.clamp(target[0], -7.5, -4.2), 0, -1.5];
-      }
-      if (
-        target &&
-        Math.hypot(
-          target[0] - guard.position[0],
-          target[2] - guard.position[2],
-        ) < 0.35
-      ) {
-        if (guard.state === "patrol" && !examiner)
-          guard.currentWaypoint =
-            (guard.currentWaypoint + 1) % guard.patrolRoute.length;
-        target = undefined;
-      }
-      let moved = false;
+      const target = approach(decision.target);
       const beforeX = guard.position[0],
         beforeZ = guard.position[2];
-      if (target) {
+      let desiredYaw = decision.scanYaw;
+      if (
+        guard.state !== "knocked_out" &&
+        target &&
+        Math.hypot(target[0] - beforeX, target[2] - beforeZ) > 0.3
+      ) {
         let destination: [number, number] = [target[0], target[2]];
-        if (this.obstructed(guard.position, target)) {
-          if (replan)
+        if (pathObstructed([beforeX, beforeZ], destination, blocks)) {
+          const old = this.pathGoals.get(guard.id),
+            changed =
+              !old ||
+              Math.hypot(old[0] - destination[0], old[1] - destination[1]) >
+                0.7 ||
+              prev !== guard.state;
+          if (replan || changed) {
+            this.pathGoals.set(guard.id, [...destination]);
             this.paths.set(
               guard.id,
-              findPath(
-                [guard.position[0], guard.position[2]],
-                destination,
-                blocks,
-              ),
+              findPath([beforeX, beforeZ], destination, blocks),
             );
+          }
           const path = this.paths.get(guard.id) ?? [];
-          if (
+          while (
             path.length &&
-            Math.hypot(
-              path[0][0] - guard.position[0],
-              path[0][1] - guard.position[2],
-            ) < 0.3
+            Math.hypot(path[0][0] - beforeX, path[0][1] - beforeZ) < 0.3
           )
             path.shift();
           if (path[0]) destination = path[0];
-          else destination = [guard.position[0], guard.position[2]];
+          else destination = [beforeX, beforeZ];
+        } else {
+          this.paths.delete(guard.id);
+          this.pathGoals.delete(guard.id);
         }
-        const dx = destination[0] - guard.position[0],
-          dz = destination[1] - guard.position[2],
+        const dx = destination[0] - beforeX,
+          dz = destination[1] - beforeZ,
           length = Math.hypot(dx, dz);
         if (length > 0.05) {
-          guard.rotationY = Math.atan2(dx, dz);
-          const step = Math.min(
-            length,
-            (guard.state === "chase" ? 3.9 : 1.3) * dt,
-          );
-          const nx = guard.position[0] + (dx / length) * step,
-            nz = guard.position[2] + (dz / length) * step;
-          if (!isBlocked(nx, guard.position[2], blocks, 0.22)) {
-            guard.position[0] = nx;
-            moved = true;
-          }
-          if (!isBlocked(guard.position[0], nz, blocks, 0.22)) {
+          desiredYaw = Math.atan2(dx, dz);
+          const step = Math.min(length, decision.speed * dt),
+            nx = beforeX + (dx / length) * step,
+            nz = beforeZ + (dz / length) * step;
+          if (!isBlocked(nx, beforeZ, blocks, 0.22)) guard.position[0] = nx;
+          if (!isBlocked(guard.position[0], nz, blocks, 0.22))
             guard.position[2] = nz;
-            moved = true;
-          }
         }
+      } else if (
+        desiredYaw === undefined &&
+        guard.lookTarget &&
+        guard.state !== "patrol"
+      ) {
+        desiredYaw = Math.atan2(
+          guard.lookTarget[0] - beforeX,
+          guard.lookTarget[2] - beforeZ,
+        );
       }
-      const phase =
-        (mesh.userData.phase ?? 0) + dt * (guard.state === "chase" ? 11 : 5);
-      mesh.userData.phase = phase;
-      mesh.position.set(...guard.position);
-      const speed =
-        dt > 0
-          ? Math.hypot(
-              guard.position[0] - beforeX,
-              guard.position[2] - beforeZ,
-            ) / dt
-          : 0;
+      if (desiredYaw !== undefined)
+        guard.rotationY +=
+          angleDelta(desiredYaw, guard.rotationY) * Math.min(1, dt * 6);
+      const travelled = Math.hypot(
+          guard.position[0] - beforeX,
+          guard.position[2] - beforeZ,
+        ),
+        speed = dt > 0 ? travelled / dt : 0;
       guard.examining =
-        !!examiner &&
+        examiner &&
         guard.state === "patrol" &&
         speed < 0.05 &&
         Math.hypot(guard.position[0] + 5.7, guard.position[2] + 0.7) < 0.4;
@@ -2088,17 +2121,10 @@ export class GameEngine {
       this.guardActors
         .get(guard.id)
         ?.update(guard, speed, dt, this.camera, this.guardQuality, this.mobile);
-      const distance = Math.hypot(
-        guard.position[0] - this.playerPos[0],
-        guard.position[2] - this.playerPos[2],
-      );
-      mesh.userData.stride =
-        (mesh.userData.stride ?? 0) +
-        Math.hypot(guard.position[0] - beforeX, guard.position[2] - beforeZ);
+      mesh.userData.stride = (mesh.userData.stride ?? 0) + travelled;
       if (
-        moved &&
-        mesh.userData.stride >= (guard.state === "chase" ? 1.2 : 0.67) &&
-        distance < 12
+        travelled > 0 &&
+        mesh.userData.stride >= (guard.state === "chase" ? 1.2 : 0.67)
       ) {
         sound.guardFootstep(guard.position, guard.state === "chase", wall);
         mesh.userData.stride = 0;
@@ -2154,6 +2180,7 @@ export class GameEngine {
     this.guardAssets.dispose();
     this.guardKey.shadow.dispose();
     this.worldData.windowLight.shadow.dispose();
+    this.practicalLights?.dispose();
     this.worldData.disposeEnvironment();
     this.environmentTarget?.dispose();
     const geometries = new Set<THREE.BufferGeometry>(),

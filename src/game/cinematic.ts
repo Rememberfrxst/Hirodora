@@ -4,55 +4,7 @@ import type { GuardActor } from "./guard-actor";
 import type { PrisonerActor } from "./prisoner";
 import { sound } from "./audio";
 import { introFrame, SHOT_TIME } from "./intro";
-
-/** Small manufactured sidearm, authored beveled profile; the human is a skinned GLB. */
-function sidearm() {
-  const shape = new THREE.Shape();
-  shape.moveTo(-0.055, -0.02);
-  shape.lineTo(0.025, -0.02);
-  shape.lineTo(0.055, 0.07);
-  shape.lineTo(0.21, 0.07);
-  shape.lineTo(0.21, 0.12);
-  shape.lineTo(-0.065, 0.12);
-  shape.lineTo(-0.065, 0.035);
-  shape.closePath();
-  const geo = new THREE.ExtrudeGeometry(shape, {
-    depth: 0.035,
-    bevelEnabled: true,
-    bevelSize: 0.004,
-    bevelThickness: 0.003,
-    bevelSegments: 2,
-    steps: 1,
-  });
-  geo.translate(0, 0, -0.0175);
-  geo.rotateY(-Math.PI / 2);
-  const root = new THREE.Group();
-  root.add(
-    new THREE.Mesh(
-      geo,
-      new THREE.MeshStandardMaterial({
-        color: 0x263035,
-        roughness: 0.48,
-        metalness: 0.65,
-      }),
-    ),
-  );
-  const flash = new THREE.Mesh(
-    new THREE.SphereGeometry(0.045, 6, 4),
-    new THREE.MeshBasicMaterial({
-      color: 0xffe5a1,
-      transparent: true,
-      opacity: 0.9,
-    }),
-  );
-  flash.position.set(0, 0.095, 0.25);
-  flash.scale.set(0.7, 0.7, 2);
-  root.add(flash);
-  const light = new THREE.PointLight(0xffcb77, 0, 3, 2);
-  light.position.copy(flash.position);
-  root.add(light);
-  return { root, flash, light };
-}
+import { createSidearm } from "./sidearm";
 export class OpeningCinematic {
   public time = 0;
   private fired = false;
@@ -60,7 +12,7 @@ export class OpeningCinematic {
   private closed = false;
   private landed = false;
   private warned = false;
-  private weapon = sidearm();
+  private weapon = createSidearm();
   constructor(
     private world: PrisonWorldData,
     private camera: THREE.PerspectiveCamera,
@@ -94,16 +46,23 @@ export class OpeningCinematic {
     g.examining = t >= 10.3;
     g.cinematicAim = t >= 2.8 && t < 6.2;
     g.state = "patrol";
-    const dolly=Math.max(0,Math.min(1,(t-1.5)/2));
-    this.camera.position.set(-6.3, 1.65, this.reducedMotion ? -6 : -6 + 1.2*dolly*dolly*(3-2*dolly));
+    const dolly = Math.max(0, Math.min(1, (t - 1.5) / 2));
+    this.camera.position.set(
+      -6.3,
+      1.65,
+      this.reducedMotion ? -6 : -6 + 1.2 * dolly * dolly * (3 - 2 * dolly),
+    );
     this.camera.lookAt(
       -5.4,
       this.reducedMotion ? 1.1 : 1.25 - 0.25 * Math.min(1, t / 6),
       -0.15,
     );
     this.camera.updateMatrixWorld();
-    const forward=this.camera.getWorldDirection(new THREE.Vector3());
-    sound.updateListener([this.camera.position.x,0,this.camera.position.z],Math.atan2(-forward.x,-forward.z));
+    const forward = this.camera.getWorldDirection(new THREE.Vector3());
+    sound.updateListener(
+      [this.camera.position.x, 0, this.camera.position.z],
+      Math.atan2(-forward.x, -forward.z),
+    );
     this.actors
       .get(g.id)
       ?.update(g, f.guardSpeed, dt, this.camera, "mobile", false);
@@ -111,17 +70,15 @@ export class OpeningCinematic {
       this.actors
         .get(other.id)
         ?.update(other, 0, dt, this.camera, "mobile", false);
-    const hand = this.actors.get(g.id)?.hitTarget.getObjectByName("RightHand");
     this.weapon.root.visible = !!g.cinematicAim;
-    if (hand) {
-      hand.getWorldPosition(this.weapon.root.position);
-      const target = new THREE.Vector3(-6.4, 1.2, -0.1)
-        .sub(this.weapon.root.position)
-        .normalize();
-      this.weapon.root.quaternion.setFromUnitVectors(
-        new THREE.Vector3(0, 0, 1),
-        target,
-      );
+    if (g.cinematicAim) {
+      const socket = this.actors
+        .get(g.id)
+        ?.weaponGrip(new THREE.Vector3(-6.4, 1.2, -0.1));
+      if (socket) {
+        this.weapon.root.position.copy(socket.position);
+        this.weapon.root.quaternion.copy(socket.quaternion);
+      }
     }
     const flash = t >= SHOT_TIME && t < SHOT_TIME + 0.09;
     this.weapon.flash.visible = flash;

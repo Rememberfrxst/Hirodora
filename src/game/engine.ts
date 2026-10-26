@@ -31,6 +31,12 @@ import { sound } from "./audio";
 import { findPath, isBlocked, movementVector, stepJump } from "./navigation";
 import { GuardAssetPool, GuardActor, type GuardQuality } from "./guard-actor";
 import {
+  nextAdaptiveScale,
+  recommendGraphicsPreset,
+  renderScaleBounds,
+  type RenderScaleBounds,
+} from "./performance";
+import {
   advanceHold,
   openingObjective,
   openingStart,
@@ -177,6 +183,10 @@ export class GameEngine {
   private lightBudgetTime = 0;
   private frameAverage = 24;
   private renderScale = 1;
+  private renderBounds: RenderScaleBounds = { initial: 1, min: 0.7, max: 1 };
+  private adaptiveScaleTime = 0;
+  private drawCalls = 0;
+  private triangles = 0;
   private scratchFrom = new THREE.Vector3();
   private scratchTo = new THREE.Vector3();
   private scratchHit = new THREE.Vector3();
@@ -272,12 +282,6 @@ export class GameEngine {
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.12;
-    this.renderer.setPixelRatio(
-      this.softwareRenderer
-        ? 0.65
-        : Math.min(devicePixelRatio, this.mobile ? 1.35 : 1.75),
-    );
-    this.renderScale = this.renderer.getPixelRatio();
     const { clientWidth: w, clientHeight: h } = mountEl;
     this.renderer.setSize(w || innerWidth, h || innerHeight);
     this.camera = new THREE.PerspectiveCamera(
@@ -317,8 +321,16 @@ export class GameEngine {
     this.guardKey.shadow.normalBias = 0.012;
     this.scene.add(this.guardKey, this.guardKey.target);
     this.setGuardQuality("auto");
+    const device = navigator as Navigator & {
+      deviceMemory?: number;
+    };
     this.setGraphicsPreset(
-      this.mobile || this.softwareRenderer ? "medium" : "high",
+      recommendGraphicsPreset({
+        mobile: this.mobile,
+        softwareRenderer: this.softwareRenderer,
+        deviceMemory: device.deviceMemory,
+        hardwareConcurrency: navigator.hardwareConcurrency,
+      }),
     );
     this.scene.traverse((object) => {
       if (object instanceof THREE.PointLight) this.lights.push(object);
@@ -412,14 +424,20 @@ export class GameEngine {
 
   public setGraphicsPreset(preset: GraphicsPreset) {
     this.graphicsPreset = preset;
-    const settings: Record<GraphicsPreset, [number, boolean, number]> = {
-      low: [0.8, false, 0.98],
-      medium: [1, false, 1.04],
-      high: [Math.min(devicePixelRatio, 1.5), true, 1.1],
-      ultra: [Math.min(devicePixelRatio, 1.85), true, 1.16],
+    const settings: Record<GraphicsPreset, [boolean, number]> = {
+      low: [false, 0.98],
+      medium: [false, 1.04],
+      high: [true, 1.1],
+      ultra: [true, 1.16],
     };
-    const [scale, shadows, exposure] = settings[preset];
-    this.renderScale = this.softwareRenderer ? Math.min(scale, 0.8) : scale;
+    const [shadows, exposure] = settings[preset];
+    this.renderBounds = renderScaleBounds(
+      preset,
+      devicePixelRatio,
+      this.softwareRenderer,
+    );
+    this.renderScale = this.renderBounds.initial;
+    this.adaptiveScaleTime = 0;
     this.renderer.setPixelRatio(this.renderScale);
     this.renderer.shadowMap.enabled = shadows;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -436,6 +454,25 @@ export class GameEngine {
     );
     this.renderer.toneMappingExposure = exposure;
     this.emitChange();
+  }
+
+  public getPerformanceStatus() {
+    const target = this.mobile || this.softwareRenderer ? 33 : 16.7;
+    const estimatedFps = Math.round(1000 / Math.max(1, this.frameAverage));
+    const status =
+      this.frameAverage > target * 0.82
+        ? "Optimizing"
+        : this.frameAverage > target * 0.62
+          ? "Balanced"
+          : "Smooth";
+    return {
+      status,
+      estimatedFps,
+      renderScale: Math.round(this.renderScale * 100),
+      drawCalls: this.drawCalls,
+      triangles: this.triangles,
+      softwareRenderer: this.softwareRenderer,
+    };
   }
 
   private setupInputs() {
@@ -1657,15 +1694,22 @@ export class GameEngine {
       this.renderer.render(this.scene, this.camera);
       this.frameAverage =
         this.frameAverage * 0.95 + (performance.now() - renderStart) * 0.05;
-      if (
-        this.mobile &&
-        !this.softwareRenderer &&
-        this.frameAverage > 27 &&
-        this.renderScale > 0.8
-      ) {
-        this.renderScale = Math.max(0.8, this.renderScale - 0.1);
-        this.renderer.setPixelRatio(this.renderScale);
-        this.frameAverage = 20;
+      this.drawCalls = this.renderer.info.render.calls;
+      this.triangles = this.renderer.info.render.triangles;
+      this.adaptiveScaleTime -= dt;
+      if (this.adaptiveScaleTime <= 0) {
+        this.adaptiveScaleTime = 1.25;
+        const targetFrame = this.mobile || this.softwareRenderer ? 33 : 16.7;
+        const nextScale = nextAdaptiveScale(
+          this.renderScale,
+          this.renderBounds,
+          this.frameAverage,
+          targetFrame,
+        );
+        if (nextScale !== this.renderScale) {
+          this.renderScale = nextScale;
+          this.renderer.setPixelRatio(this.renderScale);
+        }
       }
     }
     if (simulationActive && now - this.hudTime > 120) {

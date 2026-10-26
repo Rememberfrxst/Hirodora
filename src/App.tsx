@@ -286,6 +286,12 @@ export default function App() {
                     />{" "}
                     REDUCE CAMERA MOTION
                   </label>
+                  <p className="performance-readout" role="status">
+                    <span>PERFORMANCE / {engine.getPerformanceStatus().status.toUpperCase()}</span>
+                    {engine.getPerformanceStatus().softwareRenderer
+                      ? " Hardware acceleration is unavailable; low-resolution mode is active."
+                      : ` ~${engine.getPerformanceStatus().estimatedFps} FPS · ${engine.getPerformanceStatus().renderScale}% render scale · ${engine.getPerformanceStatus().drawCalls} draw calls`}
+                  </p>
                   <button
                     className="primary-button"
                     onClick={() => engine.resumeGame()}

@@ -150,6 +150,18 @@ button:active {
   text-align: center;
   pointer-events: none;
 }
+.performance-readout {
+  margin: 2px 0 0;
+  padding: 9px 10px;
+  border-left: 2px solid #d0b47d88;
+  color: #b8c3be;
+  background: #06101480;
+  font: 10px/1.55 monospace;
+  letter-spacing: 0.45px;
+}
+.performance-readout span {
+  color: var(--gold);
+}
 @media (pointer: coarse) and (orientation: landscape) {
   .app-shell .touch-controls .joystick {
     left: max(27px, env(safe-area-inset-left));

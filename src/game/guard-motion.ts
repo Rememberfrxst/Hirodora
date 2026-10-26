@@ -1,6 +1,7 @@
 import type { GuardState } from "./types";
 
 export type GuardClip =
+  | "Examine"
   | "Idle"
   | "Walk"
   | "Run"

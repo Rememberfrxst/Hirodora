@@ -142,7 +142,79 @@ export class GuardActor {
     templates: Map<Tier, GLTF>,
     captain: boolean,
   ) {
-    const animations = templates.get("hero")!.animations;
+    const hero = templates.get("hero")!;
+    const examination = clone(hero.scene);
+    const hips = examination.getObjectByName("Hips")!;
+    hips.position.set(0, 0.52, 0.03);
+    const tracks: THREE.KeyframeTrack[] = [];
+    const offsets: Record<string, [number, number, number]> = {
+      Hips: [0.25, 0, 0],
+      Spine: [0.3, 0, 0],
+      LeftUpLeg: [-1.45, 0, 0],
+      LeftLeg: [1.55, 0, 0],
+      RightUpLeg: [-0.55, 0, 0],
+      RightLeg: [1.65, 0, 0],
+      LeftArm: [0.65, 0, 0.15],
+      LeftForeArm: [0.6, 0, 0],
+      RightArm: [0.65, 0, -0.15],
+      RightForeArm: [0.6, 0, 0],
+      Head: [0.25, 0, 0],
+    };
+    for (const [name, offset] of Object.entries(offsets)) {
+      const bone = examination.getObjectByName(name);
+      if (!bone) continue;
+      const directions: Record<string, [number, number, number]> = {
+        LeftUpLeg: [0.05, -0.04, 1],
+        LeftLeg: [0, -1, 0],
+        RightUpLeg: [-0.05, -1, -0.1],
+        RightLeg: [0, -0.12, -1],
+      };
+      let q: THREE.Quaternion;
+      if (directions[name]) {
+        examination.updateMatrixWorld(true);
+        const parentWorld = bone.parent!.getWorldQuaternion(
+          new THREE.Quaternion(),
+        );
+        const localDirection = new THREE.Vector3(...directions[name])
+          .normalize()
+          .applyQuaternion(parentWorld.invert());
+        q = new THREE.Quaternion().setFromUnitVectors(
+          new THREE.Vector3(0, 1, 0),
+          localDirection,
+        );
+      } else
+        q = bone.quaternion
+          .clone()
+          .multiply(
+            new THREE.Quaternion().setFromEuler(new THREE.Euler(...offset)),
+          );
+      bone.quaternion.copy(q);
+      const q2 = q
+        .clone()
+        .multiply(
+          new THREE.Quaternion().setFromEuler(
+            new THREE.Euler(name === "Spine" ? 0.035 : 0, 0, 0),
+          ),
+        );
+      tracks.push(
+        new THREE.QuaternionKeyframeTrack(
+          name + ".quaternion",
+          [0, 2, 4],
+          [...q.toArray(), ...q2.toArray(), ...q.toArray()],
+        ),
+      );
+    }
+    tracks.push(
+      new THREE.VectorKeyframeTrack(
+        "Hips.position",
+        [0, 2, 4],
+        [0, 0.52, 0.03, 0, 0.53, 0.03, 0, 0.52, 0.03],
+      ),
+    );
+    const animations = [
+      ...hero.animations,
+      new THREE.AnimationClip("Examine", 4, tracks),
+    ];
     for (const [tier, template] of templates) {
       const model = clone(template.scene);
       // Actual unposed bounds normalize feet-to-scalp to the gameplay height.
@@ -201,7 +273,9 @@ export class GuardActor {
       : quality === "mobile" || (quality === "auto" && mobile)
         ? "mobile"
         : "hero";
-    const nextClip = guardClip(guard.state, speed, turn);
+    const nextClip = guard.examining
+      ? "Examine"
+      : guardClip(guard.state, speed, turn);
     const changedTier = nextTier !== this.tier;
     const previousTime = this.current?.time || 0;
     if (changedTier) {

@@ -13,6 +13,20 @@ declare global {
 
 async function start(page: Page) {
   await page.goto("/");
+  // Exercise the original campaign as a migrated v2 checkpoint. The new opening
+  // has separate end-to-end coverage in opening.spec.ts.
+  await page.waitForFunction(() => window.__HIRODORA__?.guardsReady);
+  await page.evaluate(() =>
+    window.__HIRODORA__.restoreCheckpoint({
+      id: "legacy",
+      name: "Cell 47",
+      playerPosition: [-6, 0, -6],
+      playerRotationY: 0,
+      act: 1,
+      inventory: ["small_key", "note_from_unknown"],
+      flags: {},
+    }),
+  );
   await page.getByRole("button", { name: "BEGIN THE ESCAPE" }).click();
   await expect(
     page.getByRole("button", { name: "Pause game", exact: true }),
@@ -238,12 +252,57 @@ test("authored environment loads locally and graphics presets preserve collision
   page,
 }) => {
   await start(page);
-  const baseline=JSON.parse(await readFile(new URL('../docs/screenshots/environment/before/capture.json',import.meta.url),'utf8'));
-  const geometry=await page.evaluate(()=>{
-    const e=window.__HIRODORA__;
-    return JSON.stringify({colliders:e.worldData.colliders.map(b=>[...b.min.toArray(),...b.max.toArray()]),interactions:e.worldData.interactables.map(({id,position,radius,actionRequiredItem,actionType})=>({id,position,radius,actionRequiredItem,actionType})),doors:[...e.worldData.doorColliders].map(([id,b])=>[id,...b.min.toArray(),...b.max.toArray()])});
+  const baseline = JSON.parse(
+    await readFile(
+      new URL(
+        "../docs/screenshots/environment/before/capture.json",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+  );
+  const geometry = await page.evaluate(() => {
+    const e = window.__HIRODORA__;
+    return JSON.stringify({
+      colliders: e.worldData.colliders.map((b) => [
+        ...b.min.toArray(),
+        ...b.max.toArray(),
+      ]),
+      interactions: e.worldData.interactables.map(
+        ({ id, position, radius, actionRequiredItem, actionType }) => ({
+          id,
+          position,
+          radius,
+          actionRequiredItem,
+          actionType,
+        }),
+      ),
+      doors: [...e.worldData.doorColliders].map(([id, b]) => [
+        id,
+        ...b.min.toArray(),
+        ...b.max.toArray(),
+      ]),
+    });
   });
-  expect(JSON.parse(geometry)).toEqual(baseline.gameplay);
+  const current = JSON.parse(geometry);
+  // The opening deliberately adds cells, a shared-wall aperture and movable
+  // furniture. Retain exact regression checks on the rest of the campaign.
+  const unchanged = (b: number[]) => b[0] >= -3 || (b[2] >= 1.8 && b[3] > -16);
+  expect(current.colliders.filter(unchanged)).toEqual(
+    baseline.gameplay.colliders.filter(unchanged),
+  );
+  for (const interaction of baseline.gameplay.interactions)
+    expect(
+      current.interactions.find((o: any) => o.id === interaction.id),
+    ).toEqual(interaction);
+  expect(
+    current.doors.filter(([id]: [string]) =>
+      baseline.gameplay.doors.some(([old]: [string]) => old === id),
+    ),
+  ).toEqual(baseline.gameplay.doors);
+  expect(
+    current.doors.filter(([id]: [string]) => /^cell_4[2-5]_door$/.test(id)),
+  ).toHaveLength(4);
   const before = await page.evaluate(() => ({
     position: window.__HIRODORA__.playerPos,
     inventory: window.__HIRODORA__.inventory,
@@ -258,7 +317,7 @@ test("authored environment loads locally and graphics presets preserve collision
     });
     return names;
   });
-  expect(assets.filter((n) => n === "CellAsset_Bunk")).toHaveLength(2);
+  expect(assets.filter((n) => n === "CellAsset_Bunk")).toHaveLength(6);
   expect(assets).toContain("CellAsset_Toilet");
   expect(assets).toContain("CellAsset_Sink");
   expect(assets.filter((n) => n === "CellAsset_Window")).toHaveLength(2);

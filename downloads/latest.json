@@ -1,7 +1,7 @@
 {
-  "version": "0.4.0",
-  "archive": "Hirodora-0.4.0-offline.zip",
-  "html": "Hirodora-0.4.0.html",
-  "sha256": "0d9099a3105329cf0aae3ff4633ce042212b5060d1002137fde0f801bb4ff780",
-  "bytes": 5651075
+  "version": "0.5.0",
+  "archive": "Hirodora-0.5.0-offline.zip",
+  "html": "Hirodora-0.5.0.html",
+  "sha256": "df6114c35c7c5e980ba0cfa24feb5f3025868e4a701ce25a565643d590527e6c",
+  "bytes": 6279813
 }

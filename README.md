@@ -8,19 +8,58 @@
 
 **Some walls keep you in. These walls keep a secret.**
 
-**v0.4.0 · Cell 47 environment preview**
+**v0.5.0 · A key to the wrong cell**
 
-An original first-person prison escape · Acoustic stealth · Three endings
+First-person prison escape · Recorded spatial audio · New Cell 47 → 46 chapter
 
-**[↓ DOWNLOAD THE LATEST OFFLINE GAME — v0.4.0 ZIP](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.4.0-offline.zip)**
+**[↓ DOWNLOAD THE LATEST OFFLINE GAME — v0.5.0 ZIP](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.5.0-offline.zip)**
 
-[Single-file HTML](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.4.0.html) · [Mobile setup](#play-on-mobile) · [Checksums](downloads/latest.json)
+[Single-file HTML](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.5.0.html) · [Mobile setup](#play-on-mobile) · [Checksums](downloads/latest.json)
 
 [The experience](#the-experience) · [Play on mobile](#play-on-mobile) · [Development](#development) · [Quality](#quality-and-release-status)
 
-![Hirodora title screen, rendered in the game](docs/screenshots/title.png)
+![Current Cell 47 opening, rendered in the game](docs/screenshots/opening/after-cell47.png)
 
 </div>
+
+## New opening: a way through
+
+A prisoner lies dead outside Cell 47. An officer is busy examining him. A key lies behind the officer, within reach through the bars. Collect it quietly. It looks like your chance to open the door—but the lock reveals the truth: **the key belongs to Cell 42**.
+
+Push the bunk slowly to uncover a screwdriver. Unbolt the toilet on the shared wall, move it aside, and use **Penetrate** to enter Cell 46. Your chapter checkpoint is saved there, and the passage works both ways. Cells **45, 44, 43 and 42** are physically present and locked for a future chapter. Existing v2 saves still load the original campaign.
+
+<table>
+<tr><td width="50%"><img src="docs/screenshots/opening/before-corridor.png" alt="Previous opening at commit 1e463ed, identical camera" /></td><td width="50%"><img src="docs/screenshots/opening/after-corridor.png" alt="New opening: examining officer, dead prisoner and reachable key" /></td></tr>
+<tr><td align="center"><sub>BEFORE · 1e463ed</sub></td><td align="center"><sub>AFTER · NEW OPENING</sub></td></tr>
+<tr><td><img src="docs/screenshots/opening/wrong-key.png" alt="Cell 47 lock reveals that the key belongs to Cell 42" /></td><td><img src="docs/screenshots/opening/passage.png" alt="Toilet moved aside and passage to Cell 46 revealed" /></td></tr>
+</table>
+
+These are actual browser renders. [Capture cameras and progress](docs/screenshots/opening/capture.json) document the comparison. Capture tooling advances the normal interaction simulation with a fixed timestep for the puzzle views.
+
+### How to finish this chapter
+
+1. Approach the bars while the officer checks the body. Aim at the key and press **E** or tap **Interact**.
+2. Aim at Cell 47's lock and try the key. Read the notice; the key remains in your satchel as **Cell 42 key**.
+3. Aim at the bunk. **Hold E / Push** to move it quietly. **Hold R / Push hard** moves it faster and attracts the guard.
+4. Pick up the screwdriver revealed beneath the bunk.
+5. Hold the action on the toilet's mounting bolts, then hold **Move toilet**.
+6. Aim at the opening and use **Penetrate**. Reach Cell 46 to complete this chapter. Choose **Explore Cell 46** to inspect the cell or return through the passage.
+
+### Recorded audio
+
+**59 CC0 recordings, 786 KiB**: material footsteps, keys, bed dragging, screwdriver, ceramic scraping, hinges, paper, fabric, ventilation, water and English guard speech. Footsteps follow real ground movement; guards use distance attenuation, spatial panning and wall filtering. Pause settings provide separate sound, footstep, ambience, dialogue, music and UI levels. [Audio sources, licenses, audit and remaining work](docs/AUDIO.md).
+
+The recorded lines are “Hey, you can't do that!” and “Stop right there. This isn't over yet!” Custom “I'm coming to check / for you” performances, exterior ambience and physical-phone audio QA remain pending. This release does not claim the entire sound-design brief is finished.
+
+![New opening with mobile landscape controls](docs/screenshots/opening/mobile.png)
+
+<details><summary>Cell 46 checkpoint and the extended cell block</summary>
+
+![Chapter checkpoint reached through the passage](docs/screenshots/opening/cell46-checkpoint.png)
+![Cell 46 interior](docs/screenshots/opening/cell46.png)
+![Cells 45, 44, 43 and 42 along the west corridor](docs/screenshots/opening/cellblock.png)
+
+</details>
 
 ## Cell 47 environment preview
 
@@ -41,7 +80,7 @@ Dedicated concrete scans remain blocked at the libraries' download hosts; the cu
 
 You are **Kabir Rao**, a vault technician imprisoned by the man whose secrets you discovered. Warden Voss runs Gull Rock like a kingdom. Officer Iyer is ready to bring it down—if you can get her the smuggling ledger.
 
-A key arrives through the meal slot. The sea is pulling back. Tonight is your way out.
+A key lies behind a distracted officer. The sea is pulling back. Tonight is your way out.
 
 > **Every sound has a consequence.** Crouch through the cell block, use running machinery to mask your movement, and break a guard’s line of sight before suspicion becomes pursuit.
 
@@ -59,7 +98,7 @@ A key arrives through the meal slot. The sea is pulling back. Tonight is your wa
 
 ### Work quietly. Think ahead.
 
-Find the sharpened spoon. Open the service duct. Earn Boulder’s respect at the arm-wrestling table. Search the utility wing for tools, craft a suppressor, and listen your way into Voss’s vault. The **four-minute tidal countdown** begins when you recover the ledger.
+New games follow the Cell 47 → 46 opening above. The original campaign remains available through existing v2 checkpoints: spoon, service duct, Boulder, utility-wing crafting and Voss’s vault. Its **four-minute tidal countdown** begins when you recover the ledger.
 
 <table>
 <tr><td width="50%"><img src="docs/screenshots/guard.png" alt="Rigged correctional officer front view in the actual prison" /></td><td width="50%"><img src="docs/screenshots/guard-side.png" alt="Side profile of the same skinned officer with fitted uniform and belt equipment" /></td></tr>
@@ -88,17 +127,17 @@ The gallery shows actual v0.4.0 browser renders. Front/side/detail showcases sta
 
 ## Play on mobile
 
-### Download v0.4.0 — offline edition
+### Download v0.5.0 — offline edition
 
-**[Download Hirodora v0.4.0 for offline play (.zip)](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.4.0-offline.zip)**
+**[Download Hirodora v0.5.0 for offline play (.zip)](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.5.0-offline.zip)**
 
 1. Download the ZIP from the link above and extract it in your device’s Files app.
-2. Open **`Hirodora-0.4.0.html` in a full WebGL 2 browser**, such as Chrome on Android. If your file viewer displays text or blocks scripts, choose “Open with” a full browser. File handling depends on the device/browser.
+2. Open **`Hirodora-0.5.0.html` in a full WebGL 2 browser**, such as Chrome on Android. If your file viewer displays text or blocks scripts, choose “Open with” a full browser. File handling depends on the device/browser.
 3. Play in landscape: left joystick to move, drag the scene to look, then use **Jump**, **Crouch / Stand**, **Sprint**, **Interact** and the contextual action prompt. Portrait now shows a Rotate screen and pauses gameplay; rotate back to landscape and tap **Resume escape**. Puzzle progress is kept.
 
 Use **Fullscreen / landscape** on the title screen or pause menu to request fullscreen and landscape on supported Android browsers. Browser security prevents a web game from forcing rotation everywhere: if it remains portrait, disable the phone’s portrait-orientation lock and rotate manually. iPhone/iPad browsers may require manual rotation.
 
-The single HTML embeds the engine, **all three officer GLBs and textures**, styles and synthesized audio. It needs **no server, API key, external model download or network**. Wait for officer model preparation to finish before starting. The unmodified standalone document is tested in offline Chromium mobile emulation with zero HTTP requests. Direct file navigation is blocked by this cloud browser’s administrator policy, so device file-opening behavior still needs physical-phone testing. This is a web game, **not an APK or IPA**.
+The single HTML embeds the engine, **all three officer GLBs and textures**, styles and recorded audio. It needs **no server, API key, external model download or network**. Wait for officer model preparation to finish before starting. The unmodified standalone document is tested in offline Chromium mobile emulation with zero HTTP requests. Direct file navigation is blocked by this cloud browser’s administrator policy, so device file-opening behavior still needs physical-phone testing. This is a web game, **not an APK or IPA**.
 
 The same download works on desktop: extract and open the HTML in Chrome, Edge or Firefox. The conventional `dist/index.html` is a different, hosted build and still requires an HTTP server.
 
@@ -159,7 +198,7 @@ For an existing system Chromium, set `PLAYWRIGHT_CHROMIUM_EXECUTABLE=/path/to/ch
 
 ### Build and distribute
 
-`npm run build` produces `dist/`, a content-versioned service worker, relative asset paths for GitHub Pages subdirectories, embedded-texture GLBs, PNG app icons and the install manifest. Only assets required by the game are copied into the playable build. The offline payload is approximately **7.95 MiB uncompressed** in this revision; the build still fails if it exceeds **8 MiB**.
+`npm run build` produces `dist/`, a content-versioned service worker, relative asset paths for GitHub Pages subdirectories, embedded-texture GLBs, PNG app icons and the install manifest. Only assets required by the game are copied into the playable build. The v0.5.0 hosted offline payload is approximately **8.76 MiB uncompressed** including recordings and credits; the build fails above the revised **12 MiB** budget. The standalone ZIP is approximately **6 MiB**.
 
 The quality workflow checks pull requests and pushes, packages the offline HTML, runs browser tests and uploads both builds. Static surfaces are batched, Meshopt/WebP reduce model transfer size, instances share GPU resources, distant animations are throttled and offscreen pose work is skipped. Light selection is throttled, collision bounds are cached and mobile resolution scales down under sustained rendering load. The Pages workflow is manual so publishing remains an explicit release action. Normal builds use committed assets; [rebuilding the officer GLBs](docs/GUARD-ASSETS.md#rebuild-the-assets) is a separate offline-authoring step.
 
@@ -167,8 +206,8 @@ The quality workflow checks pull requests and pushes, packages the offline HTML,
 
 This is a working, substantially rebuilt **playable web slice**, with automated regression coverage. It is not a guarantee of zero defects or a claim of completed device certification.
 
-- **25 asset/logic tests** cover embedded PBR maps, skin weights, bone indices, clips, animation selection, display-orientation fallback, stealth, puzzles, crafting, endings, movement, routing clearance and the jump arc.
-- **Ten browser scenarios** exercise independent rigs, shared geometry, real joint movement, patrol, LOD, darts/collapse, checkpoint reset, failed-download retry, desktop/touch controls, portrait-to-landscape safety, transparent HUD, all puzzles, progression and both hosted/downloaded offline play.
+- **28 asset/logic tests** cover the opening objectives, bounded hold progress, audio licenses/hashes, embedded PBR maps, skin weights, bone indices, clips, animation selection, display-orientation fallback, stealth, puzzles, crafting, endings, movement, routing clearance and the jump arc.
+- **Fourteen browser scenarios** exercise the new opening, wrong-key reveal, quiet/hard pushing, return passage, guard investigation, audio decoding, hold cancellation, independent rigs, shared geometry, real joint movement, patrol, LOD, darts/collapse, checkpoint reset, failed-download retry, desktop/touch controls, portrait-to-landscape safety, transparent HUD, legacy puzzles/progression and hosted/downloaded offline play.
 - The progression integration test uses legal approach-position fixtures with patrols suspended; it is not a full unassisted stealth playthrough.
 - Physical Android/iPhone testing, Safari/Firefox checks, sustained performance testing and player-led difficulty balancing remain release gates.
 
@@ -176,6 +215,6 @@ See [development notes and the hardware QA checklist](docs/DEVELOPMENT.md) for a
 
 ## Credits and assets
 
-Built with React, TypeScript, Three.js, Vite, Lucide and Web Audio. Full-body human assets, photo skin and authored clothing derive from **MakeHuman CC0**, fitted/exported with the MIT Ara pipeline. Walk/run use CMU motion capture; other poses combine pipeline keyframes with project-authored investigation/search/alert. The data used in this project was obtained from mocap.cs.cmu.edu; the database was created with funding from NSF EIA-0196217. [Complete sources, terms and modifications](docs/GUARD-ASSETS.md). Prison geometry, additional duty equipment, prop details, sound synthesis and app icons are project work. Supporting NPCs retain the older articulated bodies. No GTA/Rockstar assets were extracted or reused; the visual reference does not imply GTA 6 fidelity.
+Built with React, TypeScript, Three.js, Vite, Lucide and Web Audio. Full-body human assets, photo skin and authored clothing derive from **MakeHuman CC0**, fitted/exported with the MIT Ara pipeline. Walk/run use CMU motion capture; other poses combine pipeline keyframes with project-authored investigation/search/alert/examination. The data used in this project was obtained from mocap.cs.cmu.edu; the database was created with funding from NSF EIA-0196217. [Complete sources, terms and modifications](docs/GUARD-ASSETS.md). [CC0 recorded audio credits](docs/AUDIO.md). Prison geometry, additional duty equipment, prop details and app icons are project work. The corridor prisoner reuses the human rig with duty gear removed and recolored clothing. Other supporting NPCs retain the older articulated bodies. No GTA/Rockstar assets were extracted or reused; the visual reference does not imply GTA 6 fidelity.
 
 <div align="center"><sub>HIRODORA · GULL ROCK PENITENTIARY · EVERY SOUND HAS A CONSEQUENCE.</sub></div>

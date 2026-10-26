@@ -1707,3 +1707,49 @@ input[type="range"] {
     padding: 0;
   }
 }
+/* Context actions stay clear of the mobile movement and action clusters. */
+.context-actions {
+  position: absolute;
+  left: 50%;
+  bottom: 24%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  pointer-events: auto;
+}
+.context-actions .interact-prompt {
+  position: relative;
+  left: auto;
+  bottom: auto;
+  transform: none;
+  min-height: 48px;
+  touch-action: none;
+  flex-wrap: wrap;
+}
+.context-actions progress {
+  width: 100%;
+  height: 4px;
+  accent-color: #d3ba82;
+}
+.hard-push {
+  min-width: 75px;
+  min-height: 48px;
+  color: #f0c296;
+  background: transparent;
+  border: 1px solid #c9a66966;
+  padding: 8px;
+  touch-action: none;
+}
+.hard-push small,
+.passage-action small {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+}
+.passage-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}

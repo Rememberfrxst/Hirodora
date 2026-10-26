@@ -93,10 +93,15 @@ export function createEnvironment(scene: THREE.Scene) {
     decal.position.set(x, y, z);
     scene.add(decal);
   }
-  const anchors: { name: string; position: THREE.Vector3; rotation: number }[] =
-    [];
-  const add = (name: string, x: number, y: number, z: number, rotation = 0) =>
-    anchors.push({ name, position: new THREE.Vector3(x, y, z), rotation });
+  const anchors: { name: string; root: THREE.Group }[] = [];
+  const add = (name: string, x: number, y: number, z: number, rotation = 0) => {
+    const root = new THREE.Group();
+    root.position.set(x, y, z);
+    root.rotation.y = rotation;
+    scene.add(root);
+    anchors.push({ name, root });
+    return root;
+  };
   const load = () => {
     if (loaded || disposed) return Promise.resolve();
     if (pending) return pending;
@@ -127,8 +132,7 @@ export function createEnvironment(scene: THREE.Scene) {
             throw Error(`Missing environment model ${anchor.name}`);
           const clone = template.clone(true);
           clone.name = `CellAsset_${anchor.name}`;
-          clone.position.copy(anchor.position);
-          clone.rotation.y = anchor.rotation;
+          clone.position.set(0, 0, 0);
           clone.traverse((o) => {
             if (!(o instanceof THREE.Mesh)) return;
             o.castShadow = o.receiveShadow = true;
@@ -142,7 +146,7 @@ export function createEnvironment(scene: THREE.Scene) {
               ? o.material.map(replace)
               : replace(o.material);
           });
-          scene.add(clone);
+          anchor.root.add(clone);
         }
         loaded = true;
       })

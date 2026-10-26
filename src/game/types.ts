@@ -3,12 +3,22 @@
  * Architected following Unity/C# Component & State-Machine patterns
  */
 
-export type GameState = "title" | "playing" | "paused" | "gameover" | "victory";
+export type GameState =
+  | "title"
+  | "playing"
+  | "paused"
+  | "gameover"
+  | "victory"
+  | "chapter_complete";
 
 export type EndingType = "ghost" | "loud" | "brotherhood";
 
 export type GuardState =
-  "patrol" | "suspicious" | "searching" | "chase" | "knocked_out";
+  | "patrol"
+  | "suspicious"
+  | "searching"
+  | "chase"
+  | "knocked_out";
 
 export type GuardType = "patrol_dunne" | "sentry" | "night_captain";
 
@@ -27,9 +37,12 @@ export interface GuardData {
   hearingMultiplier: number;
   stateTimer: number;
   investigationTarget?: [number, number, number];
+  examining?: boolean;
 }
 
 export type ItemId =
+  | "cell_key"
+  | "screwdriver"
   | "small_key"
   | "note_from_unknown"
   | "spoon"
@@ -113,6 +126,7 @@ export interface InteractiveObject {
 }
 
 export interface GameCheckpoint {
+  openingProgress?: { bed: number; bolts: number; toilet: number };
   stats?: PlayerStats;
   id: string;
   name: string;

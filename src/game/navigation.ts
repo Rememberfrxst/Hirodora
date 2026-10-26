@@ -37,8 +37,8 @@ export function findPath(
   obstacles: Obstacle[],
 ): Point[] {
   const step = 0.5,
-    origin: Point = [-15, -10.5],
-    columns = 90,
+    origin: Point = [-36, -10.5],
+    columns = 132,
     rows = 43;
   const cell = ([x, z]: Point): Point => [
     Math.round((x - origin[0]) / step),

@@ -1,7 +1,13 @@
 import { X, ArrowRight } from "lucide-react";
 import { EndingType, PlayerStats } from "../game/types";
 
-export function StoryPrologueModal({ onClose }: { onClose: () => void }) {
+export function StoryPrologueModal({
+  onClose,
+  opening = false,
+}: {
+  onClose: () => void;
+  opening?: boolean;
+}) {
   return (
     <div className="modal-backdrop">
       <article className="game-panel dossier">
@@ -27,21 +33,22 @@ export function StoryPrologueModal({ onClose }: { onClose: () => void }) {
           walls he helped secure.
         </p>
         <p>
-          Tonight, a brass key and a note arrive through the meal slot. Officer
-          Meera Iyer is ready to testify. She needs the ledger. Kabir needs a
-          way out.
+          {opening
+            ? "Tonight, a prisoner lies dead outside Cell 47. An officer kneels over him. A key lies behind the officer, close enough to reach through the bars. Kabir sees his chance."
+            : "Tonight, a brass key and a note arrive through the meal slot. Officer Meera Iyer is ready to testify. She needs the ledger. Kabir needs a way out."}
         </p>
         <div className="dossier-rule">
           <span>THE PLAN</span>
           <p>
-            Earn Boulder’s trust. Search the utility wing. Recover the ledger.
-            Follow the old smuggler tunnel to Iyer’s skiff.
+            {opening
+              ? "Stay quiet. Find a way through the shared wall into Cell 46. This chapter ends at that checkpoint; the rest of the block awaits."
+              : "Earn Boulder’s trust. Search the utility wing. Recover the ledger. Follow the old smuggler tunnel to Iyer’s skiff."}
           </p>
         </div>
         <p className="muted">
-          Keep quiet for the Ghost ending. Trigger an alarm for Loud. Return for
-          Boulder to earn Brotherhood. The four-minute tide countdown begins
-          when you open the vault.
+          {opening
+            ? "Hold E to work quietly. R pushes the bunk harder, but noise draws the officer away from his examination. Use the satchel to inspect tools."
+            : "Keep quiet for the Ghost ending. Trigger an alarm for Loud. Return for Boulder to earn Brotherhood. The four-minute tide countdown begins when you open the vault."}
         </p>
         <button className="primary-button" onClick={onClose}>
           Back to the night <ArrowRight size={18} />
@@ -55,19 +62,31 @@ export function TacticalMapModal({
   onClose,
   playerPos = [0, 0, 0],
   act = 1,
+  opening = false,
 }: {
   onClose: () => void;
   playerPos?: number[];
   act?: number;
+  opening?: boolean;
 }) {
-  const rooms = [
-    { x: 13, y: 18, w: 18, h: 30, label: "046 / BOULDER" },
-    { x: 33, y: 18, w: 18, h: 30, label: "047 / KABIR" },
-    { x: 69, y: 18, w: 16, h: 30, label: "VOSS / VAULT" },
-    { x: 13, y: 59, w: 31, h: 26, label: "INFIRMARY" },
-    { x: 46, y: 59, w: 17, h: 26, label: "LAUNDRY" },
-    { x: 65, y: 59, w: 20, h: 26, label: "WORKSHOP" },
-  ];
+  const rooms = opening
+    ? [
+        ...[42, 43, 44, 45, 46, 47].map((n, i) => ({
+          x: 10 + i * 11,
+          y: 18,
+          w: 10,
+          h: 30,
+          label: `0${n}${n < 46 ? " / LOCKED" : ""}`,
+        })),
+      ]
+    : [
+        { x: 13, y: 18, w: 18, h: 30, label: "046 / BOULDER" },
+        { x: 33, y: 18, w: 18, h: 30, label: "047 / KABIR" },
+        { x: 69, y: 18, w: 16, h: 30, label: "VOSS / VAULT" },
+        { x: 13, y: 59, w: 31, h: 26, label: "INFIRMARY" },
+        { x: 46, y: 59, w: 17, h: 26, label: "LAUNDRY" },
+        { x: 65, y: 59, w: 20, h: 26, label: "WORKSHOP" },
+      ];
   return (
     <div className="modal-backdrop">
       <section className="game-panel map-panel">
@@ -136,7 +155,11 @@ export function TacticalMapModal({
               TIDAL GATE → IYER
             </text>
             <circle
-              cx={13 + (playerPos[0] + 14) * 2.3}
+              cx={
+                opening
+                  ? 15 + (playerPos[0] + 33.5) * 2
+                  : 13 + (playerPos[0] + 14) * 2.3
+              }
               cy={53 + playerPos[2] * 3.1}
               r="1"
               fill="#f0c983"
@@ -149,9 +172,9 @@ export function TacticalMapModal({
           <span>N ↑</span>
         </div>
         <p className="muted">
-          The service duct connects Cell 47 to Cell 46. The Block C gate leads
-          east; utility rooms are south of the corridor. Voss’s office is north.
-          Reach the sea gate with the ledger and a lockpick.
+          {opening
+            ? "CELL BLOCK: 42 · 43 · 44 · 45 · 46 · 47. Cells 42–45 remain locked. The shared service wall connects Cells 47 and 46. This chapter ends inside Cell 46."
+            : "The service duct connects Cell 47 to Cell 46. The Block C gate leads east; utility rooms are south of the corridor. Voss’s office is north. Reach the sea gate with the ledger and a lockpick."}
         </p>
       </section>
     </div>

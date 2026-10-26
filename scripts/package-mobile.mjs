@@ -13,6 +13,7 @@ import { resolve } from "node:path";
 const { version } = JSON.parse(await readFile("package.json", "utf8"));
 const basename = `Hirodora-${version}`;
 const environmentCredits =
+  (await readFile("src/assets/audio/manifest.json", "utf8")) + "\n" +
   (await readFile("src/assets/environment/GODOT-MIT-LICENSE.txt", "utf8")) +
   "\n" +
   (await readFile("src/assets/environment/TPS-ASSET-LICENSE.txt", "utf8"));
@@ -26,7 +27,7 @@ const result = await build({
   jsx: "automatic",
   minify: true,
   write: false,
-  loader: { ".glb": "dataurl", ".webp": "dataurl" },
+  loader: { ".glb": "dataurl", ".webp": "dataurl", ".ogg": "dataurl" },
   define: {
     "import.meta.env.PROD": "true",
     "import.meta.env.DEV": "false",

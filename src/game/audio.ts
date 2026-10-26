@@ -1,459 +1,588 @@
-/**
- * Procedural Web Audio API sound synthesizer for Low Tide: Prison Escape 3D
- * Zero external audio files or 404 dependencies.
- */
+import { audioURLs } from "../assets/audio/urls";
+export type Surface =
+  | "concrete"
+  | "tile"
+  | "metal"
+  | "wood"
+  | "wet"
+  | "dirt"
+  | "gravel"
+  | "water";
+export type AudioBus =
+  | "music"
+  | "sfx"
+  | "footsteps"
+  | "ambience"
+  | "dialogue"
+  | "ui";
+export const audioBuses: AudioBus[] = [
+  "music",
+  "sfx",
+  "footsteps",
+  "ambience",
+  "dialogue",
+  "ui",
+];
+type Position = [number, number, number];
+type Material =
+  | "metal"
+  | "steel"
+  | "wood"
+  | "ceramic"
+  | "plastic"
+  | "glass"
+  | "fabric"
+  | "paper"
+  | "concrete";
 
+/** Sample playback never changes authoritative stealth or gameplay state. */
 class SoundManager {
   private ctx: AudioContext | null = null;
-  private masterGain: GainNode | null = null;
-  private ambientGain: GainNode | null = null;
-  private ambientOsc: OscillatorNode | null = null;
-  private isMuted: boolean = false;
-  private lastFootstepTime: number = 0;
+  private master?: GainNode;
+  private buses = new Map<AudioBus, GainNode>();
+  private levels: Record<AudioBus, number> = {
+    music: 0.5,
+    sfx: 0.8,
+    footsteps: 0.8,
+    ambience: 0.38,
+    dialogue: 1,
+    ui: 0.5,
+  };
+  private buffers = new Map<string, AudioBuffer>();
+  private voices = new Set<AudioBufferSourceNode>();
+  private spatial = new Set<{
+    panner: PannerNode;
+    filter: BiquadFilterNode;
+    gain: GainNode;
+    position: Position;
+    volume: number;
+    follow: boolean;
+  }>();
+  public occlusion?: (position: Position) => number;
+  private occlusionTime = 0;
+  private previous = new Map<string, number>();
+  private cooldowns = new Map<string, number>();
   private volume = 0.7;
-
-  public setVolume(value: number) {
-    this.volume = Math.max(0, Math.min(1, value));
-    if (this.masterGain && this.ctx)
-      this.masterGain.gain.setTargetAtTime(
-        this.isMuted ? 0 : this.volume,
-        this.ctx.currentTime,
-        0.05,
-      );
-  }
-
+  private muted = false;
+  private reverb?: ConvolverNode;
+  private reverbGain?: GainNode;
+  private loops: {
+    source: AudioBufferSourceNode;
+    gain: GainNode;
+    key: string;
+  }[] = [];
+  private pending?: Promise<void>;
+  private generation = 0;
+  public failures: string[] = [];
+  public playedEvents = 0;
+  public lightweight = false;
   public init() {
     if (this.ctx) return;
     try {
-      const AudioCtx =
-        window.AudioContext ||
-        (window as unknown as { webkitAudioContext: typeof AudioContext })
-          .webkitAudioContext;
-      this.ctx = new AudioCtx();
-      this.masterGain = this.ctx.createGain();
-      this.masterGain.gain.setValueAtTime(
-        this.isMuted ? 0 : this.volume,
-        this.ctx.currentTime,
-      );
-      this.masterGain.connect(this.ctx.destination);
-
-      // Start ambient low-frequency penitentiary drone
-      this.startAmbientDrone();
+      const ctx = (this.ctx = new AudioContext());
+      this.lightweight = matchMedia("(pointer: coarse)").matches;
+      this.master = ctx.createGain();
+      const limiter = ctx.createDynamicsCompressor();
+      limiter.threshold.value = -8;
+      limiter.knee.value = 10;
+      limiter.ratio.value = 8;
+      this.master.connect(limiter);
+      limiter.connect(ctx.destination);
+      try {
+        const saved = JSON.parse(
+          localStorage.getItem("hirodora-audio-v1") || "null",
+        );
+        if (saved)
+          for (const bus of audioBuses)
+            if (Number.isFinite(saved[bus]))
+              this.levels[bus] = Math.max(0, Math.min(1, saved[bus]));
+      } catch {}
+      for (const bus of audioBuses) {
+        const gain = ctx.createGain();
+        gain.gain.value = this.levels[bus];
+        gain.connect(this.master);
+        this.buses.set(bus, gain);
+      }
+      // A short room impulse is a DSP effect. The audible SFX/ambience are recordings.
+      if (!this.lightweight) {
+        this.reverb = ctx.createConvolver();
+        const impulse = ctx.createBuffer(
+          2,
+          ctx.sampleRate * 0.7,
+          ctx.sampleRate,
+        );
+        for (let c = 0; c < 2; c++) {
+          const samples = impulse.getChannelData(c);
+          for (let i = 0; i < samples.length; i++)
+            samples[i] =
+              (Math.random() * 2 - 1) *
+              Math.pow(1 - i / samples.length, 3) *
+              0.14;
+        }
+        this.reverb.buffer = impulse;
+        this.reverbGain = ctx.createGain();
+        this.reverbGain.gain.value = 0.09;
+        this.reverb.connect(this.reverbGain);
+        this.reverbGain.connect(this.master);
+        for (const bus of ["sfx", "footsteps", "dialogue"] as AudioBus[])
+          this.buses.get(bus)!.connect(this.reverb);
+      }
+      this.setVolume(this.volume);
+      void this.preload();
     } catch {
-      console.warn("Web Audio not supported");
+      this.ctx = null;
     }
   }
-
+  public async preload() {
+    if (!this.ctx) return;
+    if (this.pending) return this.pending;
+    const ctx = this.ctx,
+      generation = this.generation;
+    this.pending = (async () => {
+      const queue = Object.entries(audioURLs);
+      await Promise.all(
+        Array.from({ length: 3 }, async () => {
+          for (;;) {
+            if (generation !== this.generation) return;
+            const item = queue.shift();
+            if (!item) return;
+            const [key, url] = item;
+            if (this.buffers.has(key)) continue;
+            try {
+              const response = await fetch(url);
+              if (!response.ok) throw Error("HTTP " + response.status);
+              const buffer = await ctx.decodeAudioData(
+                await response.arrayBuffer(),
+              );
+              if (generation === this.generation) this.buffers.set(key, buffer);
+            } catch {
+              if (generation === this.generation) this.failures.push(key);
+            }
+          }
+        }),
+      );
+      if (generation === this.generation && this.ctx) this.startLoops();
+    })().finally(() => {
+      if (generation === this.generation) this.pending = undefined;
+    });
+    return this.pending;
+  }
+  public get readySamples() {
+    return this.buffers.size;
+  }
+  public get activeVoices() {
+    return this.voices.size;
+  }
+  public getBusVolume(bus: AudioBus) {
+    return this.levels[bus];
+  }
+  public setBusVolume(bus: AudioBus, value: number) {
+    this.levels[bus] = Math.max(0, Math.min(1, value));
+    if (this.ctx)
+      this.buses
+        .get(bus)
+        ?.gain.setTargetAtTime(this.levels[bus], this.ctx.currentTime, 0.06);
+    try {
+      localStorage.setItem("hirodora-audio-v1", JSON.stringify(this.levels));
+    } catch {}
+  }
+  public setVolume(value: number) {
+    this.volume = Math.max(0, Math.min(1, value));
+    if (this.ctx)
+      this.master?.gain.setTargetAtTime(
+        this.muted ? 0 : this.volume,
+        this.ctx.currentTime,
+        0.06,
+      );
+  }
   public resume() {
-    if (this.ctx && this.ctx.state === "suspended") {
-      this.ctx.resume();
-    }
+    if (this.ctx?.state === "suspended") void this.ctx.resume().catch(() => {});
   }
-
   public suspend() {
     void this.ctx?.suspend();
   }
-
-  public setAmbience(zone: "cell" | "laundry" | "tide", tension: number) {
-    if (!this.ctx || !this.ambientGain || !this.ambientOsc) return;
-    this.ambientOsc.frequency.setTargetAtTime(
-      zone === "laundry" ? 72 : zone === "tide" ? 42 : 54,
-      this.ctx.currentTime,
-      0.8,
-    );
-    this.ambientGain.gain.setTargetAtTime(
-      0.025 + tension * 0.035,
-      this.ctx.currentTime,
-      0.8,
-    );
+  public toggleMute() {
+    this.muted = !this.muted;
+    this.setVolume(this.volume);
+    return this.muted;
   }
-
-  /** Filtered noise, resonant transients and stereo placement give each material a voice. */
-  public playObject(
-    kind: "metal" | "cloth" | "wood" | "water" | "drip" | "boot" | "radio",
-    pan = 0,
+  public isSoundMuted() {
+    return this.muted;
+  }
+  public updateListener(position: Position, yaw: number) {
+    if (!this.ctx) return;
+    const l = this.ctx.listener,
+      now = this.ctx.currentTime;
+    if (l.positionX) {
+      for (const [p, value] of [
+        [l.positionX, position[0]],
+        [l.positionY, 1.65],
+        [l.positionZ, position[2]],
+        [l.forwardX, -Math.sin(yaw)],
+        [l.forwardY, 0],
+        [l.forwardZ, -Math.cos(yaw)],
+        [l.upX, 0],
+        [l.upY, 1],
+        [l.upZ, 0],
+      ] as [AudioParam, number][])
+        p.setTargetAtTime(value, now, 0.04);
+    } else {
+      l.setPosition(position[0], 1.65, position[2]);
+      l.setOrientation(-Math.sin(yaw), 0, -Math.cos(yaw), 0, 1, 0);
+    }
+    for (const s of this.spatial) {
+      if (s.follow) {
+        s.panner.positionX.setTargetAtTime(s.position[0], now, 0.06);
+        s.panner.positionZ.setTargetAtTime(s.position[2], now, 0.06);
+      }
+      if (now >= this.occlusionTime && this.occlusion) {
+        const walls = this.occlusion(s.position);
+        s.filter.frequency.setTargetAtTime(
+          walls ? 1100 / walls : 17000,
+          now,
+          0.12,
+        );
+        s.gain.gain.setTargetAtTime(
+          s.volume * Math.pow(0.25, Math.min(3, walls)),
+          now,
+          0.12,
+        );
+      }
+    }
+    if (now >= this.occlusionTime) this.occlusionTime = now + 0.2;
+  }
+  public surfaceAt([x, , z]: Position): Surface {
+    if (x > 15) return "water";
+    if (z > 3 && x < -4) return "tile";
+    if (z > 3 && x < 3) return "wet";
+    if (z > 3 && x >= 3) return "metal";
+    return "concrete";
+  }
+  private choose(prefix: string) {
+    const keys = Object.keys(audioURLs).filter((k) => k.startsWith(prefix));
+    if (!keys.length) return "";
+    const prev = this.previous.get(prefix) ?? -1;
+    const index =
+      keys.length === 1
+        ? 0
+        : (prev + 1 + Math.floor(Math.random() * (keys.length - 1))) %
+          keys.length;
+    this.previous.set(prefix, index);
+    return keys[index];
+  }
+  private play(
+    key: string,
+    bus: AudioBus,
     volume = 1,
+    position?: Position,
+    walls = 0,
+    rate = 1,
+    follow = false,
   ) {
-    if (!this.ctx || !this.masterGain || this.isMuted) return;
+    if (
+      !this.ctx ||
+      this.muted ||
+      !this.buffers.has(key) ||
+      this.voices.size >= (this.lightweight ? 12 : 24)
+    )
+      return;
     const ctx = this.ctx,
-      now = ctx.currentTime;
-    const duration =
-      kind === "water"
-        ? 0.65
-        : kind === "cloth"
-          ? 0.22
-          : kind === "radio"
-            ? 0.3
-            : 0.16;
-    const buffer = ctx.createBuffer(
-      1,
-      Math.ceil(ctx.sampleRate * duration),
-      ctx.sampleRate,
-    );
-    const data = buffer.getChannelData(0);
-    for (let i = 0; i < data.length; i++)
-      data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / data.length, 2);
-    const source = ctx.createBufferSource();
-    source.buffer = buffer;
-    const filter = ctx.createBiquadFilter();
-    filter.type = kind === "metal" ? "bandpass" : "lowpass";
-    filter.frequency.value =
-      kind === "metal"
-        ? 2400
-        : kind === "cloth"
-          ? 1500
-          : kind === "radio"
-            ? 1800
-            : kind === "boot"
-              ? 340
-              : 700;
-    filter.Q.value = kind === "metal" ? 5 : 0.8;
-    const gain = ctx.createGain();
+      source = ctx.createBufferSource(),
+      gain = ctx.createGain(),
+      filter = ctx.createBiquadFilter();
+    source.buffer = this.buffers.get(key)!;
+    source.playbackRate.value = rate;
+    filter.type = "lowpass";
+    filter.frequency.value = walls ? 1100 / walls : 17000;
     gain.gain.value =
-      (kind === "water" ? 0.14 : kind === "cloth" ? 0.08 : 0.2) * volume;
-    const stereo = ctx.createStereoPanner();
-    stereo.pan.value = Math.max(-1, Math.min(1, pan));
+      Math.min(1.2, volume) * Math.pow(0.25, Math.min(3, walls));
     source.connect(filter);
     filter.connect(gain);
-    gain.connect(stereo);
-    stereo.connect(this.masterGain);
-    source.start();
+    let panner: PannerNode | undefined;
+    let spatial:
+      | {
+          panner: PannerNode;
+          filter: BiquadFilterNode;
+          gain: GainNode;
+          position: Position;
+          volume: number;
+          follow: boolean;
+        }
+      | undefined;
+    if (position) {
+      panner = ctx.createPanner();
+      panner.panningModel = this.lightweight ? "equalpower" : "HRTF";
+      panner.distanceModel = "inverse";
+      panner.refDistance = 1.5;
+      panner.maxDistance = 24;
+      panner.rolloffFactor = 1.6;
+      panner.positionX.value = position[0];
+      panner.positionY.value = position[1] + 0.25;
+      panner.positionZ.value = position[2];
+      gain.connect(panner);
+      panner.connect(this.buses.get(bus)!);
+      spatial = {
+        panner,
+        filter,
+        gain,
+        position: follow ? position : [...position],
+        volume: Math.min(1.2, volume),
+        follow,
+      };
+      this.spatial.add(spatial);
+    } else gain.connect(this.buses.get(bus)!);
+    this.voices.add(source);
+    this.playedEvents++;
     source.onended = () => {
+      this.voices.delete(source);
+      if (spatial) this.spatial.delete(spatial);
       source.disconnect();
       filter.disconnect();
       gain.disconnect();
-      stereo.disconnect();
+      panner?.disconnect();
     };
-    if (kind === "drip") this.playWaterDrip();
+    source.start();
   }
-
-  public toggleMute(): boolean {
-    this.isMuted = !this.isMuted;
-    if (this.masterGain && this.ctx) {
-      this.masterGain.gain.setValueAtTime(
-        this.isMuted ? 0 : this.volume,
-        this.ctx.currentTime,
-      );
-    }
-    return this.isMuted;
-  }
-
-  public isSoundMuted(): boolean {
-    return this.isMuted;
-  }
-
-  public playWaterDrip() {
-    if (!this.ctx || !this.masterGain || this.isMuted) return;
+  private limited(event: string, seconds: number) {
+    if (!this.ctx) return false;
     const now = this.ctx.currentTime;
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(1400 + Math.random() * 400, now);
-    osc.frequency.exponentialRampToValueAtTime(600, now + 0.06);
-    gain.gain.setValueAtTime(0.04, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-    osc.connect(gain);
-    gain.connect(this.masterGain);
-    osc.start(now);
-    osc.stop(now + 0.08);
+    if (now - (this.cooldowns.get(event) ?? -100) < seconds) return false;
+    this.cooldowns.set(event, now);
+    return true;
   }
-
-  private startAmbientDrone() {
-    if (!this.ctx || !this.masterGain) return;
-    try {
-      const osc = this.ctx.createOscillator();
-      const filter = this.ctx.createBiquadFilter();
-      const gain = this.ctx.createGain();
-
-      osc.type = "sawtooth";
-      osc.frequency.setValueAtTime(54, this.ctx.currentTime); // Low low industrial hum
-
-      filter.type = "lowpass";
-      filter.frequency.setValueAtTime(110, this.ctx.currentTime);
-
-      gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
-
-      osc.connect(filter);
-      filter.connect(gain);
-      gain.connect(this.masterGain);
-
-      osc.start();
-      this.ambientOsc = osc;
-      this.ambientGain = gain;
-    } catch {
-      // ignore
-    }
-  }
-
   public playFootstep(
-    isCrouching: boolean,
-    isSprinting: boolean,
-    surface: "stone" | "water" = "stone",
+    crouched: boolean,
+    sprinting: boolean,
+    surface: Surface | "stone" = "concrete",
+    position?: Position,
+    walls = 0,
   ) {
-    if (!this.ctx || !this.masterGain || this.isMuted) return;
-    const now = this.ctx.currentTime;
-    if (now - this.lastFootstepTime < 0.22) return;
-    this.lastFootstepTime = now;
-    this.playObject(
-      surface === "water" ? "water" : "boot",
-      0,
-      isCrouching ? 0.18 : isSprinting ? 0.8 : 0.45,
+    const prefix =
+      surface === "stone" || surface === "concrete"
+        ? "footstep_concrete_"
+        : surface === "wood"
+          ? "footstep_wood_"
+          : surface === "wet"
+            ? "water-"
+            : surface + "-";
+    this.play(
+      this.choose(prefix),
+      "footsteps",
+      crouched ? 0.14 : sprinting ? 0.85 : 0.46,
+      position,
+      walls,
+      (sprinting ? 1.06 : 1) + Math.random() * 0.05,
     );
-
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
-    const filter = this.ctx.createBiquadFilter();
-
-    osc.type = "triangle";
-    const baseFreq = isCrouching ? 75 : isSprinting ? 120 : 95;
-    osc.frequency.setValueAtTime(baseFreq + (Math.random() * 10 - 5), now);
-    osc.frequency.exponentialRampToValueAtTime(35, now + 0.08);
-
-    filter.type = "lowpass";
-    filter.frequency.setValueAtTime(260, now);
-
-    const vol = isCrouching ? 0.04 : isSprinting ? 0.16 : 0.08;
-    gain.gain.setValueAtTime(vol, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
-
-    osc.connect(filter);
-    filter.connect(gain);
-    gain.connect(this.masterGain);
-
-    osc.start(now);
-    osc.stop(now + 0.09);
   }
-
-  public playBoltTurn(rushed: boolean) {
-    this.playObject("metal", 0, rushed ? 0.7 : 0.25);
-    if (!this.ctx || !this.masterGain || this.isMuted) return;
-    const now = this.ctx.currentTime;
-
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(rushed ? 440 : 280, now);
-    osc.frequency.exponentialRampToValueAtTime(rushed ? 180 : 140, now + 0.12);
-
-    gain.gain.setValueAtTime(rushed ? 0.18 : 0.06, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
-
-    osc.connect(gain);
-    gain.connect(this.masterGain);
-    osc.start(now);
-    osc.stop(now + 0.12);
-  }
-
-  public playVentPop() {
-    if (!this.ctx || !this.masterGain || this.isMuted) return;
-    const now = this.ctx.currentTime;
-
-    // Metallic release clang
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
-    osc.type = "square";
-    osc.frequency.setValueAtTime(320, now);
-    osc.frequency.exponentialRampToValueAtTime(110, now + 0.25);
-
-    gain.gain.setValueAtTime(0.2, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
-
-    osc.connect(gain);
-    gain.connect(this.masterGain);
-    osc.start(now);
-    osc.stop(now + 0.25);
-  }
-
-  public playDoorOpen() {
-    this.playObject("metal", -0.15, 0.6);
-    if (!this.ctx || !this.masterGain || this.isMuted) return;
-    const now = this.ctx.currentTime;
-
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
-    osc.type = "sawtooth";
-    osc.frequency.setValueAtTime(140, now);
-    osc.frequency.linearRampToValueAtTime(260, now + 0.18);
-    osc.frequency.exponentialRampToValueAtTime(80, now + 0.35);
-
-    gain.gain.setValueAtTime(0.12, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
-
-    osc.connect(gain);
-    gain.connect(this.masterGain);
-    osc.start(now);
-    osc.stop(now + 0.35);
-  }
-
-  public playLockClick(isSweetSpot: boolean) {
-    if (!this.ctx || !this.masterGain || this.isMuted) return;
-    const now = this.ctx.currentTime;
-
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
-    osc.type = isSweetSpot ? "triangle" : "sine";
-    osc.frequency.setValueAtTime(isSweetSpot ? 920 : 540, now);
-    osc.frequency.exponentialRampToValueAtTime(
-      isSweetSpot ? 1200 : 320,
-      now + 0.05,
+  public guardFootstep(position: Position, running: boolean, blocked: boolean) {
+    this.playFootstep(
+      false,
+      running,
+      this.surfaceAt(position),
+      position,
+      blocked ? 1 : 0,
     );
-
-    gain.gain.setValueAtTime(isSweetSpot ? 0.22 : 0.09, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
-
-    osc.connect(gain);
-    gain.connect(this.masterGain);
-    osc.start(now);
-    osc.stop(now + 0.05);
   }
-
-  public playSafeClick(volume: number = 0.5) {
-    if (!this.ctx || !this.masterGain || this.isMuted) return;
-    const now = this.ctx.currentTime;
-
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(1240, now);
-    osc.frequency.exponentialRampToValueAtTime(880, now + 0.03);
-
-    gain.gain.setValueAtTime(Math.min(0.25, volume * 0.25), now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
-
-    osc.connect(gain);
-    gain.connect(this.masterGain);
-    osc.start(now);
-    osc.stop(now + 0.03);
+  public playObject(
+    kind: "metal" | "cloth" | "wood" | "water" | "drip" | "boot" | "radio",
+    _pan = 0,
+    volume = 1,
+  ) {
+    if (kind === "boot") return this.playFootstep(false, false);
+    const prefix = {
+      metal: "impactMetal_light_",
+      cloth: "fabric",
+      wood: "impactWood_light_",
+      water: "water-",
+      drip: "water-",
+      radio: "plastic",
+    }[kind];
+    this.play(this.choose(prefix), "sfx", volume * 0.55);
   }
-
-  public playHeartbeat() {
-    if (!this.ctx || !this.masterGain || this.isMuted) return;
-    const now = this.ctx.currentTime;
-
-    // Double thump (lub-dub)
-    [0, 0.12].forEach((offset) => {
-      if (!this.ctx || !this.masterGain) return;
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(65, now + offset);
-      osc.frequency.exponentialRampToValueAtTime(35, now + offset + 0.08);
-
-      gain.gain.setValueAtTime(0.24, now + offset);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.08);
-
-      osc.connect(gain);
-      gain.connect(this.masterGain);
-      osc.start(now + offset);
-      osc.stop(now + offset + 0.08);
-    });
+  public cue(
+    event:
+      | "keys"
+      | "bed-drag"
+      | "screwdriver"
+      | "ceramic-drag"
+      | "hinge"
+      | "paper",
+    position?: Position,
+    volume = 0.6,
+  ) {
+    if (
+      this.limited(
+        "cue-" + event,
+        event === "bed-drag" || event === "ceramic-drag" ? 1.5 : 0.25,
+      )
+    )
+      this.play(
+        event,
+        "sfx",
+        volume,
+        position,
+        position ? (this.occlusion?.(position) ?? 0) : 0,
+      );
   }
-
-  public playGuardAlert() {
-    if (!this.ctx || !this.masterGain || this.isMuted) return;
-    const now = this.ctx.currentTime;
-
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
-    osc.type = "sawtooth";
-    osc.frequency.setValueAtTime(260, now);
-    osc.frequency.linearRampToValueAtTime(540, now + 0.15);
-
-    gain.gain.setValueAtTime(0.28, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-
-    osc.connect(gain);
-    gain.connect(this.masterGain);
-    osc.start(now);
-    osc.stop(now + 0.3);
+  public contact(
+    id: string,
+    material: Material,
+    receivingSurface: Surface,
+    velocity: number,
+    position: Position,
+  ) {
+    if (velocity < 0.35 || !this.limited("contact-" + id, 0.15)) return;
+    const type = {
+      metal: "Metal",
+      steel: "Metal",
+      wood: "Wood",
+      ceramic: "Plate",
+      plastic: "Generic",
+      glass: "Glass",
+      fabric: "Soft",
+      paper: "Soft",
+      concrete: "Generic",
+    }[material];
+    const key =
+      material === "plastic" || material === "paper"
+        ? material
+        : material === "fabric"
+          ? "fabric"
+          : this.choose(
+              "impact" +
+                type +
+                (type === "Soft" || (velocity > 3 && type !== "Generic")
+                  ? "_heavy_"
+                  : "_light_"),
+            );
+    this.play(
+      key,
+      "sfx",
+      Math.min(1, velocity / 5) * (receivingSurface === "water" ? 0.6 : 1),
+      position,
+    );
   }
-
-  public playAlarmSiren() {
-    if (!this.ctx || !this.masterGain || this.isMuted) return;
-    const now = this.ctx.currentTime;
-
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
-    osc.type = "sawtooth";
-    osc.frequency.setValueAtTime(750, now);
-    osc.frequency.linearRampToValueAtTime(950, now + 0.25);
-    osc.frequency.linearRampToValueAtTime(750, now + 0.5);
-
-    gain.gain.setValueAtTime(0.35, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
-
-    osc.connect(gain);
-    gain.connect(this.masterGain);
-    osc.start(now);
-    osc.stop(now + 0.6);
+  public guardVoice(type: "investigate" | "chase", position: Position) {
+    const text =
+      type === "chase"
+        ? "Stop right there. This isn't over yet!"
+        : "Hey, you can't do that!";
+    if (this.limited("dialogue", 7)) {
+      this.play(
+        type === "chase" ? "guard-stop" : "guard-hey",
+        "dialogue",
+        1,
+        position,
+        this.occlusion?.(position) ?? 0,
+        1,
+        true,
+      );
+      const ambience = this.buses.get("ambience");
+      if (ambience && this.ctx) {
+        ambience.gain.setTargetAtTime(
+          this.levels.ambience * 0.4,
+          this.ctx.currentTime,
+          0.12,
+        );
+        ambience.gain.setTargetAtTime(
+          this.levels.ambience,
+          this.ctx.currentTime + 4,
+          0.7,
+        );
+      }
+    }
+    return text;
   }
-
-  public playDartShot(isSilenced: boolean) {
-    if (!this.ctx || !this.masterGain || this.isMuted) return;
-    const now = this.ctx.currentTime;
-
-    if (isSilenced) {
-      // Soft pneumatic thwip
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-      osc.type = "triangle";
-      osc.frequency.setValueAtTime(420, now);
-      osc.frequency.exponentialRampToValueAtTime(90, now + 0.07);
-
-      gain.gain.setValueAtTime(0.12, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
-
-      osc.connect(gain);
-      gain.connect(this.masterGain);
-      osc.start(now);
-      osc.stop(now + 0.07);
-    } else {
-      // Loud gunshot crack -> triggers alarm
-      this.playAlarmSiren();
+  private startLoops() {
+    if (!this.ctx || this.loops.length) return;
+    for (const key of ["ventilation", "drips"]) {
+      const buffer = this.buffers.get(key);
+      if (!buffer) continue;
+      const source = this.ctx.createBufferSource(),
+        gain = this.ctx.createGain();
+      source.buffer = buffer;
+      source.loop = true;
+      gain.gain.value = key === "ventilation" ? 0.3 : 0.06;
+      source.connect(gain);
+      gain.connect(this.buses.get("ambience")!);
+      source.start();
+      this.loops.push({ source, gain, key });
     }
   }
-
-  public playVictoryFanfare() {
-    if (!this.ctx || !this.masterGain || this.isMuted) return;
-    const now = this.ctx.currentTime;
-
-    const notes = [261.6, 329.6, 392.0, 523.2]; // C E G C
-    notes.forEach((freq, idx) => {
-      if (!this.ctx || !this.masterGain) return;
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-      osc.type = "triangle";
-      osc.frequency.setValueAtTime(freq, now + idx * 0.12);
-      gain.gain.setValueAtTime(0.2, now + idx * 0.12);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 0.35);
-
-      osc.connect(gain);
-      gain.connect(this.masterGain);
-      osc.start(now + idx * 0.12);
-      osc.stop(now + idx * 0.12 + 0.35);
-    });
+  public setAmbience(zone: "cell" | "laundry" | "tide", tension: number) {
+    if (!this.ctx) return;
+    for (const loop of this.loops)
+      loop.gain.gain.setTargetAtTime(
+        loop.key === "ventilation"
+          ? zone === "tide"
+            ? 0.03
+            : 0.22 + tension * 0.06
+          : zone === "laundry"
+            ? 0.18
+            : 0.045,
+        this.ctx.currentTime,
+        1,
+      );
+    this.reverbGain?.gain.setTargetAtTime(
+      zone === "cell" ? 0.09 : zone === "laundry" ? 0.15 : 0.025,
+      this.ctx.currentTime,
+      0.5,
+    );
   }
-
+  public playWaterDrip() {
+    this.playObject("drip", 0, 0.2);
+  }
+  public playBoltTurn(rushed: boolean) {
+    this.cue("screwdriver", undefined, rushed ? 0.9 : 0.22);
+  }
+  public playVentPop() {
+    this.play(this.choose("impactMetal_heavy_"), "sfx", 0.7);
+  }
+  public playDoorOpen() {
+    this.cue("hinge", undefined, 0.45);
+  }
+  public playLockClick(_success: boolean) {
+    this.play(this.choose("impactMetal_light_"), "sfx", 0.23);
+  }
+  public playSafeClick(volume: number) {
+    this.play(this.choose("impactMetal_light_"), "sfx", volume);
+  }
+  public playGuardAlert() {
+    /* Speech is the audible alert. */
+  }
+  public playAlarmSiren() {
+    this.play(this.choose("impactMetal_heavy_"), "sfx", 0.8);
+  }
+  public playDartShot(silenced: boolean) {
+    this.playObject(silenced ? "cloth" : "metal");
+  }
+  public playVictoryFanfare() {
+    this.play(this.choose("impactGeneric_light_"), "ui", 0.3);
+  }
   public playDefeatSting() {
-    if (!this.ctx || !this.masterGain || this.isMuted) return;
-    const now = this.ctx.currentTime;
-
-    const notes = [220, 207, 196, 174]; // Decreasing tension
-    notes.forEach((freq, idx) => {
-      if (!this.ctx || !this.masterGain) return;
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-      osc.type = "sawtooth";
-      osc.frequency.setValueAtTime(freq, now + idx * 0.14);
-      gain.gain.setValueAtTime(0.22, now + idx * 0.14);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.14 + 0.3);
-
-      osc.connect(gain);
-      gain.connect(this.masterGain);
-      osc.start(now + idx * 0.14);
-      osc.stop(now + idx * 0.14 + 0.3);
-    });
+    this.play(this.choose("impactMetal_heavy_"), "ui", 0.35);
+  }
+  public dispose() {
+    this.generation++;
+    this.pending = undefined;
+    for (const source of this.voices) {
+      source.stop();
+      source.disconnect();
+    }
+    for (const loop of this.loops) {
+      loop.source.stop();
+      loop.source.disconnect();
+      loop.gain.disconnect();
+    }
+    this.voices.clear();
+    this.spatial.clear();
+    this.occlusion = undefined;
+    this.loops = [];
+    this.buffers.clear();
+    this.buses.clear();
+    this.cooldowns.clear();
+    void this.ctx?.close();
+    this.ctx = null;
   }
 }
-
 export const sound = new SoundManager();

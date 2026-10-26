@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { GameEngine } from "./game/engine";
-import { sound } from "./game/audio";
+import { sound, audioBuses } from "./game/audio";
 import { requestLandscape } from "./game/display";
 import { Expand, RotateCw, Smartphone } from "lucide-react";
 import { TitleScreen } from "./components/TitleScreen";
@@ -153,12 +153,16 @@ export default function App() {
                 />
               )}
             {overlay === "story" && (
-              <StoryPrologueModal onClose={() => setOverlay(null)} />
+              <StoryPrologueModal
+                opening={!!engine.gameFlags.opening_v3}
+                onClose={() => setOverlay(null)}
+              />
             )}
             {overlay === "map" && (
               <TacticalMapModal
                 onClose={() => setOverlay(null)}
                 playerPos={engine.playerPos}
+                opening={!!engine.gameFlags.opening_v3}
                 act={engine.stats.act}
               />
             )}
@@ -207,6 +211,21 @@ export default function App() {
                       }}
                     />
                   </label>
+                  {audioBuses.map((bus) => (
+                    <label key={bus}>
+                      {bus.toUpperCase()}{" "}
+                      <input
+                        aria-label={bus + " volume"}
+                        type="range"
+                        min="0"
+                        max="100"
+                        defaultValue={Math.round(sound.getBusVolume(bus) * 100)}
+                        onChange={(e) =>
+                          sound.setBusVolume(bus, Number(e.target.value) / 100)
+                        }
+                      />
+                    </label>
+                  ))}
                   <label>
                     LOOK SENSITIVITY <span>{sensitivity}</span>
                     <input
@@ -294,6 +313,31 @@ export default function App() {
                 reason={engine.gameOverReason}
                 onRetry={() => engine.restartGame()}
               />
+            )}
+            {engine.gameState === "chapter_complete" && (
+              <div className="modal-backdrop">
+                <section className="game-panel">
+                  <span className="eyebrow">CHECKPOINT / CELL 046</span>
+                  <h2>A way through.</h2>
+                  <p>
+                    You escaped Cell 47. The key belongs to Cell 42. Cells 45–42
+                    remain locked for the next chapter.
+                  </p>
+                  <p>
+                    Your progress is saved. You can explore Cell 46 and return
+                    through the passage.
+                  </p>
+                  <button
+                    className="primary-button"
+                    onClick={() => engine.continueChapter()}
+                  >
+                    Explore Cell 46
+                  </button>
+                  <button onClick={() => engine.returnToTitle()}>
+                    Main menu
+                  </button>
+                </section>
+              </div>
             )}
             {engine.gameState === "victory" && engine.endingType && (
               <VictoryModal

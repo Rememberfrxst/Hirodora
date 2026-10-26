@@ -134,10 +134,58 @@ export function HUD({ engine, onPause, onOpenMap, onOpenStory }: Props) {
         </div>
       )}
       {engine.activeInteractPrompt && (
-        <button className="interact-prompt" onClick={() => engine.interact()}>
-          <kbd>{engine.mobile ? "TAP" : "E"}</kbd>
-          {engine.activeInteractPrompt}
-        </button>
+        <div className="context-actions">
+          <button
+            className="interact-prompt"
+            onPointerDown={(e) => {
+              e.currentTarget.setPointerCapture(e.pointerId);
+              engine.beginInteract();
+            }}
+            onPointerUp={() => engine.endInteract()}
+            onPointerCancel={() => engine.endInteract()}
+            onLostPointerCapture={() => engine.endInteract()}
+          >
+            <kbd>{engine.mobile ? "TAP" : "E"}</kbd>
+            {engine.activeInteractPrompt === "Penetrate" ? (
+              <span className="passage-action">
+                <Move size={22} />
+                <small>Penetrate</small>
+              </span>
+            ) : (
+              engine.activeInteractPrompt
+            )}
+            {engine.activeHold && (
+              <progress
+                aria-label="Action progress"
+                max="1"
+                value={
+                  engine.openingProgress[
+                    engine.activeHold === "bed_push"
+                      ? "bed"
+                      : engine.activeHold === "toilet_bolts"
+                        ? "bolts"
+                        : "toilet"
+                  ]
+                }
+              />
+            )}
+          </button>
+          {engine.contextualAction === "bed_push" && (
+            <button
+              className="hard-push"
+              onPointerDown={(e) => {
+                e.currentTarget.setPointerCapture(e.pointerId);
+                engine.beginInteract(true);
+              }}
+              onPointerUp={() => engine.endInteract()}
+              onPointerCancel={() => engine.endInteract()}
+              onLostPointerCapture={() => engine.endInteract()}
+            >
+              Push hard{" "}
+              <small>{engine.mobile ? "HOLD · LOUD" : "HOLD R · LOUD"}</small>
+            </button>
+          )}
+        </div>
       )}
       <div className="hud-bottom">
         <div className="stealth-meters">
@@ -200,8 +248,8 @@ export function HUD({ engine, onPause, onOpenMap, onOpenStory }: Props) {
           </header>
           {engine.inventory.map((id) => (
             <div key={id}>
-              <strong>{ALL_ITEMS[id].name}</strong>
-              <p>{ALL_ITEMS[id].description}</p>
+              <strong>{engine.getItem(id).name}</strong>
+              <p>{engine.getItem(id).description}</p>
             </div>
           ))}
         </div>
@@ -266,7 +314,13 @@ export function HUD({ engine, onPause, onOpenMap, onOpenStory }: Props) {
             </button>
             <button
               aria-label="Interact"
-              onClick={() => engine.interact()}
+              onPointerDown={(e) => {
+                e.currentTarget.setPointerCapture(e.pointerId);
+                engine.beginInteract();
+              }}
+              onPointerUp={() => engine.endInteract()}
+              onPointerCancel={() => engine.endInteract()}
+              onLostPointerCapture={() => engine.endInteract()}
               className="touch-interact"
             >
               <Hand size={25} />

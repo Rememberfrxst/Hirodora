@@ -22,6 +22,16 @@ export interface PrisonWorldData {
   searchlight: THREE.SpotLight;
   soundMaskingMachinePos: [number, number, number];
   dustParticles: THREE.Points;
+  opening: {
+    bed: THREE.Group;
+    toilet: THREE.Group;
+    bedBounds: THREE.Box3;
+    toiletBounds: THREE.Box3;
+    passageSeal: THREE.Mesh;
+    passageBounds: THREE.Box3;
+    body: THREE.Group;
+    legacyVent: THREE.Group;
+  };
 }
 
 const material = (color: number, roughness = 0.75, metalness = 0) =>
@@ -315,7 +325,11 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     box(staticWorld, [0.22, 0.34, 22.4], [x, 4.0, 0], iron, 0.015);
   for (const z of [-9.4, -4.4, 0.6, 5.6, 10.1])
     box(staticWorld, [45.4, 0.09, 0.13], [7, 3.92, z], rust, 0.008);
-  wall([0.5, 4.3, 23], [-16, 2, 0]);
+  wall([0.5, 4.3, 23], [-37, 2, 0]);
+  projectUV(box(staticWorld, [21, 0.3, 23], [-26.5, -0.2, 0], floor), 3);
+  projectUV(box(staticWorld, [21, 0.22, 23], [-26.5, 4.18, 0], concrete), 2.5);
+  wall([21, 4.3, 0.5], [-26.5, 2, -11.5]);
+  wall([21, 4.3, 0.5], [-26.5, 2, 11.5]);
   const rearWall = wall([46, 4.3, 0.5], [7, 2, -11.5]);
   // Keep the original solid gameplay/vision collider, but cut real visual apertures.
   staticWorld.remove(rearWall);
@@ -340,7 +354,18 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   wall([46, 4.3, 0.5], [7, 2, 11.5]);
   wall([0.5, 4.3, 23], [30, 2, 0]);
   // Cell partitions. The only escape from Cell 47 is the serviced ventilation duct.
-  for (const x of [-14, -8.8, -3.1]) wall([0.35, 4.2, 9.3], [x, 2, -6.7]);
+  for (const x of [-14, -3.1]) wall([0.35, 4.2, 9.3], [x, 2, -6.7]);
+  // The opening is real geometry; only its removable seal blocks the crawl route.
+  wall([0.35, 4.2, 1.05], [-8.8, 2, -10.825]);
+  wall([0.35, 4.2, 7.05], [-8.8, 2, -5.525]);
+  wall([0.35, 2.95, 1.2], [-8.8, 2.625, -9.7]);
+  const passageSeal = box(
+    scene,
+    [0.36, 1.15, 1.18],
+    [-8.8, 0.525, -9.7],
+    concrete,
+  );
+  const passageBounds = new THREE.Box3().setFromObject(passageSeal);
   function bars(x: number, z: number, width: number) {
     for (let bx = x - width / 2; bx <= x + width / 2; bx += 0.21)
       cylinder(staticWorld, 0.022, 3.7, [bx, 1.85, z]);
@@ -375,12 +400,43 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   bars(-7.3, -2, 2.6);
   bars(-3.8, -2, 1.1);
   door("cell_47_door", -6, -2, 1.4);
-  prop(buildLegacyBunkBounds(), -4.25, -8.4);
-  prop(buildLegacyToiletBounds(), -7.65, -9.85);
+  for (let n = 45; n >= 42; n--) {
+    const cx = -17 - (45 - n) * 5.5;
+    wall([0.35, 4.2, 9.3], [cx - 2.75, 2, -6.7]);
+    bars(cx - 1.65, -2, 2.2);
+    bars(cx + 1.8, -2, 1.8);
+    door(`cell_${n}_door`, cx - 0.55, -2, 1.4);
+    label(staticWorld, `C / 0${n}`, [cx, 3.65, -2]);
+    environment.add("Bunk", cx + 1.7, -0.05, -8.4, Math.PI);
+    environment.add("Toilet", cx - 1.6, -0.05, -9.85, Math.PI);
+    environment.add("Sink", cx - 2.2, 0, -7.8, -Math.PI / 2);
+    environment.add("Luminaire", cx, 3.32, -6);
+    const light = new THREE.PointLight(0xd8b991, 11, 10, 2);
+    light.position.set(cx, 3.2, -6);
+    scene.add(light);
+    prop(buildLegacyBunkBounds(), cx + 1.7, -8.4);
+    prop(buildLegacyToiletBounds(), cx - 1.6, -9.85);
+  }
+  const bedProxy = prop(buildLegacyBunkBounds(), -4.25, -8.4);
+  const bedBounds = colliders[colliders.length - 1];
+  const toiletProxy = prop(buildLegacyToiletBounds(), -8.05, -9.7, Math.PI / 2);
+  const toiletBounds = colliders[colliders.length - 1];
   prop(buildLegacyBunkBounds(), -13, -8.4);
-  environment.add("Bunk", -4.25, -0.05, -8.4, Math.PI);
+  const bed = environment.add("Bunk", -4.25, -0.05, -8.4, Math.PI);
   environment.add("Bunk", -13, -0.05, -8.4, Math.PI);
-  environment.add("Toilet", -7.65, -0.05, -9.85, Math.PI);
+  const toilet = environment.add("Toilet", -8.05, -0.05, -9.7, Math.PI / 2);
+  const bolts: THREE.Mesh[] = [];
+  for (const x of [-0.22, 0.22])
+    for (const z of [-0.2, 0.2]) {
+      const head = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.035, 0.035, 0.04, 6),
+        iron,
+      );
+      head.position.set(x, 0.075, z);
+      toilet.add(head);
+      bolts.push(head);
+    }
+  toilet.userData.bolts = bolts;
   environment.add("Sink", -8.27, 0, -7.8, -Math.PI / 2);
   // Keep the original basin collider; the replacement is wall mounted.
   const basin = new THREE.Mesh(
@@ -427,12 +483,97 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     const shadow = new THREE.Mesh(new THREE.PlaneGeometry(w, h), contact);
     shadow.rotation.x = -Math.PI / 2;
     shadow.position.set(x, -0.044, z);
-    staticWorld.add(shadow);
+    if (x === -4.25 || x === -7.65) {
+      shadow.position.set(0, 0.006, 0);
+      (x === -4.25 ? bed : toilet).add(shadow);
+    } else staticWorld.add(shadow);
   }
   label(staticWorld, "C / 047", [-5.8, 3.65, -2]);
   label(staticWorld, "C / 046", [-11.4, 3.65, -2]);
   label(staticWorld, "DAY 412  /  LOW TIDE", [-6, 1.7, -11.19], 2.5);
   const pickupMeshes = new Map<string, THREE.Object3D>();
+  // A complete metal key silhouette, lying behind the examining officer.
+  const key = new THREE.Group();
+  const ring = new THREE.Mesh(
+    new THREE.TorusGeometry(0.06, 0.012, 8, 18),
+    brass,
+  );
+  ring.rotation.x = Math.PI / 2;
+  key.add(ring);
+  box(key, [0.025, 0.025, 0.15], [0, 0, 0.11], brass, 0.006);
+  box(key, [0.07, 0.025, 0.025], [0.023, 0, 0.16], brass);
+  key.position.set(-5.7, 0.03, -1.72);
+  scene.add(key);
+  pickupMeshes.set("cell_key_pickup", key);
+  interaction(
+    "cell_key_pickup",
+    "Cell key",
+    "Take the cell key",
+    -5.7,
+    -1.72,
+    "pickup",
+  );
+  interaction(
+    "cell47_lock",
+    "Cell 47 lock",
+    "Try the key",
+    -5.0,
+    -2.3,
+    "interact",
+    "cell_key",
+  );
+  interaction("bed_push", "Bunk", "Push · hold slowly", -5.0, -8.1, "interact");
+  const screwdriver = new THREE.Group();
+  const handle = cylinder(
+    screwdriver,
+    0.035,
+    0.13,
+    [0, 0, 0],
+    material(0xa94d29),
+  );
+  handle.rotation.x = Math.PI / 2;
+  box(screwdriver, [0.012, 0.012, 0.18], [0, 0, -0.14], iron);
+  screwdriver.position.set(-4.45, 0.04, -8.7);
+  scene.add(screwdriver);
+  pickupMeshes.set("screwdriver_pickup", screwdriver);
+  interaction(
+    "screwdriver_pickup",
+    "Screwdriver",
+    "Take the screwdriver",
+    -4.45,
+    -8.7,
+    "pickup",
+  );
+  interaction(
+    "toilet_bolts",
+    "Toilet bolts",
+    "Unbolt · hold",
+    -7.65,
+    -9.7,
+    "interact",
+    "screwdriver",
+  );
+  interaction(
+    "toilet_move",
+    "Toilet",
+    "Move toilet · hold",
+    -7.65,
+    -9.7,
+    "interact",
+  );
+  interaction("passage47", "Cell passage", "Penetrate", -8.4, -9.7, "interact");
+  interaction(
+    "passage46",
+    "Return passage",
+    "Penetrate",
+    -9.25,
+    -9.7,
+    "interact",
+  );
+  const body = new THREE.Group();
+  body.name = "CorridorPrisoner";
+  body.position.set(-6.4, 0, -0.1);
+  scene.add(body);
   pickupMeshes.set(
     "spoon_pickup",
     box(scene, [0.035, 0.026, 0.24], [-4.85, 0.08, -7.25], brass, 0.01),
@@ -445,9 +586,11 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     -7.1,
     "pickup",
   );
-  const vent = box(staticWorld, [0.08, 0.8, 0.85], [-8.58, 0.7, -9.7], iron);
+  const legacyVent = new THREE.Group();
+  scene.add(legacyVent);
+  const vent = box(legacyVent, [0.08, 0.8, 0.85], [-8.58, 0.7, -9.7], iron);
   for (let y = 0.4; y < 1.05; y += 0.12)
-    box(staticWorld, [0.095, 0.035, 0.68], [-8.52, y, -9.7], dark);
+    box(legacyVent, [0.095, 0.035, 0.68], [-8.52, y, -9.7], dark);
   vent.name = "vent";
   interaction(
     "vent_bolts_interact",
@@ -787,8 +930,9 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
       id: "guard_dunne",
       name: "Officer Dunne",
       type: "patrol_dunne",
-      position: [-5, 0, 0],
-      rotationY: Math.PI / 2,
+      position: [-5.7, 0, -0.7],
+      rotationY: 0,
+      examining: true,
       patrolRoute: [
         [-5, 0, 0],
         [0.5, 0, 0],
@@ -875,6 +1019,16 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     for (const geometry of geometries) geometry.dispose();
   }
   return {
+    opening: {
+      bed,
+      toilet,
+      bedBounds,
+      toiletBounds,
+      passageSeal,
+      passageBounds,
+      body,
+      legacyVent,
+    },
     scene,
     loadEnvironment: environment.load,
     disposeEnvironment: environment.dispose,

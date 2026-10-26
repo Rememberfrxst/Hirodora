@@ -12,9 +12,9 @@
 
 An original first-person prison escape · Acoustic stealth · Three endings
 
-**[↓ DOWNLOAD THE LATEST OFFLINE GAME — v0.4.0 ZIP](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/codex/cell47-environment-overhaul/downloads/Hirodora-0.4.0-offline.zip)**
+**[↓ DOWNLOAD THE LATEST OFFLINE GAME — v0.4.0 ZIP](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.4.0-offline.zip)**
 
-[Single-file HTML](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/codex/cell47-environment-overhaul/downloads/Hirodora-0.4.0.html) · [Mobile setup](#play-on-mobile) · [Checksums](downloads/latest.json)
+[Single-file HTML](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.4.0.html) · [Mobile setup](#play-on-mobile) · [Checksums](downloads/latest.json)
 
 [The experience](#the-experience) · [Play on mobile](#play-on-mobile) · [Development](#development) · [Quality](#quality-and-release-status)
 
@@ -24,9 +24,16 @@ An original first-person prison escape · Acoustic stealth · Three endings
 
 ## Cell 47 environment preview
 
-The feature branch now includes authored Blender/GLB cell furniture, sourced PBR masonry/metal/fabric maps, real window apertures and a window shadow light. [Sources, licenses, matched renders and remaining work](docs/ENVIRONMENT-ASSETS.md).
+Version 0.4.0 includes authored Blender/GLB cell furniture, sourced PBR masonry/metal/fabric maps, real window apertures and a window shadow light. [Sources, licenses, matched renders and remaining work](docs/ENVIRONMENT-ASSETS.md).
 
 ![Cell 47: 5a21adc baseline on the left, environment preview on the right](docs/screenshots/environment/comparison.png)
+
+<table>
+<tr><td width="50%"><img src="docs/screenshots/environment/after/bunk.png" alt="Current GLB bunk with woven blanket, rounded bedding and welded frame" /></td><td width="50%"><img src="docs/screenshots/environment/after/fixtures.png" alt="Current hollow toilet bowl, wall-mounted sink and exposed plumbing" /></td></tr>
+<tr><td align="center"><sub>CELL 47 · BUNK AND FABRIC</sub></td><td align="center"><sub>CELL 47 · SANITARY FIXTURES</sub></td></tr>
+<tr><td><img src="docs/screenshots/environment/after/window-ceiling.png" alt="Recessed barred window and textured ceiling" /></td><td><img src="docs/screenshots/environment/after/corridor.png" alt="Prison corridor with the updated material and lighting system" /></td></tr>
+<tr><td align="center"><sub>WINDOW · REVEALS AND CEILING</sub></td><td align="center"><sub>BLOCK C · CORRIDOR</sub></td></tr>
+</table>
 
 Dedicated concrete scans remain blocked at the libraries' download hosts; the current painted/floor finish adapts the documented worn-surface maps. This is an environment preview, with physical-phone QA still open.
 
@@ -63,7 +70,7 @@ Find the sharpened spoon. Open the service duct. Earn Boulder’s respect at the
 
 <img src="docs/screenshots/mobile-rotate.png" width="260" alt="Hirodora portrait rotate screen pauses the game until the phone is horizontal" />
 
-The older gallery above shows the v0.3.1 baseline. The v0.4.0 environment comparison and detailed captures are linked above. Front/side/detail showcases stage the camera and pose inside the real prison; the gameplay shot runs guard AI. The old primitive patrol bodies are replaced by embedded, skinned GLBs with detailed fingers, eyes, short hair, authored clothing and textures. Radio, identification, handcuffs and keys follow their attachment bones. [Sources, licenses and implementation](docs/GUARD-ASSETS.md).
+The gallery shows actual v0.4.0 browser renders. Front/side/detail showcases stage the camera and pose inside the real prison; the gameplay shot runs guard AI. The matched before/after comparison uses the 5a21adc baseline. Officers use embedded, skinned GLBs with detailed fingers, eyes, short hair, authored clothing and textures. Radio, identification, handcuffs and keys follow their attachment bones. [Sources, licenses and implementation](docs/GUARD-ASSETS.md).
 
 <details><summary>Inspect the new guard face and duty uniform</summary>
 
@@ -83,7 +90,7 @@ The older gallery above shows the v0.3.1 baseline. The v0.4.0 environment compar
 
 ### Download v0.4.0 — offline edition
 
-**[Download Hirodora v0.4.0 for offline play (.zip)](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/codex/cell47-environment-overhaul/downloads/Hirodora-0.4.0-offline.zip)**
+**[Download Hirodora v0.4.0 for offline play (.zip)](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.4.0-offline.zip)**
 
 1. Download the ZIP from the link above and extract it in your device’s Files app.
 2. Open **`Hirodora-0.4.0.html` in a full WebGL 2 browser**, such as Chrome on Android. If your file viewer displays text or blocks scripts, choose “Open with” a full browser. File handling depends on the device/browser.

@@ -1,0 +1,50 @@
+{
+  "baseline": "58528d7 (camera-matched 0.5 images retained in ../opening/)",
+  "cameras": [
+    {
+      "name": "cell47",
+      "position": [
+        -6,
+        0,
+        -5
+      ],
+      "yaw": -0.25,
+      "pitch": 0
+    },
+    {
+      "name": "corridor",
+      "position": [
+        -6,
+        0,
+        -3.8
+      ],
+      "yaw": 3.141592653589793,
+      "pitch": -0.35
+    }
+  ],
+  "diagnostics": {
+    "flags": {
+      "opening_v3": true,
+      "key_identified": true,
+      "bed_moved": true,
+      "toilet_unbolted": true,
+      "passage_open": true
+    },
+    "progress": {
+      "bed": 1,
+      "bolts": 1,
+      "toilet": 1
+    },
+    "inventory": [
+      "cell_key",
+      "screwdriver"
+    ],
+    "render": {
+      "frame": 44,
+      "calls": 317,
+      "triangles": 939616,
+      "points": 90,
+      "lines": 0
+    }
+  }
+}

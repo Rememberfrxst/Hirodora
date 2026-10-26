@@ -1,5 +1,7 @@
 # Cell 47 environment assets — v0.4.0 feature build
 
+Historical milestone: v0.6 replaces the masonry/steel-derived finishes with p0ss / Georges Grondin photographic concrete and source normal maps, and revises the furniture and officer materials. See [the current Android release](ANDROID.md) and `src/assets/environment/CONCRETE-LICENSE.txt`. The screenshots and test counts below describe the original 0.4 pass.
+
 This branch replaces the visible Cell 47 furniture with a shared, UV-mapped GLB library, and replaces the canvas wall/floor noise textures with local PBR maps. Cell 46 reuses the bunk; corridor and utility-room surfaces and luminaires use the same material/asset library. The prison layout, save key, interactions and AI are retained.
 
 ## Sources and redistribution

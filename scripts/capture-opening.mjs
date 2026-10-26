@@ -1,6 +1,6 @@
 import { chromium } from "@playwright/test";
 import { mkdir, writeFile } from "node:fs/promises";
-const dir = "docs/screenshots/opening";
+const dir = process.env.CAPTURE_DIR || "docs/screenshots/opening";
 await mkdir(dir, { recursive: true });
 const browser = await chromium.launch({
   executablePath:
@@ -47,6 +47,7 @@ for (const phase of ["before", "after"].filter(phase => !process.argv[2] || proc
   await page.locator("[data-start]").click();
   await page.evaluate(() => {
     const e = window.__HIRODORA__;
+    e.setGraphicsPreset("high");
     e.renderer.setPixelRatio(1);
     e.overlayOpen = true;
   });

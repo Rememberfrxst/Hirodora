@@ -52,13 +52,13 @@ export function createEnvironment(scene: THREE.Scene) {
     });
   }
   const masonry = surface(brickColor, brickNormal, brickORM);
-  masonry.normalScale.set(0.23, 0.23);
+  masonry.normalScale.set(0.36, 0.36);
   const floor = surface(concreteColor, concreteNormal, concreteORM, 1);
-  floor.color.set(0xabab9c);
+  floor.color.set(0xb9bab2);
   floor.normalScale.set(0.3, 0.3);
   floor.aoMapIntensity = 0.25;
   const concrete = surface(concreteColor, concreteNormal, concreteORM, 1);
-  concrete.color.set(0x9b9b8d);
+  concrete.color.set(0x7f8c7d);
   concrete.normalScale.set(0.2, 0.2);
   const metal = surface(metalColor, metalNormal, metalORM, 0.8, 0.65);
   const exterior = new THREE.MeshBasicMaterial({

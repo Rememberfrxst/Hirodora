@@ -19,6 +19,7 @@ export default function App() {
   const [, render] = useState(0);
   const [overlay, setOverlay] = useState<"map" | "story" | null>(null);
   const [error, setError] = useState("");
+  const [restart, setRestart] = useState<"checkpoint" | "new" | null>(null);
   const [volume, setVolume] = useState(70);
   const [sensitivity, setSensitivity] = useState(22);
   const [displayPending, setDisplayPending] = useState(false);
@@ -136,7 +137,7 @@ export default function App() {
                 onRetry={() => void engine.loadGuardAssets()}
                 onFullscreen={engine.mobile ? openLandscape : undefined}
                 onStart={() => engine.startGame()}
-                onNewGame={() => engine.newGame()}
+                onNewGame={() => setRestart("new")}
                 onOpenMap={() => setOverlay("map")}
                 onOpenStory={() => setOverlay("story")}
               />
@@ -147,7 +148,10 @@ export default function App() {
                 <HUD
                   engine={engine}
                   onPause={() => engine.pauseGame()}
-                  onRestart={() => engine.restartGame()}
+                  onRestart={() => {
+                    engine.pauseGame();
+                    setRestart("checkpoint");
+                  }}
                   onOpenMap={() => setOverlay("map")}
                   onOpenStory={() => setOverlay("story")}
                 />
@@ -287,7 +291,10 @@ export default function App() {
                     REDUCE CAMERA MOTION
                   </label>
                   <p className="performance-readout" role="status">
-                    <span>PERFORMANCE / {engine.getPerformanceStatus().status.toUpperCase()}</span>
+                    <span>
+                      PERFORMANCE /{" "}
+                      {engine.getPerformanceStatus().status.toUpperCase()}
+                    </span>
                     {engine.getPerformanceStatus().softwareRenderer
                       ? " Hardware acceleration is unavailable; low-resolution mode is active."
                       : ` ~${engine.getPerformanceStatus().estimatedFps} FPS · ${engine.getPerformanceStatus().renderScale}% render scale · ${engine.getPerformanceStatus().drawCalls} draw calls`}
@@ -304,13 +311,66 @@ export default function App() {
                         <Expand size={16} /> Fullscreen / landscape
                       </button>
                     )}
-                    <button onClick={() => engine.restartGame()}>
+                    <button onClick={() => setRestart("checkpoint")}>
                       Retry checkpoint
+                    </button>
+                    <button onClick={() => setRestart("new")}>
+                      Start new game
                     </button>
                     <button onClick={() => engine.returnToTitle()}>
                       Main menu
                     </button>
                   </div>
+                  <details className="asset-credits">
+                    <summary>Art and audio credits</summary>
+                    <p>
+                      Concrete: p0ss / Georges Grondin, CC-BY 3.0,
+                      OpenGameArt.org. Metal and fabric: Godot demo
+                      contributors, CC-BY 3.0 / MIT. Human assets: MakeHuman
+                      CC0; animation: CMU Mocap. Audio: Kenney and credited
+                      Freesound authors, CC0. Original furniture and generated
+                      app emblem: Hirodora. Full source URLs and adaptation
+                      notes are bundled in ENVIRONMENT-LICENSES.txt and
+                      AUDIO-LICENSES.json.
+                    </p>
+                  </details>
+                </section>
+              </div>
+            )}
+            {restart && (
+              <div className="modal-backdrop restart-confirmation">
+                <section
+                  className="game-panel"
+                  role="dialog"
+                  aria-modal="true"
+                  aria-label="Restart escape"
+                >
+                  <span className="eyebrow">HIRODORA / FRESH START</span>
+                  <h2>
+                    {restart === "new"
+                      ? "Start a new escape?"
+                      : "Retry your checkpoint?"}
+                  </h2>
+                  <p>
+                    {restart === "new"
+                      ? "Return to Cell 47 with an empty satchel. This replaces your current escape progress."
+                      : "Return to your saved checkpoint and try again."}
+                  </p>
+                  <button
+                    className="primary-button"
+                    onClick={() => {
+                      const action = restart;
+                      setRestart(null);
+                      setOverlay(null);
+                      if (action === "new") engine.newGame();
+                      else engine.restartGame();
+                    }}
+                  >
+                    {restart === "new"
+                      ? "Start new game"
+                      : "Restart checkpoint"}
+                  </button>
+                  <button onClick={() => setRestart(null)}>Cancel</button>
                 </section>
               </div>
             )}

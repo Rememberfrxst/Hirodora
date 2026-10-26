@@ -1,0 +1,13 @@
+Seamless Concrete Tiles — p0ss
+Original photographs: Georges Grondin, from burningwell.org
+Source: https://opengameart.org/content/seamless-concrete-tiles
+Download: https://opengameart.org/sites/default/files/concrete_tiles.zip
+Redistributed under Creative Commons Attribution 3.0 Unported:
+https://creativecommons.org/licenses/by/3.0/legalcode
+
+Files used: concrete368.png, concrete368_nm.png, crete983.png, crete983_nm.png.
+Hirodora modifications: resized to 1024px, desaturated photographic color,
+WebP conversion, artist-derived roughness and microcavity AO packed into ORM.
+Source normal maps softened and renormalized to reduce grazing-angle aliasing.
+No affiliation or endorsement implied.
+The source offers multiple licenses; this distribution elects CC-BY 3.0.

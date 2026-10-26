@@ -194,6 +194,7 @@ export class GameEngine {
   private collisionSignature = -1;
   private collisionCache: THREE.Box3[] = [];
   private lastRender = 0;
+  private displayedFrameMs = 33;
   private softwareRenderer = false;
   private resizeObserver?: ResizeObserver;
   private viewportWidth = 0;
@@ -458,7 +459,7 @@ export class GameEngine {
 
   public getPerformanceStatus() {
     const target = this.mobile || this.softwareRenderer ? 33 : 16.7;
-    const estimatedFps = Math.round(1000 / Math.max(1, this.frameAverage));
+    const estimatedFps = Math.round(1000 / Math.max(1, this.displayedFrameMs));
     const status =
       this.frameAverage > target * 0.82
         ? "Optimizing"
@@ -477,6 +478,14 @@ export class GameEngine {
 
   private setupInputs() {
     const signal = this.events.signal;
+    window.addEventListener(
+      "hirodora:native-pause",
+      () => {
+        this.pauseGame();
+        sound.suspend();
+      },
+      { signal },
+    );
     window.addEventListener(
       "keydown",
       (e) => {
@@ -715,6 +724,7 @@ export class GameEngine {
   public startGame() {
     if (!this.guardsReady || this.orientationBlocked) return;
     sound.init();
+    sound.resetSceneAudio();
     sound.resume();
     if (this.checkpoint) this.restoreCheckpoint(this.checkpoint);
     this.syncWorld();
@@ -757,6 +767,7 @@ export class GameEngine {
     this.emitChange();
   }
   public restartGame() {
+    sound.resetSceneAudio();
     if (this.checkpoint) this.restoreCheckpoint(this.checkpoint);
     else
       this.restoreCheckpoint({
@@ -1670,6 +1681,10 @@ export class GameEngine {
       (simulationActive || this.gameState === "title") &&
       now - this.lastRender > (this.mobile || this.softwareRenderer ? 33 : 16)
     ) {
+      const renderInterval = now - this.lastRender;
+      if (this.lastRender && renderInterval < 1000)
+        this.displayedFrameMs =
+          this.displayedFrameMs * 0.9 + renderInterval * 0.1;
       this.lastRender = now;
       this.lightBudgetTime -= dt;
       if (this.lightBudgetTime <= 0) {
@@ -2022,10 +2037,8 @@ export class GameEngine {
     this.ambienceTime -= dt;
     if (this.ambienceTime <= 0) {
       this.ambienceTime = 5 + Math.random() * 4;
-      sound.playObject(
-        this.playerPos[0] > 15 ? "water" : "drip",
-        Math.sin(this.elapsed),
-      );
+      if (this.playerPos[0] > 15)
+        sound.playObject("water", Math.sin(this.elapsed), 0.2);
     }
     sound.setAmbience(
       Math.hypot(this.playerPos[0] + 1, this.playerPos[2] - 9.7) < 7

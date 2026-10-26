@@ -162,6 +162,7 @@ button:active {
 .performance-readout span {
   color: var(--gold);
 }
+.restart-confirmation { z-index: 95; }
 @media (pointer: coarse) and (orientation: landscape) {
   .app-shell .touch-controls .joystick {
     left: max(27px, env(safe-area-inset-left));

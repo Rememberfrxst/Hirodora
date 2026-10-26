@@ -18,6 +18,7 @@ import {
   Hand,
   Move,
   PersonStanding,
+  RotateCcw,
 } from "lucide-react";
 
 interface Props {
@@ -28,7 +29,13 @@ interface Props {
   onOpenStory: () => void;
 }
 
-export function HUD({ engine, onPause, onOpenMap, onOpenStory }: Props) {
+export function HUD({
+  engine,
+  onPause,
+  onRestart,
+  onOpenMap,
+  onOpenStory,
+}: Props) {
   const { stats } = engine;
   const suspicion = Math.max(
     0,
@@ -72,6 +79,9 @@ export function HUD({ engine, onPause, onOpenMap, onOpenStory }: Props) {
           <p>{engine.activeObjective}</p>
         </div>
         <nav className="hud-tools" aria-label="Game tools">
+          <button onClick={onRestart} aria-label="Restart game">
+            <RotateCcw />
+          </button>
           <button onClick={onOpenStory} aria-label="Story dossier">
             <BookOpen />
           </button>

@@ -1,29 +1,43 @@
 {
-  "authoring": "scripts/author-cell-assets.py + scripts/prepare-environment.mjs",
+  "authoring": "scripts/author-cell-assets.py + scripts/prepare-environment.mjs + scripts/upgrade-release-assets.mjs (v0.6)",
   "sources": {
     "godot": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1",
-    "tps": "a82f15448e9b015440d3bbdf5e10801b260c4e9f"
+    "tps": "a82f15448e9b015440d3bbdf5e10801b260c4e9f",
+    "concrete": {
+      "source": "https://opengameart.org/content/seamless-concrete-tiles",
+      "download": "https://opengameart.org/sites/default/files/concrete_tiles.zip",
+      "author": "p0ss; original photographs by Georges Grondin",
+      "license": "CC-BY-3.0",
+      "licenseURL": "https://creativecommons.org/licenses/by/3.0/",
+      "files": [
+        "concrete368.png",
+        "concrete368_nm.png",
+        "crete983.png",
+        "crete983_nm.png"
+      ],
+      "changes": "1024px WebP; restrained saturation; source normal slopes softened and renormalized for stable grazing-angle lighting; artist-derived roughness / microcavity AO in packed ORM. Photographic color and source normal maps replace the former masonry and steel-derived finishes."
+    }
   },
   "assets": [
     {
       "name": "cell-props.glb",
-      "bytes": 370464,
-      "sha256": "d25fe6cb4d11a6298d8f3eb963ecaff3c62b4cd9427cd2aaa5a9e82d6821c9d4"
+      "bytes": 542100,
+      "sha256": "b0beb68d3dc23fbfeb281bfd2165670896113483269427c8e1cf71ac1dabf400"
     },
     {
       "name": "masonry-albedo.webp",
-      "bytes": 82638,
-      "sha256": "a2286c1ccf67f7ec184603725a249fdbb5c100069a23f90532c28a1ce68ae9e3"
+      "bytes": 380368,
+      "sha256": "2cd17abb32dd5d86d0eb1b7e2bd2bc1ddaf0e5db92f14775280bb94f7fd48b12"
     },
     {
       "name": "masonry-normal.webp",
-      "bytes": 139474,
-      "sha256": "496add966904486b2592d9d70b826a6ebee5e4ee78772d5a2cd627efcc6e6fea"
+      "bytes": 1381600,
+      "sha256": "d270c6add5177c19a38970fb06eb9d1b76b1b71c4a4777af8802bd83bc02bde9"
     },
     {
       "name": "masonry-orm.webp",
-      "bytes": 93182,
-      "sha256": "236e6c7bd10b086d4c1b441d211b9f230247b74cc30cf47409ce6a6f6b830865"
+      "bytes": 300216,
+      "sha256": "cddcafbedbdd1b461cdbb1a38a2fd986e1257d15ee922cfa9782b9c5f7ac6330"
     },
     {
       "name": "metal-albedo.webp",
@@ -42,18 +56,18 @@
     },
     {
       "name": "concrete-albedo.webp",
-      "bytes": 6626,
-      "sha256": "a298f86c9619b2cd99c7df9f4b1c2ac22f39cb1d505020266f8fa295bc316764"
+      "bytes": 366588,
+      "sha256": "9a48568f5c59e17027ab2189afc79a96881496a311a3927a46825947ba76a24b"
     },
     {
       "name": "concrete-normal.webp",
-      "bytes": 1538,
-      "sha256": "321ef311bc88eb463ac9aceace3762fd53f25302fa0f829e1ae644a94fcd88b6"
+      "bytes": 906308,
+      "sha256": "dabc6818b25262db1ea4dd64ac3b8ffe2d2857298ef17f7dc0713d5e458975b5"
     },
     {
       "name": "concrete-orm.webp",
-      "bytes": 9684,
-      "sha256": "32ef553ceeb8714675612b91aac9bfded5a6f94f5a21a2885c9884b0a8394cdd"
+      "bytes": 279568,
+      "sha256": "8625ae769ccc7f8ad1e1c123bea842da0fd882f35f5fa1dee1567b1eab9ce468"
     },
     {
       "name": "wool-albedo.webp",

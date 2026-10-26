@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="public/icon.svg" width="64" alt="Hirodora emblem" />
+<img src="src/assets/branding/hirodora-icon.webp" width="110" alt="Hirodora prison key emblem" />
 
 # H I R O D O R A
 
@@ -8,19 +8,34 @@
 
 **Some walls keep you in. These walls keep a secret.**
 
-**v0.5.0 · A key to the wrong cell**
+**v0.6.0 · Android / Cell 47**
 
 First-person prison escape · Recorded spatial audio · New Cell 47 → 46 chapter
 
-**[↓ DOWNLOAD THE LATEST OFFLINE GAME — v0.5.0 ZIP](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.5.0-offline.zip)**
+**[↓ DOWNLOAD ANDROID APK — v0.6.0](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.6.0-android.apk)**
 
-[Single-file HTML](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.5.0.html) · [Mobile setup](#play-on-mobile) · [Checksums](downloads/latest.json)
+[Offline web ZIP](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.6.0-offline.zip) · [Single-file HTML](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.6.0.html) · [APK checksums](downloads/android-latest.json) · [Android build and signing](docs/ANDROID.md)
 
 [The experience](#the-experience) · [Play on mobile](#play-on-mobile) · [Development](#development) · [Quality](#quality-and-release-status)
 
-![Current Cell 47 opening, rendered in the game](docs/screenshots/opening/after-cell47.png)
+![Current Cell 47 with photographic concrete and revised furniture, rendered in the game](docs/screenshots/android-v6/after-cell47.png)
 
 </div>
+
+## Android app / 0.6.0
+
+Install the signed APK on **Android 8.0 or newer** with an updated Android System WebView. Allow installation from your browser/Files app when prompted. The game opens in landscape and runs offline with all models, textures and recordings included. No Internet or storage permission is requested. Android Back/backgrounding pauses the escape; return and tap Resume. [Installation, build instructions, signing identity and limitations](docs/ANDROID.md).
+
+**New controls:** use the HUD restart icon to retry a checkpoint, or **Pause → Start new game** to return to Cell 47 with a fresh inventory. Replacing progress asks for confirmation. Cell 47 is quiet at rest: the continuous ventilation loop and random water playback have been removed from this zone. Guard dialogue has a deeper processed voice master and clearer spatial mixing.
+
+<table>
+<tr><td width="50%"><img src="docs/screenshots/opening/after-cell47.png" alt="0.5 Cell 47 at the same camera" /></td><td width="50%"><img src="docs/screenshots/android-v6/after-cell47.png" alt="0.6 photographic concrete, cracked floor and revised furniture" /></td></tr>
+<tr><td align="center"><sub>BEFORE · 0.5.0</sub></td><td align="center"><sub>AFTER · 0.6.0 · SAME CAMERA</sub></td></tr>
+<tr><td><img src="docs/screenshots/android-v6/officer.png" alt="Officer in the actual game with revised skin, navy uniform and embroidered ID" /></td><td><img src="docs/screenshots/android-v6/mobile.png" alt="Updated landscape touch HUD" /></td></tr>
+<tr><td><img src="docs/screenshots/android-v6/title.png" alt="Hirodora app branding and title menu" /></td><td><img src="docs/screenshots/android-v6/new-game.png" alt="New game confirmation" /></td></tr>
+</table>
+
+New concrete photographs and source normal maps are by **p0ss / Georges Grondin**, CC-BY 3.0; roughness/AO are documented adaptations. [Source and license](src/assets/environment/CONCRETE-LICENSE.txt). Existing environment galleries below are retained as historical milestones.
 
 ## New opening: a way through
 
@@ -47,7 +62,7 @@ These are actual browser renders. [Capture cameras and progress](docs/screenshot
 
 ### Recorded audio
 
-**59 CC0 recordings, 786 KiB**: material footsteps, keys, bed dragging, screwdriver, ceramic scraping, hinges, paper, fabric, ventilation, water and English guard speech. Footsteps follow real ground movement; guards use distance attenuation, spatial panning and wall filtering. Pause settings provide separate sound, footstep, ambience, dialogue, music and UI levels. [Audio sources, licenses, audit and remaining work](docs/AUDIO.md).
+**59 CC0 recordings, 803 KiB**: material footsteps, keys, bed dragging, screwdriver, ceramic scraping, hinges, paper, fabric, zone-specific ventilation/water and processed English guard speech. Footsteps follow real ground movement; guards use distance attenuation, spatial panning and wall filtering. Pause settings provide separate sound, footstep, ambience, dialogue, music and UI levels. [Audio sources, licenses, audit and remaining work](docs/AUDIO.md).
 
 The recorded lines are “Hey, you can't do that!” and “Stop right there. This isn't over yet!” Custom “I'm coming to check / for you” performances, exterior ambience and physical-phone audio QA remain pending. This release does not claim the entire sound-design brief is finished.
 
@@ -74,7 +89,7 @@ Version 0.4.0 includes authored Blender/GLB cell furniture, sourced PBR masonry/
 <tr><td align="center"><sub>WINDOW · REVEALS AND CEILING</sub></td><td align="center"><sub>BLOCK C · CORRIDOR</sub></td></tr>
 </table>
 
-Dedicated concrete scans remain blocked at the libraries' download hosts; the current painted/floor finish adapts the documented worn-surface maps. This is an environment preview, with physical-phone QA still open.
+This historical 0.4 preview used adapted worn-surface maps. Version 0.6 replaces them with the photographed concrete and source normals described above. Physical-phone QA remains open.
 
 ## One ledger. One ally. One chance.
 
@@ -127,17 +142,21 @@ The gallery shows actual v0.4.0 browser renders. Front/side/detail showcases sta
 
 ## Play on mobile
 
-### Download v0.5.0 — offline edition
+### Android APK — recommended
 
-**[Download Hirodora v0.5.0 for offline play (.zip)](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.5.0-offline.zip)**
+**[Download Hirodora v0.6.0 APK](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.6.0-android.apk)**. Install from Files, then launch Hirodora. Android 8.0+ and an updated System WebView are required. The APK automatically opens in landscape; it includes the complete offline game.
+
+### Browser offline edition
+
+**[Download Hirodora v0.6.0 web ZIP](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.6.0-offline.zip)**
 
 1. Download the ZIP from the link above and extract it in your device’s Files app.
-2. Open **`Hirodora-0.5.0.html` in a full WebGL 2 browser**, such as Chrome on Android. If your file viewer displays text or blocks scripts, choose “Open with” a full browser. File handling depends on the device/browser.
+2. Open **`Hirodora-0.6.0.html` in a full WebGL 2 browser**, such as Chrome on Android. If your file viewer displays text or blocks scripts, choose “Open with” a full browser. File handling depends on the device/browser.
 3. Play in landscape: left joystick to move, drag the scene to look, then use **Jump**, **Crouch / Stand**, **Sprint**, **Interact** and the contextual action prompt. Portrait now shows a Rotate screen and pauses gameplay; rotate back to landscape and tap **Resume escape**. Puzzle progress is kept.
 
 Use **Fullscreen / landscape** on the title screen or pause menu to request fullscreen and landscape on supported Android browsers. Browser security prevents a web game from forcing rotation everywhere: if it remains portrait, disable the phone’s portrait-orientation lock and rotate manually. iPhone/iPad browsers may require manual rotation.
 
-The single HTML embeds the engine, **all three officer GLBs and textures**, styles and recorded audio. It needs **no server, API key, external model download or network**. Wait for officer model preparation to finish before starting. The unmodified standalone document is tested in offline Chromium mobile emulation with zero HTTP requests. Direct file navigation is blocked by this cloud browser’s administrator policy, so device file-opening behavior still needs physical-phone testing. This is a web game, **not an APK or IPA**.
+The single HTML embeds the engine, **all three officer GLBs and textures**, styles and recorded audio. It needs **no server, API key, external model download or network**. Wait for officer model preparation to finish before starting. The standalone document is tested in offline Chromium mobile emulation with zero HTTP requests. This web download is separate from the Android APK; iOS uses the hosted PWA.
 
 The same download works on desktop: extract and open the HTML in Chrome, Edge or Firefox. The conventional `dist/index.html` is a different, hosted build and still requires an HTTP server.
 
@@ -198,16 +217,16 @@ For an existing system Chromium, set `PLAYWRIGHT_CHROMIUM_EXECUTABLE=/path/to/ch
 
 ### Build and distribute
 
-`npm run build` produces `dist/`, a content-versioned service worker, relative asset paths for GitHub Pages subdirectories, embedded-texture GLBs, PNG app icons and the install manifest. Only assets required by the game are copied into the playable build. The v0.5.0 hosted offline payload is approximately **8.76 MiB uncompressed** including recordings and credits; the build fails above the revised **12 MiB** budget. The standalone ZIP is approximately **6 MiB**.
+`npm run build` produces `dist/`, a content-versioned service worker, relative asset paths for GitHub Pages subdirectories, embedded-texture GLBs, PNG app icons and the install manifest. The v0.6 hosted payload is approximately **12.7 MiB**; the build enforces a **100 MiB** maximum. `npm run package:android` creates and verifies the signed Android APK. Exact sizes and checksums are recorded in the download manifests.
 
 The quality workflow checks pull requests and pushes, packages the offline HTML, runs browser tests and uploads both builds. Static surfaces are batched, Meshopt/WebP reduce model transfer size, instances share GPU resources, distant animations are throttled and offscreen pose work is skipped. Light selection is throttled, collision bounds are cached and mobile resolution scales down under sustained rendering load. The Pages workflow is manual so publishing remains an explicit release action. Normal builds use committed assets; [rebuilding the officer GLBs](docs/GUARD-ASSETS.md#rebuild-the-assets) is a separate offline-authoring step.
 
 ## Quality and release status
 
-This is a working, substantially rebuilt **playable web slice**, with automated regression coverage. It is not a guarantee of zero defects or a claim of completed device certification.
+This is a playable chapter distributed as an Android APK and a web build, with automated regression coverage. Physical-device certification is still open.
 
-- **28 asset/logic tests** cover the opening objectives, bounded hold progress, audio licenses/hashes, embedded PBR maps, skin weights, bone indices, clips, animation selection, display-orientation fallback, stealth, puzzles, crafting, endings, movement, routing clearance and the jump arc.
-- **Fourteen browser scenarios** exercise the new opening, wrong-key reveal, quiet/hard pushing, return passage, guard investigation, audio decoding, hold cancellation, independent rigs, shared geometry, real joint movement, patrol, LOD, darts/collapse, checkpoint reset, failed-download retry, desktop/touch controls, portrait-to-landscape safety, transparent HUD, legacy puzzles/progression and hosted/downloaded offline play.
+- **30 asset/logic tests** cover the opening objectives, bounded hold progress, audio licenses/hashes, embedded PBR maps, skin weights, bone indices, clips, animation selection, display-orientation fallback, stealth, puzzles, crafting, endings, movement, routing clearance, graphics adaptation and the jump arc.
+- **16 browser scenarios** exercise the opening and legacy campaign, UI restart/new-game reset, native pause event, silent cell ambience, clearer dialogue, saves, collision, guard AI, mobile controls, rotation and hosted/downloaded offline play.
 - The progression integration test uses legal approach-position fixtures with patrols suspended; it is not a full unassisted stealth playthrough.
 - Physical Android/iPhone testing, Safari/Firefox checks, sustained performance testing and player-led difficulty balancing remain release gates.
 

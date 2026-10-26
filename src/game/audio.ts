@@ -44,7 +44,7 @@ class SoundManager {
     music: 0.5,
     sfx: 0.8,
     footsteps: 0.8,
-    ambience: 0.38,
+    ambience: 0.18,
     dialogue: 1,
     ui: 0.5,
   };
@@ -57,6 +57,7 @@ class SoundManager {
     position: Position;
     volume: number;
     follow: boolean;
+    dialogue: boolean;
   }>();
   public occlusion?: (position: Position) => number;
   private occlusionTime = 0;
@@ -124,7 +125,7 @@ class SoundManager {
         this.reverbGain.gain.value = 0.09;
         this.reverb.connect(this.reverbGain);
         this.reverbGain.connect(this.master);
-        for (const bus of ["sfx", "footsteps", "dialogue"] as AudioBus[])
+        for (const bus of ["sfx", "footsteps"] as AudioBus[])
           this.buses.get(bus)!.connect(this.reverb);
       }
       this.setVolume(this.volume);
@@ -201,6 +202,18 @@ class SoundManager {
   public suspend() {
     void this.ctx?.suspend();
   }
+  public resetSceneAudio() {
+    for (const source of this.voices) source.stop();
+    this.cooldowns.clear();
+    if (!this.ctx) return;
+    for (const loop of this.loops) {
+      loop.gain.gain.cancelScheduledValues(this.ctx.currentTime);
+      loop.gain.gain.value = 0;
+    }
+    const ambience = this.buses.get("ambience");
+    ambience?.gain.cancelScheduledValues(this.ctx.currentTime);
+    if (ambience) ambience.gain.value = this.levels.ambience;
+  }
   public toggleMute() {
     this.muted = !this.muted;
     this.setVolume(this.volume);
@@ -236,14 +249,14 @@ class SoundManager {
         s.panner.positionZ.setTargetAtTime(s.position[2], now, 0.06);
       }
       if (now >= this.occlusionTime && this.occlusion) {
-        const walls = this.occlusion(s.position);
+        const walls = Math.min(s.dialogue ? 1 : 3, this.occlusion(s.position));
         s.filter.frequency.setTargetAtTime(
-          walls ? 1100 / walls : 17000,
+          walls ? (s.dialogue ? 4200 : 1100 / walls) : 17000,
           now,
           0.12,
         );
         s.gain.gain.setTargetAtTime(
-          s.volume * Math.pow(0.25, Math.min(3, walls)),
+          s.volume * Math.pow(s.dialogue ? 0.65 : 0.25, walls),
           now,
           0.12,
         );
@@ -290,12 +303,14 @@ class SoundManager {
       source = ctx.createBufferSource(),
       gain = ctx.createGain(),
       filter = ctx.createBiquadFilter();
+    const dialogue = bus === "dialogue";
+    walls = Math.min(dialogue ? 1 : 3, walls);
     source.buffer = this.buffers.get(key)!;
     source.playbackRate.value = rate;
     filter.type = "lowpass";
-    filter.frequency.value = walls ? 1100 / walls : 17000;
+    filter.frequency.value = walls ? (dialogue ? 4200 : 1100 / walls) : 17000;
     gain.gain.value =
-      Math.min(1.2, volume) * Math.pow(0.25, Math.min(3, walls));
+      Math.min(1.2, volume) * Math.pow(dialogue ? 0.65 : 0.25, walls);
     source.connect(filter);
     filter.connect(gain);
     let panner: PannerNode | undefined;
@@ -307,17 +322,18 @@ class SoundManager {
           position: Position;
           volume: number;
           follow: boolean;
+          dialogue: boolean;
         }
       | undefined;
     if (position) {
       panner = ctx.createPanner();
       panner.panningModel = this.lightweight ? "equalpower" : "HRTF";
       panner.distanceModel = "inverse";
-      panner.refDistance = 1.5;
+      panner.refDistance = dialogue ? 4 : 1.5;
       panner.maxDistance = 24;
-      panner.rolloffFactor = 1.6;
+      panner.rolloffFactor = dialogue ? 0.8 : 1.6;
       panner.positionX.value = position[0];
-      panner.positionY.value = position[1] + 0.25;
+      panner.positionY.value = position[1] + (dialogue ? 1.5 : 0.25);
       panner.positionZ.value = position[2];
       gain.connect(panner);
       panner.connect(this.buses.get(bus)!);
@@ -328,6 +344,7 @@ class SoundManager {
         position: follow ? position : [...position],
         volume: Math.min(1.2, volume),
         follow,
+        dialogue,
       };
       this.spatial.add(spatial);
     } else gain.connect(this.buses.get(bus)!);
@@ -502,7 +519,8 @@ class SoundManager {
         gain = this.ctx.createGain();
       source.buffer = buffer;
       source.loop = true;
-      gain.gain.value = key === "ventilation" ? 0.3 : 0.06;
+      // Begin silently; zone mixing enables only the nearby authored source.
+      gain.gain.value = 0;
       source.connect(gain);
       gain.connect(this.buses.get("ambience")!);
       source.start();
@@ -514,12 +532,14 @@ class SoundManager {
     for (const loop of this.loops)
       loop.gain.gain.setTargetAtTime(
         loop.key === "ventilation"
-          ? zone === "tide"
-            ? 0.03
-            : 0.22 + tension * 0.06
+          ? zone === "laundry"
+            ? 0.055 + tension * 0.015
+            : 0
           : zone === "laundry"
-            ? 0.18
-            : 0.045,
+            ? 0.06
+            : zone === "tide"
+              ? 0.045
+              : 0,
         this.ctx.currentTime,
         1,
       );

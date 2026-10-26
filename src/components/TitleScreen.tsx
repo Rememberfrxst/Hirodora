@@ -8,6 +8,7 @@ import {
   Expand,
 } from "lucide-react";
 import { version } from "../../package.json";
+import logo from "../assets/branding/hirodora-icon.webp";
 
 interface Props {
   onStart: () => void;
@@ -36,7 +37,13 @@ export function TitleScreen({
     <main className="title-screen">
       <header className="title-header">
         <a className="wordmark" href="#" aria-label="Hirodora home">
-          <Shield size={18} /> H / 047
+          <img
+            src={logo}
+            width="38"
+            height="38"
+            alt="Hirodora prison key emblem"
+          />{" "}
+          H / 047
         </a>
         <span>AN ORIGINAL STEALTH EXPERIENCE</span>
         <div className="live-tag">

@@ -1,0 +1,46 @@
+name: Android APK
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.4.4'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.13'
+      - run: bun install --frozen-lockfile
+      - run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
+      - run: npm run check
+      - name: Build signed release with the existing app identity
+        env:
+          HIRODORA_KEYSTORE_BASE64: ${{ secrets.HIRODORA_KEYSTORE_BASE64 }}
+          HIRODORA_STORE_PASSWORD: ${{ secrets.HIRODORA_STORE_PASSWORD }}
+          HIRODORA_KEY_PASSWORD: ${{ secrets.HIRODORA_KEY_PASSWORD }}
+          HIRODORA_KEY_ALIAS: ${{ secrets.HIRODORA_KEY_ALIAS }}
+          HIRODORA_KEYSTORE: ${{ runner.temp }}/hirodora-release.jks
+          HIRODORA_GRADLE: gradle
+        run: |
+          test -n "$HIRODORA_KEYSTORE_BASE64" || { echo 'Configure the existing release signing identity first; see docs/ANDROID.md.'; exit 1; }
+          printf '%s' "$HIRODORA_KEYSTORE_BASE64" | base64 --decode > "$HIRODORA_KEYSTORE"
+          node scripts/prepare-android-assets.mjs
+          node scripts/build-android.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Hirodora-Android
+          path: |
+            downloads/*-android.apk
+            downloads/android-latest.json

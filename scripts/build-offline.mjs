@@ -14,6 +14,7 @@ for (const name of publicFiles)
 const files = [
   "index.html",
   "ENVIRONMENT-LICENSES.txt",
+  "CHARACTER-LICENSES.txt",
   "AUDIO-LICENSES.json",
   ...publicFiles,
   ...(await readdir("dist/assets"))
@@ -24,9 +25,11 @@ await writeFile(
   "dist/ENVIRONMENT-LICENSES.txt",
   (await readFile("src/assets/environment/GODOT-MIT-LICENSE.txt", "utf8")) +
     "\n" +
-    (await readFile("src/assets/environment/TPS-ASSET-LICENSE.txt", "utf8")),
+    (await readFile("src/assets/environment/TPS-ASSET-LICENSE.txt", "utf8")) + "\n" +
+    (await readFile("src/assets/environment/CONCRETE-LICENSE.txt", "utf8")),
 );
 const hash = createHash("sha256");
+await copyFile("docs/GUARD-ASSETS.md", "dist/CHARACTER-LICENSES.txt");
 await copyFile("src/assets/audio/manifest.json", "dist/AUDIO-LICENSES.json");
 let bytes = 0;
 for (const name of files) {
@@ -34,8 +37,8 @@ for (const name of files) {
   hash.update(content);
   bytes += content.byteLength;
 }
-if (bytes > 12 * 1024 * 1024)
-  throw new Error("Playable build exceeds the 12 MiB offline budget.");
+if (bytes > 100 * 1024 * 1024)
+  throw new Error("Playable build exceeds the 100 MiB offline budget.");
 const version = "hirodora-" + hash.digest("hex").slice(0, 12);
 const worker = `const CACHE = ${JSON.stringify(version)};
 const FILES = ${JSON.stringify(files)};

@@ -7,6 +7,7 @@ createRoot(document.getElementById("root")!).render(<App />);
 if (
   import.meta.env.PROD &&
   !import.meta.env.STANDALONE &&
+  location.hostname !== "appassets.androidplatform.net" &&
   /^https?:$/.test(location.protocol) &&
   "serviceWorker" in navigator
 ) {

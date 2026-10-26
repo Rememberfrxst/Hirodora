@@ -544,10 +544,10 @@
     "author": "balloonhead",
     "license": "CC0-1.0",
     "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
-    "sha256": "9f3deb7da677a9d24bb34076b85df0d6633ca7d29f607266de83356ccfc1a46e",
-    "bytes": 70549,
+    "sha256": "16f702e6585712b59e53d909a7b94e9d46f478d02688805e250b7e9beaa716f3",
+    "bytes": 85323,
     "usage": "voice",
-    "changes": "HQ preview; mono 32kHz, loudness normalized, fades, Vorbis q3"
+    "changes": "HQ preview; mono 32kHz, loudness normalized, fades, Vorbis q3; v0.6 master: 48kHz mono Vorbis q6, 0.88 pitch with duration preserved, noise reduction, 85Hz high-pass, vocal presence EQ, compression, -16 LUFS / -2dB true peak"
   },
   {
     "file": "guard-hey.ogg",
@@ -555,10 +555,10 @@
     "author": "TechWalker",
     "license": "CC0-1.0",
     "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
-    "sha256": "c8ba465d11a435f3b962f858fadeeab2e7abc734ec155ec752bd107a38b99264",
-    "bytes": 11785,
+    "sha256": "f690341de351579ee7dabe8c31ae09b4d45bc775a1ff05fc135c57a5da1fb6e1",
+    "bytes": 14947,
     "usage": "voice",
-    "changes": "HQ preview; mono 32kHz, loudness normalized, fades, Vorbis q3"
+    "changes": "HQ preview; mono 32kHz, loudness normalized, fades, Vorbis q3; v0.6 master: 48kHz mono Vorbis q6, 0.88 pitch with duration preserved, noise reduction, 85Hz high-pass, vocal presence EQ, compression, -16 LUFS / -2dB true peak"
   },
   {
     "file": "bed-drag.ogg",

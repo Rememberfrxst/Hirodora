@@ -26,7 +26,9 @@ Master plus Music, SFX, Footsteps, Ambience, Dialogue and UI controls live in Pa
 
 The camera drives a Web Audio listener. Short guard sounds use HRTF positioning, inverse distance rolloff and filtered transmission across solid boundaries. Mobile uses equal-power panning and omits convolution. Desktop has a short room impulse response, with lower exterior send. Ambience layers fade by zone. All active sources, gains and filters disconnect on completion; polyphony is capped at 12 mobile / 24 desktop voices. Common clips are predecoded by three concurrent workers, sharing decoded buffers. Failed decoding is nonfatal and visible in the audio diagnostics; audio never drives AI rules.
 
-The recording set totals **804,714 bytes (786 KiB), 59 samples**. The hosted build remains below the revised 12 MiB budget. The standalone HTML embeds the OGG data; the service worker precaches hosted audio and a license manifest.
+The recording set totals **822,650 bytes (803 KiB), 59 samples** after the 0.6 dialogue master. The build enforces a 100 MiB maximum. The standalone HTML embeds OGG data; the hosted service worker precaches audio and a license manifest. The APK serves all bundled files locally and does not use a service worker.
+
+Version 0.6 removes continuous ventilation and random water playback from Cell 47. Ambience loops start at zero gain, with quiet machine/water levels only in laundry/tidal areas. New-game/checkpoint restarts stop old effect voices and clear scheduled ambience changes. Guard speech uses duration-preserving 0.88 pitch, denoising, presence EQ, compression and a -16 LUFS / -2dB true-peak master. Dialogue uses a four-metre reference distance, gentler wall filtering and no added convolution so the words stay clearer through bars. These are processed versions of the credited human recordings, not a new performance.
 
 ## Remaining audio work
 

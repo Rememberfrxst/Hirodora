@@ -18,7 +18,10 @@ def mat(name, color, rough=.7, metal=0):
     return m
 steel=mat('PaintedSteel',(.16,.19,.17),.53,.65)
 chrome=mat('BrushedSteel',(.38,.42,.43),.3,.9)
-enamel=mat('InstitutionalPorcelain',(.63,.65,.59),.22)
+enamel=mat('InstitutionalPorcelain',(.68,.70,.65),.24)
+windowpaint=mat('WindowEnamel',(.24,.29,.26),.64,.1)
+paper=mat('BookPages',(.64,.59,.45),.96)
+bookcover=mat('WornBookCover',(.13,.18,.16),.9)
 cloth=mat('BlanketWool',(.17,.23,.23),.98)
 cotton=mat('MattressCanvas',(.56,.54,.43),.95)
 rubber=mat('Rubber',(.025,.03,.027),.78)
@@ -92,6 +95,14 @@ for z in [.42,1.55]:
     for y in [-.99,.99]: plate('End rail',(0,y,z),(1.08,.055,.085),steel,bunk,.007)
     for y in [-.88,-.6,-.3,0,.3,.6,.88]: plate('Mattress support',(0,y,z-.02),(1.05,.045,.035),steel,bunk,.005)
     cushion('Stitched mattress',(0,0,z+.12),(1.04,2.02,.17),cotton,bunk)
+    # Sewn rounded rectangular perimeter, modeled independently from the cushion.
+    for dz in [-.012,.012]:
+        points=[]
+        for i in range(49):
+            a=2*math.pi*i/48
+            points.append((math.copysign(abs(math.cos(a))**.34,math.cos(a))*.521,
+                           math.copysign(abs(math.sin(a))**.34,math.sin(a))*1.011,z+.12+dz))
+        tube('Mattress stitched piping',points,.0035,cotton,bunk)
     cushion('Soft pillow',(.035,-.72,z+.25),(.68,.43,.17),cotton,bunk)
     # Folded cloth surface with sagging hem and solid thickness, no double-sided plane.
     verts=[]; faces=[]; nx=40; ny=48
@@ -111,6 +122,10 @@ for z in [.42,1.55]:
 for x in [.16,.49]: tube('Ladder stile',[(x,1.11,.08),(x,1.11,1.74)],.019,steel,bunk)
 for z in [.3,.58,.86,1.14,1.42]: tube('Ladder tread',[(.16,1.11,z),(.49,1.11,z)],.018,chrome,bunk)
 tube('Upper safety rail',[(.56,-.88,1.62),(.56,-.88,1.95),(.56,.6,1.95),(.56,.6,1.62)],.021,steel,bunk)
+# A bound prison paperback, compressed page block and embossed spine.
+plate('Paperback page block',(-.24,-.55,.80),(.17,.25,.032),paper,bunk,.006)
+for dz in [-.019,.019]: plate('Paperback cover',(-.24,-.55,.80+dz),(.18,.26,.004),bookcover,bunk,.004)
+tube('Book binding',[(-.33,-.68,.78),(-.33,-.68,.82),(-.33,-.42,.82),(-.33,-.42,.78)],.004,bookcover,bunk)
 
 toilet=group('Toilet')
 shell('Ceramic pedestal',[(.01,0),(.16,0),(.18,.025),(.17,.08),(.115,.23),(.15,.32)],enamel,toilet,scale=(1,1.15,1))
@@ -133,11 +148,13 @@ shell('Drain strainer',[(0,.712),(.032,.713)],chrome,sink)
 plate('Polished steel mirror',(0,-.29,1.38),(.55,.022,.55),chrome,sink,.018)
 
 window=group('Window')
-for x in [-.85,.85]: plate('Deep reveal',(x,0,0),(.18,.3,1.45),enamel,window,.015)
-for z in [-.65,.65]: plate('Window lintel',(0,0,z),(1.88,.3,.16),enamel,window,.015)
+for x in [-.85,.85]: plate('Deep reveal',(x,0,0),(.18,.3,1.45),windowpaint,window,.015)
+for z in [-.65,.65]: plate('Window lintel',(0,0,z),(1.88,.3,.16),windowpaint,window,.015)
 for x in [-.7,-.42,-.14,.14,.42,.7]: tube('Embedded security bar',[(x,-.04,-.58),(x,-.04,.58)],.021,steel,window)
 plate('Cross brace',(0,-.04,0),(1.6,.06,.035),steel,window,.005)
 plate('Interior sill',(0,.13,-.72),(1.96,.5,.1),enamel,window,.025)
+for x in [-.77,.77]:
+    for z in [-.56,.56]: shell('Window frame rivet',[(.011,0),(.011,.008),(.006,.011)],chrome,window,pos=(x,-.16,z),segments=12)
 
 lamp=group('Luminaire')
 plate('Pressed protective housing',(0,0,0),(1.05,.28,.1),steel,lamp,.035)

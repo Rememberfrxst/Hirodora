@@ -1,0 +1,19 @@
+{
+  "version": "0.8.0",
+  "baselineCommit": "cd3b1eed71362c424552e513ad6e887b6de149e9",
+  "typecheck": "passed",
+  "unitAndAssetTestsPassed": 35,
+  "uniqueBrowserScenariosPassed": 21,
+  "browserRuns": {
+    "fullRegression": "20 passed; portrait status assertion initially matched both loading and rotation statuses",
+    "correctedFinalFollowup": "6 passed: scoped portrait fallback, hosted offline reload, downloaded offline HTML, settings persistence, one-shot/paused/completed intro, mobile skip. Also verifies the prisoner is in frame at intro start."
+  },
+  "android": "Gradle assembleRelease/lintRelease passed, zero lint errors; release APK v2 signature and zip alignment verified; same app certificate as 0.6/0.7",
+  "apkPayload": "See apk-assets-smoke.json for exact APK SHA-256. 81 bundled local assets; cinematic launch/skip and New Game reset passed; zero missing requests, script errors or service workers.",
+  "screenshots": "Actual game renders. intro-capture.json records cinematic presentation frames; capture.json retains identical Cell 47/corridor comparison cameras. APK screenshots render extracted package assets in Chromium, not Android hardware.",
+  "remaining": [
+    "Physical Android gameplay, thermal and device-specific WebView/GPU QA",
+    "English edition only; unavailable language arrows disabled",
+    "Earlier desktop action PNG originals and exact Rock Wall 17 map dependencies remain unavailable; see HUD-V7.md. Current concrete follows the latest reference using licensed photo adaptations."
+  ]
+}

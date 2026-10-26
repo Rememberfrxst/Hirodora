@@ -211,9 +211,68 @@ export class GuardActor {
         [0, 0.52, 0.03, 0, 0.53, 0.03, 0, 0.52, 0.03],
       ),
     );
+    const aimModel = clone(hero.scene),
+      aimTracks: THREE.KeyframeTrack[] = [];
+    for (const [name, direction] of Object.entries({
+      RightArm: [-0.08, -0.06, 1],
+      RightForeArm: [0.04, 0, 1],
+      LeftArm: [-0.18, -0.18, 1],
+      LeftForeArm: [-0.2, 0.06, 1],
+    })) {
+      const bone = aimModel.getObjectByName(name)!;
+      aimModel.updateMatrixWorld(true);
+      const local = new THREE.Vector3(
+        ...(direction as [number, number, number]),
+      )
+        .normalize()
+        .applyQuaternion(
+          bone.parent!.getWorldQuaternion(new THREE.Quaternion()).invert(),
+        );
+      const q = new THREE.Quaternion().setFromUnitVectors(
+        new THREE.Vector3(0, 1, 0),
+        local,
+      );
+      bone.quaternion.copy(q);
+      aimTracks.push(
+        new THREE.QuaternionKeyframeTrack(
+          name + ".quaternion",
+          [0, 1],
+          [...q.toArray(), ...q.toArray()],
+        ),
+      );
+    }
+    // Sweep from the prisoner's head/torso towards his legs while kneeling.
+    for (const track of tracks) {
+      if (
+        !(track instanceof THREE.QuaternionKeyframeTrack) ||
+        !/Arm|ForeArm|Head/.test(track.name)
+      )
+        continue;
+      const base = new THREE.Quaternion().fromArray(track.values, 0),
+        values: number[] = [];
+      for (const phase of [0, 0.5, 1, 0.5, 0]) {
+        const sweep = track.name.startsWith("Head")
+          ? new THREE.Euler(0.1 + phase * 0.25, phase * 0.5 - 0.25, 0)
+          : new THREE.Euler(phase * 0.35, phase * 0.55 - 0.25, 0);
+        values.push(
+          ...base
+            .clone()
+            .multiply(new THREE.Quaternion().setFromEuler(sweep))
+            .toArray(),
+        );
+      }
+      track.times = new Float32Array([0, 1.5, 3, 4.5, 6]);
+      track.values = new Float32Array(values);
+    }
     const animations = [
       ...hero.animations,
-      new THREE.AnimationClip("Examine", 4, tracks),
+      new THREE.AnimationClip("Examine", 6, tracks),
+      new THREE.AnimationClip("Aim", 1, [
+        ...hero.animations
+          .find((c) => c.name === "Idle")!
+          .tracks.filter((t) => !aimTracks.some((a) => a.name === t.name)),
+        ...aimTracks,
+      ]),
     ];
     for (const [tier, template] of templates) {
       const model = clone(template.scene);
@@ -273,9 +332,11 @@ export class GuardActor {
       : quality === "mobile" || (quality === "auto" && mobile)
         ? "mobile"
         : "hero";
-    const nextClip = guard.examining
-      ? "Examine"
-      : guardClip(guard.state, speed, turn);
+    const nextClip = guard.cinematicAim
+      ? "Aim"
+      : guard.examining
+        ? "Examine"
+        : guardClip(guard.state, speed, turn);
     const changedTier = nextTier !== this.tier;
     const previousTime = this.current?.time || 0;
     if (changedTier) {

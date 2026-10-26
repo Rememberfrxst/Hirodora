@@ -6,7 +6,7 @@ import { createHash } from "node:crypto";
 import { join, extname } from "node:path";
 const { version } = JSON.parse(await readFile("package.json", "utf8"));
 const captureDir = process.env.CAPTURE_DIR || "docs/screenshots/android-v6";
-await mkdir(captureDir, {recursive:true});
+await mkdir(captureDir, { recursive: true });
 const directory = await mkdtemp(join(tmpdir(), "hirodora-apk-smoke-"));
 execFileSync("unzip", [
   "-q",
@@ -67,6 +67,9 @@ await page.route("**/*", async (route) => {
 });
 await page.goto(host + "/assets/game/index.html");
 await page.locator("[data-start]").tap({ timeout: 120000 });
+await page.getByRole("button", { name: /Skip intro/ }).waitFor();
+await page.screenshot({ path: `${captureDir}/apk-assets-intro.png` });
+await page.getByRole("button", { name: /Skip intro/ }).tap();
 await page.getByRole("button", { name: "Pause game", exact: true }).waitFor();
 await page.screenshot({
   path: `${captureDir}/apk-assets-gameplay.png`,
@@ -77,6 +80,7 @@ await page
   .getByRole("dialog")
   .getByRole("button", { name: "Start new game", exact: true })
   .tap();
+await page.getByRole("button", { name: /Skip intro/ }).tap();
 await page.getByRole("button", { name: "Pause game", exact: true }).waitFor();
 // Give asynchronous sound decoding a chance to exercise bundled OGG URLs too.
 await page.waitForTimeout(1500);

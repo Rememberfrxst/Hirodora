@@ -49,7 +49,8 @@ test("all audio recordings have verified local bytes, redistribution licenses an
     const buffer = await readFile(
       new URL("../assets/audio/" + asset.file, import.meta.url),
     );
-    assert.equal(asset.license, "CC0-1.0");
+    assert.ok(["CC0-1.0", "CC-BY-3.0"].includes(asset.license));
+    assert.ok(asset.licenseURL);
     assert.match(asset.source, /^https:\/\//);
     assert.ok(asset.author);
     assert.equal(buffer.length, asset.bytes);

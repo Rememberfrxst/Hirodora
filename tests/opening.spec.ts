@@ -1,3 +1,4 @@
+import { skipOpening, openHudEditor } from "./helpers";
 import { test, expect, Page } from "@playwright/test";
 import type { GameEngine } from "../src/game/engine";
 declare global {
@@ -45,6 +46,7 @@ test("Cell 47 key twist, quiet bed, tool, toilet, passage, save and return", asy
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/");
   await page.locator("[data-start]").click();
+  await skipOpening(page);
   await page.evaluate(() =>
     (window.__HIRODORA__ as any).renderer.setPixelRatio(0.35),
   );
@@ -131,6 +133,7 @@ test("Cell 47 key twist, quiet bed, tool, toilet, passage, save and return", asy
     .toBeGreaterThan(-8);
   await page.reload();
   await page.locator("[data-start]").click();
+  await skipOpening(page);
   expect(
     await page.evaluate(() => window.__HIRODORA__.getItem("cell_key").name),
   ).toBe("Cell 42 key");
@@ -144,6 +147,7 @@ test("audio recordings decode, blocked movement is silent and channels persist",
 }) => {
   await page.goto("/");
   await page.locator("[data-start]").click();
+  await skipOpening(page);
   const result = await page.evaluate(async () => {
     const modulePath = "/src/game/audio.ts";
     const { sound } = await import(modulePath);
@@ -174,6 +178,7 @@ test("hard pushing alerts the examining guard, then he returns to the body witho
 }) => {
   await page.goto("/");
   await page.locator("[data-start]").click();
+  await skipOpening(page);
   await page.evaluate(() => {
     const e = window.__HIRODORA__ as any;
     e.renderer.setPixelRatio(0.35);
@@ -224,6 +229,7 @@ test("mobile contextual holding releases on cancel and rotation without stuck in
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/");
   await page.locator("[data-start]").tap();
+  await skipOpening(page);
   await page.evaluate(() => {
     const e = window.__HIRODORA__ as any;
     e.gameFlags.key_identified = true;

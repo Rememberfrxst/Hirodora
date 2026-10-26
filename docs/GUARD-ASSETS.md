@@ -1,4 +1,6 @@
-# Officer asset pipeline · v0.7.0
+# Character asset pipeline · v0.8.0
+
+The new Cell 47 prisoner uses a separate **45,164-triangle, 69-bone GLB**, not a recoloured officer. It has source-fitted `male_casualsuit06` short-sleeve T-shirt/jeans, photographic skin, short hair, shoes and Idle/Walk/Run/Death clips. `scripts/build-prisoner.mjs` validates the same pinned sources below and exports local embedded textures through Meshopt/WebP. Parameters and source references are in `src/assets/guards/prisoner-manifest.json`. The MakeHuman CC0 and CMU/MIT acknowledgements below apply to both characters. The new death motion is a baked, grounded skeletal fall from the licensed pipeline. Guard Aim and sweeping body inspection are runtime-authored poses; all underlying AI rules remain in the game engine.
 
 Version 0.7 rebuilds a new officer from the same pinned CC0 source library, rather than downloading an unrelated third-party character. New authored parameters select middle-aged photographic skin, short04 hair, revised anatomy and fitted navy clothing. The former bulky tactical vest and generated boot shafts are removed; a modeled curved breast shield, stitched name strip and shoulder epaulettes supplement the existing radio, belt, cuffs and keys. The project source script reproduces all three GLBs. Animation blending preserves the normalized walk/run stride phase. Before/after portraits use the same game camera in `docs/screenshots/android-v6/officer.png` and `docs/screenshots/hud-v7/officer.png`.
 

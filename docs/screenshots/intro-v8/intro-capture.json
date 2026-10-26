@@ -1,0 +1,17 @@
+{
+  "baseline": "cd3b1ee",
+  "viewport": {
+    "width": 998,
+    "height": 510
+  },
+  "frames": [
+    1.2,
+    3.4,
+    4.44,
+    5.6,
+    8.6,
+    13
+  ],
+  "method": "Actual game meshes, rig and deterministic timeline; paused for each capture. No generated scenes.",
+  "errors": []
+}

@@ -1,3 +1,4 @@
+import { skipOpening, openHudEditor } from "./helpers";
 import { test, expect } from "@playwright/test";
 
 test.use({
@@ -6,20 +7,43 @@ test.use({
   hasTouch: true,
 });
 
-test("all HUD presets fit a small landscape screen without overlapping controls", async ({ page }) => {
-  await page.setViewportSize({width:640,height:360});
-  await page.goto("/"); await page.locator("[data-start]").click();
-  await page.getByRole("button", {name:"Pause game",exact:true}).click();
-  await page.getByRole("button", {name:"Custom HUD",exact:true}).click();
-  for(const preset of ["compact","left","large"]) {
+test("all HUD presets fit a small landscape screen without overlapping controls", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 640, height: 360 });
+  await page.goto("/");
+  await page.locator("[data-start]").click();
+  await skipOpening(page);
+  await page.getByRole("button", { name: "Pause game", exact: true }).click();
+  await openHudEditor(page);
+  for (const preset of ["compact", "left", "large"]) {
     await page.getByLabel("HUD preset").selectOption(preset);
-    const boxes = await page.locator(".editor-control").evaluateAll(elements => elements.map(e => {const r=e.getBoundingClientRect();return {x:r.x,y:r.y,w:r.width,h:r.height};}));
+    const boxes = await page
+      .locator(".editor-control")
+      .evaluateAll((elements) =>
+        elements.map((e) => {
+          const r = e.getBoundingClientRect();
+          return { x: r.x, y: r.y, w: r.width, h: r.height };
+        }),
+      );
     expect(boxes).toHaveLength(6);
-    for(const r of boxes) {expect(r.x).toBeGreaterThanOrEqual(8);expect(r.y).toBeGreaterThanOrEqual(8);expect(r.x+r.w).toBeLessThanOrEqual(632);expect(r.y+r.h).toBeLessThanOrEqual(352);}
-    for(let i=0;i<boxes.length;i++) for(let j=i+1;j<boxes.length;j++) {
-      const a=boxes[i],b=boxes[j];
-      expect(a.x+a.w <= b.x || b.x+b.w <= a.x || a.y+a.h <= b.y || b.y+b.h <= a.y).toBe(true);
+    for (const r of boxes) {
+      expect(r.x).toBeGreaterThanOrEqual(8);
+      expect(r.y).toBeGreaterThanOrEqual(8);
+      expect(r.x + r.w).toBeLessThanOrEqual(632);
+      expect(r.y + r.h).toBeLessThanOrEqual(352);
     }
+    for (let i = 0; i < boxes.length; i++)
+      for (let j = i + 1; j < boxes.length; j++) {
+        const a = boxes[i],
+          b = boxes[j];
+        expect(
+          a.x + a.w <= b.x ||
+            b.x + b.w <= a.x ||
+            a.y + a.h <= b.y ||
+            b.y + b.h <= a.y,
+        ).toBe(true);
+      }
   }
 });
 test("custom HUD saves drag and size, cancels edits, survives reload and resets presets", async ({
@@ -27,8 +51,9 @@ test("custom HUD saves drag and size, cancels edits, survives reload and resets 
 }) => {
   await page.goto("/");
   await page.locator("[data-start]").click();
+  await skipOpening(page);
   await page.getByRole("button", { name: "Pause game", exact: true }).click();
-  await page.getByRole("button", { name: "Custom HUD", exact: true }).click();
+  await openHudEditor(page);
   const editor = page.getByRole("dialog", { name: "Custom HUD editor" });
   await editor.getByLabel("HUD preset").selectOption("left");
   const move = editor.getByRole("button", {
@@ -44,14 +69,13 @@ test("custom HUD saves drag and size, cancels edits, survives reload and resets 
   await page.mouse.up();
   await editor.getByLabel("Selected control size").fill("120");
   await editor.getByRole("button", { name: "Save HUD", exact: true }).click();
+  await page.getByRole("button", { name: "Back from settings" }).click();
   const saved = await page.evaluate(() =>
     JSON.parse(localStorage.getItem("hirodora-hud-v1")!),
   );
   expect(saved.controls.move.x).toBeLessThan(89);
   expect(saved.controls.move.size).toBe(120);
-  await page
-    .getByRole("button", { name: /^Resume escape/ })
-    .click();
+  await page.getByRole("button", { name: /^Resume escape/ }).click();
   const joystick = page.getByRole("region", { name: "Movement joystick" });
   expect((await joystick.boundingBox())!.width).toBe(120);
   await page.getByRole("button", { name: "Sprint", exact: true }).click();
@@ -64,15 +88,17 @@ test("custom HUD saves drag and size, cancels edits, survives reload and resets 
   ).toHaveAttribute("aria-pressed", "true");
   await page.reload();
   await page.locator("[data-start]").click();
+  await skipOpening(page);
   expect(
     (await page
       .getByRole("region", { name: "Movement joystick" })
       .boundingBox())!.width,
   ).toBe(120);
   await page.getByRole("button", { name: "Pause game", exact: true }).click();
-  await page.getByRole("button", { name: "Custom HUD", exact: true }).click();
+  await openHudEditor(page);
   await editor.getByLabel("HUD preset").selectOption("large");
   await editor.getByRole("button", { name: "Cancel", exact: true }).click();
+  await page.getByRole("button", { name: "Back from settings" }).click();
   expect(
     await page.evaluate(
       () => JSON.parse(localStorage.getItem("hirodora-hud-v1")!).preset,

@@ -5,6 +5,7 @@
 
 export type GameState =
   | "title"
+  | "intro"
   | "playing"
   | "paused"
   | "gameover"
@@ -38,6 +39,7 @@ export interface GuardData {
   stateTimer: number;
   investigationTarget?: [number, number, number];
   examining?: boolean;
+  cinematicAim?: boolean;
 }
 
 export type ItemId =

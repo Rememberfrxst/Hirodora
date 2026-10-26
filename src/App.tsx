@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { GameEngine } from "./game/engine";
-import { sound, audioBuses } from "./game/audio";
 import { requestLandscape } from "./game/display";
 import { Expand, RotateCw, Smartphone } from "lucide-react";
 import { TitleScreen } from "./components/TitleScreen";
+import { SettingsPanel } from "./components/SettingsPanel";
 import { HUD } from "./components/HUD";
 import { HudEditor } from "./components/HudEditor";
 import { MiniGames } from "./components/MiniGames";
@@ -20,15 +20,11 @@ export default function App() {
   const [, render] = useState(0);
   const [overlay, setOverlay] = useState<"map" | "story" | null>(null);
   const [error, setError] = useState("");
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [hudEditor, setHudEditor] = useState(false);
   const [restart, setRestart] = useState<"checkpoint" | "new" | null>(null);
-  const [volume, setVolume] = useState(70);
-  const [sensitivity, setSensitivity] = useState(22);
   const [displayPending, setDisplayPending] = useState(false);
   const [displayMessage, setDisplayMessage] = useState("");
-  const [reduced, setReduced] = useState(
-    matchMedia("(prefers-reduced-motion: reduce)").matches,
-  );
 
   useEffect(() => {
     if (!mountRef.current) return;
@@ -50,6 +46,13 @@ export default function App() {
     }
     const key = (e: KeyboardEvent) => {
       if (engine.orientationBlocked) return;
+      if (document.querySelector(".reference-settings, .hud-editor")) {
+        if (e.code === "Escape") {
+          setSettingsOpen(false);
+          setHudEditor(false);
+        }
+        return;
+      }
       if (
         (e.target as HTMLElement | null)?.closest(
           "button, input, select, textarea",
@@ -58,8 +61,11 @@ export default function App() {
       )
         return;
       if (e.repeat || engine.activeMiniGame) return;
-      if (e.code === "Escape") setOverlay(null);
-      else if (e.code === "KeyM")
+      if (e.code === "Escape") {
+        setOverlay(null);
+        setSettingsOpen(false);
+        setHudEditor(false);
+      } else if (e.code === "KeyM")
         setOverlay((value) => (value === "map" ? null : "map"));
       else if (e.code === "KeyL")
         setOverlay((value) => (value === "story" ? null : "story"));
@@ -68,7 +74,8 @@ export default function App() {
         engine.gameState === "title"
       ) {
         e.preventDefault();
-        engine.startGame();
+        if (engine.hasSave) engine.startGame();
+        else engine.newGame();
       }
     };
     window.addEventListener("keydown", key);
@@ -81,10 +88,10 @@ export default function App() {
   useEffect(() => {
     const engine = engineRef.current;
     if (!engine) return;
-    engine.overlayOpen = !!overlay || hudEditor;
+    engine.overlayOpen = !!overlay || hudEditor || settingsOpen;
     engine.clearInput();
     if (overlay) document.exitPointerLock?.();
-  }, [overlay, hudEditor]);
+  }, [overlay, hudEditor, settingsOpen]);
 
   const engine = engineRef.current;
   const portrait = !!engine?.orientationBlocked;
@@ -131,17 +138,17 @@ export default function App() {
           <div className="loading-screen">PREPARING THE NIGHT SHIFT…</div>
         ) : (
           <>
-            {engine.gameState === "title" && (
+            {engine.gameState === "title" && !settingsOpen && !hudEditor && (
               <TitleScreen
                 hasSave={engine.hasSave}
                 ready={engine.guardsReady}
                 loadError={engine.guardLoadError}
                 onRetry={() => void engine.loadGuardAssets()}
-                onFullscreen={engine.mobile ? openLandscape : undefined}
                 onStart={() => engine.startGame()}
-                onNewGame={() => setRestart("new")}
-                onOpenMap={() => setOverlay("map")}
-                onOpenStory={() => setOverlay("story")}
+                onNewGame={() =>
+                  engine.hasSave ? setRestart("new") : engine.newGame()
+                }
+                onSettings={() => setSettingsOpen(true)}
               />
             )}
             {engine.gameState === "playing" &&
@@ -193,164 +200,78 @@ export default function App() {
                 />
               </div>
             )}
-            {hudEditor && engine.gameState === "paused" && (
-              <HudEditor onClose={() => setHudEditor(false)} />
+            {hudEditor && <HudEditor onClose={() => setHudEditor(false)} />}
+            {settingsOpen && !hudEditor && (
+              <SettingsPanel
+                engine={engine}
+                onClose={() => setSettingsOpen(false)}
+                onHud={() => setHudEditor(true)}
+                onFullscreen={openLandscape}
+              />
             )}
-            {engine.gameState === "paused" && !overlay && !hudEditor && (
-              <div className="modal-backdrop">
-                <section className="game-panel pause-panel">
-                  <span className="eyebrow">HIRODORA / TAKE A BREATH</span>
-                  <h2>The night can wait.</h2>
-                  <p>
-                    Your escape is paused. Headphones help you locate nearby
-                    guards.
-                  </p>
-                  <label>
-                    MASTER VOLUME <span>{volume}%</span>
-                    <input
-                      aria-label="Master volume"
-                      type="range"
-                      min="0"
-                      max="100"
-                      value={volume}
-                      onChange={(e) => {
-                        const value = +e.target.value;
-                        setVolume(value);
-                        sound.setVolume(value / 100);
-                      }}
-                    />
-                  </label>
-                  {audioBuses.map((bus) => (
-                    <label key={bus}>
-                      {bus.toUpperCase()}{" "}
-                      <input
-                        aria-label={bus + " volume"}
-                        type="range"
-                        min="0"
-                        max="100"
-                        defaultValue={Math.round(sound.getBusVolume(bus) * 100)}
-                        onChange={(e) =>
-                          sound.setBusVolume(bus, Number(e.target.value) / 100)
-                        }
-                      />
-                    </label>
-                  ))}
-                  <label>
-                    LOOK SENSITIVITY <span>{sensitivity}</span>
-                    <input
-                      aria-label="Look sensitivity"
-                      type="range"
-                      min="5"
-                      max="50"
-                      value={sensitivity}
-                      onChange={(e) => {
-                        setSensitivity(+e.target.value);
-                        engine.sensitivity = +e.target.value / 10000;
-                      }}
-                    />
-                  </label>
-                  <label>
-                    GRAPHICS PRESET
-                    <select
-                      aria-label="Graphics preset"
-                      value={engine.graphicsPreset}
-                      onChange={(e) =>
-                        engine.setGraphicsPreset(
-                          e.target.value as "low" | "medium" | "high" | "ultra",
-                        )
-                      }
-                    >
-                      <option value="low">Low · maximum performance</option>
-                      <option value="medium">Medium · balanced</option>
-                      <option value="high">High · cinematic shadows</option>
-                      <option value="ultra">Ultra · highest fidelity</option>
-                    </select>
-                  </label>
+            {engine.gameState === "intro" && (
+              <section className="intro-overlay" aria-label="Opening cinematic">
+                <div className="intro-caption" role="status">
+                  {engine.introCaption}
+                </div>
+                <div className="intro-tools">
                   <button
-                    className="secondary-button"
-                    onClick={() => {
-                      engine.clearInput();
-                      setHudEditor(true);
-                    }}
+                    aria-label="Pause intro"
+                    onClick={() => engine.pauseGame()}
                   >
-                    Custom HUD
+                    Pause
                   </button>
-                  <label>
-                    OFFICER QUALITY
-                    <select
-                      aria-label="Officer quality"
-                      value={engine.guardQuality}
-                      onChange={(e) =>
-                        engine.setGuardQuality(
-                          e.target.value as "auto" | "desktop" | "mobile",
-                        )
-                      }
+                  <button onClick={() => engine.finishIntro()}>
+                    Skip intro ⟶
+                  </button>
+                </div>
+              </section>
+            )}
+            {engine.gameState === "paused" &&
+              !overlay &&
+              !hudEditor &&
+              !settingsOpen && (
+                <section
+                  className="reference-menu paused-reference"
+                  aria-label="Paused game"
+                >
+                  <nav>
+                    <button
+                      aria-label="Resume escape"
+                      onClick={() => engine.resumeGame()}
                     >
-                      <option value="auto">Automatic · device optimized</option>
-                      <option value="desktop">
-                        Desktop · hero detail + shadows
-                      </option>
-                      <option value="mobile">Mobile · balanced detail</option>
-                    </select>
-                  </label>
-                  <label className="check-label">
-                    <input
-                      type="checkbox"
-                      checked={reduced}
-                      onChange={(e) => {
-                        setReduced(e.target.checked);
-                        engine.reducedMotion = e.target.checked;
-                      }}
-                    />{" "}
-                    REDUCE CAMERA MOTION
-                  </label>
-                  <p className="performance-readout" role="status">
-                    <span>
-                      PERFORMANCE /{" "}
-                      {engine.getPerformanceStatus().status.toUpperCase()}
-                    </span>
-                    {engine.getPerformanceStatus().softwareRenderer
-                      ? " Hardware acceleration is unavailable; low-resolution mode is active."
-                      : ` ~${engine.getPerformanceStatus().estimatedFps} FPS · ${engine.getPerformanceStatus().renderScale}% render scale · ${engine.getPerformanceStatus().drawCalls} draw calls`}
-                  </p>
-                  <button
-                    className="primary-button"
-                    onClick={() => engine.resumeGame()}
-                  >
-                    Resume escape <span>→</span>
-                  </button>
-                  <div className="panel-actions">
-                    {engine.mobile && (
-                      <button onClick={openLandscape} disabled={displayPending}>
-                        <Expand size={16} /> Fullscreen / landscape
-                      </button>
-                    )}
+                      Continue
+                    </button>
+                    <button
+                      aria-label="Start new game"
+                      onClick={() => setRestart("new")}
+                    >
+                      New game
+                    </button>
+                    <button onClick={() => setSettingsOpen(true)}>
+                      Settings
+                    </button>
+                  </nav>
+                  <div className="pause-secondary">
                     <button onClick={() => setRestart("checkpoint")}>
                       Retry checkpoint
-                    </button>
-                    <button onClick={() => setRestart("new")}>
-                      Start new game
                     </button>
                     <button onClick={() => engine.returnToTitle()}>
                       Main menu
                     </button>
+                    <details>
+                      <summary>Art and audio credits</summary>
+                      <p>
+                        Human and clothing: MakeHuman CC0 / Ara 3D Gen MIT.
+                        Motion: CMU. Concrete: p0ss / Georges Grondin CC-BY 3.0.
+                        Gunshot: Vincent Sevedge / Tabasco, CC-BY 3.0. Complete
+                        sources ship in CHARACTER-LICENSES.txt,
+                        ENVIRONMENT-LICENSES.txt and AUDIO-LICENSES.json.
+                      </p>
+                    </details>
                   </div>
-                  <details className="asset-credits">
-                    <summary>Art and audio credits</summary>
-                    <p>
-                      Concrete: p0ss / Georges Grondin, CC-BY 3.0,
-                      OpenGameArt.org. Metal and fabric: Godot demo
-                      contributors, CC-BY 3.0 / MIT. Human assets: MakeHuman
-                      CC0; animation: CMU Mocap. Audio: Kenney and credited
-                      Freesound authors, CC0. Original furniture and generated
-                      app emblem: Hirodora. Full source URLs and adaptation
-                      notes are bundled in ENVIRONMENT-LICENSES.txt and
-                      AUDIO-LICENSES.json.
-                    </p>
-                  </details>
                 </section>
-              </div>
-            )}
+              )}
             {restart && (
               <div className="modal-backdrop restart-confirmation">
                 <section

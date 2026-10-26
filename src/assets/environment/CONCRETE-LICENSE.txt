@@ -11,3 +11,9 @@ WebP conversion, artist-derived roughness and microcavity AO packed into ORM.
 Source normal maps softened and renormalized to reduce grazing-angle aliasing.
 No affiliation or endorsement implied.
 The source offers multiple licenses; this distribution elects CC-BY 3.0.
+Version 0.8 adaptations: the same photographic concrete is recomposed with
+project-authored block-joint lines and recessed joint normals for cell walls;
+an unjointed photographic ceiling variant and reduced-saturation floor finish
+are added. These are artist adaptations, not new measured scans. Source inputs
+are pinned to Hirodora commit cd3b1eed71362c424552e513ad6e887b6de149e9.
+See scripts/prepare-reference-cell.mjs and docs/INTRO-V8.md for reproduction.

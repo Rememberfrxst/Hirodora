@@ -19,6 +19,7 @@ const errors = [];
 page.on("pageerror", (e) => errors.push(e.message));
 await page.goto(process.env.GAME_URL || "http://127.0.0.1:3200");
 await page.locator("[data-start]").click();
+if(await page.getByRole("button",{name:/Skip intro/}).isVisible())await page.getByRole("button",{name:/Skip intro/}).click();
 await page.evaluate(() => {
   const e = window.__HIRODORA__;
   e.setGraphicsPreset("high");
@@ -34,6 +35,8 @@ await page.evaluate(() => {
 });
 await page.screenshot({ path: `${directory}/mobile-controls.png` });
 await page.getByRole("button", { name: "Pause game", exact: true }).click();
+await page.getByRole("button",{name:"Settings",exact:true}).click();
+await page.getByRole("tab",{name:"Controls",exact:true}).click();
 await page.getByRole("button", { name: "Custom HUD", exact: true }).click();
 await page.screenshot({ path: `${directory}/editor-compact.png` });
 await page.getByLabel("HUD preset").selectOption("left");
@@ -41,6 +44,7 @@ await page.screenshot({ path: `${directory}/editor-left-handed.png` });
 await page.getByLabel("HUD preset").selectOption("large");
 await page.screenshot({ path: `${directory}/editor-large.png` });
 await page.getByRole("button", { name: "Cancel", exact: true }).click();
+await page.getByRole("button",{name:"Back from settings"}).click();
 await page.getByRole("button", { name: /^Resume escape/ }).click();
 await page.evaluate(() => {
   const e = window.__HIRODORA__;

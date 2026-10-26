@@ -8,23 +8,38 @@
 
 **Some walls keep you in. These walls keep a secret.**
 
-**v0.7.0 · Custom HUD / New Officer**
+**v0.8.0 · Cell 47 Cinematic / Reference Settings**
 
 First-person prison escape · Recorded spatial audio · New Cell 47 → 46 chapter
 
-**[↓ DOWNLOAD ANDROID APK — v0.7.0](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.7.0-android.apk)**
+**[↓ DOWNLOAD ANDROID APK — v0.8.0](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.8.0-android.apk)**
 
-[Offline web ZIP](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.7.0-offline.zip) · [Single-file HTML](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.7.0.html) · [APK checksums](downloads/android-latest.json) · [Android build and signing](docs/ANDROID.md)
+[Offline web ZIP](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.8.0-offline.zip) · [Single-file HTML](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.8.0.html) · [APK checksums](downloads/android-latest.json) · [Android build and signing](docs/ANDROID.md)
 
 [The experience](#the-experience) · [Play on mobile](#play-on-mobile) · [Development](#development) · [Quality](#quality-and-release-status)
 
-![Actual landscape gameplay with adjustable controls and a solid thumb-dot joystick](docs/screenshots/hud-v7/mobile-controls.png)
+![Actual main menu with the rigged prisoner, concrete cell and three choices](docs/screenshots/intro-v8/main-menu.png)
 
 </div>
 
-## Android app / 0.7.0
+## Cell 47 · version 0.8
 
-**Pause → Custom HUD** opens a live layout editor. Choose Compact, Left-handed or Large buttons, drag any of six touch controls, select a control to resize it, then Save HUD. Cancel discards edits; Reset restores the selected preset. Layouts stay on the device, independently of New Game/checkpoint saves. Display cutouts and screen edges constrain the buttons. The joystick now has a solid thumb dot and travel ring. Inventory has numbered item cards and an empty state.
+**Continue · New game · Settings.** The menu sits inside the real cell, with a clothed human prisoner in the foreground. Settings follows the supplied black/green reference: Game, Audio, Graphics and Controls tabs; white arrows and sliders; actual persistent Music/SFX, screen scale, FOV and sensitivity settings. Custom HUD now lives under **Settings → Controls**. The English-only edition disables unavailable language choices.
+
+**New game begins with a 17-second intro.** A prisoner in a T-shirt and jeans runs through the open gate. The guard warns him, aims and fires one shot. The prisoner twists and falls; the guard approaches, locks the gate, then kneels to inspect the body. Player control starts only after that setup. Skip reaches the same playable state; pause/backgrounding/rotation safely freeze the sequence. Continue does not replay an already completed intro, and older checkpoints retain their progress.
+
+<table>
+<tr><td width="50%"><img src="docs/screenshots/intro-v8/settings-game.png" alt="Black settings panel, green active Game tab and English language" /></td><td width="50%"><img src="docs/screenshots/intro-v8/settings-audio.png" alt="Music and SFX sliders control real audio gains" /></td></tr>
+<tr><td><img src="docs/screenshots/intro-v8/settings-graphics.png" alt="Render scale, field of view and graphics settings" /></td><td><img src="docs/screenshots/intro-v8/settings-controls.png" alt="Actual control mappings, sensitivity and Custom HUD" /></td></tr>
+<tr><td><img src="docs/screenshots/intro-v8/intro-shot.png" alt="Guard aiming and firing during the real opening cinematic" /></td><td><img src="docs/screenshots/intro-v8/intro-body-check.png" alt="Closed gate and officer checking the grounded prisoner" /></td></tr>
+<tr><td><img src="docs/screenshots/hud-v7/after-cell47.png" alt="Before: 0.7 Cell 47 at the matching camera" /></td><td><img src="docs/screenshots/intro-v8/after-cell47.png" alt="After: photographic block concrete, ceiling beams and cooler cell lighting at the same camera" /></td></tr>
+</table>
+
+The prisoner is a separate 45,164-triangle, 69-bone GLB using licensed photographic skin, a fitted short-sleeve T-shirt/jeans and four skeletal animations. Cell surfaces adapt the existing licensed concrete photographs with block joints and a smoother concrete ceiling, while practical lights are cooler and ceiling pipework is less dense. [Timeline, behavior, asset licenses and reproduction](docs/INTRO-V8.md). These are actual game renders, not generated mockups. Physical Android QA remains open.
+
+### Previous HUD milestone · 0.7
+
+**Settings → Controls → Custom HUD** opens a live layout editor. Choose Compact, Left-handed or Large buttons, drag any of six touch controls, select a control to resize it, then Save HUD. Cancel discards edits; Reset restores the selected preset. Layouts stay on the device, independently of New Game/checkpoint saves. Display cutouts and screen edges constrain the buttons. The joystick has a solid thumb dot and travel ring. Inventory has numbered item cards and an empty state.
 
 The new officer is rebuilt from licensed MakeHuman anatomy and fitted photographic clothing: revised face/body, short hair, work shirt, breast shield, shoulder epaulettes, radio and utility belt. The bulky padded vest and overlapping boot shafts are removed. Hero/mobile/distant GLBs retain the 69-bone rig and gameplay animations; walk/run changes preserve stride phase. [Asset sources and exact geometry counts](docs/GUARD-ASSETS.md).
 
@@ -159,19 +174,19 @@ The gallery shows actual v0.4.0 browser renders. Front/side/detail showcases sta
 
 ### Android APK — recommended
 
-**[Download Hirodora v0.7.0 APK](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.7.0-android.apk)**. Install from Files, then launch Hirodora. Android 8.0+ and an updated System WebView are required. The APK automatically opens in landscape; it includes the complete offline game. It uses the same signing identity as 0.6 and a higher version code, so install it over that version to retain app-local saves and settings.
+**[Download Hirodora v0.8.0 APK](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.8.0-android.apk)**. Install from Files, then launch Hirodora. Android 8.0+ and an updated System WebView are required. The APK automatically opens in landscape; it includes the complete offline game. It uses the existing signing identity and versionCode 800; install over 0.6/0.7 to retain app-local saves and settings.
 
 ### Browser offline edition
 
-**[Download Hirodora v0.7.0 web ZIP](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.7.0-offline.zip)**
+**[Download Hirodora v0.8.0 web ZIP](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.8.0-offline.zip)**
 
 1. Download the ZIP from the link above and extract it in your device’s Files app.
-2. Open **`Hirodora-0.7.0.html` in a full WebGL 2 browser**, such as Chrome on Android. If your file viewer displays text or blocks scripts, choose “Open with” a full browser. File handling depends on the device/browser.
+2. Open **`Hirodora-0.8.0.html` in a full WebGL 2 browser**, such as Chrome on Android. If your file viewer displays text or blocks scripts, choose “Open with” a full browser. File handling depends on the device/browser.
 3. Play in landscape: left joystick to move, drag the scene to look, then use **Jump**, **Crouch / Stand**, **Sprint**, **Interact** and the contextual action prompt. Portrait now shows a Rotate screen and pauses gameplay; rotate back to landscape and tap **Resume escape**. Puzzle progress is kept.
 
 Use **Fullscreen / landscape** on the title screen or pause menu to request fullscreen and landscape on supported Android browsers. Browser security prevents a web game from forcing rotation everywhere: if it remains portrait, disable the phone’s portrait-orientation lock and rotate manually. iPhone/iPad browsers may require manual rotation.
 
-The single HTML embeds the engine, **all three officer GLBs and textures**, styles and recorded audio. It needs **no server, API key, external model download or network**. Wait for officer model preparation to finish before starting. The standalone document is tested in offline Chromium mobile emulation with zero HTTP requests. This web download is separate from the Android APK; iOS uses the hosted PWA.
+The single HTML embeds the engine, **all officer/prisoner GLBs and textures**, styles and recorded audio. It needs **no server, API key, external model download or network**. Wait for character preparation to finish before starting. The standalone document is tested in offline Chromium mobile emulation with zero HTTP requests. This web download is separate from the Android APK; iOS uses the hosted PWA.
 
 The same download works on desktop: extract and open the HTML in Chrome, Edge or Firefox. The conventional `dist/index.html` is a different, hosted build and still requires an HTTP server.
 
@@ -232,7 +247,7 @@ For an existing system Chromium, set `PLAYWRIGHT_CHROMIUM_EXECUTABLE=/path/to/ch
 
 ### Build and distribute
 
-`npm run build` produces `dist/`, a content-versioned service worker, relative asset paths for GitHub Pages subdirectories, embedded-texture GLBs, PNG app icons and the install manifest. The v0.7 hosted payload is approximately **12.2 MiB**; the build enforces a **100 MiB** maximum. `npm run package:android` creates and verifies the signed Android APK. Exact sizes and checksums are recorded in the download manifests.
+`npm run build` produces `dist/`, a content-versioned service worker, relative asset paths for GitHub Pages subdirectories, embedded-texture GLBs, PNG app icons and the install manifest. The v0.8 hosted payload is approximately **14.7 MiB**; the build enforces a **100 MiB** maximum. `npm run package:android` creates and verifies the signed Android APK. Exact sizes and checksums are recorded in the download manifests.
 
 The quality workflow checks pull requests and pushes, packages the offline HTML, runs browser tests and uploads both builds. Static surfaces are batched, Meshopt/WebP reduce model transfer size, instances share GPU resources, distant animations are throttled and offscreen pose work is skipped. Light selection is throttled, collision bounds are cached and mobile resolution scales down under sustained rendering load. The Pages workflow is manual so publishing remains an explicit release action. Normal builds use committed assets; [rebuilding the officer GLBs](docs/GUARD-ASSETS.md#rebuild-the-assets) is a separate offline-authoring step.
 
@@ -240,8 +255,8 @@ The quality workflow checks pull requests and pushes, packages the offline HTML,
 
 This is a playable chapter distributed as an Android APK and a web build, with automated regression coverage. Physical-device certification is still open.
 
-- **32 asset/logic tests** cover saved HUD validation/presets, opening objectives, bounded hold progress, audio licenses/hashes, embedded PBR maps, skin weights, bone indices, clips, animation selection, display-orientation fallback, stealth, puzzles, crafting, endings, movement, routing clearance, graphics adaptation and the jump arc.
-- **18 browser scenarios** exercise HUD dragging/resizing/save/cancel, small-screen preset spacing, the opening and legacy campaign, UI restart/new-game reset, native pause event, silent cell ambience, clearer dialogue, saves, collision, guard AI, mobile controls, rotation and hosted/downloaded offline play.
+- **35 asset/logic tests** cover intro ordering, the clothed prisoner GLB, settings validation, HUD layouts, opening objectives, bounded hold progress, audio licenses/hashes, embedded PBR maps, skin weights, clips, animation selection, orientation, stealth, puzzles, crafting, endings, movement and graphics adaptation.
+- **21 browser scenarios** exercise the three-button menu, settings persistence, one-shot cinematic, intro pause/skip/checkpoint hand-off, HUD editing, small-screen spacing, opening/legacy progression, restart/new-game reset, native pause, silent cell ambience, dialogue, saves, collisions, guard AI, rotation and offline play.
 - The progression integration test uses legal approach-position fixtures with patrols suspended; it is not a full unassisted stealth playthrough.
 - Physical Android/iPhone testing, Safari/Firefox checks, sustained performance testing and player-led difficulty balancing remain release gates.
 

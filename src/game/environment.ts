@@ -15,6 +15,7 @@ import woolColor from "../assets/environment/wool-albedo.webp";
 import woolNormal from "../assets/environment/wool-normal.webp";
 import stainURL from "../assets/environment/water-stain.webp";
 import exteriorURL from "../assets/environment/exterior.webp";
+import ceilingURL from "../assets/environment/ceiling-albedo.webp";
 
 /** All assets resolve locally, including in the embedded offline document. */
 export function createEnvironment(scene: THREE.Scene) {
@@ -54,11 +55,14 @@ export function createEnvironment(scene: THREE.Scene) {
   const masonry = surface(brickColor, brickNormal, brickORM);
   masonry.normalScale.set(0.36, 0.36);
   const floor = surface(concreteColor, concreteNormal, concreteORM, 1);
-  floor.color.set(0xb9bab2);
-  floor.normalScale.set(0.3, 0.3);
+  floor.color.set(0xa5ada2);
+  floor.normalScale.set(0.16, 0.16);
   floor.aoMapIntensity = 0.25;
   const concrete = surface(concreteColor, concreteNormal, concreteORM, 1);
   concrete.color.set(0x7f8c7d);
+  const ceiling = surface(ceilingURL, concreteNormal, concreteORM, 1);
+  ceiling.color.set(0x92998c);
+  ceiling.normalScale.set(.12,.12);
   concrete.normalScale.set(0.2, 0.2);
   const metal = surface(metalColor, metalNormal, metalORM, 0.8, 0.65);
   const exterior = new THREE.MeshBasicMaterial({
@@ -159,5 +163,5 @@ export function createEnvironment(scene: THREE.Scene) {
     disposed = true;
     textures.forEach(({ target }) => target.dispose());
   };
-  return { masonry, floor, concrete, metal, wool, add, load, dispose };
+  return { masonry, floor, concrete, ceiling, metal, wool, add, load, dispose };
 }

@@ -247,8 +247,8 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   iron.copy(environment.metal);
   const plaster = concrete.clone();
   plaster.color.set(0xa6aaa0);
-  const paint = concrete.clone();
-  paint.color.set(0xabb6a5);
+  const paint = stone.clone();
+  paint.color.set(0xa7aea0);
   const floor = environment.floor;
   const wall = (size: number[], pos: number[], mat: THREE.Material = stone) => {
     const mesh = box(staticWorld, size, pos, mat);
@@ -262,12 +262,6 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
         paint,
       );
       projectUV(lowerWall, 2);
-      box(
-        staticWorld,
-        [size[0] + (thinX ? 0.024 : 0), 0.025, size[2] + (thinX ? 0 : 0.024)],
-        [pos[0], 1.29, pos[2]],
-        iron,
-      );
     }
     colliders.push(new THREE.Box3().setFromObject(mesh));
     return mesh;
@@ -320,14 +314,14 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   projectUV(ground, 3);
   // A concrete ceiling closes the cell volume; beams and conduits give the formerly
   // black void a readable institutional structure without altering walkable space.
-  projectUV(box(staticWorld, [46, 0.22, 23], [7, 4.18, 0], concrete), 2.5);
-  for (const x of [-13.5, -8.5, -3.5, 1.5, 6.5, 11.5, 16.5, 21.5, 26.5])
-    box(staticWorld, [0.22, 0.34, 22.4], [x, 4.0, 0], iron, 0.015);
-  for (const z of [-9.4, -4.4, 0.6, 5.6, 10.1])
+  projectUV(box(staticWorld, [46, 0.22, 23], [7, 4.18, 0], environment.ceiling), 2.5);
+  for (const x of [-13.5, -3.5, 6.5, 16.5, 26.5])
+    projectUV(box(staticWorld, [0.22, 0.34, 22.4], [x, 4.0, 0], environment.ceiling, 0.015),2);
+  for (const z of [-9.4, 0.6, 10.1])
     box(staticWorld, [45.4, 0.09, 0.13], [7, 3.92, z], rust, 0.008);
   wall([0.5, 4.3, 23], [-37, 2, 0]);
   projectUV(box(staticWorld, [21, 0.3, 23], [-26.5, -0.2, 0], floor), 3);
-  projectUV(box(staticWorld, [21, 0.22, 23], [-26.5, 4.18, 0], concrete), 2.5);
+  projectUV(box(staticWorld, [21, 0.22, 23], [-26.5, 4.18, 0], environment.ceiling), 2.5);
   wall([21, 4.3, 0.5], [-26.5, 2, -11.5]);
   wall([21, 4.3, 0.5], [-26.5, 2, 11.5]);
   const rearWall = wall([46, 4.3, 0.5], [7, 2, -11.5]);
@@ -854,9 +848,9 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   label(staticWorld, "SILENCE / LIGHTS OUT 22:00", [-6.5, 2.7, 2.2], 2.2);
   label(staticWorld, "BLOCK C / AUTHORIZED PERSONNEL", [4.8, 2.7, -1.78], 2.3);
   for (const [x, z, color] of [
-    [-6, -6, 0xffc58a],
-    [-11, -5, 0xeeb675],
-    [-6, 0, 0xffc790],
+    [-6, -6, 0xdde1c9],
+    [-11, -5, 0xd4d8be],
+    [-6, 0, 0xd9dfc9],
     [5, 0, 0xffc790],
     [-8, 6, 0x9ac8bf],
     [0, 6, 0x86afba],

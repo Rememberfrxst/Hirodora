@@ -1,3 +1,4 @@
+import { skipOpening, openHudEditor } from "./helpers";
 import { test, expect, Page } from "@playwright/test";
 import type { GameEngine } from "../src/game/engine";
 import { resolve } from "node:path";
@@ -27,7 +28,13 @@ async function start(page: Page) {
       flags: {},
     }),
   );
-  await page.getByRole("button", { name: "BEGIN THE ESCAPE" }).click();
+  await page.evaluate(() => {
+    const e = window.__HIRODORA__ as any;
+    e.saveCheckpoint();
+    e.emitChange();
+  });
+  await page.locator("[data-start]").click();
+  await skipOpening(page);
   await expect(
     page.getByRole("button", { name: "Pause game", exact: true }),
   ).toBeVisible();
@@ -99,12 +106,18 @@ test("desktop starts, moves, crouches, pauses and closes intel without stuck inp
     false,
   );
   await page.getByRole("button", { name: "Pause game", exact: true }).click();
-  await expect(page.getByText("The night can wait.")).toBeVisible();
-  await page.getByLabel("Master volume").fill("35");
-  await page.getByLabel("Officer quality").selectOption("mobile");
-  expect(await page.evaluate(() => window.__HIRODORA__.guardQuality)).toBe(
-    "mobile",
+  await expect(
+    page.getByRole("button", { name: "Resume escape", exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  await page.getByRole("tab", { name: "Audio", exact: true }).click();
+  await page.getByLabel("SFX", { exact: true }).fill("0.35");
+  await page.getByRole("tab", { name: "Controls", exact: true }).click();
+  await page.getByLabel("Mouse sensitivity").fill("30");
+  expect(await page.evaluate(() => window.__HIRODORA__.sensitivity)).toBe(
+    0.003,
   );
+  await page.getByRole("button", { name: "Back from settings" }).click();
   await page.getByRole("button", { name: "Resume escape" }).click();
   expect(errors).toEqual([]);
 });
@@ -233,16 +246,19 @@ test("failed officer downloads block play and can be retried without a primitive
   await page.route("**/*.glb", (route) => route.abort());
   await page.goto("/");
   await expect(
-    page.getByRole("button", { name: "Retry model download" }),
+    page.getByRole("button", { name: "Retry loading" }),
   ).toBeVisible();
-  await expect(page.locator("[data-start]")).toBeDisabled();
+  await expect(
+    page.getByRole("button", { name: "Continue", exact: true }),
+  ).toBeDisabled();
   expect(await page.evaluate(() => window.__HIRODORA__.guardActors.size)).toBe(
     0,
   );
   await page.unroute("**/*.glb");
-  await page.getByRole("button", { name: "Retry model download" }).click();
+  await page.getByRole("button", { name: "Retry loading" }).click();
   await expect(page.locator("[data-start]")).toBeEnabled({ timeout: 60_000 });
   await page.locator("[data-start]").click();
+  await skipOpening(page);
   await expect(
     page.getByRole("button", { name: "Pause game", exact: true }),
   ).toBeVisible();
@@ -321,6 +337,8 @@ test("authored environment loads locally and graphics presets preserve collision
   expect(assets).toContain("CellAsset_Toilet");
   expect(assets).toContain("CellAsset_Sink");
   expect(assets.filter((n) => n === "CellAsset_Window")).toHaveLength(2);
+  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  await page.getByRole("tab", { name: "Graphics", exact: true }).click();
   for (const preset of ["low", "medium", "high", "ultra"]) {
     await page.getByLabel("Graphics preset").selectOption(preset);
     const config = await page.evaluate(() => {
@@ -434,7 +452,7 @@ test("tool requirements, all four puzzles, crafting, checkpoints and Brotherhood
   await page.getByRole("button", { name: "Set tumbler" }).click();
   expect(await page.evaluate(() => window.__HIRODORA__.stats.act)).toBe(3);
   await page.reload();
-  await page.getByRole("button", { name: "CONTINUE ESCAPE" }).click();
+  await page.getByRole("button", { name: "Continue" }).click();
   expect(
     await page.evaluate(() =>
       window.__HIRODORA__.inventory.includes("warden_ledger"),
@@ -658,12 +676,13 @@ test("portrait mobile launch gates play and handles denied fullscreen/unsupporte
     "title",
   );
   await page.getByRole("button", { name: "Try fullscreen & landscape" }).tap();
-  await expect(page.getByRole("status")).toContainText(
+  await expect(page.getByRole("dialog", {name:"Turn your phone sideways."}).getByRole("status")).toContainText(
     "Automatic rotation is not supported",
   );
   await page.setViewportSize({ width: 844, height: 390 });
   await expect(page.locator(".rotate-screen")).toHaveCount(0);
   await page.locator("[data-start]").tap();
+  await skipOpening(page);
   await expect(
     page.getByRole("button", { name: "Jump", exact: true }),
   ).toBeVisible();
@@ -679,7 +698,7 @@ test("production assets load from a subdirectory and the game reloads offline", 
   });
   const page = await context.newPage();
   await page.goto("http://127.0.0.1:3101/Hirodora/");
-  await page.getByRole("button", { name: "BEGIN THE ESCAPE" }).waitFor();
+  await page.locator("[data-start]").waitFor();
   await page.evaluate(async () => {
     await navigator.serviceWorker.ready;
   });
@@ -688,7 +707,8 @@ test("production assets load from a subdirectory and the game reloads offline", 
     .toBe(true);
   await context.setOffline(true);
   await page.reload();
-  await page.getByRole("button", { name: "BEGIN THE ESCAPE" }).click();
+  await page.locator("[data-start]").click();
+  await skipOpening(page);
   await expect(
     page.getByRole("button", { name: "Pause game", exact: true }),
   ).toBeVisible();
@@ -716,12 +736,15 @@ test("downloaded standalone HTML runs in an offline browser without network requ
   await page.setContent(
     await readFile(resolve(`downloads/Hirodora-${version}.html`), "utf8"),
   );
-  await page.getByRole("button", { name: "BEGIN THE ESCAPE" }).tap();
+  await page.locator("[data-start]").tap();
+  await skipOpening(page);
   await expect(
     page.getByRole("button", { name: "Jump", exact: true }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Pause game", exact: true }).tap();
-  await expect(page.getByText("The night can wait.")).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Resume escape", exact: true }),
+  ).toBeVisible();
   expect(requests).toEqual([]);
   expect(errors).toEqual([]);
   await context.close();

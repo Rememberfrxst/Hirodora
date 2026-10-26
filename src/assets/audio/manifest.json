@@ -647,5 +647,17 @@
     "bytes": 26817,
     "usage": "foley",
     "changes": "HQ preview; mono 32kHz, loudness normalized, fades, Vorbis q3"
+  },
+  {
+    "file": "guard-gunshot.ogg",
+    "source": "https://opengameart.org/content/gunshot-sounds",
+    "download": "https://opengameart.org/sites/default/files/sounds.zip",
+    "author": "Vincent (Vince) Sevedge / Tabasco",
+    "license": "CC-BY-3.0",
+    "licenseURL": "https://creativecommons.org/licenses/by/3.0/",
+    "sha256": "21e8252534861b306dc7c5ff7daae7059eb578d07fd86ae0c99b338d0640632c",
+    "bytes": 19812,
+    "usage": "Opening cinematic pistol shot",
+    "changes": "First CZ-52 recording excerpt; leading silence trimmed, mono 48kHz, high-pass, -18 LUFS/-2 dBTP, fade, Vorbis. Archive CC-BY 3.0 terms elected despite CC0 page label."
   }
 ]

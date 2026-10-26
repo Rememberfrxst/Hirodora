@@ -28,6 +28,10 @@ import {
 } from "./rules";
 import { buildPrisonWorld, PrisonWorldData } from "./world";
 import { sound } from "./audio";
+import { PrisonerActor } from "./prisoner";
+import { OpeningCinematic } from "./cinematic";
+import { INTRO_DURATION } from "./intro";
+import { loadSettings, type GameSettings } from "./settings";
 import { findPath, isBlocked, movementVector, stepJump } from "./navigation";
 import { GuardAssetPool, GuardActor, type GuardQuality } from "./guard-actor";
 import {
@@ -227,7 +231,11 @@ export class GameEngine {
   public graphicsPreset: GraphicsPreset = "high";
   public guardActors = new Map<string, GuardActor>();
   private guardAssets = new GuardAssetPool();
-  private bodyActor?: GuardActor;
+  private bodyActor?: PrisonerActor;
+  public cinematic?: OpeningCinematic;
+  public introCaption = "";
+  private introPaused = false;
+  private userRenderScale = 1;
   private disposed = false;
   private guardKey = new THREE.SpotLight(0xe5d5ba, 32, 10, 0.7, 0.75, 2);
   public endingType: EndingType | null = null;
@@ -337,6 +345,7 @@ export class GameEngine {
       if (object instanceof THREE.PointLight) this.lights.push(object);
     });
     this.loadCheckpoint();
+    this.applySettings(loadSettings());
     this.setupInputs();
     this.updateViewport();
     this.frameId = requestAnimationFrame(this.tick);
@@ -354,6 +363,7 @@ export class GameEngine {
       );
       if (this.disposed || this.guardsReady) return;
       for (const guard of this.worldData.guards) {
+        if (this.guardActors.has(guard.id)) continue;
         const actor = this.guardAssets.create(
           this.worldData.guardMeshes.get(guard.id)!,
           guard.type === "night_captain",
@@ -361,51 +371,19 @@ export class GameEngine {
         this.guardActors.set(guard.id, actor);
         actor.update(guard, 0, 0, this.camera, this.guardQuality, this.mobile);
       }
-      this.bodyActor = this.guardAssets.create(
-        this.worldData.opening.body,
-        false,
+      this.bodyActor = new PrisonerActor(this.worldData.opening.body);
+      await this.bodyActor.load();
+      if (this.disposed) {
+        this.bodyActor.dispose();
+        return;
+      }
+      this.cinematic = new OpeningCinematic(
+        this.worldData,
+        this.camera,
+        this.guardActors,
+        this.bodyActor,
+        this.reducedMotion,
       );
-      const body = this.worldData.opening.body;
-      body.rotation.y = Math.PI / 2;
-      body.traverse((o) => {
-        if (!(o instanceof THREE.Mesh)) return;
-        const replace = (m: THREE.Material) => {
-          if (
-            /Tactical vest|Utility belt|Buckle|Pouches|Embroidered|Radio|Brushed steel/.test(
-              m.name,
-            )
-          ) {
-            const hidden = m.clone();
-            hidden.visible = false;
-            return hidden;
-          }
-          if (
-            !/Outfit|vest|Pouches/.test(m.name) ||
-            !(m instanceof THREE.MeshStandardMaterial)
-          )
-            return m;
-          const copy = m.clone();
-          copy.color.set(0xa66a36);
-          copy.metalness = 0;
-          copy.roughness = 0.95;
-          return copy;
-        };
-        o.material = Array.isArray(o.material)
-          ? o.material.map(replace)
-          : replace(o.material);
-      });
-      const corpse = {
-        ...this.worldData.guards[0],
-        examining: false,
-        position: [-6.4, 0, -0.1],
-        state: "knocked_out",
-        rotationY: Math.PI / 2,
-      } as GuardData;
-      const camera = this.camera.clone();
-      camera.position.set(-6.4, 2, 3);
-      camera.lookAt(-6.4, 0, 0);
-      camera.updateMatrixWorld();
-      this.bodyActor.update(corpse, 0, 3, camera, "mobile", true);
       this.guardsReady = true;
       this.syncWorld();
     } catch (error) {
@@ -439,9 +417,9 @@ export class GameEngine {
     );
     this.renderScale = this.renderBounds.initial;
     this.adaptiveScaleTime = 0;
-    this.renderer.setPixelRatio(this.renderScale);
+    this.renderer.setPixelRatio(this.renderScale * this.userRenderScale);
     this.renderer.shadowMap.enabled = shadows;
-    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    this.renderer.shadowMap.type = THREE.PCFShadowMap;
     this.guardKey.castShadow = shadows;
     this.worldData.windowLight.castShadow = shadows;
     const shadowSize = preset === "ultra" ? 2048 : 1024;
@@ -457,6 +435,20 @@ export class GameEngine {
     this.emitChange();
   }
 
+  public applySettings(settings: GameSettings) {
+    this.userRenderScale = settings.screenScale;
+    this.camera.fov = settings.fov;
+    this.camera.updateProjectionMatrix();
+    this.sensitivity = settings.sensitivity / 10000;
+    this.reducedMotion = settings.reducedMotion;
+    if (this.cinematic) this.cinematic.reducedMotion = settings.reducedMotion;
+    sound.setBusVolume("music", settings.music);
+    sound.setEffectsVolume(settings.sfx);
+    this.renderer.setPixelRatio(this.renderScale * this.userRenderScale);
+    this.renderer.render(this.scene, this.camera);
+    this.emitChange();
+  }
+
   public getPerformanceStatus() {
     const target = this.mobile || this.softwareRenderer ? 33 : 16.7;
     const estimatedFps = Math.round(1000 / Math.max(1, this.displayedFrameMs));
@@ -469,7 +461,7 @@ export class GameEngine {
     return {
       status,
       estimatedFps,
-      renderScale: Math.round(this.renderScale * 100),
+      renderScale: Math.round(this.renderScale * this.userRenderScale * 100),
       drawCalls: this.drawCalls,
       triangles: this.triangles,
       softwareRenderer: this.softwareRenderer,
@@ -501,7 +493,7 @@ export class GameEngine {
         if (e.code === "Escape" || e.code === "KeyP") {
           if (this.activeMiniGame) this.cancelMiniGame();
           else if (!this.overlayOpen)
-            this.gameState === "playing"
+            this.gameState === "playing" || this.gameState === "intro"
               ? this.pauseGame()
               : this.gameState === "paused"
                 ? this.resumeGame()
@@ -538,14 +530,19 @@ export class GameEngine {
       "blur",
       () => {
         this.clearInput();
-        if (this.gameState === "playing") this.pauseGame();
+        if (this.gameState === "playing" || this.gameState === "intro")
+          this.pauseGame();
       },
       { signal },
     );
     document.addEventListener(
       "visibilitychange",
       () => {
-        if (document.hidden && this.gameState === "playing") this.pauseGame();
+        if (
+          document.hidden &&
+          (this.gameState === "playing" || this.gameState === "intro")
+        )
+          this.pauseGame();
       },
       { signal },
     );
@@ -673,7 +670,11 @@ export class GameEngine {
     if (blocked !== this.orientationBlocked) {
       this.orientationBlocked = blocked;
       this.clearInput();
-      if (blocked && this.gameState === "playing") this.pauseGame();
+      if (
+        blocked &&
+        (this.gameState === "playing" || this.gameState === "intro")
+      )
+        this.pauseGame();
       this.emitChange();
     }
   };
@@ -728,6 +729,15 @@ export class GameEngine {
     sound.resume();
     if (this.checkpoint) this.restoreCheckpoint(this.checkpoint);
     this.syncWorld();
+    if (this.gameFlags.intro_pending && this.cinematic) {
+      this.gameState = "intro";
+      this.introPaused = false;
+      this.clearInput();
+      this.cinematic.start();
+      this.introCaption = "Cell 47 · 02:14 AM";
+      this.emitChange();
+      return;
+    }
     this.gameState = "playing";
     this.clearInput();
     document.body.dataset.state = "playing";
@@ -740,7 +750,49 @@ export class GameEngine {
       7,
     );
   }
+  public finishIntro() {
+    if (this.gameState !== "intro" && !this.introPaused) return;
+    this.cinematic?.hide();
+    this.introPaused = false;
+    this.gameState = "playing";
+    this.restoreCheckpoint({
+      id: "start",
+      name: "Cell 47",
+      playerPosition: [-6, 0, -5],
+      playerRotationY: Math.PI,
+      act: 1,
+      inventory: [],
+      flags: { opening_v3: true, intro_done: true },
+    });
+    this.gameState = "playing";
+    document.body.dataset.state = "playing";
+    sound.resetSceneAudio();
+    sound.resume();
+    this.saveCheckpoint();
+    this.move(0);
+    this.triggerSubtitle(
+      "KABIR RAO · PRISONER 047",
+      "He's checking the body. That key behind him… this might be my chance.",
+      "monologue",
+      5,
+    );
+    this.emitChange();
+  }
+  public updateIntro(dt: number) {
+    if (this.gameState !== "intro" || !this.cinematic) return;
+    const frame = this.cinematic.seek(this.cinematic.time + dt, true, dt);
+    this.introCaption = frame.caption;
+    if (frame.t >= INTRO_DURATION) this.finishIntro();
+  }
   public pauseGame() {
+    if (this.gameState === "intro") {
+      this.introPaused = true;
+      this.gameState = "paused";
+      this.clearInput();
+      sound.suspend();
+      this.emitChange();
+      return;
+    }
     if (this.gameState !== "playing") return;
     if (this.gameFlags.opening_v3) this.saveCheckpoint();
     this.gameState = "paused";
@@ -752,12 +804,15 @@ export class GameEngine {
   }
   public resumeGame() {
     if (this.orientationBlocked) return;
-    this.gameState = "playing";
+    this.gameState = this.introPaused ? "intro" : "playing";
+    this.introPaused = false;
     this.clearInput();
     sound.resume();
     this.emitChange();
   }
   public returnToTitle() {
+    this.cinematic?.hide();
+    this.introPaused = false;
     this.gameState = "title";
     this.activeMiniGame = null;
     this.overlayOpen = false;
@@ -767,6 +822,8 @@ export class GameEngine {
     this.emitChange();
   }
   public restartGame() {
+    this.cinematic?.hide();
+    this.introPaused = false;
     sound.resetSceneAudio();
     if (this.checkpoint) this.restoreCheckpoint(this.checkpoint);
     else
@@ -779,9 +836,12 @@ export class GameEngine {
         inventory: [],
         flags: { opening_v3: true },
       });
-    this.resumeGame();
+    if (this.gameFlags.intro_pending) this.startGame();
+    else this.resumeGame();
   }
   public newGame() {
+    this.cinematic?.hide();
+    this.introPaused = false;
     this.checkpoint = null;
     try {
       localStorage.removeItem(this.saveKey);
@@ -794,7 +854,7 @@ export class GameEngine {
       playerRotationY: 0,
       act: 1,
       inventory: [],
-      flags: { opening_v3: true },
+      flags: { opening_v3: true, intro_pending: true },
     });
     this.saveCheckpoint();
     this.startGame();
@@ -1365,6 +1425,11 @@ export class GameEngine {
       bolt.visible = opening && index >= Math.floor(p.bolts * 4);
     });
     o.body.visible = opening;
+    if (this.gameState !== "intro") {
+      o.body.position.set(-6.4, 0, -0.1);
+      o.body.rotation.set(0, -Math.PI / 2, 0);
+      this.bodyActor?.pose("Death", 1.8);
+    }
     this.collisionSignature = -1;
     const disabled: Record<string, boolean> = {
       vent_bolts_interact: !!this.gameFlags.vent_unbolted,
@@ -1446,6 +1511,8 @@ export class GameEngine {
               ? this.gameFlags.sea_gate_open
               : false;
       group.position.y = open ? 3.7 : 0;
+      if (id === "cell_47_door" && this.gameState !== "intro")
+        group.rotation.y = 0;
     }
     for (const [id, mesh] of this.worldData.pickupMeshes) {
       mesh.visible = !this.worldData.interactables.find((obj) => obj.id === id)
@@ -1560,6 +1627,7 @@ export class GameEngine {
       g.suspicion = 0;
       g.currentWaypoint = 1;
       g.position = [...g.patrolRoute[0]];
+      g.cinematicAim = false;
       g.examining = !!this.gameFlags.opening_v3 && g.id === "guard_dunne";
       if (g.examining) {
         g.position = [-5.7, 0, -0.7];
@@ -1666,19 +1734,34 @@ export class GameEngine {
       this.updateEnvironment(dt);
       if (this.munshiHint && this.elapsed > this.noticeUntil)
         this.munshiHint = null;
+    } else if (this.gameState === "intro" && !this.overlayOpen) {
+      this.updateIntro(dt);
     } else if (this.gameState === "title") {
-      const t = this.reducedMotion ? 0 : now * 0.00008;
-      this.camera.position.set(-6.7 + Math.sin(t) * 0.3, 1.7, -4.3);
-      this.camera.lookAt(-4.4, 1.2, -8.7);
+      this.camera.position.set(-6, 1.65, -6);
+      this.camera.lookAt(-6, 1.4, -1);
+      const body = this.worldData.opening.body;
+      body.visible = true;
+      body.position.set(-5.85, 0, -5.25);
+      body.rotation.set(0, 3.6, 0);
+      this.bodyActor?.pose("Idle", now / 1000);
       for (const guard of this.worldData.guards)
         this.guardActors
           .get(guard.id)
-          ?.update(guard, 0, dt, this.camera, this.guardQuality, this.mobile);
+          ?.update(
+            { ...guard, examining: false },
+            0,
+            dt,
+            this.camera,
+            this.guardQuality,
+            this.mobile,
+          );
     }
     const simulationActive =
       this.gameState === "playing" && !this.activeMiniGame && !this.overlayOpen;
     if (
-      (simulationActive || this.gameState === "title") &&
+      (simulationActive ||
+        this.gameState === "title" ||
+        this.gameState === "intro") &&
       now - this.lastRender > (this.mobile || this.softwareRenderer ? 33 : 16)
     ) {
       const renderInterval = now - this.lastRender;
@@ -1723,11 +1806,14 @@ export class GameEngine {
         );
         if (nextScale !== this.renderScale) {
           this.renderScale = nextScale;
-          this.renderer.setPixelRatio(this.renderScale);
+          this.renderer.setPixelRatio(this.renderScale * this.userRenderScale);
         }
       }
     }
-    if (simulationActive && now - this.hudTime > 120) {
+    if (
+      (simulationActive || this.gameState === "intro") &&
+      now - this.hudTime > 120
+    ) {
       this.hudTime = now;
       this.emitChange();
     }
@@ -2062,12 +2148,8 @@ export class GameEngine {
     this.clearInput();
     sound.dispose();
     this.guardActors.forEach((actor) => actor.dispose());
-    this.worldData.opening.body.traverse((o) => {
-      if (o instanceof THREE.Mesh)
-        for (const m of Array.isArray(o.material) ? o.material : [o.material])
-          if (m.name === "Outfit" || !m.visible) m.dispose();
-    });
     this.bodyActor?.dispose();
+    this.cinematic?.dispose();
     this.guardActors.clear();
     this.guardAssets.dispose();
     this.guardKey.shadow.dispose();

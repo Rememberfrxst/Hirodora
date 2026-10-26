@@ -26,13 +26,13 @@
     },
     {
       "name": "masonry-albedo.webp",
-      "bytes": 380368,
-      "sha256": "2cd17abb32dd5d86d0eb1b7e2bd2bc1ddaf0e5db92f14775280bb94f7fd48b12"
+      "bytes": 336958,
+      "sha256": "150af90ef503f02bba783accc0887b71f4bf5edffb86468d676c6ef86cd58c5a"
     },
     {
       "name": "masonry-normal.webp",
-      "bytes": 1381600,
-      "sha256": "d270c6add5177c19a38970fb06eb9d1b76b1b71c4a4777af8802bd83bc02bde9"
+      "bytes": 1459300,
+      "sha256": "cc9e9ee6dc62e903cb1ef094edd40ecf43c2c67ef9f856ae168a6491a2e02f32"
     },
     {
       "name": "masonry-orm.webp",
@@ -56,8 +56,8 @@
     },
     {
       "name": "concrete-albedo.webp",
-      "bytes": 366588,
-      "sha256": "9a48568f5c59e17027ab2189afc79a96881496a311a3927a46825947ba76a24b"
+      "bytes": 322934,
+      "sha256": "8ebae5132802384876e2777ebf8d1002eb780effa55b9a154b36c7e22a87ae4e"
     },
     {
       "name": "concrete-normal.webp",
@@ -88,6 +88,16 @@
       "name": "exterior.webp",
       "bytes": 2074,
       "sha256": "9b752005e8ff0e3290af365526937c7687d8610515825fc7485febe0c2e21c63"
+    },
+    {
+      "name": "ceiling-albedo.webp",
+      "bytes": 299850,
+      "sha256": "7203819c8dc0056138f487fc75f4d596af4a928a1252fa3cb19c05acba349dfa"
     }
-  ]
+  ],
+  "referenceAdaptation": {
+    "baseline": "cd3b1eed71362c424552e513ad6e887b6de149e9",
+    "source": "Existing p0ss / Georges Grondin photographs, CC-BY 3.0; CONCRETE-LICENSE.txt",
+    "changes": "Cool grey block masonry with authored recessed joint lines and normal slopes; unjointed photographic ceiling; reduced floor saturation. These are artist adaptations, not a new scanned asset."
+  }
 }

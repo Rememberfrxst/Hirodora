@@ -39,6 +39,8 @@ type Material =
 class SoundManager {
   private ctx: AudioContext | null = null;
   private master?: GainNode;
+  private effects?: GainNode;
+  private effectsVolume = 1;
   private buses = new Map<AudioBus, GainNode>();
   private levels: Record<AudioBus, number> = {
     music: 0.5,
@@ -83,6 +85,9 @@ class SoundManager {
       const ctx = (this.ctx = new AudioContext());
       this.lightweight = matchMedia("(pointer: coarse)").matches;
       this.master = ctx.createGain();
+      this.effects = ctx.createGain();
+      this.effects.gain.value = this.effectsVolume;
+      this.effects.connect(this.master);
       const limiter = ctx.createDynamicsCompressor();
       limiter.threshold.value = -8;
       limiter.knee.value = 10;
@@ -101,7 +106,7 @@ class SoundManager {
       for (const bus of audioBuses) {
         const gain = ctx.createGain();
         gain.gain.value = this.levels[bus];
-        gain.connect(this.master);
+        gain.connect(bus === "music" ? this.master : this.effects);
         this.buses.set(bus, gain);
       }
       // A short room impulse is a DSP effect. The audible SFX/ambience are recordings.
@@ -124,7 +129,7 @@ class SoundManager {
         this.reverbGain = ctx.createGain();
         this.reverbGain.gain.value = 0.09;
         this.reverb.connect(this.reverbGain);
-        this.reverbGain.connect(this.master);
+        this.reverbGain.connect(this.effects);
         for (const bus of ["sfx", "footsteps"] as AudioBus[])
           this.buses.get(bus)!.connect(this.reverb);
       }
@@ -195,6 +200,18 @@ class SoundManager {
         this.ctx.currentTime,
         0.06,
       );
+  }
+  public setEffectsVolume(value: number) {
+    this.effectsVolume = Math.max(0, Math.min(1, value));
+    if (this.ctx)
+      this.effects?.gain.setTargetAtTime(
+        this.effectsVolume,
+        this.ctx.currentTime,
+        0.06,
+      );
+  }
+  public playGunshot(position: Position) {
+    this.play("guard-gunshot", "sfx", 0.8, position);
   }
   public resume() {
     if (this.ctx?.state === "suspended") void this.ctx.resume().catch(() => {});

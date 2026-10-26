@@ -18,6 +18,7 @@ await page.goto(process.env.GAME_URL || "http://127.0.0.1:3200");
 await page.waitForFunction(() => window.__HIRODORA__?.guardsReady);
 await page.screenshot({ path: `${dir}/title.png` });
 await page.locator("[data-start]").click();
+if(await page.getByRole("button",{name:/Skip intro/}).isVisible())await page.getByRole("button",{name:/Skip intro/}).click();
 await page.evaluate(() => {
   const e = window.__HIRODORA__;
   e.overlayOpen = true;

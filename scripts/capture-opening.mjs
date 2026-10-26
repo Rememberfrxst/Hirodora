@@ -45,6 +45,7 @@ for (const phase of ["before", "after"].filter(phase => !process.argv[2] || proc
       : process.env.GAME_URL || "http://127.0.0.1:3002",
   );
   await page.locator("[data-start]").click();
+  if(await page.getByRole("button",{name:/Skip intro/}).isVisible())await page.getByRole("button",{name:/Skip intro/}).click();
   await page.evaluate(() => {
     const e = window.__HIRODORA__;
     e.setGraphicsPreset("high");
@@ -151,6 +152,7 @@ const page = await browser.newPage({
 page.on("pageerror", (e) => errors.push(e.message));
 await page.goto(process.env.GAME_URL || "http://127.0.0.1:3002");
 await page.locator("[data-start]").tap();
+if(await page.getByRole("button",{name:/Skip intro/}).isVisible())await page.getByRole("button",{name:/Skip intro/}).tap();
 await pose(page, { position: [-6, 0, -3.8], yaw: Math.PI, pitch: -0.35 });
 await page.screenshot({ path: dir + "/mobile.png" });
 await browser.close();

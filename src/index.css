@@ -1922,7 +1922,7 @@ input[type="range"] {
   color: #172426;
   min-width: 0;
   width: auto;
-  letter-spacing: .5px;
+  letter-spacing: 0.5px;
 }
 .editor-control {
   cursor: grab;
@@ -2014,7 +2014,433 @@ input[type="range"] {
   }
 }
 @media (max-width: 700px) {
-  .hud-editor-toolbar > div { display: none; }
-  .hud-editor-toolbar label { min-width: 90px; flex: 1; }
-  .hud-editor-toolbar button { padding: 8px; flex-shrink: 0; }
+  .hud-editor-toolbar > div {
+    display: none;
+  }
+  .hud-editor-toolbar label {
+    min-width: 90px;
+    flex: 1;
+  }
+  .hud-editor-toolbar button {
+    padding: 8px;
+    flex-shrink: 0;
+  }
+}
+.reference-menu {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  background: linear-gradient(90deg, #0003, transparent 65%);
+  color: #f4f4ee;
+}
+.reference-menu nav {
+  position: absolute;
+  left: 8.8%;
+  top: 57%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+.reference-menu nav button {
+  padding: 0;
+  min-height: 30px;
+  border: 0;
+  background: none;
+  color: #f4f4ee;
+  font:
+    600 clamp(20px, 2.65vw, 28px) / 1.15 Georgia,
+    serif;
+  text-shadow: 1px 2px 3px #1118;
+  cursor: pointer;
+}
+.reference-menu nav button:hover,
+.reference-menu nav button:focus-visible {
+  color: #a9d877;
+}
+.reference-menu nav button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.reference-loading {
+  position: absolute;
+  bottom: 5%;
+  left: 8.8%;
+  font:
+    13px Georgia,
+    serif;
+  max-width: 70%;
+}
+.reference-settings {
+  position: absolute;
+  z-index: 30;
+  inset: 0;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  background: #0005;
+  color: #f1f1eb;
+  font-family: Georgia, serif;
+}
+.reference-settings h1 {
+  font:
+    normal clamp(25px, 3.2vw, 34px) / 1 Georgia,
+    serif;
+  margin: 0 0 18px;
+}
+.reference-settings-body {
+  position: relative;
+  width: min(550px, 76vw);
+  height: min(280px, 58vh);
+  min-height: 230px;
+  background: #030403;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px #0004;
+}
+.reference-tabs {
+  position: absolute;
+  top: -4px;
+  left: 5%;
+  right: 5%;
+  display: flex;
+  gap: 8px;
+}
+.reference-tabs button {
+  flex: 1;
+  background: linear-gradient(#30312f, #242522);
+  border: 0;
+  color: #f6f5ed;
+  border-radius: 5px;
+  min-height: 46px;
+  font:
+    600 clamp(15px, 1.9vw, 20px) Georgia,
+    serif;
+  cursor: pointer;
+  box-shadow: inset 0 0 7px #0007;
+}
+.reference-tabs button[aria-selected="true"] {
+  background: #609e2c;
+  box-shadow: inset 0 0 3px #98b96766;
+}
+.reference-tabs button {
+  transition: none;
+}
+.reference-settings {
+  padding-top: 24px;
+}
+.reference-slider input[type="range"] {
+  min-height: 0;
+}
+.reference-tab-content {
+  height: 100%;
+  padding: 76px 8% 24px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  gap: 30px;
+}
+.reference-back {
+  position: absolute;
+  left: -16px;
+  bottom: -10px;
+  width: 66px;
+  height: 45px;
+  border: 0;
+  border-radius: 4px;
+  background: linear-gradient(#30312f, #232421);
+  color: white;
+  font-size: 31px;
+  line-height: 1;
+  cursor: pointer;
+}
+.reference-slider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  font:
+    600 15px Georgia,
+    serif;
+  width: 180px;
+}
+.reference-slider output {
+  font-size: 21px;
+}
+.reference-slider input {
+  appearance: none;
+  -webkit-appearance: none;
+  background: linear-gradient(0deg, #455e34, #526e3f);
+  height: 13px;
+  width: 100%;
+  border: 0;
+  border-radius: 2px;
+  cursor: pointer;
+  padding: 0;
+  margin: 4px 0;
+}
+.reference-slider input::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 23px;
+  height: 25px;
+  background: #fff;
+  border: 0;
+  border-radius: 6px;
+  box-shadow: 0 0 2px #ccc;
+}
+.reference-slider input::-moz-range-thumb {
+  width: 23px;
+  height: 25px;
+  border: 0;
+  border-radius: 6px;
+  background: #fff;
+}
+.language-setting {
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+}
+.language-setting > div {
+  display: flex;
+  gap: 35px;
+  align-items: center;
+}
+.language-setting strong {
+  font-size: 27px;
+  font-weight: 500;
+}
+.language-setting button {
+  border: 0;
+  border-radius: 4px;
+  background: #292b28;
+  color: white;
+  font-size: 29px;
+  width: 55px;
+  height: 44px;
+}
+.language-setting small {
+  color: #a6afa0;
+  font:
+    11px Arial,
+    sans-serif;
+}
+.reference-check {
+  color: #b9c2b0;
+  display: flex;
+  gap: 8px;
+  font-size: 12px;
+}
+.graphics-sliders {
+  display: flex;
+  gap: 70px;
+  width: 100%;
+  justify-content: center;
+}
+.reference-quality {
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.reference-quality select {
+  padding: 4px 12px;
+  border: 1px solid #60794f;
+  color: #fff;
+  background: #24351a;
+  border-radius: 4px;
+}
+.tab-controls {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 18px;
+  align-items: start;
+  padding: 62px 5% 20px;
+}
+.reference-keys {
+  display: flex;
+  gap: 24px;
+  color: #eee;
+  font-size: 12px;
+}
+.reference-keys kbd {
+  display: inline-grid;
+  place-items: center;
+  padding: 4px 7px;
+  min-width: 26px;
+  background: #304b20;
+  border-radius: 5px;
+  color: #fff;
+  font:
+    bold 14px Georgia,
+    serif;
+}
+.wasd {
+  display: grid;
+  justify-items: center;
+  margin-top: 6px;
+  gap: 3px;
+}
+.wasd > div {
+  display: flex;
+  gap: 3px;
+}
+.key-actions {
+  display: grid;
+  gap: 6px;
+}
+.key-actions span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.key-actions kbd {
+  font-size: 11px;
+}
+.control-options {
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+}
+.control-options .reference-slider {
+  width: 160px;
+}
+.reference-small-button {
+  background: #2c4420;
+  border: 0;
+  border-radius: 4px;
+  padding: 7px 13px;
+  color: #fff;
+  font:
+    13px Georgia,
+    serif;
+}
+.pause-secondary {
+  position: absolute;
+  right: 5%;
+  bottom: 8%;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  font-size: 12px;
+}
+.pause-secondary button {
+  border: 0;
+  color: #eee;
+  background: none;
+}
+.pause-secondary details {
+  max-width: 270px;
+}
+.pause-secondary p {
+  font-size: 11px;
+  background: #07110cf0;
+  padding: 15px;
+}
+.intro-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 14;
+  pointer-events: none;
+  border-top: 26px solid #000b;
+  border-bottom: 26px solid #000b;
+}
+.intro-caption {
+  position: absolute;
+  bottom: 20px;
+  left: 15%;
+  width: 70%;
+  text-align: center;
+  color: #fff;
+  font:
+    15px/1.5 Georgia,
+    serif;
+  text-shadow: 0 2px 4px black;
+}
+.intro-tools {
+  position: absolute;
+  bottom: 8px;
+  right: 18px;
+  display: flex;
+  gap: 12px;
+  pointer-events: auto;
+}
+.intro-tools button {
+  color: #fff;
+  background: #121a1788;
+  border: 1px solid #e1e7dc44;
+  border-radius: 5px;
+  padding: 10px;
+  min-height: 44px;
+}
+@media (max-width: 700px) {
+  .reference-settings-body {
+    width: 80vw;
+    min-height: 220px;
+    height: 64vh;
+  }
+  .reference-settings h1 {
+    margin-bottom: 14px;
+  }
+  .reference-tabs {
+    gap: 5px;
+  }
+  .reference-tabs button {
+    min-height: 40px;
+  }
+  .reference-tab-content {
+    padding-top: 61px;
+    gap: 22px;
+  }
+  .graphics-sliders {
+    gap: 28px;
+  }
+  .reference-slider {
+    width: 145px;
+  }
+  .tab-controls {
+    padding: 52px 4% 10px;
+    gap: 8px;
+  }
+  .reference-keys {
+    gap: 10px;
+    font-size: 11px;
+  }
+  .control-options .reference-slider {
+    width: 120px;
+    font-size: 12px;
+  }
+  .reference-keys kbd {
+    padding: 3px 5px;
+    font-size: 11px;
+    min-width: 22px;
+  }
+  .key-actions {
+    gap: 4px;
+  }
+  .reference-back {
+    width: 54px;
+    height: 40px;
+  }
+  .intro-caption {
+    bottom: 50px;
+    font-size: 12px;
+  }
+}
+.reference-back {
+  display: grid;
+  place-items: center;
+}
+.reference-small-button {
+  min-height: 44px;
+}
+@media (pointer: coarse) {
+  .reference-menu nav button {
+    min-height: 44px;
+  }
+  .reference-menu nav {
+    gap: 2px;
+  }
 }

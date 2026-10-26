@@ -1,3 +1,4 @@
+import { skipOpening, openHudEditor } from "./helpers";
 import { test, expect } from "@playwright/test";
 
 test("restart confirmation and new game reset opening progress through the UI", async ({
@@ -5,6 +6,7 @@ test("restart confirmation and new game reset opening progress through the UI", 
 }) => {
   await page.goto("/");
   await page.locator("[data-start]").click();
+  await skipOpening(page);
   await page.evaluate(() => {
     const e = window.__HIRODORA__;
     e.inventory.push("cell_key");
@@ -26,6 +28,7 @@ test("restart confirmation and new game reset opening progress through the UI", 
     .getByRole("dialog")
     .getByRole("button", { name: "Start new game", exact: true })
     .click();
+  await skipOpening(page);
   const fresh = await page.evaluate(() => {
     const e = window.__HIRODORA__;
     return {
@@ -44,9 +47,12 @@ test("restart confirmation and new game reset opening progress through the UI", 
   await page.evaluate(() =>
     window.dispatchEvent(new Event("hirodora:native-pause")),
   );
-  await expect(page.getByText("The night can wait.")).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Resume escape", exact: true }),
+  ).toBeVisible();
   await page.reload();
   await page.locator("[data-start]").click();
+  await skipOpening(page);
   expect(await page.evaluate(() => window.__HIRODORA__.inventory)).toEqual([]);
 });
 
@@ -55,6 +61,7 @@ test("Cell 47 has silent ambience; guard dialogue retains intelligibility across
 }) => {
   await page.goto("/");
   await page.locator("[data-start]").click();
+  await skipOpening(page);
   const result = await page.evaluate(async () => {
     const modulePath = "/src/game/audio.ts";
     const { sound } = await import(modulePath);

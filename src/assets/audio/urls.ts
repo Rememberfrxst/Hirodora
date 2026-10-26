@@ -1,4 +1,5 @@
 import a0 from './footstep_concrete_000.ogg';
+import gunshot from './guard-gunshot.ogg';
 import a1 from './footstep_concrete_001.ogg';
 import a2 from './footstep_concrete_002.ogg';
 import a3 from './footstep_concrete_003.ogg';
@@ -58,6 +59,7 @@ import a56 from './paper.ogg';
 import a57 from './fabric.ogg';
 import a58 from './hinge.ogg';
 export const audioURLs: Record<string, string> = {
+  'guard-gunshot': gunshot,
   'footstep_concrete_000': a0,
   'footstep_concrete_001': a1,
   'footstep_concrete_002': a2,

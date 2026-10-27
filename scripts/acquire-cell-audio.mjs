@@ -9,6 +9,7 @@ const work = await mkdtemp(join(tmpdir(), "hirodora-v10-foley-")),
 await mkdir(dest, { recursive: true });
 const manifest = JSON.parse(await readFile(`${dest}/manifest.json`, "utf8"));
 const clips = [
+  ["table-slide", "ralph.whitehead", 565727, 0, 3.2, true, "highpass=f=80,lowpass=f=5500"],
   // File, author, Freesound ID, start seconds, length, looping, adaptation filters.
   [
     "bed-creak-0",

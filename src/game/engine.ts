@@ -68,7 +68,7 @@ export const ALL_ITEMS: Record<ItemId, InventoryItem> = {
     id: "screwdriver",
     name: "Screwdriver",
     description:
-      "A flat-head driver hidden beneath the bunk. Fits the toilet mounting bolts.",
+      "A driver hidden beneath the table. Fits the toilet mounting bolts.",
     icon: "Wrench",
     category: "tool",
   },
@@ -781,7 +781,7 @@ export class GameEngine {
       "KABIR RAO · PRISONER 047",
       this.gameFlags.opening_v3
         ? "A prisoner down outside my door. The officer is busy checking him. That key behind him… this might be my chance."
-        : "Voss framed me. Iyer needs the ledger. A sharpened spoon beneath the bunk… that’s where I start.",
+        : "Voss framed me. Iyer needs the ledger. A sharpened spoon beneath the table… that’s where I start.",
       "monologue",
       7,
     );
@@ -942,7 +942,7 @@ export class GameEngine {
     sound.playObject("radio");
     this.notice(
       !this.gameFlags.vent_unbolted
-        ? "Munshi: Check beneath the bunk. Use the spoon on the vent beside the toilet."
+        ? "Munshi: Check beneath the table. Use the spoon on the vent beside the toilet."
         : !this.gameFlags.boulder_pacified
           ? "Munshi: Earn Boulder’s trust at the table. Then open his locker with your brass key."
           : !this.gameFlags.master_door_unlocked
@@ -1406,7 +1406,7 @@ export class GameEngine {
       this.activeObjective = openingObjective(this.gameFlags, this.inventory);
       this.notice(
         action === "bed_push"
-          ? "Something was hidden beneath the bed."
+          ? "Something was hidden beneath the table."
           : action === "toilet_bolts"
             ? "All four mounting bolts are loose. Move the toilet aside."
             : "A passage to Cell 46. Crouch and go through.",
@@ -1506,24 +1506,30 @@ export class GameEngine {
       o = this.worldData.opening;
     o.bed.position.z = -8.4 + p.bed * 1.4;
     o.toilet.position.set(
-      opening ? -8.05 : -7.65,
+      opening ? -8.05 + p.toilet * 0.9 : -7.65,
       -0.05,
       opening ? -9.7 + p.toilet * 1.7 : -9.85,
     );
-    // Steer the disconnected fixture outwards while parking it under the sink;
-    // leaving the valve wall-facing at the end intersects the washstand apron.
+    // Park the wider scanned fixture diagonally away from the washstand, not
+    // through it. The collider follows both the translation and the rotation.
     o.toilet.rotation.y = opening ? -Math.PI / 2 + p.toilet * Math.PI : Math.PI;
-    o.bedBounds.min.z = -9.6 + p.bed * 1.4;
-    o.bedBounds.max.z = -7.2 + p.bed * 1.4;
-    o.toiletBounds.min.z = -10.1 + p.toilet * 1.7;
-    o.toiletBounds.max.z = -9.3 + p.toilet * 1.7;
-    if (!opening) {
-      o.toiletBounds.min.set(-8.05, 0, -10.4);
-      o.toiletBounds.max.set(-7.25, 1.2, -9.3);
-    } else {
-      o.toiletBounds.min.x = -8.6;
-      o.toiletBounds.max.x = -7.5;
-    }
+    o.bedBounds.min.z = -9.48215 + p.bed * 1.4;
+    o.bedBounds.max.z = -7.31785 + p.bed * 1.4;
+    const yaw = o.toilet.rotation.y,
+      halfX =
+        Math.abs(Math.cos(yaw)) * 0.27944 + Math.abs(Math.sin(yaw)) * 0.43588,
+      halfZ =
+        Math.abs(Math.sin(yaw)) * 0.27944 + Math.abs(Math.cos(yaw)) * 0.43588;
+    o.toiletBounds.min.set(
+      o.toilet.position.x - halfX,
+      -0.05,
+      o.toilet.position.z - halfZ,
+    );
+    o.toiletBounds.max.set(
+      o.toilet.position.x + halfX,
+      0.93,
+      o.toilet.position.z + halfZ,
+    );
     o.passageSeal.visible = !this.gameFlags.passage_open;
     o.legacyVent.visible = !opening && !this.gameFlags.vent_unbolted;
     (o.toilet.userData.bolts as THREE.Mesh[]).forEach((bolt, index) => {
@@ -1723,7 +1729,7 @@ export class GameEngine {
       cp.name === "Cell 47"
         ? this.gameFlags.opening_v3
           ? openingObjective(this.gameFlags, this.inventory)
-          : "Find the sharpened spoon beneath your bunk."
+          : "Find the sharpened spoon beneath your table."
         : cp.name;
     this.equippedItem = this.inventory.includes("dart_pistol")
       ? "dart_pistol"

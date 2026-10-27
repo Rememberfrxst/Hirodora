@@ -6,6 +6,7 @@ import { TitleScreen } from "./components/TitleScreen";
 import { SettingsPanel } from "./components/SettingsPanel";
 import { HUD } from "./components/HUD";
 import { HudEditor } from "./components/HudEditor";
+import environmentAssets from "./assets/environment/manifest.json";
 import { MiniGames } from "./components/MiniGames";
 import {
   GameOverModal,
@@ -253,15 +254,25 @@ export default function App() {
                     <button onClick={() => engine.returnToTitle()}>
                       Main menu
                     </button>
-                    <details>
+                    <details style={{ maxHeight: "28vh", overflowY: "auto" }}>
                       <summary>Art and audio credits</summary>
                       <p>
                         Human and clothing: MakeHuman CC0 / Ara 3D Gen MIT.
-                        Motion: CMU. Concrete: p0ss / Georges Grondin CC-BY 3.0.
+                        Motion: CMU. Stone: Rock Wall 16 by Amal Kumar / Poly
+                        Haven, CC0 — https://polyhaven.com/a/rock_wall_16.
                         Gunshot: Vincent Sevedge / Tabasco, CC-BY 3.0. Complete
                         sources ship in CHARACTER-LICENSES.txt,
                         ENVIRONMENT-LICENSES.txt and AUDIO-LICENSES.json.
                       </p>
+                      {environmentAssets.uploadedAssets.models.map((asset) => (
+                        <p
+                          key={asset.name}
+                          style={{ overflowWrap: "anywhere" }}
+                        >
+                          {asset.title} — {asset.author}. {asset.license}.
+                          Source: {asset.source}. Changes: {asset.changes}
+                        </p>
+                      ))}
                     </details>
                   </div>
                 </section>

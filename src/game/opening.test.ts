@@ -11,7 +11,7 @@ test("opening reveals the key identity only after trying the door and keeps the 
   );
   assert.match(
     openingObjective({ key_identified: true }, ["cell_key"]),
-    /Push your bunk/,
+    /Push your table/,
   );
   assert.match(
     openingObjective({ bed_moved: true }, ["cell_key"]),

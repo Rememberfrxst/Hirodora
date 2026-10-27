@@ -9,9 +9,10 @@ export interface ObjectAudioEvent {
 }
 export const actionFoley = {
   bed: {
-    loop: "bed-slide",
-    attack: "bed-creak-",
-    release: "impactMetal_light_",
+    // "bed" remains the checkpoint/action ID for backwards compatibility.
+    loop: "table-slide",
+    attack: "impactWood_light_",
+    release: "impactWood_light_",
     gain: 0.55,
   },
   toilet: {

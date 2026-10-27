@@ -1,0 +1,32 @@
+HIRODORA - user-supplied environmental assets (v0.11)
+
+Rock Wall 16 - Amal Kumar / Poly Haven
+Source: https://polyhaven.com/a/rock_wall_16
+License: CC0 1.0 Universal, https://creativecommons.org/publicdomain/zero/1.0/
+Poly Haven policy: https://polyhaven.com/license
+Original 2K diffuse, OpenGL normal and ARM texture maps from the supplied ZIP.
+Changes: linear EXR-to-WebP normal conversion and vector normalization, dielectric metal channel correction,
+WebP encoding. Same map family used on walls, floors and ceilings; surface-specific
+normal strength. The preview sphere and heavy displacement are not runtime assets.
+
+Basic Table - Blender3D (https://sketchfab.com/Blender3D)
+Source: https://sketchfab.com/3d-models/basic-table-a017d2120a504b6ebccf94d651321ca4
+Dirty Toilet - shedmon (https://sketchfab.com/shedmon)
+Source: https://sketchfab.com/3d-models/dirty-toilet-389d5427a1f344c4aa4883ec5a6aaf05
+Free Screwdriver - Filip (https://sketchfab.com/filip.hans.nyberg)
+Source: https://sketchfab.com/3d-models/free-screwdriver-daa1a4a4013b479097633f75a33bb543
+
+All three models: Creative Commons Attribution 4.0 International (CC BY 4.0)
+https://creativecommons.org/licenses/by/4.0/
+Legal code: https://creativecommons.org/licenses/by/4.0/legalcode
+Attributions and licenses are supplied in each original GLB's embedded metadata.
+Changes: metre scaling, axis/floor normalization, texture encoding and meshopt
+compression; table's legacy specular/glossiness PBR converted to metallic/roughness.
+Runtime mounting bolts, contact shadows and puzzle animation are project additions.
+The table replaces the previous bunk; original models' authors do not endorse
+Hirodora. No additional restrictions are placed on these third-party assets.
+
+CC BY 4.0 permits sharing and adaptation, including commercial use, provided
+appropriate credit, a license link, and an indication of changes are retained.
+Full source URLs, original and derivative SHA256 hashes, and dimensions are in
+src/assets/environment/manifest.json. Retain these credits when redistributing.

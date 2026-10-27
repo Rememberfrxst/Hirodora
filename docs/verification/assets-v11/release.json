@@ -1,0 +1,33 @@
+{
+  "version": "0.11.0",
+  "baselineCommit": "cdf40f123a8c5fb10780452efb76395a2b7646bf",
+  "checks": {
+    "typeScript": "passed: npm run lint",
+    "unitAndAssetTests": { "passed": 53, "failed": 0 },
+    "productionBuild": "passed: npm run build",
+    "playwright": { "passed": 29, "failed": 0, "durationMinutes": 14.4 },
+    "matchedCameraComparison": "passed: six cameras; interaction prerequisites unchanged; 11 intentional furniture-bound replacements only",
+    "newScreenshotFiles": 6,
+    "readmeScreenshotReferences": 6,
+    "android": {
+      "assembleRelease": "passed",
+      "lintRelease": "passed: 0 errors, 10 warnings",
+      "signatureV2": "verified; existing certificate retained",
+      "versionCode": 1100,
+      "apkBytes": 20825582,
+      "apkSHA256": "8799119e35dadf55ed91975a456ce6b7f2ac4e3ec7159922debc5befc767d4ae",
+      "packagedGameSmoke": "passed: actual APK extracted and run at native HTTPS origin in mobile Chromium; 86 local assets, no missing files, script errors, runtime network requests or service workers"
+    }
+  },
+  "knownWarnings": [
+    "Vite main JavaScript chunk exceeds the informational 500 kB threshold",
+    "Existing Android lint warnings remain; no lint errors",
+    "Gradle reports deprecated features before a future Gradle 9 upgrade"
+  ],
+  "limits": [
+    "Physical Android GPU/WebView compatibility, frame rate and thermal behavior are not certified",
+    "Extended playtesting and unfinished Cells 45-42 story content remain open",
+    "Only six new after screenshots are published; matched before images were inspected locally",
+    "No 24-cell layout, new guard asset or replacement for the unavailable older desktop-only action PNGs is included"
+  ]
+}

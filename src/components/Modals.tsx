@@ -47,7 +47,7 @@ export function StoryPrologueModal({
         </div>
         <p className="muted">
           {opening
-            ? "Hold E to work quietly. R pushes the bunk harder, but noise draws the officer away from his examination. Use the satchel to inspect tools."
+            ? "Hold E to work quietly. R pushes the table harder, but noise draws the officer away from his examination. Use the satchel to inspect tools."
             : "Keep quiet for the Ghost ending. Trigger an alarm for Loud. Return for Boulder to earn Brotherhood. The four-minute tide countdown begins when you open the vault."}
         </p>
         <button className="primary-button" onClick={onClose}>

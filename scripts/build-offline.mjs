@@ -26,7 +26,8 @@ await writeFile(
   (await readFile("src/assets/environment/GODOT-MIT-LICENSE.txt", "utf8")) +
     "\n" +
     (await readFile("src/assets/environment/TPS-ASSET-LICENSE.txt", "utf8")) + "\n" +
-    (await readFile("src/assets/environment/CONCRETE-LICENSE.txt", "utf8")),
+    (await readFile("src/assets/environment/CONCRETE-LICENSE.txt", "utf8")) + "\n" +
+    (await readFile("src/assets/environment/UPLOADED-ASSET-LICENSES.txt", "utf8")),
 );
 const hash = createHash("sha256");
 await copyFile("docs/GUARD-ASSETS.md", "dist/CHARACTER-LICENSES.txt");

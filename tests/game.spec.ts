@@ -333,7 +333,7 @@ test("authored environment loads locally and graphics presets preserve collision
     });
     return names;
   });
-  expect(assets.filter((n) => n === "CellAsset_Bunk")).toHaveLength(6);
+  expect(assets.filter((n) => n === "CellAsset_Table")).toHaveLength(6);
   expect(assets).toContain("CellAsset_Toilet");
   expect(assets).toContain("CellAsset_Sink");
   expect(assets.filter((n) => n === "CellAsset_Window")).toHaveLength(2);

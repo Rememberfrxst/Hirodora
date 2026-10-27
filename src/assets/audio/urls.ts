@@ -67,6 +67,7 @@ import a65 from './lock-turn.ogg';
 import a66 from './bolt-ratchet.ogg';
 import a67 from './heavy-bolt.ogg';
 import a68 from './bed-slide.ogg';
+import a69 from './table-slide.ogg';
 export const audioURLs: Record<string,string> = {
   'footstep_concrete_000': a0,
   'footstep_concrete_001': a1,
@@ -137,4 +138,5 @@ export const audioURLs: Record<string,string> = {
   'bolt-ratchet': a66,
   'heavy-bolt': a67,
   'bed-slide': a68,
+  'table-slide': a69,
 };

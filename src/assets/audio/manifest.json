@@ -767,5 +767,17 @@
     "bytes": 19657,
     "usage": "bed-slide",
     "changes": "HQ preview excerpt 0–3s; mono 32 kHz; highpass=f=75,lowpass=f=6000; -23 LUFS target / -3 dBTP; 80 ms wrap crossfade for seamless movement loop; Vorbis q4. Ceramic grinding is adapted foley, not a recording of this exact toilet."
+  },
+  {
+    "file": "table-slide.ogg",
+    "source": "https://freesound.org/people/ralph.whitehead/sounds/565727/",
+    "download": "https://cdn.freesound.org/previews/565/565727_1971023-hq.mp3",
+    "author": "ralph.whitehead",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "8a9931a38a69b8541a9a09dc141e952745a49b8fa9f239afde6d95c70d6ca69f",
+    "bytes": 27708,
+    "usage": "table-slide",
+    "changes": "HQ preview excerpt 0–3.2s; mono 32 kHz; highpass=f=80,lowpass=f=5500; -23 LUFS target / -3 dBTP; 80 ms wrap crossfade for seamless movement loop; Vorbis q4."
   }
 ]

@@ -125,108 +125,17 @@ function label(
   );
 }
 
-function buildLegacyBunkBounds() {
+// Uploaded table: 1.2821 x .82 x 2.1643m. Keep the saved "bed" puzzle IDs,
+// but do not leave an invisible two-metre-high bunk collider above the table.
+function buildTableBounds() {
   const group = new THREE.Group();
-  for (const x of [-0.6, 0.6])
-    for (const z of [-1.1, 1.1]) {
-      cylinder(group, 0.035, 2.2, [x, 1.1, z]);
-      box(group, [0.15, 0.025, 0.15], [x, 0.02, z], rust);
-    }
-  for (const y of [0.42, 1.55]) {
-    box(group, [1.22, 0.09, 2.25], [0, y, 0], iron, 0.025);
-    box(group, [1.12, 0.16, 2.12], [0, y + 0.13, 0], linen, 0.065);
-    // Steel slats remain visible under the mattress at first-person distance.
-    for (let z = -0.82; z <= 0.82; z += 0.24)
-      box(group, [1.06, 0.035, 0.055], [0, y + 0.03, z], iron, 0.008);
-    box(group, [0.82, 0.15, 0.44], [0, y + 0.28, -0.76], linen, 0.07);
-    // A subdivided, draped blanket rather than a rigid cuboid.
-    const geometry = new THREE.PlaneGeometry(1.3, 1.4, 14, 16);
-    const vertices = geometry.attributes.position;
-    for (let i = 0; i < vertices.count; i++) {
-      const x = vertices.getX(i),
-        z = vertices.getY(i);
-      vertices.setXYZ(
-        i,
-        x,
-        y +
-          0.245 +
-          Math.sin(z * 23 + x * 4) * 0.018 -
-          Math.max(0, Math.abs(x) - 0.565) * 2.5,
-        z + 0.3,
-      );
-    }
-    geometry.computeVertexNormals();
-    const blanket = new THREE.Mesh(
-      geometry,
-      new THREE.MeshStandardMaterial({
-        color: 0x445856,
-        roughness: 1,
-        side: THREE.DoubleSide,
-      }),
-    );
-    group.add(blanket);
-    // Creased mattress edge and a seam make the bedding read as fabric, not foam boxes.
-    for (const x of [-0.52, 0.52])
-      box(group, [0.018, 0.11, 1.86], [x, y + 0.13, 0.02], wool, 0.006);
-  }
-  for (const y of [0.5, 0.8, 1.1, 1.4])
-    box(group, [0.4, 0.035, 0.035], [0.38, y, -1.15], iron, 0.012);
-  box(group, [0.035, 0.25, 1.8], [0.6, 1.85, 0.1], iron, 0.015);
-  // Guard rail, wall brackets and ladder stiles are separate welded parts.
-  box(group, [1.16, 0.05, 0.05], [0, 1.93, 1.07], iron, 0.012);
-  for (const x of [-0.48, 0.48])
-    box(group, [0.05, 0.38, 0.05], [x, 1.74, 1.07], iron, 0.012);
-  for (const z of [-1.02, 1.02])
-    box(group, [0.12, 0.05, 0.08], [-0.6, 0.42, z], rust, 0.01);
+  box(group, [1.2821, 0.82, 2.1643], [0, 0.36, 0], iron);
   return group;
 }
 
 function buildLegacyToiletBounds() {
   const group = new THREE.Group();
-  const profile = [
-    [0.12, 0],
-    [0.17, 0.08],
-    [0.12, 0.25],
-    [0.26, 0.38],
-    [0.29, 0.48],
-    [0.22, 0.5],
-  ].map(([r, y]) => new THREE.Vector2(r, y));
-  const bowl = new THREE.Mesh(new THREE.LatheGeometry(profile, 24), ceramic);
-  bowl.scale.z = 1.22;
-  group.add(bowl);
-  const seat = new THREE.Mesh(
-    new THREE.TorusGeometry(0.245, 0.035, 8, 32),
-    dark,
-  );
-  seat.rotation.x = Math.PI / 2;
-  seat.scale.y = 1.25;
-  seat.position.y = 0.51;
-  group.add(seat);
-  const water = new THREE.Mesh(
-    new THREE.CircleGeometry(0.18, 24),
-    new THREE.MeshStandardMaterial({
-      color: 0x253f43,
-      roughness: 0.12,
-      metalness: 0.25,
-    }),
-  );
-  water.rotation.x = -Math.PI / 2;
-  water.scale.y = 1.22;
-  water.position.y = 0.49;
-  group.add(water);
-  box(group, [0.46, 0.47, 0.19], [0, 0.72, -0.34], ceramic, 0.04);
-  box(group, [0.5, 0.055, 0.23], [0, 0.97, -0.34], ceramic, 0.025);
-  box(group, [0.09, 0.035, 0.035], [-0.2, 0.83, -0.22], iron, 0.01);
-  for (const x of [-0.13, 0.13])
-    cylinder(group, 0.018, 0.08, [x, 0.55, -0.16], iron).rotation.z =
-      Math.PI / 2;
-  cylinder(group, 0.02, 0.7, [0.3, 0.4, -0.35], rust);
-  const valve = new THREE.Mesh(
-    new THREE.TorusGeometry(0.06, 0.012, 6, 16),
-    material(0x994c37),
-  );
-  valve.position.set(0.3, 0.4, -0.3);
-  group.add(valve);
+  box(group, [0.55888, 0.98, 0.87176], [0, 0.44, 0], ceramic);
   return group;
 }
 
@@ -248,30 +157,18 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   const concrete = environment.concrete;
   iron.copy(environment.metal);
   const plaster = concrete.clone();
-  plaster.color.set(0xa6aaa0);
-  const paint = stone.clone();
-  paint.color.set(0x727b65);
   const floor = environment.floor;
   const wall = (size: number[], pos: number[], mat: THREE.Material = stone) => {
     const mesh = box(staticWorld, size, pos, mat);
-    if (size[1] > 3) {
-      projectUV(mesh, 2);
-      const thinX = size[0] < 0.8;
-      const lowerWall = box(
-        staticWorld,
-        [size[0] + (thinX ? 0.016 : 0), 1.35, size[2] + (thinX ? 0 : 0.016)],
-        [pos[0], 0.6, pos[2]],
-        paint,
-      );
-      projectUV(lowerWall, 2);
-    }
+    // World-space 2m repeat on every face, including low partitions and piers.
+    projectUV(mesh, 2);
     colliders.push(new THREE.Box3().setFromObject(mesh));
     return mesh;
   };
   const prop = (model: THREE.Group, x: number, z: number, rotation = 0) => {
     model.position.set(x, 0, z);
     model.rotation.y = rotation;
-    // Retain the exact legacy gameplay bounds; the new GLB supplies the visible furniture.
+    // Collision proxies are not rendered; furniture proxies match replacement size.
     colliders.push(new THREE.Box3().setFromObject(model));
     model.traverse((o) => {
       if (o instanceof THREE.Mesh) o.geometry.dispose();
@@ -313,12 +210,12 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
           : p.getY(i) + mesh.position.y) / scale,
       );
   };
-  projectUV(ground, 3);
+  projectUV(ground, 2);
   // A concrete ceiling closes the cell volume; beams and conduits give the formerly
   // black void a readable institutional structure without altering walkable space.
   projectUV(
     box(staticWorld, [46, 0.22, 23], [7, 4.18, 0], environment.ceiling),
-    2.5,
+    2,
   );
   for (const x of [-13.5, -3.5, 6.5, 16.5, 26.5])
     projectUV(
@@ -334,10 +231,10 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   for (const z of [-9.4, 0.6, 10.1])
     box(staticWorld, [45.4, 0.09, 0.13], [7, 3.92, z], rust, 0.008);
   wall([0.5, 4.3, 23], [-37, 2, 0]);
-  projectUV(box(staticWorld, [21, 0.3, 23], [-26.5, -0.2, 0], floor), 3);
+  projectUV(box(staticWorld, [21, 0.3, 23], [-26.5, -0.2, 0], floor), 2);
   projectUV(
     box(staticWorld, [21, 0.22, 23], [-26.5, 4.18, 0], environment.ceiling),
-    2.5,
+    2,
   );
   wall([21, 4.3, 0.5], [-26.5, 2, -11.5]);
   wall([21, 4.3, 0.5], [-26.5, 2, 11.5]);
@@ -376,6 +273,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     [-8.8, 0.525, -9.7],
     concrete,
   );
+  projectUV(passageSeal, 2);
   const passageBounds = new THREE.Box3().setFromObject(passageSeal);
   function bars(x: number, z: number, width: number) {
     for (let bx = x - width / 2; bx <= x + width / 2; bx += 0.21)
@@ -422,28 +320,28 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     environment.add("Toilet", cx - 1.6, -0.05, -9.85, Math.PI);
     environment.add("Sink", cx - 2.2, 0, -7.8, -Math.PI / 2);
     environment.add("Luminaire", cx, 3.32, -6);
-    const light = new THREE.PointLight(0xd8b991, 11, 10, 2);
+    const light = new THREE.PointLight(0xd8b991, 16, 10, 2);
     light.position.set(cx, 3.2, -6);
     scene.add(light);
-    prop(buildLegacyBunkBounds(), cx + 1.7, -8.4);
+    prop(buildTableBounds(), cx + 1.7, -8.4);
     prop(buildLegacyToiletBounds(), cx - 1.6, -9.85);
   }
-  const bedProxy = prop(buildLegacyBunkBounds(), -4.25, -8.4);
+  const bedProxy = prop(buildTableBounds(), -4.25, -8.4);
   const bedBounds = colliders[colliders.length - 1];
   const toiletProxy = prop(buildLegacyToiletBounds(), -8.05, -9.7, Math.PI / 2);
   const toiletBounds = colliders[colliders.length - 1];
-  prop(buildLegacyBunkBounds(), -13, -8.4);
+  prop(buildTableBounds(), -13, -8.4);
   const bed = environment.add("Bunk", -4.25, -0.05, -8.4, Math.PI);
   environment.add("Bunk", -13, -0.05, -8.4, Math.PI);
   const toilet = environment.add("Toilet", -8.05, -0.05, -9.7, -Math.PI / 2);
   const bolts: THREE.Mesh[] = [];
-  for (const x of [-0.22, 0.22])
-    for (const z of [-0.2, 0.2]) {
+  for (const x of [-0.105, 0.105])
+    for (const z of [-0.165, 0.125]) {
       const head = new THREE.Mesh(
         new THREE.CylinderGeometry(0.018, 0.018, 0.018, 6),
         iron,
       );
-      head.position.set(x, 0.075, z);
+      head.position.set(x, 0.055, z);
       const slot = new THREE.Mesh(
         new THREE.BoxGeometry(0.021, 0.0015, 0.003),
         iron,
@@ -539,19 +437,15 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     "interact",
     "cell_key",
   );
-  interaction("bed_push", "Bunk", "Push · hold slowly", -5.0, -8.1, "interact");
-  const screwdriver = new THREE.Group();
-  const handle = cylinder(
-    screwdriver,
-    0.035,
-    0.13,
-    [0, 0, 0],
-    material(0xa94d29),
+  interaction(
+    "bed_push",
+    "Table",
+    "Push table · hold slowly",
+    -5.0,
+    -8.1,
+    "interact",
   );
-  handle.rotation.x = Math.PI / 2;
-  box(screwdriver, [0.012, 0.012, 0.18], [0, 0, -0.14], iron);
-  screwdriver.position.set(-4.45, 0.04, -8.7);
-  scene.add(screwdriver);
+  const screwdriver = environment.add("Screwdriver", -4.45, -0.044, -8.7, 0.3);
   pickupMeshes.set("screwdriver_pickup", screwdriver);
   interaction(
     "screwdriver_pickup",
@@ -882,7 +776,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     [20, 0, 0x75b4c4],
     [27, 0, 0xc9e9e5],
   ]) {
-    const light = new THREE.PointLight(color, 14, 11, 2);
+    const light = new THREE.PointLight(color, 20, 11, 2);
     light.position.set(x, 3.2, z);
     scene.add(light);
     environment.add("Luminaire", x, 3.32, z);

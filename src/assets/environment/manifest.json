@@ -93,6 +93,31 @@
       "name": "ceiling-albedo.webp",
       "bytes": 225820,
       "sha256": "9ba9a00e8f915719c7a9f2dd29d42d1d28ff200d354557d2bd3cbbc749674b05"
+    },
+    {
+      "name": "uploaded-props.glb",
+      "bytes": 1375420,
+      "sha256": "414b61b82ca9876912f57074be065d06508b385b9984d859fd4372fb624c05c7"
+    },
+    {
+      "name": "retained-fixtures.glb",
+      "bytes": 69760,
+      "sha256": "4a9b8d8b6bd0067c29bd81a612ba5b08ccdba65d75cdf00ad3bacc633f816775"
+    },
+    {
+      "name": "rock16-albedo.webp",
+      "bytes": 866270,
+      "sha256": "238a22b6a21316d2224b6200a8614d746cce58a17735cdedc7c0fde106e7f83c"
+    },
+    {
+      "name": "rock16-normal.webp",
+      "bytes": 7020578,
+      "sha256": "c21325cb171f36e539764a8ca15cb1905866f6bef0ece98f42116a3443a7f9c4"
+    },
+    {
+      "name": "rock16-orm.webp",
+      "bytes": 3467178,
+      "sha256": "291fb2c0c723bb6a6dca13e3c925ddbd27a3961483f65f8e01129331b356b9ca"
     }
   ],
   "referenceAdaptation": {
@@ -104,5 +129,60 @@
   "cellV10": {
     "source": "Project-authored Blender meshes; existing licensed concrete photographs and wool/metal maps",
     "changes": "Welded rectangular steel bunk with unanchored skid feet, actual baked cloth drape, remodeled hollow ceramic bowl/rim/trap, serviceable capped flushometer, mounting lugs, sink drain perforations. Photo concrete grading and restrained normal/ORM adaptations; no new scanned-asset claim."
+  },
+  "uploadedAssets": {
+    "pipeline": "scripts/prepare-uploaded-assets.mjs",
+    "wall": {
+      "title": "Rock Wall 16",
+      "source": "https://polyhaven.com/a/rock_wall_16",
+      "license": "CC0-1.0",
+      "licenseURL": "https://polyhaven.com/license",
+      "originalSHA256": "6d75ee73479c641aca319daefb682778efb93a616bc350502ed87b56be36abcb",
+      "changes": "Original 2K diffuse, OpenGL normal and ARM maps; EXR normal converted linearly, ARM metal channel forced to zero, WebP encoding. No preview sphere or runtime displacement."
+    },
+    "models": [
+      {
+        "name": "Table",
+        "author": "Blender3D (https://sketchfab.com/Blender3D)",
+        "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+        "source": "https://sketchfab.com/3d-models/basic-table-a017d2120a504b6ebccf94d651321ca4",
+        "title": "Basic Table",
+        "originalSHA256": "37004d4c60d5c54589b9bf47a029c1a90fbe0c777adc21afecb71165a15c9965",
+        "metres": [
+          1.2820871922332635,
+          0.82,
+          2.164267311839839
+        ],
+        "changes": "Scaled to metres, floor-aligned, optimized textures and meshopt compression; table converted to metallic/roughness PBR."
+      },
+      {
+        "name": "Toilet",
+        "author": "shedmon (https://sketchfab.com/shedmon)",
+        "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+        "source": "https://sketchfab.com/3d-models/dirty-toilet-389d5427a1f344c4aa4883ec5a6aaf05",
+        "title": "Dirty Toilet",
+        "originalSHA256": "6cc3a003d896fd512674001c7e098d3c8418c2a34b545125b57d35e000994dc4",
+        "metres": [
+          0.5588742361405438,
+          0.98,
+          0.8717461070982865
+        ],
+        "changes": "Scaled to metres, floor-aligned, optimized textures and meshopt compression; table converted to metallic/roughness PBR."
+      },
+      {
+        "name": "Screwdriver",
+        "author": "Filip (https://sketchfab.com/filip.hans.nyberg)",
+        "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+        "source": "https://sketchfab.com/3d-models/free-screwdriver-daa1a4a4013b479097633f75a33bb543",
+        "title": "Free Screwdriver",
+        "originalSHA256": "734e5313ffed080193e7f141cb0e09252855c811cbc7f3735182a09d4560aeef",
+        "metres": [
+          0.03572881525987735,
+          0.035687084571550044,
+          0.31
+        ],
+        "changes": "Scaled to metres, floor-aligned, optimized textures and meshopt compression; table converted to metallic/roughness PBR."
+      }
+    ]
   }
 }

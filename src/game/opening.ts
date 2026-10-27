@@ -15,9 +15,9 @@ export function openingObjective(
     return "Move the toilet aside to reveal the passage.";
   if (items.includes("screwdriver"))
     return "Unbolt the toilet on the shared wall.";
-  if (flags.bed_moved) return "Collect the screwdriver beneath the bunk.";
+  if (flags.bed_moved) return "Collect the screwdriver beneath the table.";
   if (flags.key_identified)
-    return "Find another way out. Push your bunk quietly.";
+    return "Find another way out. Push your table quietly.";
   if (items.includes("cell_key")) return "Try the key on your cell door.";
   return openingStart;
 }

@@ -1,0 +1,5 @@
+# Download artifacts are generated distributions, not the game's source language.
+downloads/** linguist-generated=true
+# Embedded vendor GLSL preserves whitespace inside JavaScript template strings.
+downloads/*.html -diff -whitespace
+downloads/*-README.txt -whitespace

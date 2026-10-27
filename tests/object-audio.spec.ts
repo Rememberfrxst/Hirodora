@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { skipOpening } from "./helpers";
 
-test("toilet parking keeps its metal valve clear of the sink throughout the slide", async ({
+test("uploaded toilet stays clear of the sink throughout its diagonal slide", async ({
   page,
 }) => {
   await init(page);
@@ -18,6 +18,7 @@ test("toilet parking keeps its metal valve clear of the sink throughout the slid
     });
     const sinkBounds = new B().setFromObject(sink),
       overlaps: number[] = [];
+    let checkedMeshes = 0;
     e.gameFlags.toilet_unbolted = true;
     e.gameFlags.passage_open = true;
     for (let i = 0; i <= 10; i++) {
@@ -25,21 +26,22 @@ test("toilet parking keeps its metal valve clear of the sink throughout the slid
       e.syncWorld();
       e.scene.updateMatrixWorld(true);
       e.worldData.opening.toilet.traverse((o: any) => {
-        if (
-          o.isMesh &&
-          o.material.name === "BrushedSteel" &&
-          new B().setFromObject(o).intersectsBox(sinkBounds)
-        )
-          overlaps.push(i);
+        if (o.isMesh && o.material.name === "Default") {
+          checkedMeshes++;
+          if (new B().setFromObject(o).intersectsBox(sinkBounds))
+            overlaps.push(i);
+        }
       });
     }
     return {
       overlaps,
+      checkedMeshes,
       yaw: e.worldData.opening.toilet.rotation.y,
       z: e.worldData.opening.toilet.position.z,
     };
   });
   expect(result.overlaps).toEqual([]);
+  expect(result.checkedMeshes).toBe(11);
   expect(result.yaw).toBeCloseTo(Math.PI / 2);
   expect(result.z).toBeCloseTo(-8);
 });

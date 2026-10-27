@@ -1,21 +1,16 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
-import modelURL from "../assets/environment/cell-props.glb";
-import brickColor from "../assets/environment/masonry-albedo.webp";
-import brickNormal from "../assets/environment/masonry-normal.webp";
-import brickORM from "../assets/environment/masonry-orm.webp";
-import concreteColor from "../assets/environment/concrete-albedo.webp";
-import concreteNormal from "../assets/environment/concrete-normal.webp";
-import concreteORM from "../assets/environment/concrete-orm.webp";
+import modelURL from "../assets/environment/retained-fixtures.glb";
+import uploadedURL from "../assets/environment/uploaded-props.glb";
+import rockColor from "../assets/environment/rock16-albedo.webp";
+import rockNormal from "../assets/environment/rock16-normal.webp";
+import rockORM from "../assets/environment/rock16-orm.webp";
 import metalColor from "../assets/environment/metal-albedo.webp";
 import metalNormal from "../assets/environment/metal-normal.webp";
 import metalORM from "../assets/environment/metal-orm.webp";
-import woolColor from "../assets/environment/wool-albedo.webp";
-import woolNormal from "../assets/environment/wool-normal.webp";
 import stainURL from "../assets/environment/water-stain.webp";
 import exteriorURL from "../assets/environment/exterior.webp";
-import ceilingURL from "../assets/environment/ceiling-albedo.webp";
 
 /** All assets resolve locally, including in the embedded offline document. */
 export function createEnvironment(scene: THREE.Scene) {
@@ -52,18 +47,18 @@ export function createEnvironment(scene: THREE.Scene) {
       aoMapIntensity: 0.55,
     });
   }
-  const masonry = surface(brickColor, brickNormal, brickORM);
-  masonry.normalScale.set(0.36, 0.36);
-  const floor = surface(concreteColor, concreteNormal, concreteORM, 1);
-  floor.color.set(0xa5ada2);
-  floor.normalScale.set(0.16, 0.16);
-  floor.aoMapIntensity = 0.25;
-  const concrete = surface(concreteColor, concreteNormal, concreteORM, 1);
-  concrete.color.set(0x7f8c7d);
-  const ceiling = surface(ceilingURL, concreteNormal, concreteORM, 1);
-  ceiling.color.set(0x92998c);
-  ceiling.normalScale.set(0.12, 0.12);
-  concrete.normalScale.set(0.2, 0.2);
+  // One shared 2K scanned texture set, not duplicate GPU images per room/surface.
+  const masonry = surface(rockColor, rockNormal, rockORM);
+  masonry.name = "RockWall16";
+  masonry.normalScale.set(0.65, 0.65);
+  masonry.aoMapIntensity = 0.65;
+  const floor = masonry.clone();
+  floor.name = "RockWall16_Floor";
+  floor.normalScale.set(0.28, 0.28);
+  const concrete = masonry.clone();
+  const ceiling = masonry.clone();
+  ceiling.name = "RockWall16_Ceiling";
+  ceiling.normalScale.set(0.4, 0.4);
   const metal = surface(metalColor, metalNormal, metalORM, 0.8, 0.65);
   const exterior = new THREE.MeshBasicMaterial({
     map: texture(exteriorURL, true),
@@ -73,24 +68,6 @@ export function createEnvironment(scene: THREE.Scene) {
     sky.position.set(x, 2.9, -12.3);
     scene.add(sky);
   }
-  const wool = new THREE.MeshStandardMaterial({
-    map: texture(woolColor, true),
-    normalMap: texture(woolNormal),
-    roughness: 1,
-    normalScale: new THREE.Vector2(0.25, 0.25),
-    color: 0x9caca0,
-  });
-  wool.map!.repeat.set(5, 5);
-  wool.normalMap!.repeat.set(5, 5);
-  const cotton = new THREE.MeshStandardMaterial({
-    map: texture(woolColor, true),
-    normalMap: texture(woolNormal),
-    roughness: 0.95,
-    color: 0xfff9e7,
-    normalScale: new THREE.Vector2(0.07, 0.07),
-  });
-  cotton.map!.repeat.set(8, 8);
-  cotton.normalMap!.repeat.set(8, 8);
   const stain = new THREE.MeshBasicMaterial({
     map: texture(stainURL, true),
     transparent: true,
@@ -139,8 +116,9 @@ export function createEnvironment(scene: THREE.Scene) {
         }),
       ),
       new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(modelURL),
+      new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(uploadedURL),
     ])
-      .then(([, gltf]) => {
+      .then(([, gltf, uploaded]) => {
         if (disposed) {
           gltf.scene.traverse((o) => {
             if (o instanceof THREE.Mesh) o.geometry.dispose();
@@ -148,23 +126,23 @@ export function createEnvironment(scene: THREE.Scene) {
           return;
         }
         for (const anchor of anchors) {
-          const template = gltf.scene.getObjectByName(anchor.name);
+          const suppliedName = anchor.name === "Bunk" ? "Table" : anchor.name;
+          const template =
+            uploaded.scene.getObjectByName(suppliedName) ||
+            gltf.scene.getObjectByName(anchor.name);
           if (!template)
             throw Error(`Missing environment model ${anchor.name}`);
           const clone = template.clone(true);
-          clone.name = `CellAsset_${anchor.name}`;
-          clone.position.set(0, 0, 0);
+          clone.name = `CellAsset_${suppliedName}`;
+          // Supplied roots contain metre/floor normalization: preserve transforms.
+          if (!["Bunk", "Toilet", "Screwdriver"].includes(anchor.name))
+            clone.position.set(0, 0, 0);
+          clone.userData.sourceAsset = suppliedName;
           clone.traverse((o) => {
             if (!(o instanceof THREE.Mesh)) return;
             o.castShadow = o.receiveShadow = true;
             const replace = (m: THREE.Material) =>
-              m.name === "PaintedSteel"
-                ? metal
-                : m.name === "BlanketWool"
-                  ? wool
-                  : m.name === "MattressCanvas"
-                    ? cotton
-                    : m;
+              m.name === "PaintedSteel" ? metal : m;
             o.material = Array.isArray(o.material)
               ? o.material.map(replace)
               : replace(o.material);
@@ -182,5 +160,5 @@ export function createEnvironment(scene: THREE.Scene) {
     disposed = true;
     textures.forEach(({ target }) => target.dispose());
   };
-  return { masonry, floor, concrete, ceiling, metal, wool, add, load, dispose };
+  return { masonry, floor, concrete, ceiling, metal, add, load, dispose };
 }

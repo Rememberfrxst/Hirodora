@@ -3,8 +3,8 @@ import type { Bounds, Vec3 } from "./perception";
 
 export const ATRIUM = {
   north: 1,
-  south: 13,
-  centerZ: 7,
+  south: CELL_BLOCK.southFront - 3,
+  centerZ: (CELL_BLOCK.northFront + CELL_BLOCK.southFront) / 2,
   depth: -3.2,
   bridge: 3,
   stairWidth: 1.8,
@@ -13,7 +13,7 @@ export const ATRIUM = {
     { top: CELL_BLOCK.west + 3, bottom: CELL_BLOCK.west + 10.2 },
   ],
 } as const;
-export const LAYOUT_VERSION = 15;
+export const LAYOUT_VERSION = 16;
 export function inAtrium(x: number, z: number) {
   return (
     x > CELL_BLOCK.west &&
@@ -104,10 +104,17 @@ export function migratePosition(position: Vec3, version?: number): Vec3 {
     }
   }
   // Compress the old 16m opening to 12m, keeping cell interiors and stair heights.
-  if (onStairs && Math.abs(migratedZ - 9) <= ATRIUM.stairWidth / 2)
+  if ((version ?? 0) < 15) {
+    if (onStairs && Math.abs(migratedZ - 9) <= ATRIUM.stairWidth / 2)
+      migratedZ -= 2;
+    else if (migratedZ >= 17) migratedZ -= 4;
+    else if (migratedZ > 1) migratedZ = 1 + (migratedZ - 1) * 0.75;
+  }
+  // v16: 18m -> 14m corridor. The north puzzle rooms remain untouched.
+  if (onStairs && Math.abs(migratedZ - 7) <= ATRIUM.stairWidth / 2)
     migratedZ -= 2;
-  else if (migratedZ >= 17) migratedZ -= 4;
-  else if (migratedZ > 1) migratedZ = 1 + (migratedZ - 1) * 0.75;
+  else if (migratedZ >= 13) migratedZ -= 4;
+  else if (migratedZ > 1) migratedZ = 1 + (migratedZ - 1) * (2 / 3);
   if (
     y >= -0.1 &&
     inAtrium(x, migratedZ) &&

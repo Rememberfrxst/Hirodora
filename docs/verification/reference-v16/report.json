@@ -1,0 +1,345 @@
+{
+  "version": "0.16.0",
+  "unitPassed": 65,
+  "browserCasesPassed": 39,
+  "additionalHeldItemRenders": 9,
+  "runs": [
+    {
+      "file": "browser-1.json",
+      "stats": {
+        "startTime": "2026-10-27T18:20:15.992Z",
+        "duration": 1852042.8669999999,
+        "expected": 36,
+        "skipped": 0,
+        "unexpected": 3,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "browser-2.json",
+      "stats": {
+        "startTime": "2026-10-27T18:38:44.544Z",
+        "duration": 582377.461,
+        "expected": 5,
+        "skipped": 0,
+        "unexpected": 2,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "browser-3.json",
+      "stats": {
+        "startTime": "2026-10-27T18:48:29.111Z",
+        "duration": 55756.04,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "browser-4.json",
+      "stats": {
+        "startTime": "2026-10-27T18:49:55.896Z",
+        "duration": 31775.131999999998,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "restart confirmation and new game reset opening progress through the UI",
+      "status": "passed"
+    },
+    {
+      "name": "Cell 47 has silent ambience; guard dialogue retains intelligibility across bars",
+      "status": "passed"
+    },
+    {
+      "name": "nine officers patrol both levels and a lower cell can be opened, entered and saved",
+      "status": "passed"
+    },
+    {
+      "name": "stairs support actual player movement, gates are independent, and equipped tools persist",
+      "status": "passed"
+    },
+    {
+      "name": "guards route down stairs and cannot capture a player through the gallery floor",
+      "status": "passed"
+    },
+    {
+      "name": "48 independent wide gates frame both floors and all rows load real fixtures",
+      "status": "passed"
+    },
+    {
+      "name": "hint/pause are the only top tools; context-only touch action and rotated arrows match the requested HUD",
+      "status": "passed"
+    },
+    {
+      "name": "main-menu confirmation traps focus, defaults to No, cancels safely and confirms without deleting the checkpoint",
+      "status": "passed"
+    },
+    {
+      "name": "Cell 46 stays open for exploration in new games and previously closed saves",
+      "status": "passed"
+    },
+    {
+      "name": "desktop starts, moves, crouches, pauses and closes intel without stuck input",
+      "status": "passed"
+    },
+    {
+      "name": "rigged officers animate independently, patrol, switch LOD and retain non-lethal dart hits",
+      "status": "passed"
+    },
+    {
+      "name": "failed officer downloads block play and can be retried without a primitive fallback",
+      "status": "passed"
+    },
+    {
+      "name": "authored environment loads locally and graphics presets preserve collision and gameplay state",
+      "status": "passed"
+    },
+    {
+      "name": "tool requirements, all four puzzles, crafting, checkpoints and Brotherhood ending",
+      "status": "passed"
+    },
+    {
+      "name": "closed walls block guard sight and movement; all required rooms have routes",
+      "status": "passed"
+    },
+    {
+      "name": "mobile landscape controls work and portrait rotation safely pauses without stuck input",
+      "status": "passed"
+    },
+    {
+      "name": "portrait mobile launch gates play and handles denied fullscreen/unsupported rotation",
+      "status": "passed"
+    },
+    {
+      "name": "production assets load from a subdirectory and the game reloads offline",
+      "status": "passed"
+    },
+    {
+      "name": "downloaded standalone HTML runs in an offline browser without network requests",
+      "status": "passed"
+    },
+    {
+      "name": "all HUD presets fit a small landscape screen without overlapping controls",
+      "status": "passed"
+    },
+    {
+      "name": "custom HUD saves drag and size, cancels edits, survives reload and resets presets",
+      "status": "passed"
+    },
+    {
+      "name": "reference menu has three choices and settings tabs change real persisted values",
+      "status": "passed"
+    },
+    {
+      "name": "new-game cinematic fires once, pauses safely, closes gate and releases a playable checkpoint",
+      "status": "passed"
+    },
+    {
+      "name": "skipping intro reaches the same corpse/key/closed-gate state on mobile",
+      "status": "passed"
+    },
+    {
+      "name": "uploaded toilet stays clear of the sink throughout its diagonal slide",
+      "status": "passed"
+    },
+    {
+      "name": "bed and ceramic movement audio follow geometry, stop on release and keep original stealth noise",
+      "status": "passed"
+    },
+    {
+      "name": "bars transmit audio but solid cell walls attenuate; idle cell remains silent",
+      "status": "passed"
+    },
+    {
+      "name": "guard dialogue steals a low-priority effect at the mobile voice cap without touching AI",
+      "status": "passed"
+    },
+    {
+      "name": "Cell 47 key twist, quiet bed, tool, toilet, passage, save and return",
+      "status": "passed"
+    },
+    {
+      "name": "audio recordings decode, blocked movement is silent and channels persist",
+      "status": "passed"
+    },
+    {
+      "name": "hard pushing alerts the examining guard, then he returns to the body without crossing bars",
+      "status": "passed"
+    },
+    {
+      "name": "mobile contextual holding releases on cancel and rotation without stuck input",
+      "status": "passed"
+    },
+    {
+      "name": "reference corridor, fog and gloved grips retain saved equipment through quick slots",
+      "status": "passed"
+    },
+    {
+      "name": "mobile pocket icons remain tappable and clear of left controls on small landscape screens",
+      "status": "passed"
+    },
+    {
+      "name": "full barred cell fronts retain collision while small doors slide, protect actors and restore",
+      "status": "passed"
+    },
+    {
+      "name": "adaptive resolution, paused preset changes and mobile resize never present a cleared frame",
+      "status": "passed"
+    },
+    {
+      "name": "spatial AI sees through bars but cannot cross them, loses sight and returns to its duty",
+      "status": "passed"
+    },
+    {
+      "name": "noise stays at its impact source; guard reacts while a puzzle is open",
+      "status": "passed"
+    },
+    {
+      "name": "two-handed weapon grip follows the active skeleton across officer LOD and returns to idle hands",
+      "status": "passed"
+    }
+  ],
+  "comparison": [
+    {
+      "name": "01-corridor",
+      "position": [
+        -6.5,
+        1.65,
+        0
+      ],
+      "target": [
+        -65,
+        1.4,
+        4
+      ],
+      "item": "screwdriver",
+      "beforeSHA256": "f8502ee8057da3cf84f951ccabb92470ee1e83b4508519f70ee48181e025a173",
+      "afterSHA256": "16a4023146ea89c880b3e53ef1a33149272b91f50031b7f05485ffcabb7cfd59",
+      "beforeFog": 0.013,
+      "afterFog": 0.028
+    },
+    {
+      "name": "02-atrium",
+      "position": [
+        -5.8,
+        1.65,
+        2
+      ],
+      "target": [
+        -60,
+        1.5,
+        1.5
+      ],
+      "item": null,
+      "beforeSHA256": "65704a77a725042dd644ce597d589e9bd063f82df9e4687fa7191b9da1039936",
+      "afterSHA256": "9c56507ca17abb7d28cf69861a7ac36b40a195f127d0546511eea937e2db2bab",
+      "beforeFog": 0.013,
+      "afterFog": 0.028
+    },
+    {
+      "name": "03-lower-hall",
+      "position": [
+        -18,
+        -1.55,
+        5
+      ],
+      "target": [
+        -4,
+        0,
+        5
+      ],
+      "item": "cell_key",
+      "beforeSHA256": "4ffb4a180e84ba80c6a6c2da1e2cc7b1978a303e4064aa4996c1e66a473e3a69",
+      "afterSHA256": "6426e441a698c67e70a95d7993ea307d77c9f8598a13ae7f8d519c6a85663303",
+      "beforeFog": 0.013,
+      "afterFog": 0.028
+    },
+    {
+      "name": "04-gloved-screwdriver",
+      "position": [
+        -6.1,
+        1.6,
+        -5.4
+      ],
+      "target": [
+        -6,
+        1.45,
+        -1
+      ],
+      "item": "screwdriver",
+      "beforeSHA256": "c0928d934c1e10f5f13dbf9b721b184db4052785f4cba050bbdf4ebd2044c755",
+      "afterSHA256": "812eb9d0f2151470c798011e4d776c4c25d95d94035dc3ac1072d7e3bcaa795a",
+      "beforeFog": 0.013,
+      "afterFog": 0.028
+    },
+    {
+      "name": "05-gloved-key",
+      "position": [
+        -12.5,
+        1.6,
+        -8.5
+      ],
+      "target": [
+        -10.5,
+        1.3,
+        -2
+      ],
+      "item": "cell_key",
+      "beforeSHA256": "85b4995c1d2fc3c17954236f8449ac9c1987c1dfaa3c7b77221bf0a53c833f93",
+      "afterSHA256": "de700bf05ab3b73399790824f080bd68bfb33b04b408145b7ad0d4fb170088f0",
+      "beforeFog": 0.013,
+      "afterFog": 0.028
+    },
+    {
+      "name": "06-mobile-inventory",
+      "position": [
+        -6.5,
+        1.65,
+        0
+      ],
+      "target": [
+        -65,
+        1.4,
+        4
+      ],
+      "item": "screwdriver",
+      "beforeSHA256": "a0307db84483f996f9f4582575e280d8db7a27f113ad979bffc2195b3351eb38",
+      "afterSHA256": "9edad720bd16e29408083333de7dadf22a855f4a9cc48887dbb07e2c2ce05b2a",
+      "beforeFog": 0.013,
+      "afterFog": 0.028
+    }
+  ],
+  "artifacts": {
+    "web": {
+      "version": "0.16.0",
+      "archive": "Hirodora-0.16.0-offline.zip",
+      "html": "Hirodora-0.16.0.html",
+      "sha256": "ae885ef1578e80493c9512b1b9ccadcb8988bf24341d85fdaceee2a82f2dd5b4",
+      "bytes": 22394151
+    },
+    "android": {
+      "version": "0.16.0",
+      "file": "Hirodora-0.16.0-android.apk",
+      "bytes": 22801298,
+      "sha256": "98d5748f9a3b195ceae8aff8b908b3307ed3cb31ff74cb0aac4c6c9f40c2f0d7",
+      "certificateSHA256": "d7175da40c348c91e8a8663635d3a130115aba916e5ce889e40b646c009f33ca",
+      "minAndroid": "8.0 (API 26)",
+      "targetApi": 35,
+      "architecture": "Universal; uses installed Android System WebView",
+      "distribution": "Signed release APK; offline assets included; no network permission"
+    }
+  },
+  "limits": [
+    "Browser runs use SwiftShader, not physical phone GPUs.",
+    "Before screenshot bytes remain local; published v15 images provide the atrium/driver comparisons.",
+    "Latest status per case includes explicit focused reruns; see individual run statistics."
+  ]
+}

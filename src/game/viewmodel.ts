@@ -3,6 +3,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
 import { createSidearm } from "./sidearm";
 import type { ItemId } from "./types";
+import { gripStyle, poseGrip } from "./grip";
 import armURL from "../assets/guards/first-person-arm.glb";
 
 /** A separate stable-FOV scene keeps the arm readable on wide mobile screens. */
@@ -14,6 +15,7 @@ export class FirstPersonView {
   private hand?: THREE.Object3D;
   private items = new Map<ItemId, THREE.Object3D>();
   private selected: ItemId | null = null;
+  private rest = new Map<string, THREE.Quaternion>();
   private transition = 0;
   private disposed = false;
   private shared = new Set<
@@ -39,43 +41,53 @@ export class FirstPersonView {
     this.root.add(this.arm);
     const forearm = this.arm.getObjectByName("RightForeArm")!;
     this.arm.updateMatrixWorld(true);
-    const parentQ = forearm
-      .parent!.getWorldQuaternion(new THREE.Quaternion())
-      .invert();
-    forearm.quaternion.setFromUnitVectors(
-      new THREE.Vector3(0, 1, 0),
-      new THREE.Vector3(0.12, 0.22, -1).normalize().applyQuaternion(parentQ),
-    );
     this.hand = this.arm.getObjectByName("RightHand")!;
-    for (const finger of ["Thumb", "Index", "Middle", "Ring", "Pinky"])
-      for (let i = 1; i <= 3; i++) {
-        const bone = this.arm.getObjectByName("RightHand" + finger + i);
-        bone?.quaternion.multiply(
-          new THREE.Quaternion().setFromEuler(
-            new THREE.Euler(
-              finger === "Thumb" ? 0.85 : i === 1 ? 1.25 : 1.45,
-              0,
-              0,
-            ),
-          ),
-        );
-      }
+    // Orient the whole forearm, not a bent wrist. Local Z runs across the palm.
+    const y = new THREE.Vector3(-0.3, 0.28, -1).normalize();
+    const x = new THREE.Vector3()
+      .crossVectors(y, new THREE.Vector3(-0.15, 1, 0.1))
+      .normalize();
+    const z = new THREE.Vector3().crossVectors(x, y).normalize();
+    const desired = new THREE.Quaternion().setFromRotationMatrix(
+      new THREE.Matrix4().makeBasis(x, y, z),
+    );
+    forearm.quaternion
+      .copy(forearm.parent!.getWorldQuaternion(new THREE.Quaternion()).invert())
+      .multiply(desired)
+      .multiply(this.hand.quaternion.clone().invert());
+    this.arm.traverse((bone) => {
+      if (/^RightHand/.test(bone.name))
+        this.rest.set(bone.name, bone.quaternion.clone());
+    });
+    poseGrip(this.arm, this.rest, "power");
     this.arm.updateMatrixWorld(true);
     const wrist = this.hand.getWorldPosition(new THREE.Vector3());
-    this.arm.position.add(new THREE.Vector3(0.25, -0.25, -0.52).sub(wrist));
+    this.arm.position.add(new THREE.Vector3(0.24, -0.29, -0.57).sub(wrist));
     const driver = this.normalizeTool(screwdriver, true);
-    driver.position.set(0, 0.17, 0.035);
+    driver.rotation.x += Math.PI / 2;
+    // Handle crosses the curled fingers; the shaft exits on the thumb side.
+    driver.position.set(-0.028, 0.11, 0.09);
     this.hand.add(driver);
     this.items.set("screwdriver", driver);
     const key = this.normalizeTool(keyTemplate, false);
-    key.rotation.x = Math.PI / 2;
-    key.position.set(0, 0.12, 0.025);
+    key.scale.setScalar(0.55);
+    key.rotation.z = -Math.PI / 2;
+    key.position.set(-0.054, 0.15, 0.033);
     this.hand.add(key);
     for (const id of ["cell_key", "small_key", "master_key_c"] as ItemId[])
       this.items.set(id, key);
-    const pistol = createSidearm().root;
-    pistol.rotation.x = Math.PI / 2;
-    pistol.position.set(0, 0.07, 0.025);
+    const sidearm = createSidearm(),
+      pistol = sidearm.root;
+    sidearm.flash.visible = false;
+    pistol.quaternion.setFromRotationMatrix(
+      new THREE.Matrix4().makeBasis(
+        new THREE.Vector3(-1, 0, 0),
+        new THREE.Vector3(0, 0, 1),
+        new THREE.Vector3(0, 1, 0),
+      ),
+    );
+    pistol.position.set(-0.028, 0.12, 0.027);
+    pistol.getObjectByProperty("type", "PointLight")?.removeFromParent();
     this.hand.add(pistol);
     this.items.set("dart_pistol", pistol);
     // Remaining tools are separate authored profiles, never inventory-card images.
@@ -95,7 +107,8 @@ export class FirstPersonView {
         ),
         metal,
       );
-      tube.position.set(0, 0.05, 0.03);
+      tube.rotation.x = Math.PI / 2;
+      tube.position.set(-0.028, 0.11, -0.04);
       this.hand!.add(tube);
       this.items.set(id, tube);
     };
@@ -117,10 +130,30 @@ export class FirstPersonView {
       "steel_wool",
       "rubber_washer",
     ] as ItemId[]) {
-      const source = pickups.get(`${id}_pickup`);
+      const pickup = pickups.get(`${id}_pickup`);
+      // Pickup silhouettes were deliberately enlarged for floor visibility.
+      // Hold one active pick, not the whole two-pick display. The legacy spoon
+      // pickup is only a marker; use the authored spoon profile below instead.
+      const source =
+        id === "spoon"
+          ? undefined
+          : id === "lockpick"
+            ? pickup?.children[0]
+            : pickup;
       if (source) {
         const held = this.normalizeTool(source, true);
-        held.position.set(0, 0.1, 0.03);
+        held.rotation.x += Math.PI / 2;
+        const scales: Partial<Record<ItemId, number>> = {
+          pipe: 0.5,
+          stethoscope: 0.5,
+          lockpick: 0.5,
+          rubber_washer: 0.25,
+          steel_wool: 0.3,
+        };
+        held.scale.setScalar(scales[id] ?? 1);
+        if (id === "lockpick" || id === "rubber_washer")
+          held.position.set(-0.054, 0.13, 0.055);
+        else held.position.set(-0.028, 0.11, id === "steel_wool" ? 0 : 0.055);
         this.hand.add(held);
         this.items.set(id, held);
         continue;
@@ -136,7 +169,8 @@ export class FirstPersonView {
         bowl.position.y = 0.215;
         bowl.scale.set(0.7, 1, 0.22);
         group.add(handle, bowl);
-        group.position.z = 0.03;
+        group.rotation.x = Math.PI / 2;
+        group.position.set(-0.028, 0.11, -0.07);
         this.hand.add(group);
         this.items.set(id, group);
       } else if (id === "rubber_washer") {
@@ -144,7 +178,8 @@ export class FirstPersonView {
           new THREE.TorusGeometry(0.025, 0.009, 8, 20),
           new THREE.MeshStandardMaterial({ color: 0x232522, roughness: 0.96 }),
         );
-        ring.position.set(0, 0.12, 0.04);
+        ring.rotation.y = Math.PI / 2;
+        ring.position.set(-0.04, 0.15, 0.025);
         this.hand.add(ring);
         this.items.set(id, ring);
       } else
@@ -154,7 +189,7 @@ export class FirstPersonView {
             new THREE.Vector3(0, 0, 0),
             new THREE.Vector3(0, id === "pipe" ? 0.34 : 0.2, 0),
           ],
-          id === "pipe" ? 0.022 : 0.006,
+          id === "pipe" ? 0.022 : id === "silencer" ? 0.025 : 0.006,
         );
     }
     for (const item of new Set(this.items.values())) item.visible = false;
@@ -201,6 +236,7 @@ export class FirstPersonView {
     if (item !== this.selected) {
       this.selected = item;
       this.transition = 0.22;
+      if (this.arm) poseGrip(this.arm, this.rest, gripStyle(item));
     }
     this.transition = Math.max(0, this.transition - dt);
     this.root.visible = visible && !!item && this.items.has(item);

@@ -1,6 +1,18 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { parseLayout, presetLayout, placementStyle } from "./hud-layout";
+import {
+  parseLayout,
+  presetLayout,
+  placementStyle,
+  pocketBottom,
+} from "./hud-layout";
+
+test("mobile pockets dock below compact joystick and lift above large or mirrored controls", () => {
+  assert.equal(pocketBottom(presetLayout(), 450), 4);
+  assert.equal(pocketBottom(presetLayout(), 390), 4);
+  assert.ok(pocketBottom(presetLayout("left"), 360) > 80);
+  assert.ok(pocketBottom(presetLayout("large"), 360) > 80);
+});
 
 test("damaged or unavailable stored HUD restores a valid default", () => {
   assert.deepEqual(parseLayout("{broken"), presetLayout());

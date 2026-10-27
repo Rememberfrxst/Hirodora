@@ -2,6 +2,9 @@ import { test, expect } from "@playwright/test";
 test("reference menu has three choices and settings tabs change real persisted values", async ({
   page,
 }) => {
+  // This persistence check initializes the full WebGL scene twice. Allow
+  // software-rendered CI more total time without relaxing individual actions.
+  test.setTimeout(180_000);
   await page.goto("/");
   await page.waitForFunction(() => window.__HIRODORA__?.guardsReady);
   const menu = page.getByRole("main", { name: "Hirodora main menu" });

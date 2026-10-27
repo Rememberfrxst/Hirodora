@@ -4,6 +4,9 @@ import { test, expect } from "@playwright/test";
 test("restart confirmation and new game reset opening progress through the UI", async ({
   page,
 }) => {
+  // Multiple complete WebGL initializations/reloads can exceed two minutes on
+  // software rendering. Keep action/assertion timeouts unchanged.
+  test.setTimeout(180_000);
   await page.goto("/");
   await page.locator("[data-start]").click();
   await skipOpening(page);

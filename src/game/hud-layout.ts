@@ -97,3 +97,19 @@ export function placementStyle(p: ControlPlacement) {
     transform: "translate(-50%, -50%)",
   };
 }
+/** Dock pockets at the bottom left when possible; lift above the left controls
+ * for large/mirrored/custom layouts so item taps cannot become movement input. */
+export function pocketBottom(layout: HudLayout, height: number) {
+  const usable = Math.max(1, height - 16);
+  const left = Object.values(layout.controls)
+    .filter((c) => c.x < 48)
+    .map((c) => {
+      const half = c.size / 2;
+      const center =
+        8 +
+        Math.max(half + 4, Math.min(usable - half - 4, (c.y / 100) * usable));
+      return { top: center - half, bottom: center + half };
+    });
+  if (left.every((c) => c.bottom + 3 <= height - 48)) return 4;
+  return Math.max(4, height - Math.min(...left.map((c) => c.top)) + 8);
+}

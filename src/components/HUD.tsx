@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
 import { GameEngine, ALL_ITEMS } from "../game/engine";
-import { loadLayout, placementStyle } from "../game/hud-layout";
+import { loadLayout, placementStyle, pocketBottom } from "../game/hud-layout";
 import { ControlIcon, HintIcon } from "./ControlIcon";
+import { ItemIcon } from "./ItemIcon";
 import {
   Eye,
   Volume2,
@@ -65,6 +66,9 @@ export function HUD({ engine, onPause }: Props) {
     setStick([0, 0]);
     engine.setTouchMove(0, 0);
   };
+  // Keep mobile quick slots above any saved left-side touch controls, including
+  // mirrored/custom layouts, rather than stealing the joystick's hit targets.
+  const quickBottom = pocketBottom(layout, window.innerHeight);
   const moveStick = (clientX: number, clientY: number) => {
     if (!joystick.current) return;
     const x = (clientX - joystick.current.x) / joystick.current.radius,
@@ -250,6 +254,46 @@ export function HUD({ engine, onPause }: Props) {
           )}
         </button>
       </div>
+      <nav
+        className={"pocket-strip" + (engine.mobile ? " mobile-pockets" : "")}
+        aria-label="Carried items"
+        style={
+          engine.mobile
+            ? { bottom: `max(env(safe-area-inset-bottom), ${quickBottom}px)` }
+            : undefined
+        }
+      >
+        {!engine.mobile && (
+          <button
+            className="pocket-pause"
+            onClick={onPause}
+            aria-label="Open pause menu"
+          >
+            <kbd>ESC</kbd>
+            <span>PAUSE MENU</span>
+          </button>
+        )}
+        <div className="pocket-items">
+          {engine.inventory.map((id) => {
+            const item = engine.getItem(id),
+              selected = engine.equippedItem === id;
+            return (
+              <button
+                key={id}
+                className="pocket-item"
+                aria-label={`${selected ? "Unequip" : "Equip"} ${item.name}`}
+                aria-pressed={selected}
+                title={item.name}
+                disabled={item.category === "document"}
+                onClick={() => engine.equipItem(selected ? null : id)}
+              >
+                <ItemIcon id={id} />
+                <span className="pocket-name">{item.name}</span>
+              </button>
+            );
+          })}
+        </div>
+      </nav>
       {satchel && (
         <div className="satchel-panel">
           <header>

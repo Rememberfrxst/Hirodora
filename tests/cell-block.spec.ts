@@ -14,7 +14,7 @@ test("48 independent wide gates frame both floors and all rows load real fixture
     const cells = e.worldData.cells;
     const cuts = [];
     for (let x = -67; x < -4; x += 0.5)
-      for (const z of [-1, 0, 14, 15])
+      for (const z of [-1, 0, 10, 11])
         if (
           e.worldData.colliders.some(
             (b: any) =>

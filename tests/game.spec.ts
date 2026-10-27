@@ -326,7 +326,7 @@ test("authored environment loads locally and graphics presets preserve collision
             position: [
               interaction.position[0],
               interaction.position[1],
-              interaction.position[2] + 11,
+              interaction.position[2] + 7,
             ],
           }
         : interaction,
@@ -446,7 +446,7 @@ test("tool requirements, all four puzzles, crafting, checkpoints and Brotherhood
   await approach(page, "master_c_door_interact", [0.2, 0]);
   expect(await page.evaluate(() => window.__HIRODORA__.stats.act)).toBe(2);
   await approach(page, "lockpick_pickup", [0, 3.5]);
-  await approach(page, "stethoscope_pickup", [-8, 20]);
+  await approach(page, "stethoscope_pickup", [-8, 16]);
   await approach(page, "pipe_pickup", [4.8, 8]);
   await approach(page, "steel_wool_pickup", [6.1, 8]);
   await approach(page, "rubber_washer_pickup", [7.5, 8]);
@@ -538,7 +538,7 @@ test("closed walls block guard sight and movement; all required rooms have route
     const blocks = internal.blockers();
     const goals: [number, number][] = [
       [-11.4, -4],
-      [-8, 20],
+      [-8, 16],
       [0, 4],
       [6, 5],
       [11.3, -9],

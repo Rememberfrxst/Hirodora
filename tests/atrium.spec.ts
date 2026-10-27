@@ -93,7 +93,7 @@ test("stairs support actual player movement, gates are independent, and equipped
     e.syncWorld();
     const neighborSame = g48.rotation.y === before;
     // Walk the east staircase in real move() calls, then onto the lower hall.
-    e.playerPos = [-5.5, 0, 7];
+    e.playerPos = [-5.5, 0, 5];
     e.playerRotY = 0;
     e.keys.KeyA = true;
     for (let i = 0; i < 300; i++) e.move(0.016);
@@ -156,23 +156,23 @@ test("guards route down stairs and cannot capture a player through the gallery f
     const e = window.__HIRODORA__ as any;
     cancelAnimationFrame(e.frameId);
     e.overlayOpen = true;
-    e.playerPos = [-35, -3.2, 7];
+    e.playerPos = [-35, -3.2, 5];
     e.worldData.guards.forEach((other: any) => {
       other.state = "knocked_out";
       other.stateTimer = 100;
     });
     const g = e.worldData.guards[1];
-    g.position = [-6, 0, 7];
+    g.position = [-6, 0, 5];
     g.state = "searching";
     g.suspicion = 55;
     g.stateTimer = 12;
-    g.investigationTarget = [-15, -3.2, 7];
-    g.lastKnownPosition = [-15, -3.2, 7];
-    g.lastHeardPosition = [-15, -3.2, 7];
+    g.investigationTarget = [-15, -3.2, 5];
+    g.lastKnownPosition = [-15, -3.2, 5];
+    g.lastHeardPosition = [-15, -3.2, 5];
     for (let i = 0; i < 250 && g.position[1] > -3; i++) e.updateGuards(0.05);
     const y = g.position[1];
-    e.playerPos = [-5, -3.2, 7];
-    g.position = [-5, 0, 7];
+    e.playerPos = [-5, -3.2, 5];
+    g.position = [-5, 0, 5];
     g.state = "chase";
     g.suspicion = 100;
     g.lastKnownPosition = [...e.playerPos];

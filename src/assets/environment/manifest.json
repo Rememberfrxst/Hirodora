@@ -1,5 +1,5 @@
 {
-  "authoring": "scripts/author-cell-assets.py + scripts/prepare-environment.mjs + scripts/upgrade-release-assets.mjs (v0.6)",
+  "authoring": "scripts/author-cell-assets.py + scripts/prepare-cell-v10.mjs (v0.10); retained licensed metal/wool maps from earlier pipeline",
   "sources": {
     "godot": "b761b4cd5718a7118f2c95eb55f181d0a5f004f1",
     "tps": "a82f15448e9b015440d3bbdf5e10801b260c4e9f",
@@ -21,23 +21,23 @@
   "assets": [
     {
       "name": "cell-props.glb",
-      "bytes": 542100,
-      "sha256": "b0beb68d3dc23fbfeb281bfd2165670896113483269427c8e1cf71ac1dabf400"
+      "bytes": 639736,
+      "sha256": "80ef5eb73a806975c5786b773f9aeb933c568d0b968a14c00265bf1d1bf9df5f"
     },
     {
       "name": "masonry-albedo.webp",
-      "bytes": 336958,
-      "sha256": "150af90ef503f02bba783accc0887b71f4bf5edffb86468d676c6ef86cd58c5a"
+      "bytes": 340222,
+      "sha256": "c486fc62ee83840093826fbd5433e96ab7618545c2a6b94931305ba19bfa1626"
     },
     {
       "name": "masonry-normal.webp",
-      "bytes": 1459300,
-      "sha256": "cc9e9ee6dc62e903cb1ef094edd40ecf43c2c67ef9f856ae168a6491a2e02f32"
+      "bytes": 1053488,
+      "sha256": "d6e067073a1256f1d18c4bac5f0f9fd41f65d1cff4ec6b51b49a051a0c4c66cc"
     },
     {
       "name": "masonry-orm.webp",
-      "bytes": 300216,
-      "sha256": "cddcafbedbdd1b461cdbb1a38a2fd986e1257d15ee922cfa9782b9c5f7ac6330"
+      "bytes": 292162,
+      "sha256": "a0da00204f38e25007e20e9f09e9380a8783d9789e403263fb417edb4943dbb5"
     },
     {
       "name": "metal-albedo.webp",
@@ -56,18 +56,18 @@
     },
     {
       "name": "concrete-albedo.webp",
-      "bytes": 322934,
-      "sha256": "8ebae5132802384876e2777ebf8d1002eb780effa55b9a154b36c7e22a87ae4e"
+      "bytes": 365368,
+      "sha256": "78e311efcac809a499653906150077be50cc971e85c6acd6bb2e425d2a6cce78"
     },
     {
       "name": "concrete-normal.webp",
-      "bytes": 906308,
-      "sha256": "dabc6818b25262db1ea4dd64ac3b8ffe2d2857298ef17f7dc0713d5e458975b5"
+      "bytes": 944940,
+      "sha256": "3e1a9ba2089b0e2c5f0ce39b0b71307abafef50c89552d5d961e8fdab4d78b89"
     },
     {
       "name": "concrete-orm.webp",
-      "bytes": 279568,
-      "sha256": "8625ae769ccc7f8ad1e1c123bea842da0fd882f35f5fa1dee1567b1eab9ce468"
+      "bytes": 288006,
+      "sha256": "1e2dc487e4be5d2bf88750f1569716bb1f762f1071e54fe4c7a66824384fa3f4"
     },
     {
       "name": "wool-albedo.webp",
@@ -91,13 +91,18 @@
     },
     {
       "name": "ceiling-albedo.webp",
-      "bytes": 299850,
-      "sha256": "7203819c8dc0056138f487fc75f4d596af4a928a1252fa3cb19c05acba349dfa"
+      "bytes": 225820,
+      "sha256": "9ba9a00e8f915719c7a9f2dd29d42d1d28ff200d354557d2bd3cbbc749674b05"
     }
   ],
   "referenceAdaptation": {
     "baseline": "cd3b1eed71362c424552e513ad6e887b6de149e9",
     "source": "Existing p0ss / Georges Grondin photographs, CC-BY 3.0; CONCRETE-LICENSE.txt",
-    "changes": "Cool grey block masonry with authored recessed joint lines and normal slopes; unjointed photographic ceiling; reduced floor saturation. These are artist adaptations, not a new scanned asset."
+    "changes": "Cool grey block masonry with authored recessed joint lines and normal slopes; unjointed photographic ceiling; reduced floor saturation. These are artist adaptations, not a new scanned asset.",
+    "historical": true
+  },
+  "cellV10": {
+    "source": "Project-authored Blender meshes; existing licensed concrete photographs and wool/metal maps",
+    "changes": "Welded rectangular steel bunk with unanchored skid feet, actual baked cloth drape, remodeled hollow ceramic bowl/rim/trap, serviceable capped flushometer, mounting lugs, sink drain perforations. Photo concrete grading and restrained normal/ORM adaptations; no new scanned-asset claim."
   }
 }

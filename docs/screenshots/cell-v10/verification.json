@@ -1,0 +1,148 @@
+{
+  "version": "0.10.0",
+  "baseline": "baefbd5a2c886543e43e746c40499c4b29fff6fe",
+  "tests": {
+    "typecheck": "passed",
+    "unitAssetChecks": 51,
+    "fullBrowserRun": {
+      "passed": 28,
+      "total": 28
+    },
+    "afterFinalVisualSteeringFix": {
+      "passed": 8,
+      "total": 8,
+      "suites": [
+        "opening",
+        "object-audio"
+      ]
+    },
+    "uniqueBrowserScenariosVerified": 29,
+    "productionOfflineBuild": "passed",
+    "androidAssembleLintAndSignature": "passed"
+  },
+  "capture": {
+    "identicalCameras": true,
+    "identicalGameplayBoundsAndInteractions": true,
+    "errors": [],
+    "renderCounters": [
+      {
+        "name": "cell47",
+        "before": {
+          "calls": 239,
+          "triangles": 534602
+        },
+        "after": {
+          "calls": 250,
+          "triangles": 556156
+        }
+      },
+      {
+        "name": "bunk",
+        "before": {
+          "calls": 222,
+          "triangles": 527060
+        },
+        "after": {
+          "calls": 226,
+          "triangles": 546916
+        }
+      },
+      {
+        "name": "toilet",
+        "before": {
+          "calls": 318,
+          "triangles": 851734
+        },
+        "after": {
+          "calls": 340,
+          "triangles": 916040
+        }
+      },
+      {
+        "name": "sink",
+        "before": {
+          "calls": 334,
+          "triangles": 869192
+        },
+        "after": {
+          "calls": 357,
+          "triangles": 933754
+        }
+      },
+      {
+        "name": "window",
+        "before": {
+          "calls": 232,
+          "triangles": 533206
+        },
+        "after": {
+          "calls": 237,
+          "triangles": 554200
+        }
+      },
+      {
+        "name": "cell46",
+        "before": {
+          "calls": 251,
+          "triangles": 742224
+        },
+        "after": {
+          "calls": 258,
+          "triangles": 739432
+        }
+      },
+      {
+        "name": "corridor",
+        "before": {
+          "calls": 330,
+          "triangles": 667505
+        },
+        "after": {
+          "calls": 333,
+          "triangles": 678257
+        }
+      }
+    ]
+  },
+  "audio": {
+    "decodedSamples": 69,
+    "decodeFailures": [],
+    "activeSourcesAfterEachRelease": [
+      {
+        "action": "bed_push",
+        "count": 0
+      },
+      {
+        "action": "toilet_bolts",
+        "count": 0
+      },
+      {
+        "action": "toilet_move",
+        "count": 0
+      }
+    ],
+    "humanListeningReview": "pending"
+  },
+  "apk": {
+    "version": "0.10.0",
+    "file": "Hirodora-0.10.0-android.apk",
+    "bytes": 12080617,
+    "sha256": "70d1f34df5c2eda2498af6dec81924de997c474c4b2111fdc268ab779ea97567",
+    "certificateSHA256": "d7175da40c348c91e8a8663635d3a130115aba916e5ce889e40b646c009f33ca",
+    "minAndroid": "8.0 (API 26)",
+    "targetApi": 35,
+    "architecture": "Universal; uses installed Android System WebView",
+    "distribution": "Signed release APK; offline assets included; no network permission",
+    "smokeMatchesReleasedHash": true,
+    "servedLocalAssets": 90,
+    "missing": [],
+    "scriptErrors": [],
+    "serviceWorkers": 0
+  },
+  "remaining": [
+    "Physical phone performance/thermal and WebView QA",
+    "Calibrated human listening review",
+    "Broader Safari/Firefox coverage",
+    "Previously unavailable Rock Wall maps and original action PNGs"
+  ]
+}

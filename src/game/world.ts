@@ -250,7 +250,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   const plaster = concrete.clone();
   plaster.color.set(0xa6aaa0);
   const paint = stone.clone();
-  paint.color.set(0xa7aea0);
+  paint.color.set(0x727b65);
   const floor = environment.floor;
   const wall = (size: number[], pos: number[], mat: THREE.Material = stone) => {
     const mesh = box(staticWorld, size, pos, mat);
@@ -435,15 +435,21 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   prop(buildLegacyBunkBounds(), -13, -8.4);
   const bed = environment.add("Bunk", -4.25, -0.05, -8.4, Math.PI);
   environment.add("Bunk", -13, -0.05, -8.4, Math.PI);
-  const toilet = environment.add("Toilet", -8.05, -0.05, -9.7, Math.PI / 2);
+  const toilet = environment.add("Toilet", -8.05, -0.05, -9.7, -Math.PI / 2);
   const bolts: THREE.Mesh[] = [];
   for (const x of [-0.22, 0.22])
     for (const z of [-0.2, 0.2]) {
       const head = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.035, 0.035, 0.04, 6),
+        new THREE.CylinderGeometry(0.018, 0.018, 0.018, 6),
         iron,
       );
       head.position.set(x, 0.075, z);
+      const slot = new THREE.Mesh(
+        new THREE.BoxGeometry(0.021, 0.0015, 0.003),
+        iron,
+      );
+      slot.position.y = 0.0095;
+      head.add(slot);
       toilet.add(head);
       bolts.push(head);
     }

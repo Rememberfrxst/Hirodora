@@ -183,6 +183,7 @@ export default function App() {
               <div hidden={engine.gameState !== "playing"}>
                 <MiniGames
                   miniGame={engine.activeMiniGame}
+                  sourcePosition={engine.puzzleAudioPosition}
                   paused={engine.gameState !== "playing" || portrait}
                   onComplete={(success) => engine.completeMiniGame(success)}
                   onCancel={() => engine.cancelMiniGame()}

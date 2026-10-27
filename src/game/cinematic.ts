@@ -97,7 +97,7 @@ export class OpeningCinematic {
       )
         sound.playFootstep(false, false, "concrete", f.guard);
       if (t >= 0.2 && !this.opened) {
-        sound.playDoorOpen();
+        sound.playDoorOpen([-6, 0, -2], false, "intro-gate");
         this.opened = true;
       }
       if (t >= 2.5 && !this.warned) {
@@ -119,8 +119,8 @@ export class OpeningCinematic {
         this.landed = true;
       }
       if (t >= 8.9 && !this.closed) {
-        sound.playDoorOpen();
-        sound.playLockClick(true);
+        sound.playDoorOpen([-6, 0, -2], true, "intro-gate");
+        sound.playLockClick(true, [-6, 1.1, -2]);
         this.closed = true;
       }
     }

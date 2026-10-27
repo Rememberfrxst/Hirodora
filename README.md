@@ -8,13 +8,13 @@
 
 **Some walls keep you in. These walls keep a secret.**
 
-**v0.9.0 · Stable Frames / Spatial Stealth AI**
+**v0.10.0 · Ceramic Jail / Recorded Object Foley**
 
 First-person prison escape · Recorded spatial audio · New Cell 47 → 46 chapter
 
-**[↓ DOWNLOAD ANDROID APK — v0.9.0](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.9.0-android.apk)**
+**[↓ DOWNLOAD ANDROID APK — v0.10.0](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.10.0-android.apk)**
 
-[Offline web ZIP](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.9.0-offline.zip) · [Single-file HTML](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.9.0.html) · [APK checksums](downloads/android-latest.json) · [Android build and signing](docs/ANDROID.md)
+[Offline web ZIP](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.10.0-offline.zip) · [Single-file HTML](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.10.0.html) · [APK checksums](downloads/android-latest.json) · [Android build and signing](docs/ANDROID.md)
 
 [The experience](#the-experience) · [Play on mobile](#play-on-mobile) · [Development](#development) · [Quality](#quality-and-release-status)
 
@@ -22,7 +22,24 @@ First-person prison escape · Recorded spatial audio · New Cell 47 → 46 chapt
 
 </div>
 
-## Stable frames · smarter stealth enemies · 0.9
+## Ceramic jail · object-matched sound · 0.10
+
+Cell 47 now uses an authored welded box-section bunk, loose skid feet, corrected mattress normals and **offline cloth-simulated blankets**. The porcelain toilet has a real hollow bowl, rolled rim, visible trap, bolted mounting flange and a capped wall-facing flushometer. Sink details, localized plumbing damp and photographic painted-concrete surfaces carry the old institutional-jail direction. The shared GLB also updates surrounding cells; this is not a new room-layout or story expansion.
+
+**Nine new CC0 foley clips** bring the local library to 69 recordings. Bed movement, ceramic scraping and tool work follow the actual object position and have start/move/finish/release lifecycles. Loops fade out within 90 ms of release; pause/reset clear them. Recorded prison-door closing and lock mechanisms replace generic clanks. Bars transmit sound; solid walls attenuate it. Guard speech has priority at the mobile voice cap. Existing quiet/hard-push AI noise values are unchanged; idle Cell 47 stays silent.
+
+<table>
+<tr><td width="50%"><img src="docs/screenshots/cell-v10/before/cell47.png" alt="0.9 Cell 47 at the matched camera" /></td><td width="50%"><img src="docs/screenshots/cell-v10/after/cell47.png" alt="0.10 old ceramic jail, revised GLB furniture and photographic surfaces at the same camera" /></td></tr>
+<tr><td align="center"><sub>BEFORE · 0.9</sub></td><td align="center"><sub>AFTER · 0.10 · IDENTICAL CAMERA</sub></td></tr>
+<tr><td><img src="docs/screenshots/cell-v10/before/bunk.png" alt="Previous tubular bunk and formula-displaced blanket" /></td><td><img src="docs/screenshots/cell-v10/after/bunk.png" alt="Welded box-section frame, unanchored skids and physically baked cloth drape" /></td></tr>
+<tr><td><img src="docs/screenshots/cell-v10/before/toilet.png" alt="Previous toilet bowl and room-facing oversized pipework" /></td><td><img src="docs/screenshots/cell-v10/after/toilet.png" alt="Remodeled porcelain bowl, mounting flange, scaled bolts and wall-facing disconnected flushometer" /></td></tr>
+</table>
+
+[Before audio preview](docs/screenshots/cell-v10/audio/before-object-actions.webm) · [After audio preview](docs/screenshots/cell-v10/audio/after-object-actions.webm) · [Implementation, sources and verification limits](docs/CELL-V10.md)
+
+Previews record the real game mixer during staged bed/bolt/toilet interactions; screenshots are real browser renders, not generated mockups. No flush, wall-knock or sink-tap gameplay was added. Detailed subjective listening, physical-phone performance and broader browser QA remain open; photorealistic/AAA parity is not claimed.
+
+### Previous stable-frame and stealth milestone · 0.9
 
 Adaptive-resolution changes now resize **before** rendering, eliminating the reproducible cleared/black gameplay frame. Practical light selection crossfades with hysteresis; the corridor shadow fixture no longer teleports when the nearest lamp changes. Paused settings and viewport resizes also redraw immediately.
 
@@ -193,14 +210,14 @@ The gallery shows actual v0.4.0 browser renders. Front/side/detail showcases sta
 
 ### Android APK — recommended
 
-**[Download Hirodora v0.9.0 APK](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.9.0-android.apk)**. Install from Files, then launch Hirodora. Android 8.0+ and an updated System WebView are required. The APK automatically opens in landscape; it includes the complete offline game. It uses the existing signing identity and versionCode 900; install over 0.6/0.7/0.8 to retain app-local saves and settings.
+**[Download Hirodora v0.10.0 APK](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.10.0-android.apk)**. Install from Files, then launch Hirodora. Android 8.0+ and an updated System WebView are required. The APK automatically opens in landscape; it includes the complete offline game. It uses the existing signing identity and versionCode 1000; install over 0.6/0.7/0.8/0.9 to retain app-local saves and settings.
 
 ### Browser offline edition
 
-**[Download Hirodora v0.9.0 web ZIP](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.9.0-offline.zip)**
+**[Download Hirodora v0.10.0 web ZIP](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.10.0-offline.zip)**
 
 1. Download the ZIP from the link above and extract it in your device’s Files app.
-2. Open **`Hirodora-0.9.0.html` in a full WebGL 2 browser**, such as Chrome on Android. If your file viewer displays text or blocks scripts, choose “Open with” a full browser. File handling depends on the device/browser.
+2. Open **`Hirodora-0.10.0.html` in a full WebGL 2 browser**, such as Chrome on Android. If your file viewer displays text or blocks scripts, choose “Open with” a full browser. File handling depends on the device/browser.
 3. Play in landscape: left joystick to move, drag the scene to look, then use **Jump**, **Crouch / Stand**, **Sprint**, **Interact** and the contextual action prompt. Portrait now shows a Rotate screen and pauses gameplay; rotate back to landscape and tap **Resume escape**. Puzzle progress is kept.
 
 Use **Fullscreen / landscape** on the title screen or pause menu to request fullscreen and landscape on supported Android browsers. Browser security prevents a web game from forcing rotation everywhere: if it remains portrait, disable the phone’s portrait-orientation lock and rotate manually. iPhone/iPad browsers may require manual rotation.
@@ -266,7 +283,7 @@ For an existing system Chromium, set `PLAYWRIGHT_CHROMIUM_EXECUTABLE=/path/to/ch
 
 ### Build and distribute
 
-`npm run build` produces `dist/`, a content-versioned service worker, relative asset paths for GitHub Pages subdirectories, embedded-texture GLBs, PNG app icons and the install manifest. The v0.9 hosted payload is approximately **14.7 MiB**; the build enforces a **100 MiB** maximum. `npm run package:android` creates and verifies the signed Android APK. Exact sizes and checksums are recorded in the download manifests.
+`npm run build` produces `dist/`, a content-versioned service worker, relative asset paths for GitHub Pages subdirectories, embedded-texture GLBs, PNG app icons and the install manifest. The v0.10 hosted payload is approximately **14.7 MiB**; the build enforces a **100 MiB** maximum. `npm run package:android` creates and verifies the signed Android APK. Exact sizes and checksums are recorded in the download manifests.
 
 The quality workflow checks pull requests and pushes, packages the offline HTML, runs browser tests and uploads both builds. Static surfaces are batched, Meshopt/WebP reduce model transfer size, instances share GPU resources, distant animations are throttled and offscreen pose work is skipped. Light selection is throttled, collision bounds are cached and mobile resolution scales down under sustained rendering load. The Pages workflow is manual so publishing remains an explicit release action. Normal builds use committed assets; [rebuilding the officer GLBs](docs/GUARD-ASSETS.md#rebuild-the-assets) is a separate offline-authoring step.
 
@@ -274,8 +291,8 @@ The quality workflow checks pull requests and pushes, packages the offline HTML,
 
 This is a playable chapter distributed as an Android APK and a web build, with automated regression coverage. Physical-device certification is still open.
 
-- **48 asset/logic tests** cover spatial perception, source-memory retention, chase loss/reacquisition, bounded scans, stable lights, sidearm construction, intro ordering, the clothed prisoner GLB, settings validation, HUD layouts, opening objectives, bounded hold progress, audio licenses/hashes, embedded PBR maps, skin weights, clips, animation selection, orientation, stealth, puzzles, crafting, endings, movement and graphics adaptation.
-- **25 browser scenarios** exercise nonblank resolution/preset/resize frames, sight through bars without capture, open-gate pursuit, local hearing during puzzles, skeletal weapon grip, the three-button menu, settings persistence, one-shot cinematic, intro pause/skip/checkpoint hand-off, HUD editing, small-screen spacing, opening/legacy progression, restart/new-game reset, native pause, silent cell ambience, dialogue, saves, collisions, guard AI, rotation and offline play.
+- **51 asset/logic tests** cover object-foley licensing/encoded sample validation, voice priority, identical-camera collision snapshots, spatial perception, source-memory retention, chase loss/reacquisition, bounded scans, stable lights, sidearm construction, intro ordering, the clothed prisoner GLB, settings validation, HUD layouts, opening objectives, bounded hold progress, audio licenses/hashes, embedded PBR maps, skin weights, clips, animation selection, orientation, stealth, puzzles, crafting, endings, movement and graphics adaptation.
+- **29 browser scenarios** exercise toilet/sink parking clearance, action-audio release/follow behavior, silent idle audio, bar/wall acoustics, dialogue voice stealing without AI changes, nonblank resolution/preset/resize frames, sight through bars without capture, open-gate pursuit, local hearing during puzzles, skeletal weapon grip, the three-button menu, settings persistence, one-shot cinematic, intro pause/skip/checkpoint hand-off, HUD editing, small-screen spacing, opening/legacy progression, restart/new-game reset, native pause, silent cell ambience, dialogue, saves, collisions, guard AI, rotation and offline play.
 - The progression integration test uses legal approach-position fixtures with patrols suspended; it is not a full unassisted stealth playthrough.
 - Physical Android/iPhone testing, Safari/Firefox checks, sustained performance testing and player-led difficulty balancing remain release gates.
 

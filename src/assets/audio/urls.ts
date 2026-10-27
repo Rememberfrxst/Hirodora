@@ -1,5 +1,4 @@
 import a0 from './footstep_concrete_000.ogg';
-import gunshot from './guard-gunshot.ogg';
 import a1 from './footstep_concrete_001.ogg';
 import a2 from './footstep_concrete_002.ogg';
 import a3 from './footstep_concrete_003.ogg';
@@ -58,8 +57,17 @@ import a55 from './keys.ogg';
 import a56 from './paper.ogg';
 import a57 from './fabric.ogg';
 import a58 from './hinge.ogg';
-export const audioURLs: Record<string, string> = {
-  'guard-gunshot': gunshot,
+import a59 from './guard-gunshot.ogg';
+import a60 from './bed-creak-0.ogg';
+import a61 from './bed-creak-1.ogg';
+import a62 from './toilet-scrape.ogg';
+import a63 from './gate-close.ogg';
+import a64 from './cell-lock.ogg';
+import a65 from './lock-turn.ogg';
+import a66 from './bolt-ratchet.ogg';
+import a67 from './heavy-bolt.ogg';
+import a68 from './bed-slide.ogg';
+export const audioURLs: Record<string,string> = {
   'footstep_concrete_000': a0,
   'footstep_concrete_001': a1,
   'footstep_concrete_002': a2,
@@ -119,4 +127,14 @@ export const audioURLs: Record<string, string> = {
   'paper': a56,
   'fabric': a57,
   'hinge': a58,
+  'guard-gunshot': a59,
+  'bed-creak-0': a60,
+  'bed-creak-1': a61,
+  'toilet-scrape': a62,
+  'gate-close': a63,
+  'cell-lock': a64,
+  'lock-turn': a65,
+  'bolt-ratchet': a66,
+  'heavy-bolt': a67,
+  'bed-slide': a68,
 };

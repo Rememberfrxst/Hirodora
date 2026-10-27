@@ -659,5 +659,113 @@
     "bytes": 19812,
     "usage": "Opening cinematic pistol shot",
     "changes": "First CZ-52 recording excerpt; leading silence trimmed, mono 48kHz, high-pass, -18 LUFS/-2 dBTP, fade, Vorbis. Archive CC-BY 3.0 terms elected despite CC0 page label."
+  },
+  {
+    "file": "bed-creak-0.ogg",
+    "source": "https://freesound.org/people/richwise/sounds/871185/",
+    "download": "https://cdn.freesound.org/previews/871/871185_1481531-hq.mp3",
+    "author": "richwise",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "c99f330c74350178b5c727a4c23488e928d1253b718574f2727659a89b9d7c2a",
+    "bytes": 21756,
+    "usage": "bed-creak-0",
+    "changes": "HQ preview excerpt 0–2.4s; mono 32 kHz; highpass=f=85,lowpass=f=5500; -23 LUFS target / -3 dBTP; trimmed onset / short fade; Vorbis q4. Ceramic grinding is adapted foley, not a recording of this exact toilet."
+  },
+  {
+    "file": "bed-creak-1.ogg",
+    "source": "https://freesound.org/people/richwise/sounds/871185/",
+    "download": "https://cdn.freesound.org/previews/871/871185_1481531-hq.mp3",
+    "author": "richwise",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "9d844b787e5efd7e834a376cb5251a64bee84ed57243bed2283086bcd81aebb7",
+    "bytes": 21540,
+    "usage": "bed-creak-1",
+    "changes": "HQ preview excerpt 2.7–5.1s; mono 32 kHz; highpass=f=90,lowpass=f=5000; -23 LUFS target / -3 dBTP; trimmed onset / short fade; Vorbis q4."
+  },
+  {
+    "file": "toilet-scrape.ogg",
+    "source": "https://freesound.org/people/Gerent/sounds/558728/",
+    "download": "https://cdn.freesound.org/previews/558/558728_556505-hq.mp3",
+    "author": "Gerent",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "954e9309b09fc684869dcc4d3b4fa7d1880637a6895db2d678212a28215a04db",
+    "bytes": 32130,
+    "usage": "toilet-scrape",
+    "changes": "HQ preview excerpt 0–3.7s; mono 32 kHz; asetrate=42336,aresample=32000,highpass=f=65,lowpass=f=3300; -23 LUFS target / -3 dBTP; 80 ms wrap crossfade for seamless movement loop; Vorbis q4. Ceramic grinding is adapted foley, not a recording of this exact toilet."
+  },
+  {
+    "file": "gate-close.ogg",
+    "source": "https://freesound.org/people/brianbaltar/sounds/528259/",
+    "download": "https://cdn.freesound.org/previews/528/528259_11385110-hq.mp3",
+    "author": "brianbaltar",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "916e007c6bf500bdff1dd69350b92028fd06b1179766f7e7a6c3d82fec249b21",
+    "bytes": 33703,
+    "usage": "gate-close",
+    "changes": "HQ preview excerpt 0–4s; mono 32 kHz; highpass=f=65,lowpass=f=9000; -23 LUFS target / -3 dBTP; trimmed onset / short fade; Vorbis q4. Ceramic grinding is adapted foley, not a recording of this exact toilet."
+  },
+  {
+    "file": "cell-lock.ogg",
+    "source": "https://freesound.org/people/bruno.auzet/sounds/661642/",
+    "download": "https://cdn.freesound.org/previews/661/661642_11519060-hq.mp3",
+    "author": "bruno.auzet",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "c65b58aed300c95311dd12ffa550a257b33696ba81c27119c00245e4c26129f5",
+    "bytes": 28810,
+    "usage": "cell-lock",
+    "changes": "HQ preview excerpt 0–3.5s; mono 32 kHz; highpass=f=80,lowpass=f=9000; -23 LUFS target / -3 dBTP; trimmed onset / short fade; Vorbis q4. Ceramic grinding is adapted foley, not a recording of this exact toilet."
+  },
+  {
+    "file": "lock-turn.ogg",
+    "source": "https://freesound.org/people/colinpoh/sounds/146348/",
+    "download": "https://cdn.freesound.org/previews/146/146348_2090377-hq.mp3",
+    "author": "colinpoh",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "0c2dad29d94c1de5152b2004d91f37206366b92c2945114086a3d56ec342c8f0",
+    "bytes": 35885,
+    "usage": "lock-turn",
+    "changes": "HQ preview excerpt 0–3.7s; mono 32 kHz; highpass=f=85,lowpass=f=8500; -23 LUFS target / -3 dBTP; trimmed onset / short fade; Vorbis q4. Ceramic grinding is adapted foley, not a recording of this exact toilet."
+  },
+  {
+    "file": "bolt-ratchet.ogg",
+    "source": "https://freesound.org/people/tannernet/sounds/698699/",
+    "download": "https://cdn.freesound.org/previews/698/698699_9149264-hq.mp3",
+    "author": "tannernet",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "2bb70c764705626b0f834d601301fe51d0356d4e1f4f88c06c281e4937b5f6c8",
+    "bytes": 19848,
+    "usage": "bolt-ratchet",
+    "changes": "HQ preview excerpt 4–5.8s; mono 32 kHz; highpass=f=140,lowpass=f=6500; -23 LUFS target / -3 dBTP; 80 ms wrap crossfade for seamless movement loop; Vorbis q4. Ceramic grinding is adapted foley, not a recording of this exact toilet."
+  },
+  {
+    "file": "heavy-bolt.ogg",
+    "source": "https://freesound.org/people/kyles/sounds/407297/",
+    "download": "https://cdn.freesound.org/previews/407/407297_612689-hq.mp3",
+    "author": "kyles",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "9f498740d0bb8c640a95acbed8a0a44d846638729e25d0fe62e21791fc15c8db",
+    "bytes": 27854,
+    "usage": "heavy-bolt",
+    "changes": "HQ preview excerpt 0–3s; mono 32 kHz; highpass=f=70,lowpass=f=7000; -23 LUFS target / -3 dBTP; trimmed onset / short fade; Vorbis q4. Ceramic grinding is adapted foley, not a recording of this exact toilet."
+  },
+  {
+    "file": "bed-slide.ogg",
+    "source": "https://freesound.org/people/sfneumar/sounds/735684/",
+    "download": "https://cdn.freesound.org/previews/735/735684_16007120-hq.mp3",
+    "author": "sfneumar",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "763d7b5066ceccf452b78395b1c8d7391610f65d98c2f19a403b63966a53b3c3",
+    "bytes": 19657,
+    "usage": "bed-slide",
+    "changes": "HQ preview excerpt 0–3s; mono 32 kHz; highpass=f=75,lowpass=f=6000; -23 LUFS target / -3 dBTP; 80 ms wrap crossfade for seamless movement loop; Vorbis q4. Ceramic grinding is adapted foley, not a recording of this exact toilet."
   }
 ]

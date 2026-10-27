@@ -26,7 +26,12 @@ import {
 import { buildPrisonWorld, PrisonWorldData } from "./world";
 import { sound } from "./audio";
 import { decideGuard } from "./guard-ai";
-import { sightEvidence, strongestNoise, type NoiseEvent } from "./perception";
+import {
+  sightEvidence,
+  strongestNoise,
+  segmentBlocked,
+  type NoiseEvent,
+} from "./perception";
 import { PracticalLightPool } from "./lighting";
 import { pathObstructed } from "./navigation";
 import { angleDelta } from "./guard-motion";
@@ -220,7 +225,6 @@ export class GameEngine {
   public openingProgress: OpeningProgress = { bed: 0, bolts: 0, toilet: 0 };
   public activeHold: HoldAction | null = null;
   private hardPush = false;
-  private actionSoundTime = 0;
   public contextualAction: string | null = null;
   private transit: {
     from: number;
@@ -309,18 +313,35 @@ export class GameEngine {
     mountEl.appendChild(this.renderer.domElement);
     this.worldData = buildPrisonWorld(this.scene);
     sound.occlusion = (position) => {
-      const origin = new THREE.Vector3(
+      const origin: [number, number, number] = [
         this.playerPos[0],
-        1.4,
+        this.stats.isCrouching ? 0.95 : 1.55,
         this.playerPos[2],
-      );
-      const target = new THREE.Vector3(position[0], 1.4, position[2]);
-      const distance = origin.distanceTo(target),
-        ray = new THREE.Ray(origin, target.sub(origin).normalize());
-      return this.blockers().filter((box) => {
-        const hit = ray.intersectBox(box, new THREE.Vector3());
-        return hit && hit.distanceTo(origin) < distance - 0.25;
-      }).length;
+      ];
+      const target: [number, number, number] = [
+        position[0],
+        position[1] + 0.25,
+        position[2],
+      ];
+      const opaque = this.gameFlags.passage_open
+        ? this.worldData.visionColliders
+        : [
+            ...this.worldData.visionColliders,
+            this.worldData.opening.passageBounds,
+          ];
+      const inside = (p: number[], b: THREE.Box3) =>
+        p[0] >= b.min.x &&
+        p[0] <= b.max.x &&
+        p[1] >= b.min.y &&
+        p[1] <= b.max.y &&
+        p[2] >= b.min.z &&
+        p[2] <= b.max.z;
+      return opaque.filter(
+        (b) =>
+          !inside(target, b) &&
+          !inside(origin, b) &&
+          segmentBlocked(origin, target, b),
+      ).length;
     };
     const pmrem = new THREE.PMREMGenerator(this.renderer),
       room = new RoomEnvironment();
@@ -702,6 +723,7 @@ export class GameEngine {
     );
   }
   public clearInput() {
+    sound.stopObjectActions();
     this.activeHold = null;
     this.hardPush = false;
     this.keys = {};
@@ -1051,7 +1073,7 @@ export class GameEngine {
       obj.actionRequiredItem &&
       !this.inventory.includes(obj.actionRequiredItem)
     ) {
-      sound.playLockClick(false);
+      sound.playLockClick(false, obj.position);
       this.notice("Required: " + ALL_ITEMS[obj.actionRequiredItem].name);
       return;
     }
@@ -1069,6 +1091,9 @@ export class GameEngine {
       obj.disabled = true;
       sound.playObject(
         item === "steel_wool" || item === "rubber_washer" ? "cloth" : "metal",
+        0,
+        1,
+        obj.position,
       );
       this.notice(ALL_ITEMS[item].name + " added to your satchel.");
       if (item === "spoon")
@@ -1084,7 +1109,7 @@ export class GameEngine {
       obj.disabled = true;
       this.activeObjective =
         "Leave Cell 46. Unlock the Block C gate to the east.";
-      sound.playDoorOpen();
+      sound.playDoorOpen(obj.position, false, obj.id);
       this.emitNoise(26, "door");
     } else if (obj.id === "vent_bolts_interact")
       this.startMiniGame({ type: "vent_bolts", progress: 0, noiseSpike: 0 });
@@ -1135,7 +1160,7 @@ export class GameEngine {
       obj.disabled = true;
       this.activeObjective =
         "Search the infirmary, laundry and maintenance rooms. Recover the ledger from Voss’s office.";
-      sound.playDoorOpen();
+      sound.playDoorOpen(obj.position, false, obj.id);
     } else if (obj.actionType === "hide") {
       this.stats.isInHidingSpot = true;
       this.stats.hidingSpotName = obj.name;
@@ -1203,12 +1228,24 @@ export class GameEngine {
       }
       this.activeHold = obj.id as HoldAction;
       this.hardPush = hard;
-      this.actionSoundTime = 0;
+      sound.objectAction({
+        id: obj.id,
+        kind:
+          obj.id === "bed_push"
+            ? "bed"
+            : obj.id === "toilet_move"
+              ? "toilet"
+              : "bolts",
+        phase: "start",
+        position: this.holdAudioPosition(obj.id),
+        intensity: hard ? 1 : 0.32,
+      });
       this.emitChange();
     } else this.interact();
   }
   public endInteract() {
     if (!this.activeHold) return;
+    sound.stopObjectActions();
     this.activeHold = null;
     this.hardPush = false;
     this.saveCheckpoint();
@@ -1217,7 +1254,10 @@ export class GameEngine {
   private interactOpening(id: string) {
     if (id === "cell_key_pickup") {
       this.inventory.push("cell_key");
-      sound.cue("keys");
+      sound.cue(
+        "keys",
+        this.worldData.interactables.find((o) => o.id === id)!.position,
+      );
       this.notice("Cell key added to your satchel. Try your door.");
     } else if (id === "cell47_lock") {
       if (!this.inventory.includes("cell_key")) {
@@ -1225,12 +1265,20 @@ export class GameEngine {
         return true;
       }
       this.gameFlags.key_identified = true;
-      sound.playLockClick(false);
+      sound.playLockClick(
+        false,
+        this.worldData.interactables.find((o) => o.id === id)!.position,
+      );
       this.notice(wrongKeyNotice);
       this.triggerSubtitle("KABIR", wrongKeyNotice, "monologue", 6);
     } else if (id === "screwdriver_pickup") {
       this.inventory.push("screwdriver");
-      sound.playObject("metal");
+      sound.playObject(
+        "metal",
+        0,
+        0.45,
+        this.worldData.interactables.find((o) => o.id === id)!.position,
+      );
       this.notice(
         "Screwdriver collected. The toilet is bolted to the shared wall.",
       );
@@ -1321,20 +1369,31 @@ export class GameEngine {
       this.worldData.interactables.find((o) => o.id === action)?.position ??
         this.playerPos,
     );
-    this.actionSoundTime -= dt;
-    if (this.actionSoundTime <= 0) {
-      this.actionSoundTime = action === "toilet_bolts" ? 1 : 1.8;
-      sound.cue(
+    sound.objectAction({
+      id: action,
+      kind:
         action === "bed_push"
-          ? "bed-drag"
+          ? "bed"
           : action === "toilet_move"
-            ? "ceramic-drag"
-            : "screwdriver",
-        undefined,
-        this.hardPush ? 1 : 0.18,
-      );
-    }
+            ? "toilet"
+            : "bolts",
+      phase: "update",
+      position: this.holdAudioPosition(action),
+      intensity: this.hardPush ? 1 : 0.32,
+    });
     if (this.openingProgress[field] >= 1) {
+      sound.objectAction({
+        id: action,
+        kind:
+          action === "bed_push"
+            ? "bed"
+            : action === "toilet_move"
+              ? "toilet"
+              : "bolts",
+        phase: "finish",
+        position: this.holdAudioPosition(action),
+        intensity: 0.3,
+      });
       this.gameFlags[
         action === "bed_push"
           ? "bed_moved"
@@ -1363,6 +1422,28 @@ export class GameEngine {
     document.exitPointerLock?.();
     this.emitChange();
   }
+  private holdAudioPosition(id: string): [number, number, number] {
+    const root =
+      id === "bed_push"
+        ? this.worldData.opening.bed
+        : this.worldData.opening.toilet;
+    return [root.position.x, 0.15, root.position.z];
+  }
+  public get puzzleAudioPosition(): [number, number, number] {
+    const g = this.activeMiniGame;
+    const id =
+      g?.type === "vent_bolts"
+        ? "vent_bolts_interact"
+        : g?.type === "safe_crack"
+          ? "warden_safe_interact"
+          : g?.type === "lockpick"
+            ? "sea_gate_interact"
+            : "boulder_npc";
+    return [
+      ...(this.worldData.interactables.find((o) => o.id === id)?.position ??
+        this.playerPos),
+    ];
+  }
   public cancelMiniGame() {
     this.activeMiniGame = null;
     this.clearInput();
@@ -1371,6 +1452,7 @@ export class GameEngine {
   public completeMiniGame(success: boolean) {
     const game = this.activeMiniGame;
     if (!game) return;
+    const audioPosition = this.puzzleAudioPosition;
     this.activeMiniGame = null;
     if (!success) {
       this.notice("Try again. Watch for the rhythm and keep your noise low.");
@@ -1382,7 +1464,7 @@ export class GameEngine {
       this.playerPos = [-11.4, 0, -4.1];
       this.playerRotY = 0;
       this.activeObjective = "Earn Boulder’s trust at the arm-wrestling table.";
-      sound.playVentPop();
+      sound.playVentPop(audioPosition);
     }
     if (game.type === "arm_wrestling") {
       this.gameFlags.boulder_pacified = true;
@@ -1411,7 +1493,7 @@ export class GameEngine {
       this.gameFlags.sea_gate_open = true;
       this.activeObjective =
         "Rescue Boulder on the right, or head straight to Iyer’s skiff.";
-      sound.playDoorOpen();
+      sound.playDoorOpen(audioPosition, false, "sea_gate_door");
     }
     this.syncWorld();
     this.saveCheckpoint();
@@ -1428,7 +1510,9 @@ export class GameEngine {
       -0.05,
       opening ? -9.7 + p.toilet * 1.7 : -9.85,
     );
-    o.toilet.rotation.y = opening ? Math.PI / 2 : Math.PI;
+    // Steer the disconnected fixture outwards while parking it under the sink;
+    // leaving the valve wall-facing at the end intersects the washstand apron.
+    o.toilet.rotation.y = opening ? -Math.PI / 2 + p.toilet * Math.PI : Math.PI;
     o.bedBounds.min.z = -9.6 + p.bed * 1.4;
     o.bedBounds.max.z = -7.2 + p.bed * 1.4;
     o.toiletBounds.min.z = -10.1 + p.toilet * 1.7;
@@ -1926,7 +2010,10 @@ export class GameEngine {
     this.camera.updateMatrixWorld();
     const closest = this.findClosestInteractable();
     this.contextualAction = closest?.id ?? null;
-    sound.updateListener(this.playerPos, this.playerRotY);
+    sound.updateListener(
+      [this.playerPos[0], this.camera.position.y - 1.65, this.playerPos[2]],
+      this.playerRotY,
+    );
     this.activeInteractPrompt = this.stats.isInHidingSpot
       ? "Leave cover"
       : (closest?.prompt ?? null);
@@ -2126,7 +2213,11 @@ export class GameEngine {
         travelled > 0 &&
         mesh.userData.stride >= (guard.state === "chase" ? 1.2 : 0.67)
       ) {
-        sound.guardFootstep(guard.position, guard.state === "chase", wall);
+        sound.guardFootstep(
+          guard.position,
+          guard.state === "chase",
+          (sound.occlusion?.(guard.position) ?? 0) > 0,
+        );
         mesh.userData.stride = 0;
       }
     }

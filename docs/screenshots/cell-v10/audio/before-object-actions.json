@@ -1,0 +1,34 @@
+{
+  "timeline": [
+    {
+      "action": "bed_push",
+      "phase": "start",
+      "state": "bed_push"
+    },
+    {
+      "action": "bed_push",
+      "phase": "release"
+    },
+    {
+      "action": "toilet_bolts",
+      "phase": "start",
+      "state": "toilet_bolts"
+    },
+    {
+      "action": "toilet_bolts",
+      "phase": "release"
+    },
+    {
+      "action": "toilet_move",
+      "phase": "start",
+      "state": "toilet_move"
+    },
+    {
+      "action": "toilet_move",
+      "phase": "release"
+    }
+  ],
+  "failures": [],
+  "samples": 60,
+  "hasLifecycle": false
+}

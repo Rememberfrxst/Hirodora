@@ -62,7 +62,7 @@ export function createEnvironment(scene: THREE.Scene) {
   concrete.color.set(0x7f8c7d);
   const ceiling = surface(ceilingURL, concreteNormal, concreteORM, 1);
   ceiling.color.set(0x92998c);
-  ceiling.normalScale.set(.12,.12);
+  ceiling.normalScale.set(0.12, 0.12);
   concrete.normalScale.set(0.2, 0.2);
   const metal = surface(metalColor, metalNormal, metalORM, 0.8, 0.65);
   const exterior = new THREE.MeshBasicMaterial({
@@ -82,6 +82,15 @@ export function createEnvironment(scene: THREE.Scene) {
   });
   wool.map!.repeat.set(5, 5);
   wool.normalMap!.repeat.set(5, 5);
+  const cotton = new THREE.MeshStandardMaterial({
+    map: texture(woolColor, true),
+    normalMap: texture(woolNormal),
+    roughness: 0.95,
+    color: 0xfff9e7,
+    normalScale: new THREE.Vector2(0.07, 0.07),
+  });
+  cotton.map!.repeat.set(8, 8);
+  cotton.normalMap!.repeat.set(8, 8);
   const stain = new THREE.MeshBasicMaterial({
     map: texture(stainURL, true),
     transparent: true,
@@ -97,6 +106,14 @@ export function createEnvironment(scene: THREE.Scene) {
     decal.position.set(x, y, z);
     scene.add(decal);
   }
+  // Localized damp beneath the existing washstand; visual only, no collision.
+  const plumbingStain = new THREE.Mesh(
+    new THREE.PlaneGeometry(0.82, 1.35),
+    stain,
+  );
+  plumbingStain.position.set(-8.612, 0.9, -7.8);
+  plumbingStain.rotation.y = Math.PI / 2;
+  scene.add(plumbingStain);
   const anchors: { name: string; root: THREE.Group }[] = [];
   const add = (name: string, x: number, y: number, z: number, rotation = 0) => {
     const root = new THREE.Group();
@@ -145,7 +162,9 @@ export function createEnvironment(scene: THREE.Scene) {
                 ? metal
                 : m.name === "BlanketWool"
                   ? wool
-                  : m;
+                  : m.name === "MattressCanvas"
+                    ? cotton
+                    : m;
             o.material = Array.isArray(o.material)
               ? o.material.map(replace)
               : replace(o.material);

@@ -1,0 +1,73 @@
+{
+  "timeline": [
+    {
+      "action": "bed_push",
+      "phase": "start",
+      "state": "bed_push",
+      "audio": [
+        {
+          "id": "bed_push",
+          "kind": "bed",
+          "position": [
+            -4.25,
+            0.15,
+            -8.4
+          ],
+          "playing": true
+        }
+      ]
+    },
+    {
+      "action": "bed_push",
+      "phase": "release",
+      "audio": []
+    },
+    {
+      "action": "toilet_bolts",
+      "phase": "start",
+      "state": "toilet_bolts",
+      "audio": [
+        {
+          "id": "toilet_bolts",
+          "kind": "bolts",
+          "position": [
+            -8.05,
+            0.15,
+            -9.7
+          ],
+          "playing": true
+        }
+      ]
+    },
+    {
+      "action": "toilet_bolts",
+      "phase": "release",
+      "audio": []
+    },
+    {
+      "action": "toilet_move",
+      "phase": "start",
+      "state": "toilet_move",
+      "audio": [
+        {
+          "id": "toilet_move",
+          "kind": "toilet",
+          "position": [
+            -8.05,
+            0.15,
+            -9.7
+          ],
+          "playing": true
+        }
+      ]
+    },
+    {
+      "action": "toilet_move",
+      "phase": "release",
+      "audio": []
+    }
+  ],
+  "failures": [],
+  "samples": 69,
+  "hasLifecycle": true
+}

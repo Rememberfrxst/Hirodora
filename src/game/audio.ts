@@ -1,4 +1,17 @@
 import { audioURLs } from "../assets/audio/urls";
+import {
+  actionFoley,
+  clampAudioIntensity,
+  soundPriority,
+  type ObjectAudioEvent,
+  type AudioPosition,
+  type ObjectActionKind,
+} from "./object-audio";
+interface AudioHandle {
+  source: AudioBufferSourceNode;
+  gain: GainNode;
+  spatial?: { position: AudioPosition; volume: number };
+}
 export type Surface =
   | "concrete"
   | "tile"
@@ -52,6 +65,28 @@ class SoundManager {
   };
   private buffers = new Map<string, AudioBuffer>();
   private voices = new Set<AudioBufferSourceNode>();
+  private priorities = new Map<AudioBufferSourceNode, number>();
+  private objectVoices = new Set<AudioBufferSourceNode>();
+  private actions = new Map<
+    string,
+    {
+      kind: ObjectActionKind;
+      position: AudioPosition;
+      intensity: number;
+      handle?: AudioHandle;
+    }
+  >();
+  public get activeObjectActions() {
+    return this.actions.size;
+  }
+  public objectAudioSnapshot() {
+    return [...this.actions].map(([id, a]) => ({
+      id,
+      kind: a.kind,
+      position: [...a.position],
+      playing: !!a.handle,
+    }));
+  }
   private spatial = new Set<{
     panner: PannerNode;
     filter: BiquadFilterNode;
@@ -217,9 +252,12 @@ class SoundManager {
     if (this.ctx?.state === "suspended") void this.ctx.resume().catch(() => {});
   }
   public suspend() {
+    this.stopObjectActions();
+    for (const source of this.objectVoices) source.stop();
     void this.ctx?.suspend();
   }
   public resetSceneAudio() {
+    this.stopObjectActions();
     for (const source of this.voices) source.stop();
     this.cooldowns.clear();
     if (!this.ctx) return;
@@ -246,7 +284,7 @@ class SoundManager {
     if (l.positionX) {
       for (const [p, value] of [
         [l.positionX, position[0]],
-        [l.positionY, 1.65],
+        [l.positionY, position[1] + 1.65],
         [l.positionZ, position[2]],
         [l.forwardX, -Math.sin(yaw)],
         [l.forwardY, 0],
@@ -257,12 +295,17 @@ class SoundManager {
       ] as [AudioParam, number][])
         p.setTargetAtTime(value, now, 0.04);
     } else {
-      l.setPosition(position[0], 1.65, position[2]);
+      l.setPosition(position[0], position[1] + 1.65, position[2]);
       l.setOrientation(-Math.sin(yaw), 0, -Math.cos(yaw), 0, 1, 0);
     }
     for (const s of this.spatial) {
       if (s.follow) {
         s.panner.positionX.setTargetAtTime(s.position[0], now, 0.06);
+        s.panner.positionY.setTargetAtTime(
+          s.position[1] + (s.dialogue ? 1.5 : 0.25),
+          now,
+          0.06,
+        );
         s.panner.positionZ.setTargetAtTime(s.position[2], now, 0.06);
       }
       if (now >= this.occlusionTime && this.occlusion) {
@@ -308,14 +351,19 @@ class SoundManager {
     walls = 0,
     rate = 1,
     follow = false,
-  ) {
-    if (
-      !this.ctx ||
-      this.muted ||
-      !this.buffers.has(key) ||
-      this.voices.size >= (this.lightweight ? 12 : 24)
-    )
-      return;
+    loop = false,
+  ): AudioHandle | undefined {
+    if (!this.ctx || this.muted || !this.buffers.has(key)) return;
+    const priority = soundPriority(bus);
+    if (this.voices.size >= (this.lightweight ? 12 : 24)) {
+      const victim = [...this.voices].find(
+        (v) => (this.priorities.get(v) ?? 0) < priority,
+      );
+      if (!victim) return;
+      victim.stop();
+      this.voices.delete(victim);
+      this.priorities.delete(victim);
+    }
     const ctx = this.ctx,
       source = ctx.createBufferSource(),
       gain = ctx.createGain(),
@@ -323,6 +371,7 @@ class SoundManager {
     const dialogue = bus === "dialogue";
     walls = Math.min(dialogue ? 1 : 3, walls);
     source.buffer = this.buffers.get(key)!;
+    source.loop = loop;
     source.playbackRate.value = rate;
     filter.type = "lowpass";
     filter.frequency.value = walls ? (dialogue ? 4200 : 1100 / walls) : 17000;
@@ -366,9 +415,16 @@ class SoundManager {
       this.spatial.add(spatial);
     } else gain.connect(this.buses.get(bus)!);
     this.voices.add(source);
+    this.priorities.set(source, priority);
     this.playedEvents++;
     source.onended = () => {
+      this.objectVoices.delete(source);
       this.voices.delete(source);
+      this.priorities.delete(source);
+      // A high-priority voice may steal a movement loop. Recreate it on the next
+      // action update, but never let a late onended delete a newer replacement.
+      for (const action of this.actions.values())
+        if (action.handle?.source === source) action.handle = undefined;
       if (spatial) this.spatial.delete(spatial);
       source.disconnect();
       filter.disconnect();
@@ -376,6 +432,85 @@ class SoundManager {
       panner?.disconnect();
     };
     source.start();
+    return { source, gain, spatial };
+  }
+  /** Stable per-object lifecycle: movement recordings follow actual geometry. */
+  public objectAction(event: ObjectAudioEvent) {
+    const existing = this.actions.get(event.id),
+      profile = actionFoley[event.kind];
+    const intensity = clampAudioIntensity(event.intensity);
+    if (event.phase === "stop" || event.phase === "finish") {
+      if (!existing) return;
+      if (existing.handle && this.ctx) {
+        existing.handle.gain.gain.setTargetAtTime(
+          0,
+          this.ctx.currentTime,
+          0.018,
+        );
+        existing.handle.source.stop(this.ctx.currentTime + 0.09);
+      }
+      this.actions.delete(event.id);
+      if (event.phase === "finish")
+        this.play(
+          this.choose(profile.release),
+          "sfx",
+          event.kind === "bolts" ? 0.22 : 0.14,
+          event.position,
+          this.occlusion?.(event.position) ?? 0,
+        );
+      return;
+    }
+    if (!this.ctx) return;
+    const action = existing ?? {
+      kind: event.kind,
+      position: [...event.position] as AudioPosition,
+      intensity,
+    };
+    action.position.splice(0, 3, ...event.position);
+    action.intensity = intensity;
+    if (!existing) {
+      this.actions.set(event.id, action);
+      this.play(
+        this.choose(profile.attack),
+        "sfx",
+        intensity * (event.kind === "bed" ? 0.2 : 0.1),
+        action.position,
+        this.occlusion?.(action.position) ?? 0,
+      );
+    }
+    if (!action.handle) {
+      action.handle = this.play(
+        profile.loop,
+        "sfx",
+        profile.gain * intensity,
+        action.position,
+        this.occlusion?.(action.position) ?? 0,
+        1,
+        true,
+        true,
+      );
+      if (action.handle) this.objectVoices.add(action.handle.source);
+    }
+    if (action.handle) {
+      if (action.handle.spatial)
+        action.handle.spatial.volume = profile.gain * intensity;
+      else
+        action.handle.gain.gain.setTargetAtTime(
+          profile.gain * intensity,
+          this.ctx.currentTime,
+          0.04,
+        );
+    }
+  }
+  public stopObjectActions() {
+    for (const [id, a] of [...this.actions])
+      this.objectAction({
+        id,
+        kind: a.kind,
+        phase: "stop",
+        position: a.position,
+        intensity: 0,
+      });
   }
   private limited(event: string, seconds: number) {
     if (!this.ctx) return false;
@@ -421,8 +556,10 @@ class SoundManager {
     kind: "metal" | "cloth" | "wood" | "water" | "drip" | "boot" | "radio",
     _pan = 0,
     volume = 1,
+    position?: Position,
   ) {
-    if (kind === "boot") return this.playFootstep(false, false);
+    if (kind === "boot")
+      return this.playFootstep(false, false, "concrete", position);
     const prefix = {
       metal: "impactMetal_light_",
       cloth: "fabric",
@@ -431,7 +568,13 @@ class SoundManager {
       drip: "water-",
       radio: "plastic",
     }[kind];
-    this.play(this.choose(prefix), "sfx", volume * 0.55);
+    this.play(
+      this.choose(prefix),
+      "sfx",
+      volume * 0.55,
+      position,
+      position ? (this.occlusion?.(position) ?? 0) : 0,
+    );
   }
   public cue(
     event:
@@ -569,20 +712,53 @@ class SoundManager {
   public playWaterDrip() {
     this.playObject("drip", 0, 0.2);
   }
-  public playBoltTurn(rushed: boolean) {
-    this.cue("screwdriver", undefined, rushed ? 0.9 : 0.22);
+  public playBoltTurn(rushed: boolean, position?: Position) {
+    if (this.limited("bolt-turn", 0.18))
+      this.play(
+        "bolt-ratchet",
+        "sfx",
+        rushed ? 0.65 : 0.2,
+        position,
+        position ? (this.occlusion?.(position) ?? 0) : 0,
+      );
   }
-  public playVentPop() {
-    this.play(this.choose("impactMetal_heavy_"), "sfx", 0.7);
+  public playVentPop(position?: Position) {
+    this.play(
+      "heavy-bolt",
+      "sfx",
+      0.42,
+      position,
+      position ? (this.occlusion?.(position) ?? 0) : 0,
+    );
   }
-  public playDoorOpen() {
-    this.cue("hinge", undefined, 0.45);
+  public playDoorOpen(position?: Position, closing = false, id = "door") {
+    if (this.limited("door-" + id, 0.4))
+      this.play(
+        closing ? "gate-close" : "hinge",
+        "sfx",
+        closing ? 0.5 : 0.4,
+        position,
+        position ? (this.occlusion?.(position) ?? 0) : 0,
+      );
   }
-  public playLockClick(_success: boolean) {
-    this.play(this.choose("impactMetal_light_"), "sfx", 0.23);
+  public playLockClick(success: boolean, position?: Position) {
+    if (this.limited("lock-click", 0.35))
+      this.play(
+        success ? "cell-lock" : "lock-turn",
+        "sfx",
+        0.28,
+        position,
+        position ? (this.occlusion?.(position) ?? 0) : 0,
+      );
   }
-  public playSafeClick(volume: number) {
-    this.play(this.choose("impactMetal_light_"), "sfx", volume);
+  public playSafeClick(volume: number, position?: Position) {
+    this.play(
+      this.choose("impactMetal_light_"),
+      "sfx",
+      volume,
+      position,
+      position ? (this.occlusion?.(position) ?? 0) : 0,
+    );
   }
   public playGuardAlert() {
     /* Speech is the audible alert. */
@@ -600,6 +776,7 @@ class SoundManager {
     this.play(this.choose("impactMetal_heavy_"), "ui", 0.35);
   }
   public dispose() {
+    this.stopObjectActions();
     this.generation++;
     this.pending = undefined;
     for (const source of this.voices) {
@@ -612,6 +789,8 @@ class SoundManager {
       loop.gain.disconnect();
     }
     this.voices.clear();
+    this.priorities.clear();
+    this.objectVoices.clear();
     this.spatial.clear();
     this.occlusion = undefined;
     this.loops = [];

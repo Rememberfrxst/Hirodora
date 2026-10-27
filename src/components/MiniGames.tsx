@@ -9,6 +9,7 @@ import {
 } from "../game/rules";
 
 interface Props {
+  sourcePosition?: [number, number, number];
   miniGame: ActiveMiniGame;
   onComplete: (success: boolean) => void;
   onCancel: () => void;
@@ -64,6 +65,7 @@ export function MiniGames(props: Props) {
     cancel: props.onCancel,
     noise: (n: number) => callbacks.current.onNoiseSpike(n),
     paused: !!props.paused,
+    sourcePosition: props.sourcePosition,
   };
   switch (props.miniGame?.type) {
     case "vent_bolts":
@@ -79,12 +81,13 @@ export function MiniGames(props: Props) {
   }
 }
 interface Puzzle {
+  sourcePosition?: [number, number, number];
   finish: (success: boolean) => void;
   cancel: () => void;
   noise: (n: number) => void;
   paused: boolean;
 }
-function Vent({ finish, cancel, noise, paused }: Puzzle) {
+function Vent({ finish, cancel, noise, paused, sourcePosition }: Puzzle) {
   const [bolts, setBolts] = useState(0),
     [progress, setProgress] = useState(0),
     [holding, setHolding] = useState(false);
@@ -93,7 +96,7 @@ function Vent({ finish, cancel, noise, paused }: Puzzle) {
   latest.current = { finish, noise };
   const loosen = (rushed: boolean) => {
     if (state.current.bolts >= 4) return;
-    sound.playBoltTurn(rushed);
+    sound.playBoltTurn(rushed, sourcePosition);
     latest.current.noise(rushed ? 38 : 8);
     state.current.bolts++;
     state.current.progress = 0;
@@ -227,7 +230,7 @@ function Arm({ finish, cancel, noise, paused }: Puzzle) {
     </Shell>
   );
 }
-function Lock({ finish, cancel }: Puzzle) {
+function Lock({ finish, cancel, sourcePosition }: Puzzle) {
   const [angle, setAngle] = useState(0),
     [pin, setPin] = useState(0);
   const result = checkLockpickPin(angle, [35, -42, 18][pin] ?? 0, 7);
@@ -267,7 +270,7 @@ function Lock({ finish, cancel }: Puzzle) {
         value={angle}
         onChange={(e) => {
           setAngle(+e.target.value);
-          sound.playSafeClick(result.vibrationIntensity * 0.2);
+          sound.playSafeClick(result.vibrationIntensity * 0.2, sourcePosition);
         }}
       />
       <button
@@ -288,7 +291,7 @@ function Lock({ finish, cancel }: Puzzle) {
     </Shell>
   );
 }
-function Safe({ finish, cancel }: Puzzle) {
+function Safe({ finish, cancel, sourcePosition }: Puzzle) {
   const [dial, setDial] = useState(0),
     [solved, setSolved] = useState<number[]>([]);
   const result = checkSafeDial(dial * 3.6, [24, 68, 42][solved.length] ?? 0, 1);
@@ -298,6 +301,7 @@ function Safe({ finish, cancel }: Puzzle) {
     sound.playSafeClick(
       checkSafeDial(value * 3.6, [24, 68, 42][solved.length], 1)
         .audioClickVolume,
+      sourcePosition,
     );
   };
   return (

@@ -5,6 +5,7 @@ import type { PrisonerActor } from "./prisoner";
 import { sound } from "./audio";
 import { introFrame, SHOT_TIME } from "./intro";
 import { createSidearm } from "./sidearm";
+import { positionCellSlider } from "./cell-gates";
 export class OpeningCinematic {
   public time = 0;
   private fired = false;
@@ -39,7 +40,7 @@ export class OpeningCinematic {
     w.opening.body.position.set(...f.prisoner);
     w.opening.body.rotation.set(0, f.prisonerYaw, 0);
     this.prisoner.pose(f.prisonerClip, f.prisonerTime);
-    w.doors.get("cell_47_door")!.rotation.y = f.doorAngle;
+    positionCellSlider(w.doors.get("cell_47_door")!, f.doorOpen);
     w.pickupMeshes.get("cell_key_pickup")!.visible = t >= 10.3;
     g.position = f.guard;
     g.rotationY = f.guardYaw;
@@ -129,7 +130,7 @@ export class OpeningCinematic {
   hide() {
     this.weapon.root.visible = false;
     this.weapon.light.intensity = 0;
-    this.world.doors.get("cell_47_door")!.rotation.y = 0;
+    positionCellSlider(this.world.doors.get("cell_47_door")!, 0);
     this.world.guards[0].cinematicAim = false;
   }
   dispose() {

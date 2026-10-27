@@ -15,6 +15,7 @@ async function aim(page: Page, id: string, x: number, z: number) {
       e.playerRotY = Math.atan2(-(o.position[0] - x), -(o.position[2] - z));
       e.cameraPitch = 0;
       e.stats.subtitle = null;
+      (e as any).move(0);
       e.emitChange();
     },
     { id, x, z },
@@ -218,7 +219,9 @@ test("hard pushing alerts the examining guard, then he returns to the body witho
   expect(result.z).toBeGreaterThan(-1.8);
   expect(result.state).toBe("patrol");
   expect(result.examining).toBe(true);
-  expect(result.closestZ).toBeLessThan(-1);
+  // The external slide track now reserves a 0.9m guard approach clearance.
+  expect(result.closestZ).toBeLessThan(-0.85);
+  expect(result.closestZ).toBeGreaterThan(-1.6);
 });
 test("mobile contextual holding releases on cancel and rotation without stuck input", async ({
   browser,

@@ -1,6 +1,6 @@
 import { chromium } from "@playwright/test";
 import { mkdir, writeFile } from "node:fs/promises";
-const directory = process.env.CAPTURE_DIR || "docs/screenshots/atrium-v14";
+const directory = process.env.CAPTURE_DIR || "docs/screenshots/sliding-v15";
 await mkdir(directory, { recursive: true });
 const browser = await chromium.launch({
   executablePath:
@@ -70,6 +70,7 @@ async function save(page, name, position, target, item = null) {
         lowerGuards: e.worldData.guards.filter((g) => g.patrolRoute[0][1] < 0)
           .length,
         fogDensity: e.scene.fog.density,
+        cell46Slide: e.worldData.doors.get("cell_46_door").userData.slider.fraction,
       };
     },
     { position, target, item },
@@ -97,7 +98,7 @@ try {
     [-12.5, 1.6, -8.5],
     [-10.5, 1.3, -2],
   );
-  await save(page, "03-lower-cell-rows", [-16, -1.55, 9], [-60, -1.7, 9]);
+  await save(page, "03-lower-cell-rows", [-16, -1.55, 7], [-60, -1.7, 7]);
   await save(
     page,
     "04-screwdriver-in-hand",
@@ -105,13 +106,13 @@ try {
     [-6, 1.45, -1],
     "screwdriver",
   );
-  await save(page, "05-lower-hall", [-18, -1.55, 5], [-4, 0, 5]);
+  await save(page, "05-lower-hall", [-18, -1.55, 7], [-4, 0, 7]);
   const mobile = await start(true);
   await save(
     mobile,
     "06-mobile-key",
-    [-6.5, 1.65, 18.5],
-    [-50, 1.3, 18.5],
+    [-6.5, 1.65, 14.5],
+    [-50, 1.3, 14.5],
     "cell_key",
   );
   await writeFile(

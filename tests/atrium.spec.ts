@@ -35,6 +35,7 @@ test("nine officers patrol both levels and a lower cell can be opened, entered a
     e.overlayOpen = false;
     e.interact();
     const opened = e.gameFlags.cell_22_open;
+    e.updateCellGates(0.7);
     e.overlayOpen = true;
     e.keys.KeyW = true;
     for (let i = 0; i < 90; i++) e.move(0.016);
@@ -92,7 +93,7 @@ test("stairs support actual player movement, gates are independent, and equipped
     e.syncWorld();
     const neighborSame = g48.rotation.y === before;
     // Walk the east staircase in real move() calls, then onto the lower hall.
-    e.playerPos = [-5.5, 0, 9];
+    e.playerPos = [-5.5, 0, 7];
     e.playerRotY = 0;
     e.keys.KeyA = true;
     for (let i = 0; i < 300; i++) e.move(0.016);
@@ -155,23 +156,23 @@ test("guards route down stairs and cannot capture a player through the gallery f
     const e = window.__HIRODORA__ as any;
     cancelAnimationFrame(e.frameId);
     e.overlayOpen = true;
-    e.playerPos = [-35, -3.2, 9];
+    e.playerPos = [-35, -3.2, 7];
     e.worldData.guards.forEach((other: any) => {
       other.state = "knocked_out";
       other.stateTimer = 100;
     });
     const g = e.worldData.guards[1];
-    g.position = [-6, 0, 9];
+    g.position = [-6, 0, 7];
     g.state = "searching";
     g.suspicion = 55;
     g.stateTimer = 12;
-    g.investigationTarget = [-15, -3.2, 9];
-    g.lastKnownPosition = [-15, -3.2, 9];
-    g.lastHeardPosition = [-15, -3.2, 9];
+    g.investigationTarget = [-15, -3.2, 7];
+    g.lastKnownPosition = [-15, -3.2, 7];
+    g.lastHeardPosition = [-15, -3.2, 7];
     for (let i = 0; i < 250 && g.position[1] > -3; i++) e.updateGuards(0.05);
     const y = g.position[1];
-    e.playerPos = [-5, -3.2, 9];
-    g.position = [-5, 0, 9];
+    e.playerPos = [-5, -3.2, 7];
+    g.position = [-5, 0, 7];
     g.state = "chase";
     g.suspicion = 100;
     g.lastKnownPosition = [...e.playerPos];

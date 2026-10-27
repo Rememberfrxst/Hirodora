@@ -37,6 +37,7 @@ export function introFrame(seconds: number) {
     t,
     stage,
     doorAngle: -1.45 * fraction(t, 0.2, 1.5) * (1 - close) || 0,
+    doorOpen: fraction(t, 0.2, 1.5) * (1 - close),
     prisoner: [-5.25 - 1.15 * fraction(run, 0.65, 1), 0, -4.4 + 4.3 * run] as [
       number,
       number,

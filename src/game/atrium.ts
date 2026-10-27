@@ -3,8 +3,8 @@ import type { Bounds, Vec3 } from "./perception";
 
 export const ATRIUM = {
   north: 1,
-  south: 17,
-  centerZ: 9,
+  south: 13,
+  centerZ: 7,
   depth: -3.2,
   bridge: 3,
   stairWidth: 1.8,
@@ -13,7 +13,7 @@ export const ATRIUM = {
     { top: CELL_BLOCK.west + 3, bottom: CELL_BLOCK.west + 10.2 },
   ],
 } as const;
-export const LAYOUT_VERSION = 14;
+export const LAYOUT_VERSION = 15;
 export function inAtrium(x: number, z: number) {
   return (
     x > CELL_BLOCK.west &&
@@ -85,28 +85,31 @@ export function migratePosition(position: Vec3, version?: number): Vec3 {
   )
     return [...position];
   let migratedZ = z;
-  // A saved mid-flight stair position follows the relocated stair, not open air.
-  if (
-    version === 13 &&
-    y < -0.1 &&
-    y > ATRIUM.depth + 0.1 &&
-    Math.abs(z - 5) <= ATRIUM.stairWidth / 2
-  )
-    return [x, y, z + 4];
-  if ((version ?? 0) < 13) {
-    if (z >= 5) migratedZ += 7;
-    else if (
-      z > 1 &&
-      z < 9 &&
-      x < CELL_BLOCK.east - 3 &&
-      x > CELL_BLOCK.west + 3
-    )
-      return [x, 0, 0.4];
+  const onStairs = y < -0.1 && y > ATRIUM.depth + 0.1;
+  if ((version ?? 0) < 14) {
+    if (version === 13 && onStairs && Math.abs(z - 5) <= ATRIUM.stairWidth / 2)
+      migratedZ = z + 4;
+    else {
+      if ((version ?? 0) < 13) {
+        if (z >= 5) migratedZ += 7;
+        else if (
+          z > 1 &&
+          z < 9 &&
+          x < CELL_BLOCK.east - 3 &&
+          x > CELL_BLOCK.west + 3
+        )
+          return [x, 0, 0.4];
+      }
+      if (migratedZ >= 9) migratedZ += 8;
+    }
   }
-  if (migratedZ >= 9) migratedZ += 8;
-  // Preserve lower-hall saves; upper bridge saves move onto a supported bridge.
-  if (y < -1) return [x, y, migratedZ];
+  // Compress the old 16m opening to 12m, keeping cell interiors and stair heights.
+  if (onStairs && Math.abs(migratedZ - 9) <= ATRIUM.stairWidth / 2)
+    migratedZ -= 2;
+  else if (migratedZ >= 17) migratedZ -= 4;
+  else if (migratedZ > 1) migratedZ = 1 + (migratedZ - 1) * 0.75;
   if (
+    y >= -0.1 &&
     inAtrium(x, migratedZ) &&
     x < CELL_BLOCK.east - 3 &&
     x > CELL_BLOCK.west + 3

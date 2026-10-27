@@ -11,6 +11,7 @@ import {
   type CellRoom,
 } from "./cell-block";
 import { ATRIUM } from "./atrium";
+import { configureCellSlider } from "./cell-gates";
 
 export interface PrisonWorldData {
   cells: readonly CellRoom[];
@@ -242,9 +243,9 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   wall([0.5, 8.5, blockWidth], [CELL_BLOCK.west, 1, centerZ]);
   wall([blockLength, 3.2, 0.5], [blockCenter, -1.6, CELL_BLOCK.north]);
   wall([blockLength, 8.5, 0.5], [blockCenter, 1, CELL_BLOCK.south]);
-  wall([0.35, 8.5, 12.5], [CELL_BLOCK.east, 1, 23.25]);
-  wall([0.35, 5.2, 15], [CELL_BLOCK.east, 2.6, 9.5]);
-  wall([0.35, 3.2, 28.5], [CELL_BLOCK.east, -1.6, 2.75]);
+  wall([0.35, 8.5, 12.5], [CELL_BLOCK.east, 1, 19.25]);
+  wall([0.35, 5.2, 11], [CELL_BLOCK.east, 2.6, 7.5]);
+  wall([0.35, 3.2, 24.5], [CELL_BLOCK.east, -1.6, 0.75]);
   wall(
     [-16 - CELL_BLOCK.west, 4.3, 0.5],
     [(CELL_BLOCK.west - 16) / 2, 2, CELL_BLOCK.north],
@@ -268,7 +269,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     ),
     2,
   );
-  for (const z of [-5.25, 23.25])
+  for (const z of [-5.25, 19.25])
     projectUV(
       box(
         staticWorld,
@@ -279,7 +280,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
       2,
     );
   for (const x of [CELL_BLOCK.west + 1.5, CELL_BLOCK.east - 1.5])
-    projectUV(box(staticWorld, [3, 0.3, 16], [x, -0.15, centerZ], floor), 2);
+    projectUV(box(staticWorld, [3, 0.3, 12], [x, -0.15, centerZ], floor), 2);
   // A continuous underside blocks sight/hearing through the upper galleries.
   const floorOccluders = [
     new THREE.Box3(
@@ -287,15 +288,15 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
       new THREE.Vector3(CELL_BLOCK.east, 0, 1),
     ),
     new THREE.Box3(
-      new THREE.Vector3(CELL_BLOCK.west, -0.3, 17),
-      new THREE.Vector3(CELL_BLOCK.east, 0, 29.5),
+      new THREE.Vector3(CELL_BLOCK.west, -0.3, 13),
+      new THREE.Vector3(CELL_BLOCK.east, 0, 25.5),
     ),
   ];
   for (const x of [CELL_BLOCK.west, CELL_BLOCK.east - 3])
     floorOccluders.push(
       new THREE.Box3(
         new THREE.Vector3(x, -0.3, 1),
-        new THREE.Vector3(x + 3, 0, 17),
+        new THREE.Vector3(x + 3, 0, 13),
       ),
     );
   const rail = (x1: number, z1: number, x2: number, z2: number, y = 0) => {
@@ -366,7 +367,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     }
   }
   for (let x = -64; x < -5; x += 5.5) {
-    for (const z of [-0.5, centerZ, 18.5]) {
+    for (const z of [-0.5, centerZ, 14.5]) {
       environment.add("Luminaire", x, 4.8, z);
       const light = new THREE.PointLight(
         0xb8cebd,
@@ -377,7 +378,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
       light.position.set(x, 4.65, z);
       scene.add(light);
     }
-    for (const z of [-0.5, 18.5]) {
+    for (const z of [-0.5, 14.5]) {
       environment.add("Luminaire", x, -0.65, z);
       const light = new THREE.PointLight(0xc6d0b6, 19, 10, 2);
       light.position.set(x, -0.8, z);
@@ -422,13 +423,31 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   );
   projectUV(passageSeal, 2);
   const passageBounds = new THREE.Box3().setFromObject(passageSeal);
-  function bars(x: number, z: number, width: number) {
-    for (let bx = x - width / 2; bx <= x + width / 2; bx += 0.21)
-      cylinder(staticWorld, 0.022, 3.7, [bx, 1.85, z]);
-    box(staticWorld, [width, 0.12, 0.12], [x, 3.7, z], iron);
+  function bars(
+    left: number,
+    right: number,
+    z: number,
+    bottom: number,
+    top: number,
+  ) {
+    const width = right - left,
+      count = Math.ceil(width / 0.19),
+      height = top - bottom;
+    for (let i = 0; i <= count; i++)
+      cylinder(staticWorld, 0.022, height, [
+        left + (width * i) / count,
+        (bottom + top) / 2,
+        z,
+      ]);
+    for (const y of [
+      bottom + 0.06,
+      ...(height > 1.5 ? [bottom + 1.3] : []),
+      top - 0.06,
+    ])
+      box(staticWorld, [width, 0.075, 0.075], [(left + right) / 2, y, z], iron);
     const face = new THREE.Box3(
-      new THREE.Vector3(x - width / 2, 0, z - 0.08),
-      new THREE.Vector3(x + width / 2, 3.8, z + 0.08),
+      new THREE.Vector3(left - 0.025, bottom, z - 0.055),
+      new THREE.Vector3(right + 0.025, top, z + 0.055),
     );
     colliders.push(face);
     barredFaces.add(face);
@@ -441,6 +460,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     across = false,
     floorY = 0,
     height = 3.4,
+    rollers = false,
   ) {
     const group = new THREE.Group();
     const count = Math.ceil(width / 0.2);
@@ -449,6 +469,15 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     for (const y of [0.18, 1.4, height - 0.12])
       box(group, [width, 0.08, 0.07], [width / 2, y, 0], iron);
     box(group, [0.2, 0.23, 0.08], [width * 0.8, 1.4, 0.03], rust);
+    if (rollers)
+      for (const wheelX of [0.16, width - 0.16])
+        cylinder(
+          group,
+          0.05,
+          0.04,
+          [wheelX, height + 0.06, 0],
+          iron,
+        ).rotation.x = Math.PI / 2;
     group.position.set(x, floorY, z);
     group.userData.floorY = floorY;
     if (across) group.rotation.y = Math.PI / 2;
@@ -485,21 +514,20 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   function cellEntrance(cell: CellRoom) {
     const { left, right, doorX: x, front: z, number, floorY: y, level } = cell;
     const width = CELL_GATE_WIDTH,
-      height = level === "upper" ? 4.25 : 2.65,
+      height = level === "upper" ? 2.8 : 2.6,
       wallHeight = level === "upper" ? 5.2 : 2.9;
-    // Each opening has solid masonry shoulders, its own jamb, lintel and leaf.
-    wall(
-      [x - left - 0.07, wallHeight, 0.36],
-      [(left + x - 0.07) / 2, y + wallHeight / 2, z],
-    );
-    wall(
-      [right - x - width - 0.07, wallHeight, 0.36],
-      [(x + width + 0.07 + right) / 2, y + wallHeight / 2, z],
-    );
-    wall(
-      [width + 0.14, wallHeight - height - 0.08, 0.4],
-      [x + width / 2, y + height + 0.08 + (wallHeight - height - 0.08) / 2, z],
-    );
+    // Full-room steel frontage with a human-sized sliding wicket in its own track.
+    bars(left + 0.12, x - 0.07, z, y, y + wallHeight);
+    bars(x + width + 0.07, right - 0.12, z, y, y + wallHeight);
+    bars(x - 0.02, x + width + 0.02, z, y + height + 0.08, y + wallHeight);
+    for (const j of [left + 0.1, right - 0.1])
+      box(
+        staticWorld,
+        [0.09, wallHeight, 0.12],
+        [j, y + wallHeight / 2, z],
+        iron,
+        0.01,
+      );
     for (const j of [x - 0.045, x + width + 0.045])
       box(
         staticWorld,
@@ -508,7 +536,31 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
         iron,
         0.012,
       );
-    door(`cell_${number}_door`, x, z, width, false, y, height);
+    const lane = z + (cell.side === "north" ? 0.14 : -0.14);
+    box(
+      staticWorld,
+      [right - left - 0.22, 0.1, 0.16],
+      [(left + right) / 2, y + height + 0.13, lane],
+      iron,
+      0.015,
+    );
+    box(
+      staticWorld,
+      [width, 0.025, 0.18],
+      [x + width / 2, y + 0.0125, z],
+      iron,
+    );
+    const leaf = door(
+      `cell_${number}_door`,
+      x,
+      lane,
+      width,
+      false,
+      y,
+      height,
+      true,
+    );
+    configureCellSlider(leaf, cell);
   }
   for (const cell of CELL_ROOMS.filter(
     (c) => c.number === 46 || c.number === 47,
@@ -533,7 +585,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     (c) => c.side === "south" && c.level === "upper",
   )) {
     const { left, right, centerX: cx, doorX, front, number } = cell;
-    wall([0.35, 4.2, 9.5], [left, 2, 24.75]);
+    wall([0.35, 4.2, 9.5], [left, 2, 20.75]);
     cellEntrance(cell);
     const sign = label(
       staticWorld,
@@ -542,14 +594,14 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
       cell.medical ? 2.2 : 1.8,
     );
     sign.rotation.y = Math.PI;
-    environment.add("Bunk", cx + 1.65, -0.05, 26.4);
-    environment.add("Toilet", cx - 1.6, -0.05, 28.3);
-    environment.add("Sink", left + 0.53, 0, 26.1, -Math.PI / 2);
-    environment.add("Luminaire", cx, 4.8, 24.5);
-    prop(buildTableBounds(), cx + 1.65, 26.4);
-    prop(buildLegacyToiletBounds(), cx - 1.6, 28.3);
+    environment.add("Bunk", cx + 1.65, -0.05, 22.4);
+    environment.add("Toilet", cx - 1.6, -0.05, 24.3);
+    environment.add("Sink", left + 0.53, 0, 22.1, -Math.PI / 2);
+    environment.add("Luminaire", cx, 4.8, 20.5);
+    prop(buildTableBounds(), cx + 1.65, 22.4);
+    prop(buildLegacyToiletBounds(), cx - 1.6, 24.3);
     const light = new THREE.PointLight(0xd8cbb1, 16, 10, 2);
-    light.position.set(cx, 4.6, 24.5);
+    light.position.set(cx, 4.6, 20.5);
     scene.add(light);
   }
   for (const cell of CELL_ROOMS.filter((c) => c.level === "lower")) {
@@ -851,23 +903,23 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   );
   const medical = material(0x7d9d94, 0.85);
   for (const x of [-11, -6]) {
-    box(staticWorld, [1.4, 0.12, 2.5], [x, 0.6, 22.5], iron, 0.03);
-    box(staticWorld, [1.3, 0.2, 2.35], [x, 0.77, 22.5], linen, 0.06);
-    box(staticWorld, [1.32, 0.07, 1.4], [x, 0.91, 22.95], medical, 0.025);
-    for (const z of [21.4, 23.6])
+    box(staticWorld, [1.4, 0.12, 2.5], [x, 0.6, 18.5], iron, 0.03);
+    box(staticWorld, [1.3, 0.2, 2.35], [x, 0.77, 18.5], linen, 0.06);
+    box(staticWorld, [1.32, 0.07, 1.4], [x, 0.91, 18.95], medical, 0.025);
+    for (const z of [17.4, 19.6])
       box(staticWorld, [1.4, 0.7, 0.05], [x, 0.9, z], iron);
   }
-  label(staticWorld, "+  INFIRMARY", [-5.95, 4.6, 19.9], 2.5).rotation.y =
+  label(staticWorld, "+  INFIRMARY", [-5.95, 4.6, 15.9], 2.5).rotation.y =
     Math.PI;
-  wall([1.4, 1.9, 0.5], [-8, 0.95, 25.7], medical);
+  wall([1.4, 1.9, 0.5], [-8, 0.95, 21.7], medical);
   const stethoscope = new THREE.Group();
   const tube = new THREE.Mesh(
     new THREE.TorusGeometry(0.12, 0.015, 8, 20, Math.PI * 1.65),
     dark,
   );
-  tube.position.set(-8, 1.55, 25.41);
+  tube.position.set(-8, 1.55, 21.41);
   stethoscope.add(tube);
-  cylinder(stethoscope, 0.045, 0.025, [-8.1, 1.35, 25.4], iron).rotation.x =
+  cylinder(stethoscope, 0.045, 0.025, [-8.1, 1.35, 21.4], iron).rotation.x =
     Math.PI / 2;
   scene.add(stethoscope);
   pickupMeshes.set("stethoscope_pickup", stethoscope);
@@ -876,7 +928,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     "Medical cabinet",
     "Take the acoustic stethoscope",
     -8,
-    24.7,
+    20.7,
     "pickup",
   );
   // Laundry: glazed drum doors, pipes, linen and mechanical sound masking.
@@ -1128,11 +1180,11 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
       id: "guard_captain",
       name: "Captain Vance",
       type: "night_captain",
-      position: [-38, 0, 18.5],
+      position: [-38, 0, 14.5],
       rotationY: -Math.PI / 2,
       patrolRoute: [
-        [-38, 0, 18.5],
-        [-63, 0, 18.5],
+        [-38, 0, 14.5],
+        [-63, 0, 14.5],
       ],
       currentWaypoint: 0,
       state: "patrol",
@@ -1157,7 +1209,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
         id: "guard_upper_east",
         name: "Officer Cole",
         y: 0,
-        z: 18.5,
+        z: 14.5,
         a: -10,
         b: -30,
       },
@@ -1181,7 +1233,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
         id: "guard_lower_south_east",
         name: "Officer Ward",
         y: ATRIUM.depth,
-        z: 18.5,
+        z: 14.5,
         a: -12,
         b: -34,
       },
@@ -1189,7 +1241,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
         id: "guard_lower_south_west",
         name: "Officer Blake",
         y: ATRIUM.depth,
-        z: 18.5,
+        z: 14.5,
         a: -62,
         b: -40,
       },
@@ -1197,7 +1249,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
         id: "guard_lower_center",
         name: "Officer Shaw",
         y: ATRIUM.depth,
-        z: 9,
+        z: 7,
         a: -25,
         b: -53,
       },

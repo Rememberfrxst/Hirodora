@@ -14,7 +14,7 @@ test("48 independent wide gates frame both floors and all rows load real fixture
     const cells = e.worldData.cells;
     const cuts = [];
     for (let x = -67; x < -4; x += 0.5)
-      for (const z of [-1, 0, 18, 19])
+      for (const z of [-1, 0, 14, 15])
         if (
           e.worldData.colliders.some(
             (b: any) =>
@@ -131,8 +131,10 @@ test("Cell 46 stays open for exploration in new games and previously closed save
       (o: any) => o.id === "cell_latch_46",
     );
     e.overlayOpen = true;
-    const yaw = e.worldData.doors.get("cell_46_door").rotation.y;
-    e.playerPos = [-10, 0, -3.2];
+    const gate = e.worldData.doors.get("cell_46_door");
+    const yaw = gate.rotation.y;
+    const slidOpen = gate.position.x !== gate.userData.slider.closedX;
+    e.playerPos = [-10.7, 0, -3.2];
     e.playerRotY = 0;
     e.keys.KeyS = true;
     for (let i = 0; i < 90; i++) e.move(0.016);
@@ -167,10 +169,12 @@ test("Cell 46 stays open for exploration in new games and previously closed save
       heldOpen,
       legacyLocked,
       legacyUnlocked,
+      slidOpen,
     };
   });
-  expect(result.yaw).toBe(Math.PI / 2);
-  expect(result.restoredYaw).toBe(Math.PI / 2);
+  expect(result.yaw).toBe(0);
+  expect(result.restoredYaw).toBe(0);
+  expect(result.slidOpen).toBe(true);
   expect(result.outside).toBeGreaterThan(-0.5);
   expect(result.inside).toBeLessThan(-2.5);
   expect(result.restored).toBe(true);

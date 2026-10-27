@@ -4,8 +4,8 @@ export const CELL_BLOCK = {
   east: -3.1,
   north: -11.5,
   northFront: -2,
-  southFront: 20,
-  south: 29.5,
+  southFront: 16,
+  south: 25.5,
   height: 5.2,
 } as const;
 export interface CellRoom {
@@ -21,7 +21,7 @@ export interface CellRoom {
   floorY: number;
   level: "upper" | "lower";
 }
-export const CELL_GATE_WIDTH = 2.4;
+export const CELL_GATE_WIDTH = 1.4;
 const spans = [
   [-8.8, -3.1],
   [-14, -8.8],
@@ -91,12 +91,13 @@ export function cellApproachTarget(
   return [
     Math.max(cell.left + 0.5, Math.min(cell.right - 0.5, point[0])),
     cell.floorY,
-    cell.front + (cell.side === "north" ? 0.5 : -0.5),
+    // Leave room for the external sliding track, actor radius and 0.5m nav grid.
+    cell.front + (cell.side === "north" ? 0.9 : -0.9),
   ];
 }
 export const NAV_BOUNDS = {
   minX: -70,
   maxX: 30.5,
   minZ: -11,
-  maxZ: 29.75,
+  maxZ: 25.75,
 } as const;

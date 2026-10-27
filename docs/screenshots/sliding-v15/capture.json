@@ -1,0 +1,131 @@
+{
+  "captures": [
+    {
+      "name": "01-atrium",
+      "position": [
+        -5.8,
+        1.65,
+        2
+      ],
+      "target": [
+        -60,
+        1.5,
+        1.5
+      ],
+      "item": null,
+      "calls": 533,
+      "triangles": 3396524,
+      "cellCount": 48,
+      "upperGuards": 4,
+      "lowerGuards": 5,
+      "fogDensity": 0.013,
+      "cell46Slide": 1
+    },
+    {
+      "name": "02-independent-gates",
+      "position": [
+        -12.5,
+        1.6,
+        -8.5
+      ],
+      "target": [
+        -10.5,
+        1.3,
+        -2
+      ],
+      "item": null,
+      "calls": 411,
+      "triangles": 3137939,
+      "cellCount": 48,
+      "upperGuards": 4,
+      "lowerGuards": 5,
+      "fogDensity": 0.013,
+      "cell46Slide": 1
+    },
+    {
+      "name": "03-lower-cell-rows",
+      "position": [
+        -16,
+        -1.55,
+        7
+      ],
+      "target": [
+        -60,
+        -1.7,
+        7
+      ],
+      "item": null,
+      "calls": 463,
+      "triangles": 3153253,
+      "cellCount": 48,
+      "upperGuards": 4,
+      "lowerGuards": 5,
+      "fogDensity": 0.013,
+      "cell46Slide": 1
+    },
+    {
+      "name": "04-screwdriver-in-hand",
+      "position": [
+        -6.1,
+        1.6,
+        -5.4
+      ],
+      "target": [
+        -6,
+        1.45,
+        -1
+      ],
+      "item": "screwdriver",
+      "calls": 394,
+      "triangles": 3078185,
+      "cellCount": 48,
+      "upperGuards": 4,
+      "lowerGuards": 5,
+      "fogDensity": 0.013,
+      "cell46Slide": 1
+    },
+    {
+      "name": "05-lower-hall",
+      "position": [
+        -18,
+        -1.55,
+        7
+      ],
+      "target": [
+        -4,
+        0,
+        7
+      ],
+      "item": null,
+      "calls": 392,
+      "triangles": 3308164,
+      "cellCount": 48,
+      "upperGuards": 4,
+      "lowerGuards": 5,
+      "fogDensity": 0.013,
+      "cell46Slide": 1
+    },
+    {
+      "name": "06-mobile-key",
+      "position": [
+        -6.5,
+        1.65,
+        14.5
+      ],
+      "target": [
+        -50,
+        1.3,
+        14.5
+      ],
+      "item": "cell_key",
+      "calls": 529,
+      "triangles": 2629650,
+      "cellCount": 48,
+      "upperGuards": 4,
+      "lowerGuards": 5,
+      "fogDensity": 0.013,
+      "cell46Slide": 1
+    }
+  ],
+  "errors": []
+}

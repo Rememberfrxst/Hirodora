@@ -51,7 +51,14 @@ import {
 import { WarriorActor } from "./warrior";
 import { FirstPersonView } from "./viewmodel";
 import {
+  nextCellSlide,
+  positionCellSlider,
+  targetCellSlider,
+  type CellSlider,
+} from "./cell-gates";
+import {
   CELL_ROOMS,
+  CELL_GATE_WIDTH,
   isExplorationCell,
   cellApproachTarget,
 } from "./cell-block";
@@ -997,11 +1004,8 @@ export class GameEngine {
     if (!this.gameFlags.passage_open)
       blocks.push(this.worldData.opening.passageBounds);
     for (const [id, bounds] of this.worldData.doorColliders) {
-      const cellNumber = Number(id.match(/^cell_(\d+)_door$/)?.[1]);
-      const hinged =
-        isExplorationCell(cellNumber) ||
-        (cellNumber === 46 && !!this.gameFlags.opening_v3);
-      if (!this.doorIsOpen(id) || hinged) blocks.push(bounds);
+      if (!this.doorIsOpen(id) || this.worldData.doors.get(id)?.userData.slider)
+        blocks.push(bounds);
     }
     this.collisionSignature = signature;
     this.collisionCache = blocks;
@@ -1044,8 +1048,8 @@ export class GameEngine {
         a[0] > -8.5 &&
         a[0] < -3.3 &&
         a[2] < -2 &&
-        box.min.z >= -2.15 &&
-        box.max.z <= -1.85
+        (box === this.worldData.doorColliders.get("cell_47_door") ||
+          (box.min.z >= -2.15 && box.max.z <= -1.85))
       )
         return false;
       const hit = ray.intersectBox(box, this.scratchHit);
@@ -1187,7 +1191,7 @@ export class GameEngine {
         closing &&
         Math.abs(this.playerPos[1] - cell.floorY) < 0.8 &&
         this.playerPos[0] > cell.doorX - 0.35 &&
-        this.playerPos[0] < cell.doorX + 2.75 &&
+        this.playerPos[0] < cell.doorX + CELL_GATE_WIDTH + 0.35 &&
         Math.abs(this.playerPos[2] - cell.front) < 0.6
       ) {
         this.notice("Step clear of the doorway before closing the gate.");
@@ -1628,7 +1632,7 @@ export class GameEngine {
     this.emitChange();
   }
 
-  private syncWorld() {
+  private syncWorld(snapGates = false) {
     const opening = !!this.gameFlags.opening_v3;
     // Keep Cell 46 available for exploration, including previously closed saves.
     if (opening) this.gameFlags.cell_46_open = true;
@@ -1751,26 +1755,14 @@ export class GameEngine {
     for (const [id, group] of this.worldData.doors) {
       const open = this.doorIsOpen(id),
         number = Number(id.match(/^cell_(\d+)_door$/)?.[1]);
-      if (isExplorationCell(number) || (number === 46 && opening)) {
-        const cell = CELL_ROOMS.find((c) => c.number === number)!;
-        group.position.y = cell.floorY;
-        group.rotation.y = open
-          ? cell.side === "north"
-            ? Math.PI / 2
-            : -Math.PI / 2
-          : 0;
+      if (group.userData.slider) {
+        targetCellSlider(group, open, snapGates);
         this.worldData.doorColliders
           .get(id)!
           .setFromObject(group)
           .expandByScalar(0.03);
       } else {
         group.position.y = (group.userData.floorY ?? 0) + (open ? 5.3 : 0);
-        if (id === "cell_46_door") {
-          group.rotation.y = 0;
-          this.worldData.doorColliders
-            .get(id)!
-            .copy(group.userData.closedBounds);
-        }
       }
       if (id === "cell_47_door" && this.gameState !== "intro")
         group.rotation.y = 0;
@@ -1918,7 +1910,7 @@ export class GameEngine {
       this.guardActors.get(g.id)?.reset();
     }
     this.paths.clear();
-    this.syncWorld();
+    this.syncWorld(true);
     this.clearInput();
     this.emitChange();
   }
@@ -2004,6 +1996,7 @@ export class GameEngine {
     }
     if (this.gameState === "playing" && !this.overlayOpen) {
       this.elapsed += dt;
+      this.updateCellGates(dt);
       if (!this.activeMiniGame) {
         this.updateOpening(dt);
         this.move(dt);
@@ -2080,6 +2073,25 @@ export class GameEngine {
     }
     this.frameId = requestAnimationFrame(this.tick);
   };
+  private updateCellGates(dt: number) {
+    for (const [id, gate] of this.worldData.doors) {
+      const s = gate.userData.slider as CellSlider | undefined;
+      if (!s) continue;
+      const fraction = nextCellSlide(gate, dt);
+      if (fraction === s.fraction) continue;
+      const bounds = (gate.userData.closedBounds as THREE.Box3).clone();
+      bounds.translate(new THREE.Vector3(s.travel * fraction, 0, 0));
+      // A closing/opening leaf pauses rather than clipping a player or officer.
+      if (
+        bodyBlocked(...this.playerPos, [bounds]) ||
+        this.worldData.guards.some((g) => bodyBlocked(...g.position, [bounds]))
+      )
+        continue;
+      positionCellSlider(gate, fraction);
+      this.worldData.doorColliders.get(id)!.copy(bounds);
+      this.collisionSignature = -1;
+    }
+  }
   private move(dt: number) {
     this.warriorActor?.update(this.elapsed, this.reducedMotion);
     const [mx, mz] = [

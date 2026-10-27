@@ -1,0 +1,134 @@
+{
+  "version": "0.15.0",
+  "layout": {
+    "cells": 48,
+    "corridorWidth": 18,
+    "doorWidth": 1.4,
+    "slideSeconds": 0.7
+  },
+  "unitChecks": 63,
+  "targetedBrowserScenarios": 12,
+  "runs": [
+    {
+      "file": "browser-1.json",
+      "stats": {
+        "startTime": "2026-10-27T17:32:12.647Z",
+        "duration": 710868.436,
+        "expected": 11,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "browser-2.json",
+      "stats": {
+        "startTime": "2026-10-27T17:40:04.680Z",
+        "duration": 155499.916,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "browser-3.json",
+      "stats": {
+        "startTime": "2026-10-27T17:42:48.945Z",
+        "duration": 76718.747,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "browser-4.json",
+      "stats": {
+        "startTime": "2026-10-27T17:45:30.869Z",
+        "duration": 38968.827,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    }
+  ],
+  "cases": [
+    [
+      "nine officers patrol both levels and a lower cell can be opened, entered and saved",
+      "passed"
+    ],
+    [
+      "stairs support actual player movement, gates are independent, and equipped tools persist",
+      "passed"
+    ],
+    [
+      "guards route down stairs and cannot capture a player through the gallery floor",
+      "passed"
+    ],
+    [
+      "48 independent wide gates frame both floors and all rows load real fixtures",
+      "passed"
+    ],
+    [
+      "Cell 46 stays open for exploration in new games and previously closed saves",
+      "passed"
+    ],
+    [
+      "tool requirements, all four puzzles, crafting, checkpoints and Brotherhood ending",
+      "passed"
+    ],
+    [
+      "closed walls block guard sight and movement; all required rooms have routes",
+      "passed"
+    ],
+    [
+      "new-game cinematic fires once, pauses safely, closes gate and releases a playable checkpoint",
+      "passed"
+    ],
+    [
+      "Cell 47 key twist, quiet bed, tool, toilet, passage, save and return",
+      "passed"
+    ],
+    [
+      "hard pushing alerts the examining guard, then he returns to the body without crossing bars",
+      "passed"
+    ],
+    [
+      "full barred cell fronts retain collision while small doors slide, protect actors and restore",
+      "passed"
+    ],
+    [
+      "spatial AI sees through bars but cannot cross them, loses sight and returns to its duty",
+      "passed"
+    ]
+  ],
+  "images": [
+    "01-atrium.png",
+    "02-independent-gates.png",
+    "03-lower-cell-rows.png",
+    "04-screwdriver-in-hand.png",
+    "05-lower-hall.png",
+    "06-mobile-key.png"
+  ],
+  "web": {
+    "version": "0.15.0",
+    "archive": "Hirodora-0.15.0-offline.zip",
+    "html": "Hirodora-0.15.0.html",
+    "sha256": "f107375547a4245bff4d97203e8292f3b82d170365de097e9a8bae2d65fceb61",
+    "bytes": 22568913
+  },
+  "android": {
+    "version": "0.15.0",
+    "file": "Hirodora-0.15.0-android.apk",
+    "bytes": 22973418,
+    "sha256": "a2fb139dc8ae22876668eb96dbc3bc9876e6dd2c0d4740b30cdc03a869a19b6b",
+    "certificateSHA256": "d7175da40c348c91e8a8663635d3a130115aba916e5ce889e40b646c009f33ca",
+    "minAndroid": "8.0 (API 26)",
+    "targetApi": 35,
+    "architecture": "Universal; uses installed Android System WebView",
+    "distribution": "Signed release APK; offline assets included; no network permission"
+  },
+  "note": "Targeted gate/layout regression coverage; the entire 37-scenario browser suite was not rerun. Physical-device GPU/thermal testing remains open."
+}

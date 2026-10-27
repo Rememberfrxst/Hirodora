@@ -39,13 +39,13 @@ test("collision respects height and old checkpoints migrate without losing north
   assert.equal(bodyBlocked(-5.5, 0, 0.5, [b]), true);
   assert.equal(bodyBlocked(-5.5, -3.2, 0.5, [b]), false);
   assert.deepEqual(migratePosition([-6, 0, -6]), [-6, 0, -6]);
-  assert.deepEqual(migratePosition([-11, 0, 9]), [-11, 0, 24]);
+  assert.deepEqual(migratePosition([-11, 0, 9]), [-11, 0, 20]);
   assert.deepEqual(migratePosition([-30, 0, 3]), [-30, 0, 0.4]);
-  assert.deepEqual(migratePosition([-30, -3.2, 5], 13), [-30, -3.2, 5]);
-  assert.deepEqual(migratePosition([-11, 0, 16], 13), [-11, 0, 24]);
+  assert.deepEqual(migratePosition([-30, -3.2, 5], 13), [-30, -3.2, 4]);
+  assert.deepEqual(migratePosition([-11, 0, 16], 13), [-11, 0, 20]);
   assert.deepEqual(migratePosition([-11, 0, -6], 13), [-11, 0, -6]);
-  assert.deepEqual(migratePosition([-9.7, -1.6, 5], 13), [-9.7, -1.6, 9]);
-  assert.deepEqual(migratePosition([-30, -3.2, 24], 14), [-30, -3.2, 24]);
+  assert.deepEqual(migratePosition([-9.7, -1.6, 5], 13), [-9.7, -1.6, 7]);
+  assert.deepEqual(migratePosition([-30, -3.2, 24], 14), [-30, -3.2, 20]);
   assert.equal(supportHeight(-11, -8, -3.2), -3.2);
   assert.equal(supportHeight(-11, 25, -3.2), -3.2);
   assert.deepEqual(evidenceTarget([-11, -1.8, -2]), [-11, -3.2, -2]);

@@ -8,17 +8,17 @@
 
 **Every sound has a consequence.**
 
-**v0.13.0 · Playable Atrium / Independent Gates / Held Tools**
+**v0.14.0 · Two Floors / 48 Cells / Nine Officers**
 
-**[↓ DOWNLOAD ANDROID APK](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/codex/cell47-environment-overhaul/downloads/Hirodora-0.13.0-android.apk)**
+**[↓ DOWNLOAD ANDROID APK](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.14.0-android.apk)**
 
-[Offline web ZIP](downloads/Hirodora-0.13.0-offline.zip?raw=true) · [Single-file HTML](downloads/Hirodora-0.13.0.html?raw=true) · [APK checksums](downloads/android-latest.json) · [Android installation](docs/ANDROID.md)
+[↓ Offline web ZIP](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.14.0-offline.zip) · [Single-file HTML download](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.14.0.html) · [ZIP checksum](downloads/latest.json) · [APK checksums](downloads/android-latest.json) · [Android installation](docs/ANDROID.md)
 
 </div>
 
 ## A playable prison atrium
 
-Block C has **12 cells on each side of a 14-metre atrium**: two 3-metre upper galleries surround an 8-metre opening, with an exercise hall 3.2 metres below. Stairs and end bridges connect the playable floors. Each cell has its **own gate, steel frame, masonry shoulders and lintel**. Cell 47/46 puzzles retain their original locations; medical cells move with the southern row.
+Block C now has **48 cells: 12 left and 12 right on each of two playable floors**. The atrium is **22 metres wide**, with two 3-metre upper galleries around a 16-metre opening. Stairs and end bridges connect the lower corridor 3.2 metres below. Original cell interiors remain 9.5 metres deep; each cell has a **2.4-metre-wide independent gate** with its own frame, masonry shoulders and latch. The roof is one metre higher, with ceiling-mounted lights and light atmospheric fog. The overhead beam/pipe grid is removed. **Four officers serve upstairs (including the opening examination duty), and five patrol downstairs**; their AI can investigate and traverse the stairs.
 
 The supplied **Redeemed Warrior** occupies Cell 46, preserving Boulder's interaction and challenge. Its USDZ is converted to a local 2.1 MB textured GLB. Keys, the supplied screwdriver and other equipment appear in a first-person anatomical hand. Select **Equip / Unequip** in the satchel; equipment selection is saved. Dart ammo/fire controls only appear for the dart pistol.
 
@@ -26,30 +26,30 @@ The top-right HUD has only **Hint** and **Pause**. The bulb and up-arrow referen
 
 **Police replacement remains pending:** a local 69-bone conversion of the supplied mesh has been prepared for inspection. Complete source/license details are required before publishing it; grip/deformation polishing remains open. This release ships the previously licensed officers. The Warrior is static source geometry; breathing presentation does not imply a new skeletal performance.
 
-[Implementation and remaining work](docs/ATRIUM-V13.md) · [Character credits](docs/GUARD-ASSETS.md) · [Environment credits](src/assets/environment/UPLOADED-ASSET-LICENSES.txt)
+[Current implementation and verification](docs/ATRIUM-V14.md) · [Held tools / Warrior work](docs/ATRIUM-V13.md) · [Character credits](docs/GUARD-ASSETS.md) · [Environment credits](src/assets/environment/UPLOADED-ASSET-LICENSES.txt)
 
 ## Latest screenshots — exactly six
 
-Six actual game renders. The first two cameras match the previous captures. [Camera positions and render statistics](docs/screenshots/atrium-v13/capture.json).
+Six actual game renders. The first two cameras match the previous captures. [Camera positions and render statistics](docs/screenshots/atrium-v14/capture.json).
 
-Compare [previous corridor](docs/screenshots/block-v12/01-wide-corridor.png) with [current atrium](docs/screenshots/atrium-v13/01-atrium.png), and [previous Cell 46 gate](docs/screenshots/block-v12/03-cell46-gate.png) with [its new independent entrance](docs/screenshots/atrium-v13/02-independent-gates.png).
+Compare [previous atrium](docs/screenshots/atrium-v13/01-atrium.png) with [wider two-floor block](docs/screenshots/atrium-v14/01-atrium.png), and [previous gate](docs/screenshots/atrium-v13/02-independent-gates.png) with [the wider Cell 46 gate](docs/screenshots/atrium-v14/02-independent-gates.png).
 
 <table>
-<tr><td width="50%"><img src="docs/screenshots/atrium-v13/01-atrium.png" alt="Upper galleries and lower exercise hall" /></td><td width="50%"><img src="docs/screenshots/atrium-v13/02-independent-gates.png" alt="Individual Cell 46 gate and solid masonry" /></td></tr>
-<tr><td align="center"><sub>14-METRE ATRIUM · 24 CELLS</sub></td><td align="center"><sub>INDEPENDENT CELL GATES</sub></td></tr>
-<tr><td><img src="docs/screenshots/atrium-v13/03-redeemed-warrior.png" alt="Supplied Redeemed Warrior in Cell 46" /></td><td><img src="docs/screenshots/atrium-v13/04-screwdriver-in-hand.png" alt="Supplied screwdriver held in a first-person hand" /></td></tr>
-<tr><td align="center"><sub>THE REDEEMED WARRIOR · CELL 46</sub></td><td align="center"><sub>FIRST-PERSON EQUIPMENT</sub></td></tr>
-<tr><td><img src="docs/screenshots/atrium-v13/05-lower-hall.png" alt="Playable lower hall and end stairs" /></td><td><img src="docs/screenshots/atrium-v13/06-mobile-key.png" alt="Equipped key and landscape mobile controls" /></td></tr>
-<tr><td align="center"><sub>LOWER HALL · END STAIRS</sub></td><td align="center"><sub>MOBILE · EQUIPPED KEY</sub></td></tr>
+<tr><td width="50%"><img src="docs/screenshots/atrium-v14/01-atrium.png" alt="Wider atrium with cells on both floors" /></td><td width="50%"><img src="docs/screenshots/atrium-v14/02-independent-gates.png" alt="Wide individual Cell 46 gate" /></td></tr>
+<tr><td align="center"><sub>22-METRE ATRIUM · 48 CELLS</sub></td><td align="center"><sub>2.4-METRE INDEPENDENT GATES</sub></td></tr>
+<tr><td><img src="docs/screenshots/atrium-v14/03-lower-cell-rows.png" alt="Left and right cells around the lower corridor" /></td><td><img src="docs/screenshots/atrium-v14/04-screwdriver-in-hand.png" alt="Large original Cell 47 and equipped screwdriver" /></td></tr>
+<tr><td align="center"><sub>LOWER CELLS · FIVE OFFICERS</sub></td><td align="center"><sub>CELL 47 · FIRST-PERSON EQUIPMENT</sub></td></tr>
+<tr><td><img src="docs/screenshots/atrium-v14/05-lower-hall.png" alt="Lower corridor and stairs under clear roof" /></td><td><img src="docs/screenshots/atrium-v14/06-mobile-key.png" alt="Opposite upper gallery in mobile landscape" /></td></tr>
+<tr><td align="center"><sub>CONNECTED FLOORS · CEILING LIGHTS</sub></td><td align="center"><sub>MOBILE · SINGLE-DOT AIM</sub></td></tr>
 </table>
 
 ## Play on mobile
 
 Download the APK above, open it in Android Files and allow installation from that source when prompted. Requires **Android 8.0+**, an updated Android System WebView and WebGL 2. The app opens horizontally and includes all models, textures and audio offline, with **no Internet, storage, microphone or tracking permission**.
 
-Version 0.13 uses the existing release certificate and versionCode **1300**. Older saves migrate to safe upper walkways, retaining inventory and puzzles. Install over an earlier release to retain app-local saves and settings; uninstalling clears them.
+Version 0.14 uses the existing release certificate and versionCode **1400**. Older saves migrate to safe walkways, retaining inventory and puzzles. Install over an earlier release to retain app-local saves and settings; uninstalling clears them.
 
-For the web edition, extract the ZIP and open `Hirodora-0.13.0.html` in a full WebGL 2 browser. File handling depends on your device. On iPhone/iPad, use the hosted PWA; a local HTML viewer may block scripts. Portrait play pauses behind a rotate notice.
+For the web edition, download through the direct ZIP link above, extract it and open `Hirodora-0.14.0.html` in a full WebGL 2 browser. The links bypass GitHub's large-file preview. File handling depends on your device. On iPhone/iPad, use the hosted PWA; a local HTML viewer may block scripts. Portrait play pauses behind a rotate notice.
 
 ## How to finish the current chapter
 
@@ -101,9 +101,9 @@ The offline pipeline needs ffmpeg and preserves attribution. Original source upl
 
 ## Quality and release status
 
-Asset/logic tests, browser gameplay tests, production packaging and signed-APK validation are documented in [CELL-BLOCK-V12.md](docs/CELL-BLOCK-V12.md). Browser tests cover both the opening and legacy campaign, audio, HUD, save/load, intro, collision, stealth and offline startup.
+Asset/logic tests, browser gameplay tests, production packaging and signed-APK validation are documented in [ATRIUM-V14.md](docs/ATRIUM-V14.md). Browser tests cover both floors, patrol movement, the opening and legacy campaign, audio, HUD, save/load, intro, collision, stealth and offline startup.
 
-Physical-phone frame rate, thermal behavior and device-specific WebView/GPU compatibility still need hardware testing. Software-rendered browser checks are not Android-device certification or a promise of glitch-free gameplay. No AAA/GTA-level fidelity is claimed. Existing guard models are preserved. The uploaded police and warrior replacements are pending the file/license blockers above.
+Physical-phone frame rate, thermal behavior and device-specific WebView/GPU compatibility still need hardware testing. Software-rendered browser checks are not Android-device certification or a promise of glitch-free gameplay. Existing licensed guard models are preserved; the supplied police replacement still needs its source/license details and grip polish. The supplied Warrior is integrated.
 
 ## Sources and credits
 

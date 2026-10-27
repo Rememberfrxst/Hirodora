@@ -523,7 +523,6 @@ button:active {
   top: 50%;
   width: 16px;
   height: 16px;
-  border: 1px solid #e8e1c225;
   transform: translate(-50%, -50%);
   border-radius: 50%;
   display: grid;

@@ -1,0 +1,213 @@
+{
+  "version": "0.14.0",
+  "units": 61,
+  "browserScenarios": 36,
+  "runs": [
+    {
+      "report": "browser-1.json",
+      "stats": {
+        "startTime": "2026-10-27T14:17:35.771Z",
+        "duration": 1403051.182,
+        "expected": 34,
+        "skipped": 0,
+        "unexpected": 2,
+        "flaky": 0
+      },
+      "cases": [
+        {
+          "title": "restart confirmation and new game reset opening progress through the UI",
+          "status": "passed"
+        },
+        {
+          "title": "Cell 47 has silent ambience; guard dialogue retains intelligibility across bars",
+          "status": "passed"
+        },
+        {
+          "title": "nine officers patrol both levels and a lower cell can be opened, entered and saved",
+          "status": "passed"
+        },
+        {
+          "title": "stairs support actual player movement, gates are independent, and equipped tools persist",
+          "status": "passed"
+        },
+        {
+          "title": "guards route down stairs and cannot capture a player through the gallery floor",
+          "status": "passed"
+        },
+        {
+          "title": "48 independent wide gates frame both floors and all rows load real fixtures",
+          "status": "passed"
+        },
+        {
+          "title": "hint/pause are the only top tools; context-only touch action and rotated arrows match the requested HUD",
+          "status": "passed"
+        },
+        {
+          "title": "main-menu confirmation traps focus, defaults to No, cancels safely and confirms without deleting the checkpoint",
+          "status": "passed"
+        },
+        {
+          "title": "Cell 46 exploration gate unlocks after the chapter and gate state survives save/load",
+          "status": "passed"
+        },
+        {
+          "title": "desktop starts, moves, crouches, pauses and closes intel without stuck input",
+          "status": "passed"
+        },
+        {
+          "title": "rigged officers animate independently, patrol, switch LOD and retain non-lethal dart hits",
+          "status": "passed"
+        },
+        {
+          "title": "failed officer downloads block play and can be retried without a primitive fallback",
+          "status": "passed"
+        },
+        {
+          "title": "authored environment loads locally and graphics presets preserve collision and gameplay state",
+          "status": "failed"
+        },
+        {
+          "title": "tool requirements, all four puzzles, crafting, checkpoints and Brotherhood ending",
+          "status": "passed"
+        },
+        {
+          "title": "closed walls block guard sight and movement; all required rooms have routes",
+          "status": "passed"
+        },
+        {
+          "title": "mobile landscape controls work and portrait rotation safely pauses without stuck input",
+          "status": "passed"
+        },
+        {
+          "title": "portrait mobile launch gates play and handles denied fullscreen/unsupported rotation",
+          "status": "passed"
+        },
+        {
+          "title": "production assets load from a subdirectory and the game reloads offline",
+          "status": "failed"
+        },
+        {
+          "title": "downloaded standalone HTML runs in an offline browser without network requests",
+          "status": "passed"
+        },
+        {
+          "title": "all HUD presets fit a small landscape screen without overlapping controls",
+          "status": "passed"
+        },
+        {
+          "title": "custom HUD saves drag and size, cancels edits, survives reload and resets presets",
+          "status": "passed"
+        },
+        {
+          "title": "reference menu has three choices and settings tabs change real persisted values",
+          "status": "passed"
+        },
+        {
+          "title": "new-game cinematic fires once, pauses safely, closes gate and releases a playable checkpoint",
+          "status": "passed"
+        },
+        {
+          "title": "skipping intro reaches the same corpse/key/closed-gate state on mobile",
+          "status": "passed"
+        },
+        {
+          "title": "uploaded toilet stays clear of the sink throughout its diagonal slide",
+          "status": "passed"
+        },
+        {
+          "title": "bed and ceramic movement audio follow geometry, stop on release and keep original stealth noise",
+          "status": "passed"
+        },
+        {
+          "title": "bars transmit audio but solid cell walls attenuate; idle cell remains silent",
+          "status": "passed"
+        },
+        {
+          "title": "guard dialogue steals a low-priority effect at the mobile voice cap without touching AI",
+          "status": "passed"
+        },
+        {
+          "title": "Cell 47 key twist, quiet bed, tool, toilet, passage, save and return",
+          "status": "passed"
+        },
+        {
+          "title": "audio recordings decode, blocked movement is silent and channels persist",
+          "status": "passed"
+        },
+        {
+          "title": "hard pushing alerts the examining guard, then he returns to the body without crossing bars",
+          "status": "passed"
+        },
+        {
+          "title": "mobile contextual holding releases on cancel and rotation without stuck input",
+          "status": "passed"
+        },
+        {
+          "title": "adaptive resolution, paused preset changes and mobile resize never present a cleared frame",
+          "status": "passed"
+        },
+        {
+          "title": "spatial AI sees through bars but cannot cross them, loses sight and returns to its duty",
+          "status": "passed"
+        },
+        {
+          "title": "noise stays at its impact source; guard reacts while a puzzle is open",
+          "status": "passed"
+        },
+        {
+          "title": "two-handed weapon grip follows the active skeleton across officer LOD and returns to idle hands",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "report": "browser-2.json",
+      "stats": {
+        "startTime": "2026-10-27T14:31:59.057Z",
+        "duration": 131475.00900000002,
+        "expected": 2,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "cases": [
+        {
+          "title": "authored environment loads locally and graphics presets preserve collision and gameplay state",
+          "status": "passed"
+        },
+        {
+          "title": "production assets load from a subdirectory and the game reloads offline",
+          "status": "passed"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    "01-atrium.png",
+    "02-independent-gates.png",
+    "03-lower-cell-rows.png",
+    "04-screwdriver-in-hand.png",
+    "05-lower-hall.png",
+    "06-mobile-key.png"
+  ],
+  "comparedCameras": 2,
+  "web": {
+    "version": "0.14.0",
+    "archive": "Hirodora-0.14.0-offline.zip",
+    "html": "Hirodora-0.14.0.html",
+    "sha256": "430babbd46babc1569f72d0cf69dcff627cdeca672532d90421446d82fa80fc9",
+    "bytes": 22567653
+  },
+  "android": {
+    "version": "0.14.0",
+    "file": "Hirodora-0.14.0-android.apk",
+    "bytes": 22972826,
+    "sha256": "bc4e5241c6fa0c92fc64f0f8168b962465ad4546032252b88566b0f38ef2b063",
+    "certificateSHA256": "d7175da40c348c91e8a8663635d3a130115aba916e5ce889e40b646c009f33ca",
+    "minAndroid": "8.0 (API 26)",
+    "targetApi": 35,
+    "architecture": "Universal; uses installed Android System WebView",
+    "distribution": "Signed release APK; offline assets included; no network permission"
+  },
+  "note": "Software-rendered browser and APK payload validation; physical Android GPU/thermal QA remains open."
+}

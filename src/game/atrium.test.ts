@@ -7,6 +7,7 @@ import {
   findSurfacePath,
   migratePosition,
   bodyBlocked,
+  evidenceTarget,
 } from "./atrium";
 test("atrium upper galleries, lower hall, end bridge and continuous stairs have explicit support", () => {
   assert.equal(supportHeight(-25, 0, 0), 0);
@@ -15,7 +16,9 @@ test("atrium upper galleries, lower hall, end bridge and continuous stairs have 
   assert.equal(supportHeight(-4.5, 5, 0), 0);
   const s = ATRIUM.stairs[0];
   assert.ok(
-    Math.abs(surfaceHeights((s.top + s.bottom) / 2, 5).at(-1)! + 1.6) < 1e-6,
+    Math.abs(
+      surfaceHeights((s.top + s.bottom) / 2, ATRIUM.centerZ).at(-1)! + 1.6,
+    ) < 1e-6,
   );
 });
 test("3D route descends the stairs and does not cut through the central opening", () => {
@@ -36,7 +39,15 @@ test("collision respects height and old checkpoints migrate without losing north
   assert.equal(bodyBlocked(-5.5, 0, 0.5, [b]), true);
   assert.equal(bodyBlocked(-5.5, -3.2, 0.5, [b]), false);
   assert.deepEqual(migratePosition([-6, 0, -6]), [-6, 0, -6]);
-  assert.deepEqual(migratePosition([-11, 0, 9]), [-11, 0, 16]);
+  assert.deepEqual(migratePosition([-11, 0, 9]), [-11, 0, 24]);
   assert.deepEqual(migratePosition([-30, 0, 3]), [-30, 0, 0.4]);
   assert.deepEqual(migratePosition([-30, -3.2, 5], 13), [-30, -3.2, 5]);
+  assert.deepEqual(migratePosition([-11, 0, 16], 13), [-11, 0, 24]);
+  assert.deepEqual(migratePosition([-11, 0, -6], 13), [-11, 0, -6]);
+  assert.deepEqual(migratePosition([-9.7, -1.6, 5], 13), [-9.7, -1.6, 9]);
+  assert.deepEqual(migratePosition([-30, -3.2, 24], 14), [-30, -3.2, 24]);
+  assert.equal(supportHeight(-11, -8, -3.2), -3.2);
+  assert.equal(supportHeight(-11, 25, -3.2), -3.2);
+  assert.deepEqual(evidenceTarget([-11, -1.8, -2]), [-11, -3.2, -2]);
+  assert.deepEqual(evidenceTarget([-11, 1.4, -2]), [-11, 0, -2]);
 });

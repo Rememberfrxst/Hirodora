@@ -1,0 +1,1012 @@
+HIRODORA 0.14.0 - OFFLINE WEB EDITION
+
+Extract the ZIP and open Hirodora-0.14.0.html in a WebGL 2 browser. All code, styles, GLB models, textures and sound are embedded; no server, API key or network is needed. Wait for officer model preparation to finish before starting.
+
+Mobile: play in landscape. In portrait the game pauses behind a Rotate screen; turn the phone sideways, then tap Resume. The Fullscreen / landscape button can request it on supported Android browsers. If it does not rotate automatically, turn off the phone's portrait-orientation lock and rotate manually.
+
+Android: download, extract in Files, then choose Open with Chrome or another WebGL 2-capable browser. File handlers differ by device. If your file viewer blocks JavaScript, open the file in a full browser.
+
+iPhone/iPad: local HTML viewers may block scripts; use the hosted PWA and Add to Home Screen instead. This is not an APK or IPA.
+
+Desktop: open the HTML in Chrome, Edge or Firefox.
+
+Controls: WASD / joystick, mouse / drag look, Space / Jump, C / Crouch, Shift / Sprint, E / Interact. Settings > Graphics controls quality, screen scale and FOV. Settings > Controls > Custom HUD edits touch layout. New game plays the Cell 47 opening; Skip intro reaches the playable checkpoint.
+
+Officer and prisoner assets: MakeHuman CC0 1.0 (Data Collection AB, Joel Palmius, Jonas Hauquier), adapted through the MIT Ara 3D Gen pipeline. Walk/run: CMU Graphics Lab Motion Capture Database. The data used in this project was obtained from mocap.cs.cmu.edu. The database was created with funding from NSF EIA-0196217. Motion data may not be resold on its own. Sources and terms: https://github.com/Rememberfrxst/Hirodora/blob/main/docs/GUARD-ASSETS.md
+# Character asset pipeline · v0.13.0
+
+## Supplied Redeemed Warrior and first-person arm
+
+**The Redeemed Warrior** by **denizuchia**, source:
+https://sketchfab.com/3d-models/the-redeemed-warrior-65f5d47ef460496d9fc9a312c2cf9b5e
+and author https://sketchfab.com/denizuchia . The supplied USDZ contains explicit
+`copyright: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)` metadata.
+License: https://creativecommons.org/licenses/by/4.0/ . This is the asset author's
+declared license, not an independent ownership audit of any franchise likeness.
+Changes: USD transforms baked, metre/feet normalization, preserved UVs/normals and
+embedded colour texture, silhouette-preserving mesh simplification from 857,264
+to 102,296 triangles, 2K WebP/Meshopt encoding and Cell 46 placement. The runtime
+asset is about 2.1 MB; it is static source geometry, not a newly rigged character.
+The existing Boulder interaction, challenge and locker logic retain their IDs.
+
+The first-person forearm is extracted from the existing licensed CC0-derived
+prisoner below, retaining its anatomical geometry, skin UVs and finger skeleton.
+Project-authored finger poses and tool placements drive the held objects. The
+screwdriver uses the credited Filip GLB; keys use the project's pickup geometry.
+
+The supplied `professional-police-officer.glb` is **not distributed in this
+release**. It contains MPFB component metadata but no complete asset-level author,
+source URL or redistribution license. The offline `rig-supplied-police.mjs`
+pipeline produces locally inspected 69-bone derivatives with existing clips and
+three LODs; publishing them remains pending those source/permission details.
+The previously licensed correctional officers remain the shipped models.
+
+The new Cell 47 prisoner uses a separate **45,164-triangle, 69-bone GLB**, not a recoloured officer. It has source-fitted `male_casualsuit06` short-sleeve T-shirt/jeans, photographic skin, short hair, shoes and Idle/Walk/Run/Death clips. `scripts/build-prisoner.mjs` validates the same pinned sources below and exports local embedded textures through Meshopt/WebP. Parameters and source references are in `src/assets/guards/prisoner-manifest.json`. The MakeHuman CC0 and CMU/MIT acknowledgements below apply to both characters. The new death motion is a baked, grounded skeletal fall from the licensed pipeline. Guard Aim and sweeping body inspection are runtime-authored poses; all underlying AI rules remain in the game engine.
+
+Version 0.7 rebuilds a new officer from the same pinned CC0 source library, rather than downloading an unrelated third-party character. New authored parameters select middle-aged photographic skin, short04 hair, revised anatomy and fitted navy clothing. The former bulky tactical vest and generated boot shafts are removed; a modeled curved breast shield, stitched name strip and shoulder epaulettes supplement the existing radio, belt, cuffs and keys. The project source script reproduces all three GLBs. Animation blending preserves the normalized walk/run stride phase. Before/after portraits use the same game camera in `docs/screenshots/android-v6/officer.png` and `docs/screenshots/hud-v7/officer.png`.
+
+The patrol guards are **full-body, 69-bone skinned GLBs**. MakeHuman supplies authored human anatomy, fitted clothing, photo skin, eyes, brows, lashes and hair. The game adds a navy correctional uniform treatment, breast shield, radio, embroidered identification, epaulettes, belt pouches, cuffs and keys. This is an independently produced browser-game character, without Rockstar assets or a claim of GTA 6 fidelity.
+
+## Sources and redistribution
+
+| Input | Pinned source / license |
+| --- | --- |
+| MakeHuman base, targets and rig | [`makehumancommunity/makehuman`](https://github.com/makehumancommunity/makehuman), revision `a8bc2d54ff0ac92e78ff71431b1023eda42bf482`; asset data CC0 1.0 |
+| Official system asset pack | [Actual downloaded ZIP](https://files.makehumancommunity.org/asset_packs/makehuman_system_assets/makehuman_system_assets_cc0.zip), 280,737,770 bytes; CC0 1.0 |
+| Offline fitting/export pipeline | [`olatunde85/3d-gen`](https://github.com/olatunde85/3d-gen), revision `8e2cc69f529a4a384951c78312c134e31f456c04`; MIT code, CC0 MakeHuman data |
+| Walk/run motion | CMU Graphics Lab Motion Capture Database via the pinned pipeline's baked data; commercial game use allowed, not resale of motion data on its own |
+| Additional animation and equipment | Pipeline keyframed idle/turn/collapse; project-authored investigate/search/alert poses, ID, radio, cuffs and keys |
+
+Official pack SHA-256:
+
+```text
+b542127a8e25547c7c29c19f2d1d2adb9a664c80396ecd694095dbc8028a0107
+```
+
+The official pack was downloaded through the configured environment proxy, with normal TLS verification, then checked for archive integrity and unsafe paths before extraction. The former domain denial is resolved; no proxy bypass or environment restart was needed.
+
+CC0 attribution, preserved voluntarily: **Data Collection AB, Joel Palmius and Jonas Hauquier**, September 2020. [CC0 1.0 legal text](https://creativecommons.org/publicdomain/zero/1.0/legalcode).
+
+CMU acknowledgement: **The data used in this project was obtained from mocap.cs.cmu.edu. The database was created with funding from NSF EIA-0196217.** See [CMU usage terms](http://mocap.cs.cmu.edu/). Animation is distributed embedded in the playable character/game, not as a separately sold motion library.
+
+The upstream MIT notice is preserved in [licenses/ARA-3D-GEN.txt](licenses/ARA-3D-GEN.txt). No MakeHuman application code is shipped in the game. Raw source packs are not committed.
+
+## Rebuild the assets
+
+Normal installation, tests, production builds and offline play use the committed GLBs. They do **not** require MakeHuman, Blender, Python, a model server or this large source pack.
+
+For asset authoring only:
+
+1. Clone the pinned 3d-gen revision, install its dependencies with `npm ci`, and place the pinned MakeHuman repository at its `vendor/mh` directory.
+2. Download and checksum the official CC0 ZIP, then extract its contents to `vendor/sys`. Do not rename the downloaded asset directories.
+3. Run `npm run build-assets` in the pipeline repository. This creates `public/assets` from the authored source data; optional CMU downloads are not needed because the pinned revision already contains the baked walk/run motion.
+4. In Hirodora, run:
+
+```sh
+HIRODORA_CHARACTER_SOURCE=/absolute/path/to/3d-gen HIRODORA_ASSET_PACK=/absolute/path/to/makehuman_system_assets_cc0.zip node --import tsx scripts/build-guard-assets.mjs
+npm run check
+```
+
+The authoring script verifies both pinned Git revisions and the archive SHA-256 before executing the upstream pipeline. Pass `--verify-sources` to check only those prerequisites. `src/assets/guards/manifest.json` records every body/appearance parameter, source hash, LOD triangle count and clip name. No source-directory paths enter the browser bundle.
+
+## Runtime and quality
+
+| Tier | Geometry | Texture budget | Selection |
+| --- | --- | --- | --- |
+| Hero | 179,390 triangles | 2K skin and uniform; smaller hair/interiors | Desktop close-ups |
+| Mobile | 58,346 triangles | 1K maximum; smaller hair/interiors | Coarse-pointer mobile / Mobile preset |
+| Distant | 14,515 triangles | 256px maximum | Beyond 17m, returns near below 14m |
+
+All tiers retain the same rig, finger/eye bones and face targets. Lower tiers reuse the hero's nine clips: Idle, Walk, Run, left/right turn, Investigate, Search, Alert, Collapse. `GLTFLoader` decodes embedded WebP and Meshopt-compressed buffers; no remote texture paths remain. Meshopt is geometry compression, WebP reduces transfer size; WebP is **not** GPU-native compressed texture storage.
+
+Base-color maps use sRGB; normals and packed occlusion/roughness/metallic maps are linear glTF data. Fabric and leather have normal relief and varied roughness, metal has a separate metallic response. AO is restrained **normal-derived microcavity**, not a ray-traced bake or full-screen SSAO. Anisotropy is capped at 8. Desktop quality adds one 1024px practical-fixture shadow map; automatic mode disables shadows on mobile/software renderers. ACES tone mapping remains consistent with the prison scene.
+
+`GuardAssetPool` preloads each tier once per engine. Instances share geometry/materials/textures but have separate skeletons and mixers. The AI's authoritative position, navigation clearance and sight angle are unchanged. Visual heading smoothing, speed-matched walk/run, cross-fades, blinking and limited head tracking do not influence perception. Darts raycast only the active LOD. Non-lethal cooldowns remain unchanged; a grounded skeletal collapse replaces tipping the whole rigid body.
+
+Offscreen mixers skip pose work; distant animation is throttled to 15Hz. Cleanup stops/uncaches mixers, disposes skeleton textures and releases shared GPU assets once after all instances are removed. Loading failure blocks starting the game with an actionable retry instead of silently falling back to a primitive guard.
+
+## Verification boundaries
+
+Automated asset checks validate embedded images, PBR maps, skin weights, bone indices and all nine clips. Browser coverage checks independent skeletons with shared geometry, actual animated joints, patrol movement, quality/LOD changes, non-lethal ray hits, collapse, checkpoint reset, download failure/retry, puzzle progression, touch controls and offline play.
+
+Screenshots are actual game renders. Front/side/detail images stage the camera and pose in the real prison with the Desktop quality preset; `guard-gameplay.png` runs the patrol simulation. Reproduce with `scripts/capture-screenshots.mjs` against the development server. Physical-phone performance, Safari/Firefox and extended playtesting remain release gates; headless Chromium software rendering is not a mobile FPS benchmark.
+
+[
+  {
+    "file": "footstep_concrete_000.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "d7267e183067757c92c169de2a379abea592cfca6b39bb2e8feea15221ad79fe",
+    "bytes": 5808,
+    "usage": "footstep_concrete_000",
+    "changes": "Original OGG recording, unmodified"
+  },
+  {
+    "file": "footstep_concrete_001.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "507a75eb19b897087855a3be3cf11a12d7fa37d143ad535eeebe0b8031c7325d",
+    "bytes": 6308,
+    "usage": "footstep_concrete_001",
+    "changes": "Original OGG recording, unmodified"
+  },
+  {
+    "file": "footstep_concrete_002.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "b21fa546d74941196b25da8a20b7010abd8c05c4fcf93545d1f344e66a664e13",
+    "bytes": 6255,
+    "usage": "footstep_concrete_002",
+    "changes": "Original OGG recording, unmodified"
+  },
+  {
+    "file": "footstep_concrete_003.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "8b513c2f0316324060b9174b8f28df6c2147418c506e6a53b77f18e149a5547b",
+    "bytes": 5805,
+    "usage": "footstep_concrete_003",
+    "changes": "Original OGG recording, unmodified"
+  },
+  {
+    "file": "footstep_wood_000.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "5f1c252942a220d658121bd9417448cd19649ded9fff2ff15f6e50899373ce8e",
+    "bytes": 5949,
+    "usage": "footstep_wood_000",
+    "changes": "Original OGG recording, unmodified"
+  },
+  {
+    "file": "footstep_wood_001.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "e4f68e1c9fd55b4dc8ca89ed2bbab6f200171bc54bdc18aa96b80d8e7336f462",
+    "bytes": 5929,
+    "usage": "footstep_wood_001",
+    "changes": "Original OGG recording, unmodified"
+  },
+  {
+    "file": "footstep_wood_002.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "9ff095b05cee5eec40b081defe3f0eef7232bb16d4865ce03b9f6dbab875cfdd",
+    "bytes": 5895,
+    "usage": "footstep_wood_002",
+    "changes": "Original OGG recording, unmodified"
+  },
+  {
+    "file": "footstep_wood_003.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "2a68a083daa9eda08fed0ea5da5280dfbe0de226196c576be02f95259dd139d9",
+    "bytes": 6207,
+    "usage": "footstep_wood_003",
+    "changes": "Original OGG recording, unmodified"
+  },
+  {
+    "file": "impactGeneric_light_000.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "f0e982611e97512fee5f777986b67e8b435434b601f94992ec044f7e89fb5acb",
+    "bytes": 5827,
+    "usage": "impactGeneric_light_000",
+    "changes": "Original OGG recording, unmodified"
+  },
+  {
+    "file": "impactGeneric_light_001.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "c3cd1c073d186ae8fa35788ba94de581f1826e7427a7bb26490b2695fac18efa",
+    "bytes": 5636,
+    "usage": "impactGeneric_light_001",
+    "changes": "Original OGG recording, unmodified"
+  },
+  {
+    "file": "impactGlass_heavy_000.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "b44b39a940e8948e74b9bd3776bff980df43cf220abdaf0d467dc4c43c0244a5",
+    "bytes": 7403,
+    "usage": "impactGlass_heavy_000",
+    "changes": "Original OGG recording, unmodified"
+  },
+  {
+    "file": "impactGlass_heavy_001.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "58686e0e562612cc566791844a10e269f8d1921f4766c14ba43976fd0a429f4e",
+    "bytes": 8946,
+    "usage": "impactGlass_heavy_001",
+    "changes": "Original OGG recording, unmodified"
+  },
+  {
+    "file": "impactGlass_light_000.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "d750cf88097d0c3e69920e6e14496e1444e1a9da01aa4cca8f5ec8cb44c57b4f",
+    "bytes": 6526,
+    "usage": "impactGlass_light_000",
+    "changes": "Original OGG recording, unmodified"
+  },
+  {
+    "file": "impactGlass_light_001.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "05e513fbd42829060eb37855f8c3866722ec5c39a8937c9bfde518cc609effa2",
+    "bytes": 6544,
+    "usage": "impactGlass_light_001",
+    "changes": "Original OGG recording, unmodified"
+  },
+  {
+    "file": "impactMetal_heavy_000.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "e07045693e4a2b3d165c424e3dab4c781d9ff8880a386880ac89a51315d7f831",
+    "bytes": 6110,
+    "usage": "impactMetal_heavy_000",
+    "changes": "Original OGG recording, unmodified"
+  },
+  {
+    "file": "impactMetal_heavy_001.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "83554049f81f4db9209379e103c30bfa63f65c42189a03f300b045c2c82e23ae",
+    "bytes": 7279,
+    "usage": "impactMetal_heavy_001",
+    "changes": "Original OGG recording, unmodified"
+  },
+  {
+    "file": "impactMetal_light_000.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "33b5e6e37c6e9d54e07bf5a89b12c76e879f40c1ea83cdd82714df1d6f9fec6d",
+    "bytes": 7651,
+    "usage": "impactMetal_light_000",
+    "changes": "Original OGG recording, unmodified"
+  },
+  {
+    "file": "impactMetal_light_001.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "fba69c467ddd85da7b1d82e259f936b876d9ba6a3d6f1b24bdd10468e46bfe08",
+    "bytes": 6967,
+    "usage": "impactMetal_light_001",
+    "changes": "Original OGG recording, unmodified"
+  },
+  {
+    "file": "impactPlate_heavy_000.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "112d4f93ddcc370b410630f971c0f5d991856102da9c76bc5c5540d388e75aaa",
+    "bytes": 10032,
+    "usage": "impactPlate_heavy_000",
+    "changes": "Original OGG recording, unmodified"
+  },
+  {
+    "file": "impactPlate_heavy_001.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "142fd6c77f13d25f318265901163f70f8dfe12f87829169a570025be43de7011",
+    "bytes": 8713,
+    "usage": "impactPlate_heavy_001",
+    "changes": "Original OGG recording, unmodified"
+  },
+  {
+    "file": "impactPlate_light_000.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "6e797cf8a5bfc52d7ed5eb47c227974c1cf2a674954fec5b539cea7d62c7282c",
+    "bytes": 10474,
+    "usage": "impactPlate_light_000",
+    "changes": "Original OGG recording, unmodified"
+  },
+  {
+    "file": "impactPlate_light_001.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "947915c2eb6ac57ee08fd3a48b297fd108d69abc72076e79882c21cad0eef56e",
+    "bytes": 11730,
+    "usage": "impactPlate_light_001",
+    "changes": "Original OGG recording, unmodified"
+  },
+  {
+    "file": "impactSoft_heavy_000.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "49e7ca88743fca974bb8676ea138b751cfd8f9033b5e7af8736c2a215d6edbc1",
+    "bytes": 6570,
+    "usage": "impactSoft_heavy_000",
+    "changes": "Original OGG recording, unmodified"
+  },
+  {
+    "file": "impactSoft_heavy_001.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "4d0096364ba9e46119d2ff6df493fdc101bd2e1efae061da5e5f77a53b3fdcb6",
+    "bytes": 6689,
+    "usage": "impactSoft_heavy_001",
+    "changes": "Original OGG recording, unmodified"
+  },
+  {
+    "file": "impactWood_heavy_000.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "15ff82332f342c30e469215539e1cc57e11b221aa2cf7e11e811d313a9927f3d",
+    "bytes": 6233,
+    "usage": "impactWood_heavy_000",
+    "changes": "Original OGG recording, unmodified"
+  },
+  {
+    "file": "impactWood_heavy_001.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "f1b07a53ac10c615fff9ba470511fdeb722b5902e1a8520759fc20ad6f546015",
+    "bytes": 6239,
+    "usage": "impactWood_heavy_001",
+    "changes": "Original OGG recording, unmodified"
+  },
+  {
+    "file": "impactWood_light_000.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "eb45e35b4bed784d3f120de4afec4b0d6ac09d9e143cce8cfcb7d739e1b1f3c3",
+    "bytes": 6343,
+    "usage": "impactWood_light_000",
+    "changes": "Original OGG recording, unmodified"
+  },
+  {
+    "file": "impactWood_light_001.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "4b76bf3ccc8e60d19188f3165b778a7817786faa6887c55d9049bcbeef3b425f",
+    "bytes": 6373,
+    "usage": "impactWood_light_001",
+    "changes": "Original OGG recording, unmodified"
+  },
+  {
+    "file": "tile-0.ogg",
+    "source": "https://freesound.org/people/Nox_Sound/sounds/555868/",
+    "author": "Nox_Sound",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "e05494e3f7c2730fe67e57909542b7639d637ecb89a2c4eaa45f4112c456a317",
+    "bytes": 7754,
+    "usage": "tile footwear contact",
+    "changes": "HQ preview; mono 32kHz, normalized, cut at 1.019063s, 0.5s, fade out, Vorbis q3"
+  },
+  {
+    "file": "tile-1.ogg",
+    "source": "https://freesound.org/people/Nox_Sound/sounds/555868/",
+    "author": "Nox_Sound",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "f712393a47bc21473cb16a61c3900fbe29d783c4358a969165a358d937cdbd28",
+    "bytes": 7277,
+    "usage": "tile footwear contact",
+    "changes": "HQ preview; mono 32kHz, normalized, cut at 2.0740000000000003s, 0.5s, fade out, Vorbis q3"
+  },
+  {
+    "file": "tile-2.ogg",
+    "source": "https://freesound.org/people/Nox_Sound/sounds/555868/",
+    "author": "Nox_Sound",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "58b7af44410fb0b70c0693c4b9331fe938c3480580295e073c5537970529f9f2",
+    "bytes": 7538,
+    "usage": "tile footwear contact",
+    "changes": "HQ preview; mono 32kHz, normalized, cut at 3.140094s, 0.5s, fade out, Vorbis q3"
+  },
+  {
+    "file": "tile-3.ogg",
+    "source": "https://freesound.org/people/Nox_Sound/sounds/555868/",
+    "author": "Nox_Sound",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "a04fcaa30464e4f4c6a3a8c10d24d38cae8d71b7b841c90ffc53ac302dd54264",
+    "bytes": 7999,
+    "usage": "tile footwear contact",
+    "changes": "HQ preview; mono 32kHz, normalized, cut at 4.230874999999999s, 0.5s, fade out, Vorbis q3"
+  },
+  {
+    "file": "metal-0.ogg",
+    "source": "https://freesound.org/people/audioninja001/sounds/455058/",
+    "author": "audioninja001",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "b0fbd82a58b92bd827f855560026489ed05f93e8a1df5c4bb1256521966b30cc",
+    "bytes": 8320,
+    "usage": "metal footwear contact",
+    "changes": "HQ preview; mono 32kHz, normalized, cut at 0.336844s, 0.5s, fade out, Vorbis q3"
+  },
+  {
+    "file": "metal-1.ogg",
+    "source": "https://freesound.org/people/audioninja001/sounds/455058/",
+    "author": "audioninja001",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "e2fa4fc6862c2810bc374b7a756008e2a48aaf24bb47ee4db508db257be89a2f",
+    "bytes": 7704,
+    "usage": "metal footwear contact",
+    "changes": "HQ preview; mono 32kHz, normalized, cut at 0.6935939999999999s, 0.5s, fade out, Vorbis q3"
+  },
+  {
+    "file": "metal-2.ogg",
+    "source": "https://freesound.org/people/audioninja001/sounds/455058/",
+    "author": "audioninja001",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "92d3c20d3af3ff0bd0b32522f45522d12725a0297e6290a47eb575f40da09bc6",
+    "bytes": 7698,
+    "usage": "metal footwear contact",
+    "changes": "HQ preview; mono 32kHz, normalized, cut at 1.111625s, 0.5s, fade out, Vorbis q3"
+  },
+  {
+    "file": "metal-3.ogg",
+    "source": "https://freesound.org/people/audioninja001/sounds/455058/",
+    "author": "audioninja001",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "d006551b61ec63edb8aac4ae7fc097742aded5a378789c255c1ddfad0087503c",
+    "bytes": 8257,
+    "usage": "metal footwear contact",
+    "changes": "HQ preview; mono 32kHz, normalized, cut at 1.5235s, 0.5s, fade out, Vorbis q3"
+  },
+  {
+    "file": "gravel-0.ogg",
+    "source": "https://freesound.org/people/soundmary/sounds/117627/",
+    "author": "soundmary",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "23cfc64b51a42c4aa21daf4e9b428d371e87e719e98d4a93cc2cccaf90fadf04",
+    "bytes": 8327,
+    "usage": "gravel footwear contact",
+    "changes": "HQ preview; mono 32kHz, normalized, cut at 5.490562s, 0.5s, fade out, Vorbis q3"
+  },
+  {
+    "file": "gravel-1.ogg",
+    "source": "https://freesound.org/people/soundmary/sounds/117627/",
+    "author": "soundmary",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "7bc916b417a5795ae111adef5b86e34db3792a3299a032d437b762fd49305342",
+    "bytes": 8032,
+    "usage": "gravel footwear contact",
+    "changes": "HQ preview; mono 32kHz, normalized, cut at 6.953437999999999s, 0.5s, fade out, Vorbis q3"
+  },
+  {
+    "file": "gravel-2.ogg",
+    "source": "https://freesound.org/people/soundmary/sounds/117627/",
+    "author": "soundmary",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "30c8bc861f989561dedac15ff829e5e90e5c3d0c57adf0dbc12494a44124df25",
+    "bytes": 7308,
+    "usage": "gravel footwear contact",
+    "changes": "HQ preview; mono 32kHz, normalized, cut at 7.59775s, 0.5s, fade out, Vorbis q3"
+  },
+  {
+    "file": "dirt-0.ogg",
+    "source": "https://freesound.org/people/SecureSubset/sounds/813621/",
+    "author": "SecureSubset",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "7e7c634745f8967108f8c462adb74d5acf1d9cdecb79bf3644289908f890ddd2",
+    "bytes": 7015,
+    "usage": "dirt footwear contact",
+    "changes": "HQ preview; mono 32kHz, normalized, cut at 0.688688s, 0.5s, fade out, Vorbis q3"
+  },
+  {
+    "file": "dirt-1.ogg",
+    "source": "https://freesound.org/people/SecureSubset/sounds/813621/",
+    "author": "SecureSubset",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "809b66b13549b4b8b3f01b42986ee0dfa3fc2b2d594ea28b8d17c0d123a946cc",
+    "bytes": 6869,
+    "usage": "dirt footwear contact",
+    "changes": "HQ preview; mono 32kHz, normalized, cut at 1.432531s, 0.5s, fade out, Vorbis q3"
+  },
+  {
+    "file": "dirt-2.ogg",
+    "source": "https://freesound.org/people/SecureSubset/sounds/813621/",
+    "author": "SecureSubset",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "ea6fe7f4fc130d05b1c63f813b0217103dd3042c7d456e95fa8ae4de02e94285",
+    "bytes": 6902,
+    "usage": "dirt footwear contact",
+    "changes": "HQ preview; mono 32kHz, normalized, cut at 2.2178750000000003s, 0.5s, fade out, Vorbis q3"
+  },
+  {
+    "file": "dirt-3.ogg",
+    "source": "https://freesound.org/people/SecureSubset/sounds/813621/",
+    "author": "SecureSubset",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "250783330f76ad1dd3b6b5a8547de954a4c34ef9a8aa6d94c9b1e08100454606",
+    "bytes": 7389,
+    "usage": "dirt footwear contact",
+    "changes": "HQ preview; mono 32kHz, normalized, cut at 2.961344s, 0.5s, fade out, Vorbis q3"
+  },
+  {
+    "file": "water-0.ogg",
+    "source": "https://freesound.org/people/xkeril/sounds/611278/",
+    "author": "xkeril",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "9e7f87fb1c3a18d87ee6b06090d84a176c7d2abd954187081b7061932d130577",
+    "bytes": 8123,
+    "usage": "water footwear contact",
+    "changes": "HQ preview; mono 32kHz, normalized, cut at 0.159344s, 0.5s, fade out, Vorbis q3"
+  },
+  {
+    "file": "water-1.ogg",
+    "source": "https://freesound.org/people/xkeril/sounds/611278/",
+    "author": "xkeril",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "c7faea95a87932f17a6908389eec52573339f3382ad5ad55fba0bd754973088c",
+    "bytes": 8145,
+    "usage": "water footwear contact",
+    "changes": "HQ preview; mono 32kHz, normalized, cut at 1.4308750000000001s, 0.5s, fade out, Vorbis q3"
+  },
+  {
+    "file": "water-2.ogg",
+    "source": "https://freesound.org/people/xkeril/sounds/611278/",
+    "author": "xkeril",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "c6b2ddd1f9d9728b8b04ca9b78b401028c3c5526b3788132ab5903b0719b9ba5",
+    "bytes": 7922,
+    "usage": "water footwear contact",
+    "changes": "HQ preview; mono 32kHz, normalized, cut at 2.0633440000000003s, 0.5s, fade out, Vorbis q3"
+  },
+  {
+    "file": "water-3.ogg",
+    "source": "https://freesound.org/people/xkeril/sounds/611278/",
+    "author": "xkeril",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "3b669ba987ff9215941b6b979ac73c2fffe1784618e27264c38ff0112841b96b",
+    "bytes": 7923,
+    "usage": "water footwear contact",
+    "changes": "HQ preview; mono 32kHz, normalized, cut at 2.410188s, 0.5s, fade out, Vorbis q3"
+  },
+  {
+    "file": "ventilation.ogg",
+    "source": "https://freesound.org/people/jamesdrake89/sounds/671456/",
+    "author": "jamesdrake89",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "addb1490b107bc1b74a4a84276826d8f64d896799364c494ea406e69ac703d7d",
+    "bytes": 83796,
+    "usage": "loop",
+    "changes": "HQ preview; mono 32kHz, loudness normalized, fades, Vorbis q3"
+  },
+  {
+    "file": "drips.ogg",
+    "source": "https://freesound.org/people/xkeril/sounds/628404/",
+    "author": "xkeril",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "add95bbc2efefc186a2ca0dae9ed47c7bcadea29919c750a9dfbf6c2ad8b6bd3",
+    "bytes": 90932,
+    "usage": "loop",
+    "changes": "HQ preview; mono 32kHz, loudness normalized, fades, Vorbis q3"
+  },
+  {
+    "file": "guard-stop.ogg",
+    "source": "https://freesound.org/people/balloonhead/sounds/364952/",
+    "author": "balloonhead",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "16f702e6585712b59e53d909a7b94e9d46f478d02688805e250b7e9beaa716f3",
+    "bytes": 85323,
+    "usage": "voice",
+    "changes": "HQ preview; mono 32kHz, loudness normalized, fades, Vorbis q3; v0.6 master: 48kHz mono Vorbis q6, 0.88 pitch with duration preserved, noise reduction, 85Hz high-pass, vocal presence EQ, compression, -16 LUFS / -2dB true peak"
+  },
+  {
+    "file": "guard-hey.ogg",
+    "source": "https://freesound.org/people/TechWalker/sounds/419920/",
+    "author": "TechWalker",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "f690341de351579ee7dabe8c31ae09b4d45bc775a1ff05fc135c57a5da1fb6e1",
+    "bytes": 14947,
+    "usage": "voice",
+    "changes": "HQ preview; mono 32kHz, loudness normalized, fades, Vorbis q3; v0.6 master: 48kHz mono Vorbis q6, 0.88 pitch with duration preserved, noise reduction, 85Hz high-pass, vocal presence EQ, compression, -16 LUFS / -2dB true peak"
+  },
+  {
+    "file": "bed-drag.ogg",
+    "source": "https://freesound.org/people/sfneumar/sounds/735684/",
+    "author": "sfneumar",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "bc1834aac8106f84e0b783a5a33fbd6121c7781d6c7dd6e1c8c38925196f3680",
+    "bytes": 23432,
+    "usage": "foley",
+    "changes": "HQ preview; mono 32kHz, loudness normalized, fades, Vorbis q3"
+  },
+  {
+    "file": "screwdriver.ogg",
+    "source": "https://freesound.org/people/piwilliwillski/sounds/579554/",
+    "author": "piwilliwillski",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "22910a81a543a0545df3e2b48bc5ef0b4d251cfbccec189931aaaf0bdd76bb53",
+    "bytes": 25223,
+    "usage": "foley",
+    "changes": "HQ preview; mono 32kHz, loudness normalized, fades, Vorbis q3"
+  },
+  {
+    "file": "ceramic-drag.ogg",
+    "source": "https://freesound.org/people/3D_Blanco/sounds/848463/",
+    "author": "3D_Blanco",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "9cd93ee03ff5e884c767884eea2128ec9694b34c20e38c444ea784398d4ad2ed",
+    "bytes": 25274,
+    "usage": "foley",
+    "changes": "HQ preview; mono 32kHz, loudness normalized, fades, Vorbis q3"
+  },
+  {
+    "file": "plastic.ogg",
+    "source": "https://freesound.org/people/jomse/sounds/525105/",
+    "author": "jomse",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "f13fd6733034008c262488b949f7e1dc92e10a1fcdb6da90a1557343402cf0bc",
+    "bytes": 6862,
+    "usage": "foley",
+    "changes": "HQ preview; mono 32kHz, loudness normalized, fades, Vorbis q3"
+  },
+  {
+    "file": "keys.ogg",
+    "source": "https://freesound.org/people/heidicolorado/sounds/827504/",
+    "author": "heidicolorado",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "61cb0b40710728443bd4e9c6a9b2ffa89754c5c422b4e3d37072c858bb5c41f3",
+    "bytes": 36513,
+    "usage": "foley",
+    "changes": "HQ preview; mono 32kHz, loudness normalized, fades, Vorbis q3"
+  },
+  {
+    "file": "paper.ogg",
+    "source": "https://freesound.org/people/Spaghetto87/sounds/731484/",
+    "author": "Spaghetto87",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "0b9466de984fe510e182a761ddef3f35afb67b8d232739a225cedbb7d5647b93",
+    "bytes": 31347,
+    "usage": "foley",
+    "changes": "HQ preview; mono 32kHz, loudness normalized, fades, Vorbis q3"
+  },
+  {
+    "file": "fabric.ogg",
+    "source": "https://freesound.org/people/reconsider59/sounds/427211/",
+    "author": "reconsider59",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "eb80e245b58f8135d39b4d1aab4a9319bf96c06f70b5807c135a1acd932d32de",
+    "bytes": 29241,
+    "usage": "foley",
+    "changes": "HQ preview; mono 32kHz, loudness normalized, fades, Vorbis q3"
+  },
+  {
+    "file": "hinge.ogg",
+    "source": "https://freesound.org/people/Ottomaani138/sounds/232700/",
+    "author": "Ottomaani138",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "7a5a1b685f9c863ddbab75ce02539b7f691c562a4eeb884fa21fcce9f15f24a4",
+    "bytes": 26817,
+    "usage": "foley",
+    "changes": "HQ preview; mono 32kHz, loudness normalized, fades, Vorbis q3"
+  },
+  {
+    "file": "guard-gunshot.ogg",
+    "source": "https://opengameart.org/content/gunshot-sounds",
+    "download": "https://opengameart.org/sites/default/files/sounds.zip",
+    "author": "Vincent (Vince) Sevedge / Tabasco",
+    "license": "CC-BY-3.0",
+    "licenseURL": "https://creativecommons.org/licenses/by/3.0/",
+    "sha256": "21e8252534861b306dc7c5ff7daae7059eb578d07fd86ae0c99b338d0640632c",
+    "bytes": 19812,
+    "usage": "Opening cinematic pistol shot",
+    "changes": "First CZ-52 recording excerpt; leading silence trimmed, mono 48kHz, high-pass, -18 LUFS/-2 dBTP, fade, Vorbis. Archive CC-BY 3.0 terms elected despite CC0 page label."
+  },
+  {
+    "file": "bed-creak-0.ogg",
+    "source": "https://freesound.org/people/richwise/sounds/871185/",
+    "download": "https://cdn.freesound.org/previews/871/871185_1481531-hq.mp3",
+    "author": "richwise",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "c99f330c74350178b5c727a4c23488e928d1253b718574f2727659a89b9d7c2a",
+    "bytes": 21756,
+    "usage": "bed-creak-0",
+    "changes": "HQ preview excerpt 0–2.4s; mono 32 kHz; highpass=f=85,lowpass=f=5500; -23 LUFS target / -3 dBTP; trimmed onset / short fade; Vorbis q4. Ceramic grinding is adapted foley, not a recording of this exact toilet."
+  },
+  {
+    "file": "bed-creak-1.ogg",
+    "source": "https://freesound.org/people/richwise/sounds/871185/",
+    "download": "https://cdn.freesound.org/previews/871/871185_1481531-hq.mp3",
+    "author": "richwise",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "9d844b787e5efd7e834a376cb5251a64bee84ed57243bed2283086bcd81aebb7",
+    "bytes": 21540,
+    "usage": "bed-creak-1",
+    "changes": "HQ preview excerpt 2.7–5.1s; mono 32 kHz; highpass=f=90,lowpass=f=5000; -23 LUFS target / -3 dBTP; trimmed onset / short fade; Vorbis q4."
+  },
+  {
+    "file": "toilet-scrape.ogg",
+    "source": "https://freesound.org/people/Gerent/sounds/558728/",
+    "download": "https://cdn.freesound.org/previews/558/558728_556505-hq.mp3",
+    "author": "Gerent",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "954e9309b09fc684869dcc4d3b4fa7d1880637a6895db2d678212a28215a04db",
+    "bytes": 32130,
+    "usage": "toilet-scrape",
+    "changes": "HQ preview excerpt 0–3.7s; mono 32 kHz; asetrate=42336,aresample=32000,highpass=f=65,lowpass=f=3300; -23 LUFS target / -3 dBTP; 80 ms wrap crossfade for seamless movement loop; Vorbis q4. Ceramic grinding is adapted foley, not a recording of this exact toilet."
+  },
+  {
+    "file": "gate-close.ogg",
+    "source": "https://freesound.org/people/brianbaltar/sounds/528259/",
+    "download": "https://cdn.freesound.org/previews/528/528259_11385110-hq.mp3",
+    "author": "brianbaltar",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "916e007c6bf500bdff1dd69350b92028fd06b1179766f7e7a6c3d82fec249b21",
+    "bytes": 33703,
+    "usage": "gate-close",
+    "changes": "HQ preview excerpt 0–4s; mono 32 kHz; highpass=f=65,lowpass=f=9000; -23 LUFS target / -3 dBTP; trimmed onset / short fade; Vorbis q4. Ceramic grinding is adapted foley, not a recording of this exact toilet."
+  },
+  {
+    "file": "cell-lock.ogg",
+    "source": "https://freesound.org/people/bruno.auzet/sounds/661642/",
+    "download": "https://cdn.freesound.org/previews/661/661642_11519060-hq.mp3",
+    "author": "bruno.auzet",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "c65b58aed300c95311dd12ffa550a257b33696ba81c27119c00245e4c26129f5",
+    "bytes": 28810,
+    "usage": "cell-lock",
+    "changes": "HQ preview excerpt 0–3.5s; mono 32 kHz; highpass=f=80,lowpass=f=9000; -23 LUFS target / -3 dBTP; trimmed onset / short fade; Vorbis q4. Ceramic grinding is adapted foley, not a recording of this exact toilet."
+  },
+  {
+    "file": "lock-turn.ogg",
+    "source": "https://freesound.org/people/colinpoh/sounds/146348/",
+    "download": "https://cdn.freesound.org/previews/146/146348_2090377-hq.mp3",
+    "author": "colinpoh",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "0c2dad29d94c1de5152b2004d91f37206366b92c2945114086a3d56ec342c8f0",
+    "bytes": 35885,
+    "usage": "lock-turn",
+    "changes": "HQ preview excerpt 0–3.7s; mono 32 kHz; highpass=f=85,lowpass=f=8500; -23 LUFS target / -3 dBTP; trimmed onset / short fade; Vorbis q4. Ceramic grinding is adapted foley, not a recording of this exact toilet."
+  },
+  {
+    "file": "bolt-ratchet.ogg",
+    "source": "https://freesound.org/people/tannernet/sounds/698699/",
+    "download": "https://cdn.freesound.org/previews/698/698699_9149264-hq.mp3",
+    "author": "tannernet",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "2bb70c764705626b0f834d601301fe51d0356d4e1f4f88c06c281e4937b5f6c8",
+    "bytes": 19848,
+    "usage": "bolt-ratchet",
+    "changes": "HQ preview excerpt 4–5.8s; mono 32 kHz; highpass=f=140,lowpass=f=6500; -23 LUFS target / -3 dBTP; 80 ms wrap crossfade for seamless movement loop; Vorbis q4. Ceramic grinding is adapted foley, not a recording of this exact toilet."
+  },
+  {
+    "file": "heavy-bolt.ogg",
+    "source": "https://freesound.org/people/kyles/sounds/407297/",
+    "download": "https://cdn.freesound.org/previews/407/407297_612689-hq.mp3",
+    "author": "kyles",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "9f498740d0bb8c640a95acbed8a0a44d846638729e25d0fe62e21791fc15c8db",
+    "bytes": 27854,
+    "usage": "heavy-bolt",
+    "changes": "HQ preview excerpt 0–3s; mono 32 kHz; highpass=f=70,lowpass=f=7000; -23 LUFS target / -3 dBTP; trimmed onset / short fade; Vorbis q4. Ceramic grinding is adapted foley, not a recording of this exact toilet."
+  },
+  {
+    "file": "bed-slide.ogg",
+    "source": "https://freesound.org/people/sfneumar/sounds/735684/",
+    "download": "https://cdn.freesound.org/previews/735/735684_16007120-hq.mp3",
+    "author": "sfneumar",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "763d7b5066ceccf452b78395b1c8d7391610f65d98c2f19a403b63966a53b3c3",
+    "bytes": 19657,
+    "usage": "bed-slide",
+    "changes": "HQ preview excerpt 0–3s; mono 32 kHz; highpass=f=75,lowpass=f=6000; -23 LUFS target / -3 dBTP; 80 ms wrap crossfade for seamless movement loop; Vorbis q4. Ceramic grinding is adapted foley, not a recording of this exact toilet."
+  },
+  {
+    "file": "table-slide.ogg",
+    "source": "https://freesound.org/people/ralph.whitehead/sounds/565727/",
+    "download": "https://cdn.freesound.org/previews/565/565727_1971023-hq.mp3",
+    "author": "ralph.whitehead",
+    "license": "CC0-1.0",
+    "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "sha256": "8a9931a38a69b8541a9a09dc141e952745a49b8fa9f239afde6d95c70d6ca69f",
+    "bytes": 27708,
+    "usage": "table-slide",
+    "changes": "HQ preview excerpt 0–3.2s; mono 32 kHz; highpass=f=80,lowpass=f=5500; -23 LUFS target / -3 dBTP; 80 ms wrap crossfade for seamless movement loop; Vorbis q4."
+  }
+]
+
+Copyright (c) 2014-present Godot Engine contributors. \
+Copyright (c) 2007-2014 Juan Linietsky, Ariel Manzur.
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+All assets Copyright (c) 2018 Juan Linietsky, Fernando Miguel Calabró \
+Distributed under the terms of the Creative Commons Attribution License
+version 3.0 (CC-BY 3.0) <https://creativecommons.org/licenses/by/3.0/legalcode>.
+
+************************************************************************
+
+Music Copyright (c) 2018 Christian Fernando Perucchi \
+Distributed under the terms of the Creative Commons Attribution License
+version 3.0 (CC-BY 3.0) <https://creativecommons.org/licenses/by/3.0/legalcode>.
+
+************************************************************************
+
+Existing as derivatived work, many original Substance Painter materials
+used to create this scene were kindly provided by GameTextures.com
+
+************************************************************************
+
+All code Copyright (c) 2018-2021 Juan Linietsky, Godot Engine contributors.
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+************************************************************************
+
+Seamless Concrete Tiles — p0ss
+Original photographs: Georges Grondin, from burningwell.org
+Source: https://opengameart.org/content/seamless-concrete-tiles
+Download: https://opengameart.org/sites/default/files/concrete_tiles.zip
+Redistributed under Creative Commons Attribution 3.0 Unported:
+https://creativecommons.org/licenses/by/3.0/legalcode
+
+Files used: concrete368.png, concrete368_nm.png, crete983.png, crete983_nm.png.
+Hirodora modifications: resized to 1024px, desaturated photographic color,
+WebP conversion, artist-derived roughness and microcavity AO packed into ORM.
+Source normal maps softened and renormalized to reduce grazing-angle aliasing.
+No affiliation or endorsement implied.
+The source offers multiple licenses; this distribution elects CC-BY 3.0.
+Version 0.8 adaptations: the same photographic concrete is recomposed with
+project-authored block-joint lines and recessed joint normals for cell walls;
+an unjointed photographic ceiling variant and reduced-saturation floor finish
+are added. These are artist adaptations, not new measured scans. Source inputs
+are pinned to Hirodora commit cd3b1eed71362c424552e513ad6e887b6de149e9.
+See scripts/prepare-reference-cell.mjs and docs/INTRO-V8.md for reproduction.
+
+HIRODORA - user-supplied environmental assets (v0.11)
+
+Rock Wall 16 - Amal Kumar / Poly Haven
+Source: https://polyhaven.com/a/rock_wall_16
+License: CC0 1.0 Universal, https://creativecommons.org/publicdomain/zero/1.0/
+Poly Haven policy: https://polyhaven.com/license
+Original 2K diffuse, OpenGL normal and ARM texture maps from the supplied ZIP.
+Changes: linear EXR-to-WebP normal conversion and vector normalization, dielectric metal channel correction,
+WebP encoding. Same map family used on walls, floors and ceilings; surface-specific
+normal strength. The preview sphere and heavy displacement are not runtime assets.
+
+Basic Table - Blender3D (https://sketchfab.com/Blender3D)
+Source: https://sketchfab.com/3d-models/basic-table-a017d2120a504b6ebccf94d651321ca4
+Dirty Toilet - shedmon (https://sketchfab.com/shedmon)
+Source: https://sketchfab.com/3d-models/dirty-toilet-389d5427a1f344c4aa4883ec5a6aaf05
+Free Screwdriver - Filip (https://sketchfab.com/filip.hans.nyberg)
+Source: https://sketchfab.com/3d-models/free-screwdriver-daa1a4a4013b479097633f75a33bb543
+
+All three models: Creative Commons Attribution 4.0 International (CC BY 4.0)
+https://creativecommons.org/licenses/by/4.0/
+Legal code: https://creativecommons.org/licenses/by/4.0/legalcode
+Attributions and licenses are supplied in each original GLB's embedded metadata.
+Changes: metre scaling, axis/floor normalization, texture encoding and meshopt
+compression; table's legacy specular/glossiness PBR converted to metallic/roughness.
+Runtime mounting bolts, contact shadows and puzzle animation are project additions.
+The table replaces the previous bunk; original models' authors do not endorse
+Hirodora. No additional restrictions are placed on these third-party assets.
+
+CC BY 4.0 permits sharing and adaptation, including commercial use, provided
+appropriate credit, a license link, and an indication of changes are retained.
+Full source URLs, original and derivative SHA256 hashes, and dimensions are in
+src/assets/environment/manifest.json. Retain these credits when redistributing.
+

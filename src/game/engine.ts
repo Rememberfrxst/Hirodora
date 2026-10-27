@@ -43,6 +43,7 @@ import { movementVector, stepJump } from "./navigation";
 import {
   bodyBlocked,
   supportHeight,
+  evidenceTarget,
   findSurfacePath,
   migratePosition,
   LAYOUT_VERSION,
@@ -1184,8 +1185,9 @@ export class GameEngine {
         closing = this.doorIsOpen(`cell_${number}_door`);
       if (
         closing &&
+        Math.abs(this.playerPos[1] - cell.floorY) < 0.8 &&
         this.playerPos[0] > cell.doorX - 0.35 &&
-        this.playerPos[0] < cell.doorX + 1.75 &&
+        this.playerPos[0] < cell.doorX + 2.75 &&
         Math.abs(this.playerPos[2] - cell.front) < 0.6
       ) {
         this.notice("Step clear of the doorway before closing the gate.");
@@ -1750,7 +1752,7 @@ export class GameEngine {
         number = Number(id.match(/^cell_(\d+)_door$/)?.[1]);
       if (isExplorationCell(number) || (number === 46 && opening)) {
         const cell = CELL_ROOMS.find((c) => c.number === number)!;
-        group.position.y = 0;
+        group.position.y = cell.floorY;
         group.rotation.y = open
           ? cell.side === "north"
             ? Math.PI / 2
@@ -1761,7 +1763,7 @@ export class GameEngine {
           .setFromObject(group)
           .expandByScalar(0.03);
       } else {
-        group.position.y = open ? 3.7 : 0;
+        group.position.y = (group.userData.floorY ?? 0) + (open ? 5.3 : 0);
         if (id === "cell_46_door") {
           group.rotation.y = 0;
           this.worldData.doorColliders
@@ -2226,8 +2228,10 @@ export class GameEngine {
       const examiner =
         !!this.gameFlags.opening_v3 && guard.id === "guard_dunne";
       const approach = (point: [number, number, number] | undefined) =>
-        cellApproachTarget(point, guard.position, (number) =>
-          this.doorIsOpen(`cell_${number}_door`),
+        cellApproachTarget(
+          point && evidenceTarget(point),
+          guard.position,
+          (number) => this.doorIsOpen(`cell_${number}_door`),
         );
       const oldTarget = approach(guard.investigationTarget);
       const vision = sightEvidence(

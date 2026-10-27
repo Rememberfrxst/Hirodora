@@ -5,6 +5,7 @@ import {
   CELL_ROOMS,
   isExplorationCell,
   cellApproachTarget,
+  CELL_GATE_WIDTH,
 } from "./cell-block";
 import { findPath, pathObstructed } from "./navigation";
 test("guard approach uses the expanded corridor and respects open gates on either row", () => {
@@ -13,8 +14,8 @@ test("guard approach uses the expanded corridor and respects open gates on eithe
     [-66, 0, -1.5],
   );
   assert.deepEqual(
-    cellApproachTarget([-22, 0, 17], [-22, 0, 1], () => false),
-    [-22, 0, 11.5],
+    cellApproachTarget([-22, 0, 25], [-22, 0, 1], () => false),
+    [-22, 0, 19.5],
   );
   const point: [number, number, number] = [-11, 0, -8];
   assert.equal(
@@ -25,27 +26,35 @@ test("guard approach uses the expanded corridor and respects open gates on eithe
     cellApproachTarget(point, [-11, 0, -6], () => false),
     point,
   );
+  assert.deepEqual(
+    cellApproachTarget([-22, -3.2, -8], [-22, 0, -6], () => false),
+    [-22, -3.2, -1.5],
+    "being inside the upper room does not put a guard inside the lower cell",
+  );
 });
-test("24 distinct cells have 12 on each side of a fourteen-metre atrium", () => {
-  assert.equal(CELL_ROOMS.length, 24);
-  assert.equal(new Set(CELL_ROOMS.map((c) => c.number)).size, 24);
-  assert.equal(CELL_BLOCK.southFront - CELL_BLOCK.northFront, 14);
-  for (const side of ["north", "south"]) {
-    const cells = CELL_ROOMS.filter((c) => c.side === side).sort(
-      (a, b) => a.left - b.left,
-    );
-    assert.equal(cells.length, 12);
-    for (let i = 1; i < cells.length; i++)
-      assert.equal(
-        cells[i - 1].right,
-        cells[i].left,
-        "continuous shared partitions, no overlapping cells",
+test("48 distinct large cells have 12 per side per floor around a 22m atrium", () => {
+  assert.equal(CELL_ROOMS.length, 48);
+  assert.equal(new Set(CELL_ROOMS.map((c) => c.number)).size, 48);
+  assert.equal(CELL_BLOCK.southFront - CELL_BLOCK.northFront, 22);
+  for (const level of ["upper", "lower"])
+    for (const side of ["north", "south"]) {
+      const cells = CELL_ROOMS.filter((c) => c.side === side).sort(
+        (a, b) => a.left - b.left,
       );
-    for (const c of cells) {
-      assert.ok(c.doorX > c.left);
-      assert.ok(c.doorX + 1.4 < c.right);
+      const row = cells.filter((c) => c.level === level);
+      assert.equal(row.length, 12);
+      for (let i = 1; i < row.length; i++)
+        assert.equal(
+          row[i - 1].right,
+          row[i].left,
+          "continuous shared partitions, no overlapping cells",
+        );
+      for (const c of row) {
+        assert.ok(c.doorX > c.left);
+        assert.ok(c.doorX + CELL_GATE_WIDTH < c.right);
+        assert.ok(Math.abs(c.rear - c.front) === 9.5);
+      }
     }
-  }
 });
 test("opening cell boundaries, original gates and story locks stay compatible", () => {
   const c47 = CELL_ROOMS.find((c) => c.number === 47)!,
@@ -56,7 +65,7 @@ test("opening cell boundaries, original gates and story locks stay compatible", 
   );
   assert.deepEqual(
     [c46.left, c46.right, c46.front, c46.doorX],
-    [-14, -8.8, -2, -11],
+    [-14, -8.8, -2, -11.4],
   );
   assert.equal(isExplorationCell(42), false);
   assert.equal(isExplorationCell(47), false);

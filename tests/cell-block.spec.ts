@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { skipOpening } from "./helpers";
 
-test("24 independent gates frame the upper galleries and both rows load real fixtures", async ({
+test("48 independent wide gates frame both floors and all rows load real fixtures", async ({
   page,
 }) => {
   await page.goto("/");
@@ -14,7 +14,7 @@ test("24 independent gates frame the upper galleries and both rows load real fix
     const cells = e.worldData.cells;
     const cuts = [];
     for (let x = -67; x < -4; x += 0.5)
-      for (const z of [-1, 0, 10, 11])
+      for (const z of [-1, 0, 18, 19])
         if (
           e.worldData.colliders.some(
             (b: any) =>
@@ -41,10 +41,10 @@ test("24 independent gates frame the upper galleries and both rows load real fix
     };
   });
   expect(result).toEqual({
-    north: 12,
-    south: 12,
+    north: 24,
+    south: 24,
     doors: true,
-    tables: 24,
+    tables: 48,
     cuts: [],
   });
 });

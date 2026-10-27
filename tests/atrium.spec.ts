@@ -1,5 +1,77 @@
 import { test, expect } from "@playwright/test";
 import { skipOpening } from "./helpers";
+test("nine officers patrol both levels and a lower cell can be opened, entered and saved", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator("[data-start]").click();
+  await skipOpening(page);
+  const r = await page.evaluate(() => {
+    const e = window.__HIRODORA__ as any;
+    cancelAnimationFrame(e.frameId);
+    e.overlayOpen = true;
+    e.stats.isInHidingSpot = true;
+    const guards = e.worldData.guards;
+    const before = guards.map((g: any) => [...g.position]);
+    for (let i = 0; i < 200; i++) e.updateGuards(0.05);
+    const patrols = guards
+      .filter((g: any) => !g.examining)
+      .map((g: any) => ({
+        distance: Math.hypot(
+          g.position[0] - before[guards.indexOf(g)][0],
+          g.position[2] - before[guards.indexOf(g)][2],
+        ),
+        level: g.position[1],
+        expected: g.patrolRoute[0][1],
+      }));
+    e.clearInput();
+    e.stats.isInHidingSpot = false;
+    const gate = e.worldData.interactables.find(
+      (o: any) => o.id === "cell_latch_22",
+    );
+    e.playerPos = [gate.position[0], -3.2, -0.9];
+    e.playerRotY = 0;
+    e.move(0);
+    e.overlayOpen = false;
+    e.interact();
+    const opened = e.gameFlags.cell_22_open;
+    e.overlayOpen = true;
+    e.keys.KeyW = true;
+    for (let i = 0; i < 90; i++) e.move(0.016);
+    e.clearInput();
+    const entered = [...e.playerPos];
+    e.saveCheckpoint();
+    e.playerPos = [-6, 0, -6];
+    e.restoreCheckpoint(e.checkpoint);
+    const box = e.worldData.doorColliders.get("cell_22_door");
+    return {
+      patrols,
+      count: guards.length,
+      upper: guards.filter((g: any) => g.patrolRoute[0][1] === 0).length,
+      lower: guards.filter((g: any) => g.patrolRoute[0][1] < 0).length,
+      actors: e.guardActors.size,
+      opened,
+      entered,
+      restored: [...e.playerPos],
+      gateY: box.min.y,
+      dotBorder: getComputedStyle(document.querySelector(".reticle")!)
+        .borderTopWidth,
+    };
+  });
+  expect(r.count).toBe(9);
+  expect(r.actors).toBe(9);
+  expect(r.upper).toBe(4);
+  expect(r.lower).toBe(5);
+  for (const patrol of r.patrols) {
+    expect(patrol.distance).toBeGreaterThan(2);
+    expect(patrol.level).toBeCloseTo(patrol.expected, 2);
+  }
+  expect(r.opened).toBe(true);
+  expect(r.entered[2]).toBeLessThan(-2.5);
+  expect(r.restored).toEqual(r.entered);
+  expect(r.gateY).toBeLessThan(-3);
+  expect(r.dotBorder).toBe("0px");
+});
 test("stairs support actual player movement, gates are independent, and equipped tools persist", async ({
   page,
 }) => {
@@ -20,7 +92,7 @@ test("stairs support actual player movement, gates are independent, and equipped
     e.syncWorld();
     const neighborSame = g48.rotation.y === before;
     // Walk the east staircase in real move() calls, then onto the lower hall.
-    e.playerPos = [-5.5, 0, 5];
+    e.playerPos = [-5.5, 0, 9];
     e.playerRotY = 0;
     e.keys.KeyA = true;
     for (let i = 0; i < 300; i++) e.move(0.016);
@@ -58,7 +130,7 @@ test("stairs support actual player movement, gates are independent, and equipped
         undefined,
     };
   });
-  expect(r.independent).toBeGreaterThanOrEqual(24);
+  expect(r.independent).toBeGreaterThanOrEqual(48);
   expect(r.neighborSame).toBe(true);
   expect(r.lower[1]).toBeCloseTo(-3.2, 2);
   expect(r.eye).toBeLessThan(-1.3);
@@ -83,19 +155,23 @@ test("guards route down stairs and cannot capture a player through the gallery f
     const e = window.__HIRODORA__ as any;
     cancelAnimationFrame(e.frameId);
     e.overlayOpen = true;
-    e.playerPos = [-35, -3.2, 5];
+    e.playerPos = [-35, -3.2, 9];
+    e.worldData.guards.forEach((other: any) => {
+      other.state = "knocked_out";
+      other.stateTimer = 100;
+    });
     const g = e.worldData.guards[1];
-    g.position = [-6, 0, 5];
+    g.position = [-6, 0, 9];
     g.state = "searching";
     g.suspicion = 55;
     g.stateTimer = 12;
-    g.investigationTarget = [-15, -3.2, 5];
-    g.lastKnownPosition = [-15, -3.2, 5];
-    g.lastHeardPosition = [-15, -3.2, 5];
+    g.investigationTarget = [-15, -3.2, 9];
+    g.lastKnownPosition = [-15, -3.2, 9];
+    g.lastHeardPosition = [-15, -3.2, 9];
     for (let i = 0; i < 250 && g.position[1] > -3; i++) e.updateGuards(0.05);
     const y = g.position[1];
-    e.playerPos = [-5, -3.2, 5];
-    g.position = [-5, 0, 5];
+    e.playerPos = [-5, -3.2, 9];
+    g.position = [-5, 0, 9];
     g.state = "chase";
     g.suspicion = 100;
     g.lastKnownPosition = [...e.playerPos];

@@ -71,7 +71,7 @@ export function TacticalMapModal({
   opening?: boolean;
 }) {
   const px = (x: number) => 50 + (x + 70) * 10.8,
-    pz = (z: number) => 55 + (z + 11.5) * 17;
+    pz = (z: number) => 55 + (z + 11.5) * 14.5;
   return (
     <div className="modal-backdrop">
       <section className="game-panel map-panel">
@@ -83,7 +83,10 @@ export function TacticalMapModal({
           <X />
         </button>
         <span className="eyebrow">FACILITY INTEL / ACT 0{act}</span>
-        <h2>Know your way out.</h2>
+        <h2>
+          {playerPos[1] < -1 ? "Lower level" : "Upper level"} · Know your way
+          out.
+        </h2>
         <svg
           viewBox="0 0 1200 700"
           className="facility-map"
@@ -107,13 +110,15 @@ export function TacticalMapModal({
           </defs>
           <rect width="1200" height="700" fill="url(#grid)" />
           <g>
-            {CELL_ROOMS.map((r) => (
+            {CELL_ROOMS.filter(
+              (r) => r.level === (playerPos[1] < -1 ? "lower" : "upper"),
+            ).map((r) => (
               <g key={r.number}>
                 <rect
                   x={px(r.left)}
                   y={pz(Math.min(r.front, r.rear))}
                   width={(r.right - r.left) * 10.8}
-                  height={Math.abs(r.front - r.rear) * 18.5}
+                  height={Math.abs(r.front - r.rear) * 14.5}
                   fill="#183337"
                   stroke="#75928b"
                   strokeWidth="2"
@@ -154,7 +159,7 @@ export function TacticalMapModal({
         </div>
         <p className="muted">
           {opening
-            ? "24 CELLS: 36–47 north, 48–59 south. Fourteen-metre atrium with upper galleries, an exercise hall below and stairs at both ends. Each cell has an independent gate. The service passage links Cells 47 and 46; medical cells 48/49 retain infirmary access."
+            ? "48 CELLS: 24 upstairs (36–59), 24 downstairs (12–35). The 22-metre atrium connects through stairs at both ends. Every cell has its own wide gate. The service passage links Cells 47 and 46; medical cells 48/49 retain infirmary access. This map shows your current level."
             : "The service duct connects Cell 47 to Cell 46. The Block C gate leads east; utility rooms are south of the corridor. Voss’s office is north. Reach the sea gate with the ledger and a lockpick."}
         </p>
       </section>

@@ -1,6 +1,6 @@
 import { chromium } from "@playwright/test";
 import { mkdir, writeFile } from "node:fs/promises";
-const directory = process.env.CAPTURE_DIR || "docs/screenshots/atrium-v13";
+const directory = process.env.CAPTURE_DIR || "docs/screenshots/atrium-v14";
 await mkdir(directory, { recursive: true });
 const browser = await chromium.launch({
   executablePath:
@@ -64,6 +64,12 @@ async function save(page, name, position, target, item = null) {
         item,
         calls: e.drawCalls,
         triangles: e.triangles,
+        cellCount: e.worldData.cells.length,
+        upperGuards: e.worldData.guards.filter((g) => g.patrolRoute[0][1] === 0)
+          .length,
+        lowerGuards: e.worldData.guards.filter((g) => g.patrolRoute[0][1] < 0)
+          .length,
+        fogDensity: e.scene.fog.density,
       };
     },
     { position, target, item },
@@ -91,12 +97,7 @@ try {
     [-12.5, 1.6, -8.5],
     [-10.5, 1.3, -2],
   );
-  await save(
-    page,
-    "03-redeemed-warrior",
-    [-10.7, 1.6, -4.7],
-    [-10.7, 1.05, -6.6],
-  );
+  await save(page, "03-lower-cell-rows", [-16, -1.55, 9], [-60, -1.7, 9]);
   await save(
     page,
     "04-screwdriver-in-hand",
@@ -109,8 +110,8 @@ try {
   await save(
     mobile,
     "06-mobile-key",
-    [-5.8, 1.65, 2],
-    [-35, 1.3, 5],
+    [-6.5, 1.65, 18.5],
+    [-50, 1.3, 18.5],
     "cell_key",
   );
   await writeFile(

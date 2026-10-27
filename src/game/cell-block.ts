@@ -4,9 +4,9 @@ export const CELL_BLOCK = {
   east: -3.1,
   north: -11.5,
   northFront: -2,
-  southFront: 12,
-  south: 21.5,
-  height: 4.2,
+  southFront: 20,
+  south: 29.5,
+  height: 5.2,
 } as const;
 export interface CellRoom {
   number: number;
@@ -18,7 +18,10 @@ export interface CellRoom {
   rear: number;
   doorX: number;
   medical: boolean;
+  floorY: number;
+  level: "upper" | "lower";
 }
+export const CELL_GATE_WIDTH = 2.4;
 const spans = [
   [-8.8, -3.1],
   [-14, -8.8],
@@ -27,7 +30,7 @@ const spans = [
     i === 0 ? -14 : -14.25 - i * 5.5,
   ]),
 ];
-export const CELL_ROOMS: CellRoom[] = spans.flatMap(([left, right], i) => {
+const upperRooms: CellRoom[] = spans.flatMap(([left, right], i) => {
   const centerX = i < 2 ? (left + right) / 2 : -17 - (i - 2) * 5.5;
   return (["north", "south"] as const).map((side) => ({
     number: side === "north" ? 47 - i : 48 + i,
@@ -41,13 +44,25 @@ export const CELL_ROOMS: CellRoom[] = spans.flatMap(([left, right], i) => {
       side === "north" && i === 0
         ? -6
         : side === "north" && i === 1
-          ? -11
+          ? -11.4
           : side === "north"
             ? centerX - 0.55
             : centerX - 0.7,
     medical: side === "south" && i < 2,
+    floorY: 0,
+    level: "upper",
   }));
 });
+export const CELL_ROOMS: CellRoom[] = [
+  ...upperRooms,
+  ...upperRooms.map((c) => ({
+    ...c,
+    number: c.number - 24,
+    medical: false,
+    floorY: -3.2,
+    level: "lower" as const,
+  })),
+];
 /** The key story still controls Cells 42–47; added exploration cells have latches. */
 export const isExplorationCell = (number: number) => number < 42 || number > 47;
 /** Closed-cell evidence is approached from the corridor; open gates permit entry. */
@@ -59,6 +74,7 @@ export function cellApproachTarget(
   if (!point) return point;
   const cell = CELL_ROOMS.find(
     (c) =>
+      Math.abs(point[1] - c.floorY) < 0.8 &&
       point[0] > c.left &&
       point[0] < c.right &&
       point[2] > Math.min(c.front, c.rear) &&
@@ -66,6 +82,7 @@ export function cellApproachTarget(
   );
   if (!cell || isOpen(cell.number)) return point;
   const inside =
+    Math.abs(guard[1] - cell.floorY) < 0.8 &&
     guard[0] > cell.left &&
     guard[0] < cell.right &&
     guard[2] > Math.min(cell.front, cell.rear) &&
@@ -73,7 +90,7 @@ export function cellApproachTarget(
   if (inside) return point;
   return [
     Math.max(cell.left + 0.5, Math.min(cell.right - 0.5, point[0])),
-    0,
+    cell.floorY,
     cell.front + (cell.side === "north" ? 0.5 : -0.5),
   ];
 }
@@ -81,5 +98,5 @@ export const NAV_BOUNDS = {
   minX: -70,
   maxX: 30.5,
   minZ: -11,
-  maxZ: 21.75,
+  maxZ: 29.75,
 } as const;

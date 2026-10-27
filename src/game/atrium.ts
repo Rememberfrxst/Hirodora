@@ -3,7 +3,8 @@ import type { Bounds, Vec3 } from "./perception";
 
 export const ATRIUM = {
   north: 1,
-  south: 9,
+  south: 17,
+  centerZ: 9,
   depth: -3.2,
   bridge: 3,
   stairWidth: 1.8,
@@ -12,9 +13,14 @@ export const ATRIUM = {
     { top: CELL_BLOCK.west + 3, bottom: CELL_BLOCK.west + 10.2 },
   ],
 } as const;
-export const LAYOUT_VERSION = 13;
+export const LAYOUT_VERSION = 14;
 export function inAtrium(x: number, z: number) {
-  return x > CELL_BLOCK.west && x < CELL_BLOCK.east && z > 1 && z < 9;
+  return (
+    x > CELL_BLOCK.west &&
+    x < CELL_BLOCK.east &&
+    z > ATRIUM.north &&
+    z < ATRIUM.south
+  );
 }
 export function surfaceHeights(x: number, z: number): number[] {
   if (
@@ -24,12 +30,17 @@ export function surfaceHeights(x: number, z: number): number[] {
     z > NAV_BOUNDS.maxZ
   )
     return [];
-  if (!inAtrium(x, z)) return [0];
+  const inBlock = x > CELL_BLOCK.west && x < CELL_BLOCK.east;
+  if (!inAtrium(x, z)) return inBlock ? [0, ATRIUM.depth] : [0];
   const heights: number[] = [ATRIUM.depth];
   if (x >= CELL_BLOCK.east - 3 || x <= CELL_BLOCK.west + 3) heights.push(0);
   for (const stair of ATRIUM.stairs) {
     const t = (x - stair.top) / (stair.bottom - stair.top);
-    if (Math.abs(z - 5) <= ATRIUM.stairWidth / 2 && t >= 0 && t <= 1) {
+    if (
+      Math.abs(z - ATRIUM.centerZ) <= ATRIUM.stairWidth / 2 &&
+      t >= 0 &&
+      t <= 1
+    ) {
       const y = t * ATRIUM.depth;
       // Do not let a character walk into the solid underside of a staircase.
       if (y - ATRIUM.depth < 1.9) heights.length = 0;
@@ -40,6 +51,13 @@ export function surfaceHeights(x: number, z: number): number[] {
 }
 export function supportHeight(x: number, z: number, previousY: number) {
   return surfaceHeights(x, z).find((y) => Math.abs(y - previousY) <= 0.35);
+}
+/** Door/tool sounds originate above the floor; navigation targets their support. */
+export function evidenceTarget(point: Vec3): Vec3 {
+  const floors = surfaceHeights(point[0], point[2])
+    .filter((y) => y <= point[1] + 0.1)
+    .sort((a, b) => b - a);
+  return [point[0], floors[0] ?? point[1], point[2]];
 }
 export function bodyBlocked(
   x: number,
@@ -66,10 +84,35 @@ export function migratePosition(position: Vec3, version?: number): Vec3 {
     x <= CELL_BLOCK.west
   )
     return [...position];
-  if (z >= 5) return [x, y, z + 7];
-  if (inAtrium(x, z) && x < CELL_BLOCK.east - 3 && x > CELL_BLOCK.west + 3)
+  let migratedZ = z;
+  // A saved mid-flight stair position follows the relocated stair, not open air.
+  if (
+    version === 13 &&
+    y < -0.1 &&
+    y > ATRIUM.depth + 0.1 &&
+    Math.abs(z - 5) <= ATRIUM.stairWidth / 2
+  )
+    return [x, y, z + 4];
+  if ((version ?? 0) < 13) {
+    if (z >= 5) migratedZ += 7;
+    else if (
+      z > 1 &&
+      z < 9 &&
+      x < CELL_BLOCK.east - 3 &&
+      x > CELL_BLOCK.west + 3
+    )
+      return [x, 0, 0.4];
+  }
+  if (migratedZ >= 9) migratedZ += 8;
+  // Preserve lower-hall saves; upper bridge saves move onto a supported bridge.
+  if (y < -1) return [x, y, migratedZ];
+  if (
+    inAtrium(x, migratedZ) &&
+    x < CELL_BLOCK.east - 3 &&
+    x > CELL_BLOCK.west + 3
+  )
     return [x, 0, 0.4];
-  return [...position];
+  return [x, y, migratedZ];
 }
 
 /** Two floor grids joined by stair portals. Heights stay attached to every waypoint. */

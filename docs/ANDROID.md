@@ -1,8 +1,10 @@
-# Hirodora Android 0.14.0
+# Hirodora Android 0.14.1
 
 The APK is an installable, signed Android application. It embeds the existing Three.js game inside a hardware-accelerated Android System WebView; Java handles the Android lifecycle, local asset delivery, landscape orientation, immersive display and Android Back. This release does not migrate the renderer to Unity or C++.
 
-Download `downloads/Hirodora-0.14.0-android.apk` from the main branch's README, allow installation from your browser/Files application when Android prompts, then install. Requires Android 8.0+, an updated Android System WebView and WebGL 2 support. All assets are local. The manifest requests **no Internet, storage, microphone or tracking permissions**. VersionCode 1400 reuses the existing release certificate. Install over an earlier version to preserve app-local saves and HUD settings; older layout saves migrate safely. Uninstalling clears saves. Browser saves do not transfer automatically.
+Download `downloads/Hirodora-0.14.1-android.apk` from the main branch's README, allow installation from your browser/Files application when Android prompts, then install. Requires Android 8.0+, an updated Android System WebView and WebGL 2 support. All assets are local. The manifest requests **no Internet, storage, microphone or tracking permissions**. VersionCode 1401 reuses the existing release certificate. Install over an earlier version to preserve app-local saves and HUD settings; older layout saves migrate safely. Uninstalling clears saves. Browser saves do not transfer automatically.
+
+Version 0.14.1 holds Cell 46's gate open in the current opening chapter, including older saves. Use the Cell 47 passage, choose **Explore Cell 46**, then walk into the corridor. Guards stay active. See [exploration patch and verification](CELL46-EXPLORATION.md).
 
 The application opens horizontally with Continue, New game and Settings. Android Back pauses and offers an exit confirmation. App backgrounding pauses play/audio, including the intro timeline; return and tap Continue. Pause → Retry checkpoint restarts a checkpoint, and Pause → New game replaces the current escape after confirmation. The title menu also offers New game. Its 17-second opening can be paused or skipped and saves a completed cinematic checkpoint; existing saves continue without replay. See [INTRO-V8.md](INTRO-V8.md).
 

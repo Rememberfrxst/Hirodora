@@ -52,9 +52,10 @@ const report = {
   }).split(/\s/)[0],
   downloads: results,
 };
-await mkdir("docs/verification/atrium-v14", { recursive: true });
+const reportDir = process.env.VERIFY_DIR || "docs/verification/atrium-v14";
+await mkdir(reportDir, { recursive: true });
 await writeFile(
-  "docs/verification/atrium-v14/public-downloads.json",
+  join(reportDir, "public-downloads.json"),
   JSON.stringify(report, null, 2) + "\n",
 );
 console.log(

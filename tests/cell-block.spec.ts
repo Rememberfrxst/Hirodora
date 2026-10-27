@@ -118,7 +118,7 @@ test("main-menu confirmation traps focus, defaults to No, cancels safely and con
   await expect(page.locator("[data-start]")).toBeVisible();
   expect(await page.evaluate(() => window.__HIRODORA__.hasSave)).toBe(true);
 });
-test("Cell 46 exploration gate unlocks after the chapter and gate state survives save/load", async ({
+test("Cell 46 stays open for exploration in new games and previously closed saves", async ({
   page,
 }) => {
   await page.goto("/");
@@ -130,27 +130,53 @@ test("Cell 46 exploration gate unlocks after the chapter and gate state survives
     const latch = e.worldData.interactables.find(
       (o: any) => o.id === "cell_latch_46",
     );
-    const locked = latch.disabled;
-    e.gameFlags.cell46_reached = true;
+    e.overlayOpen = true;
+    const yaw = e.worldData.doors.get("cell_46_door").rotation.y;
+    e.playerPos = [-10, 0, -3.2];
+    e.playerRotY = 0;
+    e.keys.KeyS = true;
+    for (let i = 0; i < 90; i++) e.move(0.016);
+    e.clearInput();
+    const outside = e.playerPos[2];
+    e.keys.KeyW = true;
+    for (let i = 0; i < 90; i++) e.move(0.016);
+    e.clearInput();
+    const inside = e.playerPos[2];
+    e.saveCheckpoint();
+    // Simulate an older checkpoint that explicitly saved the gate as closed.
+    const old = structuredClone(e.checkpoint);
+    old.flags.cell_46_open = false;
+    old.flags.cell46_reached = false;
+    e.restoreCheckpoint(old);
+    const restored = e.gameFlags.cell_46_open && e.doorIsOpen("cell_46_door");
+    const restoredYaw = e.worldData.doors.get("cell_46_door").rotation.y;
+    const heldOpen = latch.disabled;
+    // Original campaign still unlocks this door through Locker 46.
+    e.restoreCheckpoint({ ...old, flags: {} });
+    const legacyLocked = !e.doorIsOpen("cell_46_door");
+    e.gameFlags.locker_open = true;
     e.syncWorld();
-    e.playerPos = [-10.1, 0, -3.2];
-    e.playerRotY = Math.atan2(
-      -(latch.position[0] + 10.1),
-      -(latch.position[2] + 3.2),
-    );
-    e.overlayOpen = false;
-    e.interact();
-    const opened = !!e.gameFlags.cell_46_open,
-      yaw = e.worldData.doors.get("cell_46_door").rotation.y;
-    e.loadCheckpoint();
-    return { locked, opened, yaw, restored: !!e.gameFlags.cell_46_open };
+    const legacyUnlocked = e.doorIsOpen("cell_46_door");
+    e.restoreCheckpoint(old);
+    return {
+      outside,
+      inside,
+      yaw,
+      restoredYaw,
+      restored,
+      heldOpen,
+      legacyLocked,
+      legacyUnlocked,
+    };
   });
-  expect(result).toEqual({
-    locked: true,
-    opened: true,
-    yaw: Math.PI / 2,
-    restored: true,
-  });
+  expect(result.yaw).toBe(Math.PI / 2);
+  expect(result.restoredYaw).toBe(Math.PI / 2);
+  expect(result.outside).toBeGreaterThan(-0.5);
+  expect(result.inside).toBeLessThan(-2.5);
+  expect(result.restored).toBe(true);
+  expect(result.heldOpen).toBe(true);
+  expect(result.legacyLocked).toBe(true);
+  expect(result.legacyUnlocked).toBe(true);
   const westward = await page.evaluate(() => {
     const e = window.__HIRODORA__ as any,
       g = e.worldData.guards[1];

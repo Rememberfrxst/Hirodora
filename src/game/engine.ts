@@ -1630,6 +1630,8 @@ export class GameEngine {
 
   private syncWorld() {
     const opening = !!this.gameFlags.opening_v3;
+    // Keep Cell 46 available for exploration, including previously closed saves.
+    if (opening) this.gameFlags.cell_46_open = true;
     const p = this.openingProgress,
       o = this.worldData.opening;
     o.bed.position.z = -8.4 + p.bed * 1.4;
@@ -1702,8 +1704,7 @@ export class GameEngine {
       const latch = obj.id.match(/^cell_latch_(\d+)$/);
       if (latch) {
         const number = Number(latch[1]);
-        obj.disabled =
-          number === 46 && (!opening || !this.gameFlags.cell46_reached);
+        obj.disabled = number === 46;
         obj.prompt = `${this.doorIsOpen(`cell_${number}_door`) ? "Close" : "Open"} Cell ${number} gate`;
       }
       if (

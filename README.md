@@ -8,15 +8,17 @@
 
 **Every sound has a consequence.**
 
-**v0.14.0 · Two Floors / 48 Cells / Nine Officers**
+**v0.14.1 · Cell 46 Open for Exploration**
 
-**[↓ DOWNLOAD ANDROID APK](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.14.0-android.apk)**
+**[↓ DOWNLOAD ANDROID APK](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.14.1-android.apk)**
 
-[↓ Offline web ZIP](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.14.0-offline.zip) · [Single-file HTML download](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.14.0.html) · [ZIP checksum](downloads/latest.json) · [APK checksums](downloads/android-latest.json) · [Android installation](docs/ANDROID.md)
+[↓ Offline web ZIP](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.14.1-offline.zip) · [Single-file HTML download](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.14.1.html) · [ZIP checksum](downloads/latest.json) · [APK checksums](downloads/android-latest.json) · [Android installation](docs/ANDROID.md)
 
 </div>
 
 ## A playable prison atrium
+
+**Cell 46's gate now stays open in the current opening chapter**, including previously closed saves. Complete the Cell 47 passage, choose **Explore Cell 46**, then walk through its open gate to inspect both floors. The gate's Close action is disabled so it stays available for testing. Guards remain active. [Exploration patch](docs/CELL46-EXPLORATION.md).
 
 Block C now has **48 cells: 12 left and 12 right on each of two playable floors**. The atrium is **22 metres wide**, with two 3-metre upper galleries around a 16-metre opening. Stairs and end bridges connect the lower corridor 3.2 metres below. Original cell interiors remain 9.5 metres deep; each cell has a **2.4-metre-wide independent gate** with its own frame, masonry shoulders and latch. The roof is one metre higher, with ceiling-mounted lights and light atmospheric fog. The overhead beam/pipe grid is removed. **Four officers serve upstairs (including the opening examination duty), and five patrol downstairs**; their AI can investigate and traverse the stairs.
 
@@ -47,9 +49,9 @@ Compare [previous atrium](docs/screenshots/atrium-v13/01-atrium.png) with [wider
 
 Download the APK above, open it in Android Files and allow installation from that source when prompted. Requires **Android 8.0+**, an updated Android System WebView and WebGL 2. The app opens horizontally and includes all models, textures and audio offline, with **no Internet, storage, microphone or tracking permission**.
 
-Version 0.14 uses the existing release certificate and versionCode **1400**. Older saves migrate to safe walkways, retaining inventory and puzzles. Install over an earlier release to retain app-local saves and settings; uninstalling clears them.
+Version 0.14.1 uses the existing release certificate and versionCode **1401**. Older saves migrate to safe walkways, retaining inventory and puzzles. Install over an earlier release to retain app-local saves and settings; uninstalling clears them.
 
-For the web edition, download through the direct ZIP link above, extract it and open `Hirodora-0.14.0.html` in a full WebGL 2 browser. The links bypass GitHub's large-file preview. File handling depends on your device. On iPhone/iPad, use the hosted PWA; a local HTML viewer may block scripts. Portrait play pauses behind a rotate notice.
+For the web edition, download through the direct ZIP link above, extract it and open `Hirodora-0.14.1.html` in a full WebGL 2 browser. The links bypass GitHub's large-file preview. File handling depends on your device. On iPhone/iPad, use the hosted PWA; a local HTML viewer may block scripts. Portrait play pauses behind a rotate notice.
 
 ## How to finish the current chapter
 

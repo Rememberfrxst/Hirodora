@@ -1,3 +1,5 @@
+import { NAV_BOUNDS } from "./cell-block";
+
 export type Point = [number, number];
 export type Obstacle = {
   min: { x: number; z: number };
@@ -66,9 +68,9 @@ export function findPath(
   obstacles: Obstacle[],
 ): Point[] {
   const step = 0.5,
-    origin: Point = [-36, -10.5],
-    columns = 132,
-    rows = 43;
+    origin: Point = [NAV_BOUNDS.minX, NAV_BOUNDS.minZ],
+    columns = Math.ceil((NAV_BOUNDS.maxX - NAV_BOUNDS.minX) / step) + 1,
+    rows = Math.ceil((NAV_BOUNDS.maxZ - NAV_BOUNDS.minZ) / step) + 1;
   const cell = ([x, z]: Point): Point => [
     Math.round((x - origin[0]) / step),
     Math.round((z - origin[1]) / step),
@@ -80,6 +82,32 @@ export function findPath(
   const [sx, sz] = cell(start),
     [gx, gz] = cell(goal);
   const key = (x: number, z: number) => z * columns + x;
+  if (
+    [sx, gx].some((x) => x < 0 || x >= columns) ||
+    [sz, gz].some((z) => z < 0 || z >= rows)
+  )
+    return [];
+  // Rasterize inflated AABBs once instead of checking every obstacle at every
+  // visited grid node. This keeps the larger 24-cell navigation grid inexpensive.
+  const occupied = new Uint8Array(columns * rows),
+    radius = 0.28;
+  for (const b of obstacles) {
+    const x0 = Math.max(
+        0,
+        Math.floor((b.min.x - radius - origin[0]) / step) + 1,
+      ),
+      x1 = Math.min(
+        columns - 1,
+        Math.ceil((b.max.x + radius - origin[0]) / step) - 1,
+      ),
+      z0 = Math.max(0, Math.floor((b.min.z - radius - origin[1]) / step) + 1),
+      z1 = Math.min(
+        rows - 1,
+        Math.ceil((b.max.z + radius - origin[1]) / step) - 1,
+      );
+    for (let z = z0; z <= z1; z++)
+      for (let x = x0; x <= x1; x++) occupied[key(x, z)] = 1;
+  }
   const queue: Point[] = [[sx, sz]],
     parents = new Map<number, Point | null>([[key(sx, sz), null]]);
   let found: Point | undefined;
@@ -105,8 +133,7 @@ export function findPath(
         parents.has(key(nx, nz))
       )
         continue;
-      const [wx, wz] = world([nx, nz]);
-      if (isBlocked(wx, wz, obstacles)) continue;
+      if (occupied[key(nx, nz)]) continue;
       parents.set(key(nx, nz), [x, z]);
       queue.push([nx, nz]);
     }

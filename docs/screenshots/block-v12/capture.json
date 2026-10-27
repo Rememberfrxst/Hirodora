@@ -1,0 +1,339 @@
+{
+  "cells": [
+    {
+      "number": 47,
+      "side": "north",
+      "centerX": -5.95,
+      "left": -8.8,
+      "right": -3.1,
+      "front": -2,
+      "rear": -11.5,
+      "doorX": -6,
+      "medical": false
+    },
+    {
+      "number": 48,
+      "side": "south",
+      "centerX": -5.95,
+      "left": -8.8,
+      "right": -3.1,
+      "front": 5,
+      "rear": 14.5,
+      "doorX": -6.65,
+      "medical": true
+    },
+    {
+      "number": 46,
+      "side": "north",
+      "centerX": -11.4,
+      "left": -14,
+      "right": -8.8,
+      "front": -2,
+      "rear": -11.5,
+      "doorX": -11,
+      "medical": false
+    },
+    {
+      "number": 49,
+      "side": "south",
+      "centerX": -11.4,
+      "left": -14,
+      "right": -8.8,
+      "front": 5,
+      "rear": 14.5,
+      "doorX": -12.1,
+      "medical": true
+    },
+    {
+      "number": 45,
+      "side": "north",
+      "centerX": -17,
+      "left": -19.75,
+      "right": -14,
+      "front": -2,
+      "rear": -11.5,
+      "doorX": -17.55,
+      "medical": false
+    },
+    {
+      "number": 50,
+      "side": "south",
+      "centerX": -17,
+      "left": -19.75,
+      "right": -14,
+      "front": 5,
+      "rear": 14.5,
+      "doorX": -17.7,
+      "medical": false
+    },
+    {
+      "number": 44,
+      "side": "north",
+      "centerX": -22.5,
+      "left": -25.25,
+      "right": -19.75,
+      "front": -2,
+      "rear": -11.5,
+      "doorX": -23.05,
+      "medical": false
+    },
+    {
+      "number": 51,
+      "side": "south",
+      "centerX": -22.5,
+      "left": -25.25,
+      "right": -19.75,
+      "front": 5,
+      "rear": 14.5,
+      "doorX": -23.2,
+      "medical": false
+    },
+    {
+      "number": 43,
+      "side": "north",
+      "centerX": -28,
+      "left": -30.75,
+      "right": -25.25,
+      "front": -2,
+      "rear": -11.5,
+      "doorX": -28.55,
+      "medical": false
+    },
+    {
+      "number": 52,
+      "side": "south",
+      "centerX": -28,
+      "left": -30.75,
+      "right": -25.25,
+      "front": 5,
+      "rear": 14.5,
+      "doorX": -28.7,
+      "medical": false
+    },
+    {
+      "number": 42,
+      "side": "north",
+      "centerX": -33.5,
+      "left": -36.25,
+      "right": -30.75,
+      "front": -2,
+      "rear": -11.5,
+      "doorX": -34.05,
+      "medical": false
+    },
+    {
+      "number": 53,
+      "side": "south",
+      "centerX": -33.5,
+      "left": -36.25,
+      "right": -30.75,
+      "front": 5,
+      "rear": 14.5,
+      "doorX": -34.2,
+      "medical": false
+    },
+    {
+      "number": 41,
+      "side": "north",
+      "centerX": -39,
+      "left": -41.75,
+      "right": -36.25,
+      "front": -2,
+      "rear": -11.5,
+      "doorX": -39.55,
+      "medical": false
+    },
+    {
+      "number": 54,
+      "side": "south",
+      "centerX": -39,
+      "left": -41.75,
+      "right": -36.25,
+      "front": 5,
+      "rear": 14.5,
+      "doorX": -39.7,
+      "medical": false
+    },
+    {
+      "number": 40,
+      "side": "north",
+      "centerX": -44.5,
+      "left": -47.25,
+      "right": -41.75,
+      "front": -2,
+      "rear": -11.5,
+      "doorX": -45.05,
+      "medical": false
+    },
+    {
+      "number": 55,
+      "side": "south",
+      "centerX": -44.5,
+      "left": -47.25,
+      "right": -41.75,
+      "front": 5,
+      "rear": 14.5,
+      "doorX": -45.2,
+      "medical": false
+    },
+    {
+      "number": 39,
+      "side": "north",
+      "centerX": -50,
+      "left": -52.75,
+      "right": -47.25,
+      "front": -2,
+      "rear": -11.5,
+      "doorX": -50.55,
+      "medical": false
+    },
+    {
+      "number": 56,
+      "side": "south",
+      "centerX": -50,
+      "left": -52.75,
+      "right": -47.25,
+      "front": 5,
+      "rear": 14.5,
+      "doorX": -50.7,
+      "medical": false
+    },
+    {
+      "number": 38,
+      "side": "north",
+      "centerX": -55.5,
+      "left": -58.25,
+      "right": -52.75,
+      "front": -2,
+      "rear": -11.5,
+      "doorX": -56.05,
+      "medical": false
+    },
+    {
+      "number": 57,
+      "side": "south",
+      "centerX": -55.5,
+      "left": -58.25,
+      "right": -52.75,
+      "front": 5,
+      "rear": 14.5,
+      "doorX": -56.2,
+      "medical": false
+    },
+    {
+      "number": 37,
+      "side": "north",
+      "centerX": -61,
+      "left": -63.75,
+      "right": -58.25,
+      "front": -2,
+      "rear": -11.5,
+      "doorX": -61.55,
+      "medical": false
+    },
+    {
+      "number": 58,
+      "side": "south",
+      "centerX": -61,
+      "left": -63.75,
+      "right": -58.25,
+      "front": 5,
+      "rear": 14.5,
+      "doorX": -61.7,
+      "medical": false
+    },
+    {
+      "number": 36,
+      "side": "north",
+      "centerX": -66.5,
+      "left": -69.25,
+      "right": -63.75,
+      "front": -2,
+      "rear": -11.5,
+      "doorX": -67.05,
+      "medical": false
+    },
+    {
+      "number": 59,
+      "side": "south",
+      "centerX": -66.5,
+      "left": -69.25,
+      "right": -63.75,
+      "front": 5,
+      "rear": 14.5,
+      "doorX": -67.2,
+      "medical": false
+    }
+  ],
+  "captures": [
+    {
+      "name": "01-wide-corridor",
+      "position": [
+        -5.8,
+        1.65,
+        2
+      ],
+      "target": [
+        -60,
+        1.5,
+        1.5
+      ],
+      "calls": 342,
+      "triangles": 992080,
+      "batches": 89,
+      "instances": 251
+    },
+    {
+      "name": "02-opposite-cells",
+      "position": [
+        -23,
+        1.65,
+        0.6
+      ],
+      "target": [
+        -22.5,
+        1.35,
+        10
+      ],
+      "calls": 216,
+      "triangles": 721124,
+      "batches": 89,
+      "instances": 251
+    },
+    {
+      "name": "03-cell46-gate",
+      "position": [
+        -12.5,
+        1.6,
+        -8.5
+      ],
+      "target": [
+        -10.5,
+        1.3,
+        -2
+      ],
+      "calls": 302,
+      "triangles": 895808,
+      "batches": 89,
+      "instances": 251
+    },
+    {
+      "name": "04-floor-plan",
+      "description": "Actual floor-plan UI uses the same 24-cell layout metadata"
+    },
+    {
+      "name": "06-main-menu-confirmation",
+      "description": "Real Yes/No confirmation over paused gameplay; defaults to No"
+    },
+    {
+      "name": "05-mobile-controls",
+      "viewport": {
+        "width": 960,
+        "height": 450
+      },
+      "description": "Reference-matched vector arrow/bulb icons; original desktop-path PNGs are unavailable"
+    }
+  ],
+  "errors": [],
+  "characterStatus": "Original characters retained: warrior exceeds 32 MiB transfer limit; police upload lacks source/license and skin rig. Not claimed as integrated."
+}

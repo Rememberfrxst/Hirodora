@@ -1804,6 +1804,91 @@ input[type="range"] {
   fill: currentColor;
   stroke: none;
 }
+.custom-control .arrow-crouch {
+  transform: rotate(180deg);
+}
+.custom-control .arrow-sprint {
+  transform: rotate(90deg);
+}
+.touch-interact progress {
+  width: 65%;
+  height: 3px;
+  position: absolute;
+  bottom: 7px;
+  accent-color: #ddc58c;
+}
+.hud-tools .hint-bulb {
+  width: 26px;
+  height: 26px;
+}
+.exit-main-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 96;
+  display: grid;
+  place-items: center;
+  background: #0003;
+  pointer-events: auto;
+}
+.map-panel {
+  max-height: 92vh;
+  max-height: 92dvh;
+  overflow-y: auto;
+}
+.exit-main-dialog {
+  position: relative;
+  width: min(520px, 70vw);
+  height: min(260px, 58vh);
+  min-height: 170px;
+  background: #131313;
+  color: #f4f4ee;
+  border-radius: 5px;
+  display: grid;
+  place-items: center;
+  padding: 22px;
+  box-shadow: 0 6px 22px #0004;
+}
+.exit-main-dialog h2 {
+  margin: 0;
+  font:
+    600 clamp(20px, 2.8vw, 29px) / 1.3 Georgia,
+    serif;
+  text-align: center;
+}
+.exit-main-choices {
+  position: absolute;
+  bottom: -14px;
+  display: flex;
+  gap: 10px;
+}
+.exit-main-choices button {
+  width: 100px;
+  min-height: 44px;
+  border: 0;
+  border-radius: 5px;
+  background: #292929;
+  color: #fff;
+  cursor: pointer;
+  font:
+    600 24px/1 Georgia,
+    serif;
+}
+.exit-main-choices button:hover,
+.exit-main-choices button:focus-visible {
+  outline: 2px solid #99bb62;
+  background: #3b442b;
+}
+.paused-reference nav {
+  padding: 14px 20px;
+  left: 5.6%;
+  background: #030303;
+  border-radius: 4px;
+}
+.paused-reference .pause-secondary {
+  flex-wrap: wrap;
+  max-width: 50%;
+  justify-content: flex-end;
+}
 .custom-control small {
   font: 7px/1 monospace;
   letter-spacing: 0.8px;

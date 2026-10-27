@@ -1,32 +1,50 @@
 import { Hand, Crosshair } from "lucide-react";
 import type { ControlId } from "../game/hud-layout";
 
-// Project-authored placeholders until the user's original PNG files are uploaded.
-// Keep this component as the single swap point for the supplied artwork.
+// Vector rendition of the supplied arrow reference. A single shape rotates for
+// all movement actions; original PNG can replace this at one point if supplied.
 export function ControlIcon({ id }: { id: ControlId }) {
   if (id === "move") return <i className="thumb-dot" />;
   if (id === "interact") return <Hand />;
   if (id === "fire") return <Crosshair />;
   return (
-    <svg className="action-silhouette" viewBox="0 0 48 48" aria-hidden="true">
-      {id === "jump" ? (
-        <>
-          <circle cx="26" cy="7" r="4" />
-          <path d="M22 14l8 1 8-9 4 3-10 12-4-1-2 9 10 8-3 4-13-10-7 11-5-3 10-17-3-7-9 7-3-4 12-11z" />
-        </>
-      ) : id === "sprint" ? (
-        <>
-          <circle cx="29" cy="8" r="4" />
-          <path d="M22 14l8 2 7 8 6 1-1 5-8-2-7-7-4 9 9 7-2 8-5-1 1-5-10-6-6 10-5-3 10-17 2-5-8 5-3-4z" />
-          <path d="M2 12h12v3H2zm-2 8h10v3H0zm1 8h7v3H1z" />
-        </>
-      ) : (
-        <>
-          <circle cx="29" cy="9" r="4" />
-          <path d="M22 15l9 1-2 10 10 5-2 5-15-7-4 6 12 4-2 5-19-7 9-15-9 5-3-4z" />
-          <path d="M30 18l7 5 7-2 1 5-10 3-8-6z" />
-        </>
-      )}
+    <svg
+      className={`action-silhouette action-arrow arrow-${id}`}
+      viewBox="0 0 512 512"
+      aria-hidden="true"
+    >
+      <path d="M272 8a23 23 0 0 0-32 0L17 231c-20 20-5 55 24 55h107v190c0 20 16 36 36 36h144c20 0 36-16 36-36V286h107c29 0 44-35 24-55Z" />
+    </svg>
+  );
+}
+
+export function HintIcon() {
+  return (
+    <svg className="hint-bulb" viewBox="0 0 512 512" aria-hidden="true">
+      <g fill="currentColor">
+        <rect x="241" width="30" height="91" rx="15" />
+        <rect
+          x="241"
+          width="30"
+          height="91"
+          rx="15"
+          transform="rotate(-45 256 256)"
+        />
+        <rect
+          x="241"
+          width="30"
+          height="91"
+          rx="15"
+          transform="rotate(45 256 256)"
+        />
+        <rect y="241" width="91" height="30" rx="15" />
+        <rect x="421" y="241" width="91" height="30" rx="15" />
+        <path
+          fillRule="evenodd"
+          d="M121 256a135 135 0 0 1 270 0c0 54-27 81-57 112-10 10-18 24-18 39v15H196v-15c0-15-8-29-18-39-30-31-57-58-57-112Zm75 0a15 15 0 0 0 30 0 30 30 0 0 1 30-30 15 15 0 0 0 0-30 60 60 0 0 0-60 60Z"
+        />
+        <path d="M196 452h120v15a45 45 0 0 1-45 45h-30a45 45 0 0 1-45-45Z" />
+      </g>
     </svg>
   );
 }

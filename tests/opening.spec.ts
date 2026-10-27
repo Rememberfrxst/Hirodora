@@ -240,7 +240,8 @@ test("mobile contextual holding releases on cancel and rotation without stuck in
     e.syncWorld();
   });
   await aim(page, "bed_push", -5.6, -8.1);
-  const button = page.locator(".context-actions .interact-prompt");
+  const button = page.getByRole("button", { name: "Interact", exact: true });
+  await expect(button).toBeVisible();
   const bounds = (await button.boundingBox())!;
   await page.mouse.move(
     bounds.x + bounds.width / 2,

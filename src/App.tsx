@@ -24,6 +24,9 @@ export default function App() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [hudEditor, setHudEditor] = useState(false);
   const [restart, setRestart] = useState<"checkpoint" | "new" | null>(null);
+  const [exitMain, setExitMain] = useState(false);
+  const mainMenuTrigger = useRef<HTMLButtonElement>(null);
+  const exitNo = useRef<HTMLButtonElement>(null);
   const [displayPending, setDisplayPending] = useState(false);
   const [displayMessage, setDisplayMessage] = useState("");
 
@@ -47,6 +50,13 @@ export default function App() {
     }
     const key = (e: KeyboardEvent) => {
       if (engine.orientationBlocked) return;
+      if (document.querySelector(".exit-main-dialog")) {
+        if (e.code === "Escape") {
+          setExitMain(false);
+          mainMenuTrigger.current?.focus();
+        }
+        return;
+      }
       if (document.querySelector(".reference-settings, .hud-editor")) {
         if (e.code === "Escape") {
           setSettingsOpen(false);
@@ -63,6 +73,7 @@ export default function App() {
         return;
       if (e.repeat || engine.activeMiniGame) return;
       if (e.code === "Escape") {
+        setRestart(null);
         setOverlay(null);
         setSettingsOpen(false);
         setHudEditor(false);
@@ -89,10 +100,14 @@ export default function App() {
   useEffect(() => {
     const engine = engineRef.current;
     if (!engine) return;
-    engine.overlayOpen = !!overlay || hudEditor || settingsOpen;
+    engine.overlayOpen =
+      !!overlay || hudEditor || settingsOpen || exitMain || !!restart;
     engine.clearInput();
     if (overlay) document.exitPointerLock?.();
-  }, [overlay, hudEditor, settingsOpen]);
+  }, [overlay, hudEditor, settingsOpen, exitMain, restart]);
+  useEffect(() => {
+    if (exitMain) exitNo.current?.focus();
+  }, [exitMain]);
 
   const engine = engineRef.current;
   const portrait = !!engine?.orientationBlocked;
@@ -155,16 +170,7 @@ export default function App() {
             {engine.gameState === "playing" &&
               !engine.activeMiniGame &&
               !overlay && (
-                <HUD
-                  engine={engine}
-                  onPause={() => engine.pauseGame()}
-                  onRestart={() => {
-                    engine.pauseGame();
-                    setRestart("checkpoint");
-                  }}
-                  onOpenMap={() => setOverlay("map")}
-                  onOpenStory={() => setOverlay("story")}
-                />
+                <HUD engine={engine} onPause={() => engine.pauseGame()} />
               )}
             {overlay === "story" && (
               <StoryPrologueModal
@@ -235,7 +241,24 @@ export default function App() {
                       aria-label="Resume escape"
                       onClick={() => engine.resumeGame()}
                     >
-                      Continue
+                      Resume
+                    </button>
+                    <button
+                      ref={mainMenuTrigger}
+                      onClick={() => setExitMain(true)}
+                    >
+                      To main menu
+                    </button>
+                    <button onClick={() => setSettingsOpen(true)}>
+                      Settings
+                    </button>
+                  </nav>
+                  <div className="pause-secondary">
+                    <button
+                      aria-label="Restart game"
+                      onClick={() => setRestart("checkpoint")}
+                    >
+                      Retry checkpoint
                     </button>
                     <button
                       aria-label="Start new game"
@@ -243,16 +266,17 @@ export default function App() {
                     >
                       New game
                     </button>
-                    <button onClick={() => setSettingsOpen(true)}>
-                      Settings
+                    <button
+                      aria-label="Facility map"
+                      onClick={() => setOverlay("map")}
+                    >
+                      Map
                     </button>
-                  </nav>
-                  <div className="pause-secondary">
-                    <button onClick={() => setRestart("checkpoint")}>
-                      Retry checkpoint
-                    </button>
-                    <button onClick={() => engine.returnToTitle()}>
-                      Main menu
+                    <button
+                      aria-label="Story dossier"
+                      onClick={() => setOverlay("story")}
+                    >
+                      Story
                     </button>
                     <details style={{ maxHeight: "28vh", overflowY: "auto" }}>
                       <summary>Art and audio credits</summary>
@@ -277,6 +301,58 @@ export default function App() {
                   </div>
                 </section>
               )}
+            {exitMain && (
+              <div className="exit-main-backdrop">
+                <section
+                  className="exit-main-dialog"
+                  role="dialog"
+                  aria-modal="true"
+                  aria-labelledby="exit-main-title"
+                  onKeyDown={(e) => {
+                    if (e.key === "Escape") {
+                      e.stopPropagation();
+                      setExitMain(false);
+                      mainMenuTrigger.current?.focus();
+                    }
+                    if (e.key === "Tab") {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      const buttons = Array.from(
+                        e.currentTarget.querySelectorAll("button"),
+                      );
+                      const index = buttons.indexOf(
+                        document.activeElement as HTMLButtonElement,
+                      );
+                      buttons[
+                        (index + (e.shiftKey ? buttons.length - 1 : 1)) %
+                          buttons.length
+                      ]?.focus();
+                    }
+                  }}
+                >
+                  <h2 id="exit-main-title">Exit to the main menu?</h2>
+                  <div className="exit-main-choices">
+                    <button
+                      onClick={() => {
+                        setExitMain(false);
+                        engine.returnToTitle();
+                      }}
+                    >
+                      Yes
+                    </button>
+                    <button
+                      ref={exitNo}
+                      onClick={() => {
+                        setExitMain(false);
+                        mainMenuTrigger.current?.focus();
+                      }}
+                    >
+                      No
+                    </button>
+                  </div>
+                </section>
+              </div>
+            )}
             {restart && (
               <div className="modal-backdrop restart-confirmation">
                 <section

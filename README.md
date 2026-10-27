@@ -8,44 +8,46 @@
 
 **Every sound has a consequence.**
 
-**v0.11.0 · Rock Wall 16 / Supplied 3D Assets**
+**v0.12.0 · 24 Cells / Reference HUD**
 
-**[↓ DOWNLOAD ANDROID APK](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.11.0-android.apk)**
+**[↓ DOWNLOAD ANDROID APK](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.12.0-android.apk)**
 
-[Offline web ZIP](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.11.0-offline.zip) · [Single-file HTML](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.11.0.html) · [APK checksums](downloads/android-latest.json) · [Android installation](docs/ANDROID.md)
+[Offline web ZIP](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.12.0-offline.zip) · [Single-file HTML](https://github.com/Rememberfrxst/Hirodora/raw/refs/heads/main/downloads/Hirodora-0.12.0.html) · [APK checksums](downloads/android-latest.json) · [Android installation](docs/ANDROID.md)
 
 </div>
 
-## The latest environment
+## 24 cells · wider corridor · cleaner HUD
 
-The supplied **Poly Haven Rock Wall 16** now covers prison walls, floors and ceilings with the original 2K albedo, OpenGL normal and packed AO/roughness maps. The shared material uses metre-scaled UVs, non-metallic stone and surface-specific normal strength. The former green lower-wall overlays are removed. These are actual source textures, not noise-generated substitutes.
+Block C now has **12 north-side cells (36–47) and 12 south-side cells (48–59)** facing a **7-metre central corridor**. The original Cell 47 / Cell 46 opening coordinates and puzzle remain intact. All new cells use the existing licensed Rock Wall 16 PBR materials and supplied table/toilet assets. Cells 48/49 retain medical-room access for the legacy campaign.
 
-The supplied **Basic Table** replaces the bunk in all six existing cells. **Dirty Toilet** replaces the older toilet fixtures; **Free Screwdriver** is the actual hidden pickup. Models retain their authored geometry and textures, with corrected axes, real-world scale and floor alignment. The table's legacy specular/gloss material is converted to supported PBR. Existing modeled sinks, windows and lights remain.
+Added exploration gates have working latches, collision-safe hinges and saved state. After reaching Cell 46, its gate can be opened to explore the block; Cells 42–45 remain story-locked. Repeated GLB fixtures use spatially chunked GPU instances; welded gate bars are batched by material. This reduces draw-call overhead without replacing assets with primitive proxies.
 
-The table-push puzzle keeps its quiet/hard behavior, screwdriver reveal and saved progress. Furniture collision volumes follow the new dimensions; the toilet moves diagonally clear of the sink before opening the passage. Wooden-furniture scraping replaces the steel-bed movement sound. Guard AI, story progression, checkpoints, mobile HUD and landscape support are retained.
+The top-right HUD has only **Hint** and **Pause**. The bulb and up-arrow references have vector renditions: jump points up, crouch down and sprint right. The touch interaction button is hidden when no action is available; nearby actions display Push, Unbolt, Move, Open or Penetrate with hold progress. Map, story, restart and New game remain in Pause. **To main menu** opens the reference-style **Yes / No** confirmation, defaulting to No with keyboard focus management.
 
-[Implementation and verification](docs/ASSETS-V11.md) · [Asset sources, licenses and hashes](src/assets/environment/manifest.json) · [Redistribution credits](src/assets/environment/UPLOADED-ASSET-LICENSES.txt)
+**Character replacement is not complete:** `the_redeemed_warrior.glb` exceeds this environment's 32 MiB upload-transfer limit. The 16.8 MB police GLB has no rig, animation or source/license metadata. Existing characters are retained until a smaller warrior file/direct link and police redistribution permission/source are supplied. The original desktop-path PNG files are also unavailable; screenshots show vector renditions, not the original PNG bytes.
+
+[Implementation, verification and remaining blockers](docs/CELL-BLOCK-V12.md) · [Asset credits](src/assets/environment/UPLOADED-ASSET-LICENSES.txt)
 
 ## Latest screenshots — exactly six
 
-Actual game renders, not concept art or generated mockups. Desktop views use High quality at 1280 × 800; the landscape touch view uses 960 × 450. The screwdriver close-up stages the completed table-push progress. Camera positions and render statistics are recorded in the [capture manifest](docs/screenshots/assets-v11/capture.json). Historical screenshots remain in their earlier folders, but are not mixed into this gallery.
+Actual game/UI renders. The floor-plan image uses the same 24-cell metadata as the level; the Cell 46 view stages the unlocked exploration gate. No new character model is claimed in these images. [Capture positions and render statistics](docs/screenshots/block-v12/capture.json).
 
 <table>
-<tr><td width="50%"><img src="docs/screenshots/assets-v11/01-cell47.png" alt="Cell 47 with supplied stone PBR, wooden table and dirty toilet" /></td><td width="50%"><img src="docs/screenshots/assets-v11/02-table.png" alt="The supplied textured wooden table replaces the bunk" /></td></tr>
-<tr><td align="center"><sub>CELL 47 · SHARED STONE FINISH</sub></td><td align="center"><sub>BASIC TABLE · REAL GLB</sub></td></tr>
-<tr><td><img src="docs/screenshots/assets-v11/03-toilet.png" alt="Supplied dirty ceramic toilet, oriented into the room with fitted mounting bolts" /></td><td><img src="docs/screenshots/assets-v11/04-screwdriver.png" alt="The supplied red-handled screwdriver revealed on the floor" /></td></tr>
-<tr><td align="center"><sub>DIRTY TOILET · FITTED FIXTURE</sub></td><td align="center"><sub>SCREWDRIVER · PUZZLE PICKUP</sub></td></tr>
-<tr><td><img src="docs/screenshots/assets-v11/05-cellblock.png" alt="The existing cell block with consistent stone walls, ceiling and floor" /></td><td><img src="docs/screenshots/assets-v11/06-mobile.png" alt="Cell 47 running with landscape mobile joystick and action buttons" /></td></tr>
-<tr><td align="center"><sub>CELL BLOCK · CONSISTENT MATERIALS</sub></td><td align="center"><sub>MOBILE · LANDSCAPE HUD</sub></td></tr>
+<tr><td width="50%"><img src="docs/screenshots/block-v12/01-wide-corridor.png" alt="Twelve cells on each side of the wider central corridor" /></td><td width="50%"><img src="docs/screenshots/block-v12/02-opposite-cells.png" alt="The new opposite row of furnished cells" /></td></tr>
+<tr><td align="center"><sub>24-CELL BLOCK · 7-METRE CORRIDOR</sub></td><td align="center"><sub>OPPOSITE ROW · SHARED GLB FIXTURES</sub></td></tr>
+<tr><td><img src="docs/screenshots/block-v12/03-cell46-gate.png" alt="Cell 46 exploration gate open; the original NPC is retained pending the warrior upload" /></td><td><img src="docs/screenshots/block-v12/04-floor-plan.png" alt="Actual floor-plan UI showing both rows of twelve cells" /></td></tr>
+<tr><td align="center"><sub>CELL 46 · WORKING GATE</sub></td><td align="center"><sub>FLOOR PLAN · 12 + 12</sub></td></tr>
+<tr><td><img src="docs/screenshots/block-v12/05-mobile-controls.png" alt="Up, down and right arrow controls with only Hint and Pause at top right" /></td><td><img src="docs/screenshots/block-v12/06-main-menu-confirmation.png" alt="Exit to the main menu confirmation with Yes and No over paused gameplay" /></td></tr>
+<tr><td align="center"><sub>MOBILE · CONTEXTUAL HUD</sub></td><td align="center"><sub>MAIN MENU · SAFE CONFIRMATION</sub></td></tr>
 </table>
 
 ## Play on mobile
 
 Download the APK above, open it in Android Files and allow installation from that source when prompted. Requires **Android 8.0+**, an updated Android System WebView and WebGL 2. The app opens horizontally and includes all models, textures and audio offline, with **no Internet, storage, microphone or tracking permission**.
 
-Version 0.11 uses the existing release certificate and increasing versionCode **1100**. Install over an earlier release to retain app-local saves and settings; uninstalling clears them. Browser and Android saves do not transfer automatically.
+Version 0.12 uses the existing release certificate and increasing versionCode **1200**. Install over an earlier release to retain app-local saves and settings; uninstalling clears them. Browser and Android saves do not transfer automatically.
 
-For the web edition, extract the ZIP and open `Hirodora-0.11.0.html` in a full WebGL 2 browser. File handling depends on your device. On iPhone/iPad, use the hosted PWA; a local HTML viewer may block scripts. Portrait play pauses behind a rotate notice.
+For the web edition, extract the ZIP and open `Hirodora-0.12.0.html` in a full WebGL 2 browser. File handling depends on your device. On iPhone/iPad, use the hosted PWA; a local HTML viewer may block scripts. Portrait play pauses behind a rotate notice.
 
 ## How to finish the current chapter
 
@@ -68,7 +70,7 @@ Cells 45–42 are present but their story progression remains unfinished. This r
 | Crouch / sprint / jump | C / Shift / Space   | Action buttons       |
 | Pause                  | Escape / pause icon | Pause / Android Back |
 
-Settings has Game, Audio, Graphics and Controls tabs. **Controls → Custom HUD** supports drag, resize, presets and saved layouts. Graphics has Low, Medium, High and Ultra presets, render scale and FOV. The restart icon retries a checkpoint; **New game** resets progress after confirmation.
+Settings has Game, Audio, Graphics and Controls tabs. **Controls → Custom HUD** supports drag, resize, presets and saved layouts. Graphics has Low, Medium, High and Ultra presets, render scale and FOV. Pause → Retry checkpoint restarts a checkpoint; **New game** resets progress after confirmation.
 
 Guards use wall-aware vision, suspicion, spatial hearing, last-known-position searches and sight-loss/reacquisition. Skeletal animation follows authoritative AI decisions. The intro, gun-grip fix and stable-frame rendering remain intact. Cell 47 is quiet at rest; **70 local recordings** provide material footsteps, object movement, doors, tools and spatial English guard speech.
 
@@ -97,9 +99,9 @@ The offline pipeline needs ffmpeg and preserves attribution. Original source upl
 
 ## Quality and release status
 
-Asset/logic tests, browser gameplay tests, production packaging and signed-APK validation are documented in [ASSETS-V11.md](docs/ASSETS-V11.md). Browser tests cover both the opening and legacy campaign, audio, HUD, save/load, intro, collision, stealth and offline startup.
+Asset/logic tests, browser gameplay tests, production packaging and signed-APK validation are documented in [CELL-BLOCK-V12.md](docs/CELL-BLOCK-V12.md). Browser tests cover both the opening and legacy campaign, audio, HUD, save/load, intro, collision, stealth and offline startup.
 
-Physical-phone frame rate, thermal behavior and device-specific WebView/GPU compatibility still need hardware testing. Software-rendered browser checks are not Android-device certification or a promise of glitch-free gameplay. No AAA/GTA-level fidelity is claimed. Existing guard models were preserved, not redesigned in this asset replacement release.
+Physical-phone frame rate, thermal behavior and device-specific WebView/GPU compatibility still need hardware testing. Software-rendered browser checks are not Android-device certification or a promise of glitch-free gameplay. No AAA/GTA-level fidelity is claimed. Existing guard models are preserved. The uploaded police and warrior replacements are pending the file/license blockers above.
 
 ## Sources and credits
 

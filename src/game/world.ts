@@ -4,8 +4,10 @@ import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js
 import { GuardData, InteractiveObject } from "./types";
 import { buildHumanOfficer } from "./characters";
 import { createEnvironment } from "./environment";
+import { CELL_BLOCK, CELL_ROOMS, type CellRoom } from "./cell-block";
 
 export interface PrisonWorldData {
+  cells: readonly CellRoom[];
   scene: THREE.Scene;
   loadEnvironment: () => Promise<void>;
   disposeEnvironment: () => void;
@@ -230,14 +232,44 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     );
   for (const z of [-9.4, 0.6, 10.1])
     box(staticWorld, [45.4, 0.09, 0.13], [7, 3.92, z], rust, 0.008);
-  wall([0.5, 4.3, 23], [-37, 2, 0]);
-  projectUV(box(staticWorld, [21, 0.3, 23], [-26.5, -0.2, 0], floor), 2);
+  const extensionLength = -16 - CELL_BLOCK.west,
+    extensionCenter = (CELL_BLOCK.west - 16) / 2;
+  wall([0.5, 4.3, 26], [CELL_BLOCK.west, 2, 1.5]);
   projectUV(
-    box(staticWorld, [21, 0.22, 23], [-26.5, 4.18, 0], environment.ceiling),
+    box(
+      staticWorld,
+      [extensionLength, 0.3, 23],
+      [extensionCenter, -0.2, 0],
+      floor,
+    ),
     2,
   );
-  wall([21, 4.3, 0.5], [-26.5, 2, -11.5]);
-  wall([21, 4.3, 0.5], [-26.5, 2, 11.5]);
+  projectUV(
+    box(
+      staticWorld,
+      [extensionLength, 0.22, 23],
+      [extensionCenter, 4.18, 0],
+      environment.ceiling,
+    ),
+    2,
+  );
+  wall([extensionLength, 4.3, 0.5], [extensionCenter, 2, -11.5]);
+  const blockLength = CELL_BLOCK.east - CELL_BLOCK.west,
+    blockCenter = (CELL_BLOCK.east + CELL_BLOCK.west) / 2;
+  projectUV(
+    box(staticWorld, [blockLength, 0.3, 3], [blockCenter, -0.2, 13], floor),
+    2,
+  );
+  projectUV(
+    box(
+      staticWorld,
+      [blockLength, 0.22, 3],
+      [blockCenter, 4.18, 13],
+      environment.ceiling,
+    ),
+    2,
+  );
+  wall([blockLength, 4.3, 0.5], [blockCenter, 2, CELL_BLOCK.south]);
   const rearWall = wall([46, 4.3, 0.5], [7, 2, -11.5]);
   // Keep the original solid gameplay/vision collider, but cut real visual apertures.
   staticWorld.remove(rearWall);
@@ -259,7 +291,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     projectUV(box(staticWorld, [1.6, 2.35, 0.5], [x, 1.025, -11.5], stone), 2);
     projectUV(box(staticWorld, [1.6, 0.7, 0.5], [x, 3.8, -11.5], stone), 2);
   }
-  wall([46, 4.3, 0.5], [7, 2, 11.5]);
+  wall([33.1, 4.3, 0.5], [13.45, 2, 11.5]);
   wall([0.5, 4.3, 23], [30, 2, 0]);
   // Cell partitions. The only escape from Cell 47 is the serviced ventilation duct.
   for (const x of [-14, -3.1]) wall([0.35, 4.2, 9.3], [x, 2, -6.7]);
@@ -295,12 +327,34 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     box(group, [0.2, 0.23, 0.08], [width * 0.8, 1.4, 0.03], rust);
     group.position.set(x, 0, z);
     if (across) group.rotation.y = Math.PI / 2;
+    const closedBounds = new THREE.Box3()
+      .setFromObject(group)
+      .expandByScalar(0.03);
+    // Gates keep independent transforms, but their welded bars draw as one mesh
+    // per material instead of eleven draw calls for every single cell door.
+    const pieces = new Map<THREE.Material, THREE.BufferGeometry[]>();
+    for (const child of group.children) {
+      if (!(child instanceof THREE.Mesh) || Array.isArray(child.material))
+        continue;
+      child.updateMatrix();
+      const geometry = child.geometry.clone().applyMatrix4(child.matrix);
+      const list = pieces.get(child.material) || [];
+      list.push(geometry);
+      pieces.set(child.material, list);
+      child.geometry.dispose();
+    }
+    group.clear();
+    for (const [mat, geometries] of pieces) {
+      const geometry = mergeGeometries(geometries, false)!;
+      const mesh = new THREE.Mesh(geometry, mat);
+      mesh.castShadow = mesh.receiveShadow = true;
+      group.add(mesh);
+      geometries.forEach((g) => g.dispose());
+    }
+    group.userData.closedBounds = closedBounds.clone();
     scene.add(group);
     doors.set(id, group);
-    doorColliders.set(
-      id,
-      new THREE.Box3().setFromObject(group).expandByScalar(0.03),
-    );
+    doorColliders.set(id, closedBounds);
     return group;
   }
   bars(-12.5, -2, 3);
@@ -309,7 +363,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   bars(-7.3, -2, 2.6);
   bars(-3.8, -2, 1.1);
   door("cell_47_door", -6, -2, 1.4);
-  for (let n = 45; n >= 42; n--) {
+  for (let n = 45; n >= 36; n--) {
     const cx = -17 - (45 - n) * 5.5;
     wall([0.35, 4.2, 9.3], [cx - 2.75, 2, -6.7]);
     bars(cx - 1.65, -2, 2.2);
@@ -325,6 +379,42 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     scene.add(light);
     prop(buildTableBounds(), cx + 1.7, -8.4);
     prop(buildLegacyToiletBounds(), cx - 1.6, -9.85);
+  }
+  for (const cell of CELL_ROOMS.filter((c) => c.side === "south")) {
+    const { left, right, centerX: cx, doorX, front, number } = cell;
+    wall([0.35, 4.2, 9.5], [left, 2, 9.75]);
+    bars((left + doorX) / 2, front, doorX - left);
+    bars((doorX + 1.4 + right) / 2, front, right - doorX - 1.4);
+    door(`cell_${number}_door`, doorX, front, 1.4);
+    const sign = label(
+      staticWorld,
+      `C / 0${number}${cell.medical ? " / MEDICAL" : ""}`,
+      [cx, 3.65, front - 0.09],
+      cell.medical ? 2.2 : 1.8,
+    );
+    sign.rotation.y = Math.PI;
+    environment.add("Bunk", cx + 1.65, -0.05, 11.4);
+    environment.add("Toilet", cx - 1.6, -0.05, 13.3);
+    environment.add("Sink", left + 0.53, 0, 11.1, -Math.PI / 2);
+    environment.add("Luminaire", cx, 3.32, 9.5);
+    prop(buildTableBounds(), cx + 1.65, 11.4);
+    prop(buildLegacyToiletBounds(), cx - 1.6, 13.3);
+    const light = new THREE.PointLight(0xd8cbb1, 16, 10, 2);
+    light.position.set(cx, 3.2, 9.5);
+    scene.add(light);
+  }
+  // Latched exploration gates; original Cell 46 becomes usable after its chapter.
+  for (const cell of CELL_ROOMS.filter(
+    (c) => c.number < 42 || c.number > 47 || c.number === 46,
+  )) {
+    interaction(
+      `cell_latch_${cell.number}`,
+      `Cell ${cell.number} gate`,
+      `Open Cell ${cell.number} gate`,
+      cell.doorX + 0.95,
+      cell.front + (cell.side === "north" ? 0.14 : -0.14),
+      "interact",
+    );
   }
   const bedProxy = prop(buildTableBounds(), -4.25, -8.4);
   const bedBounds = colliders[colliders.length - 1];
@@ -548,13 +638,13 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   );
   // South wing: actual rooms with open, collision-safe doorways.
   for (const [x, width] of [
-    [-11, 9],
-    [-2, 3],
+    [-1.8, 2.6],
     [4.5, 4],
     [11.5, 4],
   ])
     wall([width, 4.2, 0.35], [x, 2, 2]);
-  for (const x of [-4, 3, 9]) wall([0.3, 4.2, 9.3], [x, 2, 6.7], plaster);
+  wall([0.35, 4.2, 12.5], [-3.1, 2, 8.25], plaster);
+  for (const x of [3, 9]) wall([0.3, 4.2, 9.3], [x, 2, 6.7], plaster);
   wall([11.1, 4.2, 0.35], [2.45, 2, -2]);
   wall([2.2, 4.2, 0.35], [9.1, 2, -2]);
   wall([2.2, 4.2, 0.35], [13.4, 2, -2]);
@@ -580,7 +670,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     for (const z of [6.4, 8.6])
       box(staticWorld, [1.4, 0.7, 0.05], [x, 0.9, z], iron);
   }
-  label(staticWorld, "+  INFIRMARY", [-8, 3, 2.21], 2.5);
+  label(staticWorld, "+  INFIRMARY", [-5.95, 3, 4.9], 2.5).rotation.y = Math.PI;
   wall([1.4, 1.9, 0.5], [-8, 0.95, 10.7], medical);
   const stethoscope = new THREE.Group();
   const tube = new THREE.Mesh(
@@ -603,7 +693,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   );
   // Laundry: glazed drum doors, pipes, linen and mechanical sound masking.
   label(staticWorld, "LAUNDRY / 02", [-1.5, 3, 2.21], 2);
-  for (const x of [-2.7, -1, 0.7]) {
+  for (const x of [-2.1, -0.5, 1.1]) {
     wall([1.25, 1.55, 1.1], [x, 0.775, 9.7], linen);
     const drum = new THREE.Mesh(
       new THREE.TorusGeometry(0.38, 0.055, 8, 24),
@@ -738,11 +828,14 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   iyer.rotation.y = -Math.PI / 2;
   staticWorld.add(iyer);
   // Structural rhythm, service pipes, hazard stripes and warm practical fixtures.
-  for (let x = -14; x < 16; x += 5) {
-    for (const z of [-1.8, 1.8])
+  for (let x = -68; x < -3; x += 5.5) {
+    for (const z of [-1.8, 4.8])
       box(staticWorld, [0.18, 4, 0.18], [x, 2, z], iron);
-    box(staticWorld, [0.2, 0.2, 4], [x, 3.9, 0], iron);
-    environment.add("Luminaire", x + 2, 3.7, 0);
+    box(staticWorld, [0.2, 0.2, 7], [x, 3.9, 1.5], iron);
+    environment.add("Luminaire", x + 2, 3.7, 1.5);
+    const light = new THREE.PointLight(0xd9dfc9, 22, 12, 2);
+    light.position.set(x + 2, 3.5, 1.5);
+    scene.add(light);
   }
   for (const z of [-1.6, 1.6])
     cylinder(staticWorld, 0.065, 42, [6, 3.6, z], rust).rotation.z =
@@ -930,6 +1023,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     for (const geometry of geometries) geometry.dispose();
   }
   return {
+    cells: CELL_ROOMS,
     opening: {
       bed,
       toilet,

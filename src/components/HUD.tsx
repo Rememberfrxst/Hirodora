@@ -1,43 +1,25 @@
 import { useRef, useState } from "react";
 import { GameEngine, ALL_ITEMS } from "../game/engine";
-import { sound } from "../game/audio";
 import { loadLayout, placementStyle } from "../game/hud-layout";
-import { ControlIcon } from "./ControlIcon";
+import { ControlIcon, HintIcon } from "./ControlIcon";
 import {
   Eye,
   Volume2,
-  VolumeX,
   Pause,
-  HelpCircle,
-  Map,
-  BookOpen,
   Footprints,
   Crosshair,
   Backpack,
   X,
-  ArrowUp,
-  Zap,
   Hand,
   Move,
-  PersonStanding,
-  RotateCcw,
 } from "lucide-react";
 
 interface Props {
   engine: GameEngine;
   onPause: () => void;
-  onRestart: () => void;
-  onOpenMap: () => void;
-  onOpenStory: () => void;
 }
 
-export function HUD({
-  engine,
-  onPause,
-  onRestart,
-  onOpenMap,
-  onOpenStory,
-}: Props) {
+export function HUD({ engine, onPause }: Props) {
   const { stats } = engine;
   const suspicion = Math.max(
     0,
@@ -61,6 +43,23 @@ export function HUD({
     radius: number;
   } | null>(null);
   const [stick, setStick] = useState([0, 0]);
+  const actionLabel = stats.isInHidingSpot
+    ? "Leave"
+    : engine.activeInteractPrompt === "Penetrate"
+      ? "Penetrate"
+      : engine.contextualAction === "bed_push"
+        ? "Push"
+        : engine.contextualAction === "toilet_bolts"
+          ? "Unbolt"
+          : engine.contextualAction === "toilet_move"
+            ? "Move"
+            : engine.activeInteractPrompt?.startsWith("Open ")
+              ? "Open"
+              : engine.activeInteractPrompt?.startsWith("Close ")
+                ? "Close"
+                : engine.activeInteractPrompt?.startsWith("Take ")
+                  ? "Take"
+                  : "Interact";
   const stop = () => {
     joystick.current = null;
     setStick([0, 0]);
@@ -97,29 +96,12 @@ export function HUD({
           <p>{engine.activeObjective}</p>
         </div>
         <nav className="hud-tools" aria-label="Game tools">
-          <button onClick={onRestart} aria-label="Restart game">
-            <RotateCcw />
-          </button>
-          <button onClick={onOpenStory} aria-label="Story dossier">
-            <BookOpen />
-          </button>
-          <button onClick={onOpenMap} aria-label="Facility map">
-            <Map />
-          </button>
           <button
             onClick={() => engine.triggerMunshiHint()}
             aria-label="Ask Munshi for a hint"
+            aria-keyshortcuts="H"
           >
-            <HelpCircle />
-          </button>
-          <button
-            onClick={() => {
-              sound.toggleMute();
-              engine.emitChange();
-            }}
-            aria-label={sound.isSoundMuted() ? "Unmute sound" : "Mute sound"}
-          >
-            {sound.isSoundMuted() ? <VolumeX /> : <Volume2 />}
+            <HintIcon />
           </button>
           <button onClick={onPause} aria-label="Pause game">
             <Pause />
@@ -167,41 +149,43 @@ export function HUD({
       )}
       {engine.activeInteractPrompt && (
         <div className="context-actions">
-          <button
-            className="interact-prompt"
-            onPointerDown={(e) => {
-              e.currentTarget.setPointerCapture(e.pointerId);
-              engine.beginInteract();
-            }}
-            onPointerUp={() => engine.endInteract()}
-            onPointerCancel={() => engine.endInteract()}
-            onLostPointerCapture={() => engine.endInteract()}
-          >
-            <kbd>{engine.mobile ? "TAP" : "E"}</kbd>
-            {engine.activeInteractPrompt === "Penetrate" ? (
-              <span className="passage-action">
-                <Move size={22} />
-                <small>Penetrate</small>
-              </span>
-            ) : (
-              engine.activeInteractPrompt
-            )}
-            {engine.activeHold && (
-              <progress
-                aria-label="Action progress"
-                max="1"
-                value={
-                  engine.openingProgress[
-                    engine.activeHold === "bed_push"
-                      ? "bed"
-                      : engine.activeHold === "toilet_bolts"
-                        ? "bolts"
-                        : "toilet"
-                  ]
-                }
-              />
-            )}
-          </button>
+          {!engine.mobile && (
+            <button
+              className="interact-prompt"
+              onPointerDown={(e) => {
+                e.currentTarget.setPointerCapture(e.pointerId);
+                engine.beginInteract();
+              }}
+              onPointerUp={() => engine.endInteract()}
+              onPointerCancel={() => engine.endInteract()}
+              onLostPointerCapture={() => engine.endInteract()}
+            >
+              <kbd>{engine.mobile ? "TAP" : "E"}</kbd>
+              {engine.activeInteractPrompt === "Penetrate" ? (
+                <span className="passage-action">
+                  <Move size={22} />
+                  <small>Penetrate</small>
+                </span>
+              ) : (
+                engine.activeInteractPrompt
+              )}
+              {engine.activeHold && (
+                <progress
+                  aria-label="Action progress"
+                  max="1"
+                  value={
+                    engine.openingProgress[
+                      engine.activeHold === "bed_push"
+                        ? "bed"
+                        : engine.activeHold === "toilet_bolts"
+                          ? "bolts"
+                          : "toilet"
+                    ]
+                  }
+                />
+              )}
+            </button>
+          )}
           {engine.contextualAction === "bed_push" && (
             <button
               className="hard-push"
@@ -360,21 +344,43 @@ export function HUD({
               <ControlIcon id="crouch" />
               <small>{stats.isCrouching ? "STAND" : "CROUCH"}</small>
             </button>
-            <button
-              aria-label="Interact"
-              onPointerDown={(e) => {
-                e.currentTarget.setPointerCapture(e.pointerId);
-                engine.beginInteract();
-              }}
-              onPointerUp={() => engine.endInteract()}
-              onPointerCancel={() => engine.endInteract()}
-              onLostPointerCapture={() => engine.endInteract()}
-              className="custom-control touch-interact"
-              style={placementStyle(layout.controls.interact)}
-            >
-              <Hand size={25} />
-              <small>INTERACT</small>
-            </button>
+            {(engine.activeInteractPrompt || stats.isInHidingSpot) && (
+              <button
+                aria-label="Interact"
+                aria-description={engine.activeInteractPrompt || "Leave cover"}
+                onPointerDown={(e) => {
+                  e.currentTarget.setPointerCapture(e.pointerId);
+                  engine.beginInteract();
+                }}
+                onPointerUp={() => engine.endInteract()}
+                onPointerCancel={() => engine.endInteract()}
+                onLostPointerCapture={() => engine.endInteract()}
+                className="custom-control touch-interact"
+                style={placementStyle(layout.controls.interact)}
+              >
+                {actionLabel === "Penetrate" ? (
+                  <Move size={25} />
+                ) : (
+                  <Hand size={25} />
+                )}
+                <small>{actionLabel}</small>
+                {engine.activeHold && (
+                  <progress
+                    aria-label="Action progress"
+                    max="1"
+                    value={
+                      engine.openingProgress[
+                        engine.activeHold === "bed_push"
+                          ? "bed"
+                          : engine.activeHold === "toilet_bolts"
+                            ? "bolts"
+                            : "toilet"
+                      ]
+                    }
+                  />
+                )}
+              </button>
+            )}
             {engine.equippedItem && (
               <button
                 className="custom-control touch-fire"

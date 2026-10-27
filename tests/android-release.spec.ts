@@ -13,6 +13,7 @@ test("restart confirmation and new game reset opening progress through the UI", 
     e.gameFlags.key_identified = true;
     e.openingProgress.bed = 0.5;
   });
+  await page.getByRole("button", { name: "Pause game", exact: true }).click();
   await page.getByRole("button", { name: "Restart game", exact: true }).click();
   await expect(
     page.getByRole("dialog", { name: "Restart escape" }),

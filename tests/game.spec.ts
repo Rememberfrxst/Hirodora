@@ -99,7 +99,7 @@ test("desktop starts, moves, crouches, pauses and closes intel without stuck inp
   expect(await page.evaluate(() => window.__HIRODORA__.stats.isCrouching)).toBe(
     true,
   );
-  await page.getByRole("button", { name: "Facility map", exact: true }).click();
+  await page.keyboard.press("KeyM");
   await expect(page.getByText("Know your way out.")).toBeVisible();
   await page.keyboard.press("Escape");
   expect(await page.evaluate(() => window.__HIRODORA__.overlayOpen)).toBe(
@@ -303,7 +303,9 @@ test("authored environment loads locally and graphics presets preserve collision
   const current = JSON.parse(geometry);
   // The opening deliberately adds cells, a shared-wall aperture and movable
   // furniture. Retain exact regression checks on the rest of the campaign.
-  const unchanged = (b: number[]) => b[0] >= -3 || (b[2] >= 1.8 && b[3] > -16);
+  // The 24-cell expansion intentionally changes west-side architecture and
+  // laundry fixture spacing. Eastern campaign collision geometry stays exact.
+  const unchanged = (b: number[]) => b[0] >= 3;
   expect(current.colliders.filter(unchanged)).toEqual(
     baseline.gameplay.colliders.filter(unchanged),
   );
@@ -333,7 +335,7 @@ test("authored environment loads locally and graphics presets preserve collision
     });
     return names;
   });
-  expect(assets.filter((n) => n === "CellAsset_Table")).toHaveLength(6);
+  expect(assets.filter((n) => n === "CellAsset_Table")).toHaveLength(24);
   expect(assets).toContain("CellAsset_Toilet");
   expect(assets).toContain("CellAsset_Sink");
   expect(assets.filter((n) => n === "CellAsset_Window")).toHaveLength(2);
@@ -621,9 +623,14 @@ test("mobile landscape controls work and portrait rotation safely pauses without
     page.getByRole("dialog", { name: "Turn your phone sideways." }),
   ).toHaveCount(0);
   await page.getByRole("button", { name: "Resume escape" }).tap();
+  const hasContext = await page.evaluate(
+    () =>
+      !!window.__HIRODORA__.activeInteractPrompt ||
+      window.__HIRODORA__.stats.isInHidingSpot,
+  );
   await expect(
     page.getByRole("button", { name: "Interact", exact: true }),
-  ).toBeInViewport();
+  ).toHaveCount(hasContext ? 1 : 0);
   await page.waitForTimeout(200);
   expect(await page.evaluate(() => window.__HIRODORA__.playerPos)).toEqual(
     pausedPosition,
@@ -676,9 +683,11 @@ test("portrait mobile launch gates play and handles denied fullscreen/unsupporte
     "title",
   );
   await page.getByRole("button", { name: "Try fullscreen & landscape" }).tap();
-  await expect(page.getByRole("dialog", {name:"Turn your phone sideways."}).getByRole("status")).toContainText(
-    "Automatic rotation is not supported",
-  );
+  await expect(
+    page
+      .getByRole("dialog", { name: "Turn your phone sideways." })
+      .getByRole("status"),
+  ).toContainText("Automatic rotation is not supported");
   await page.setViewportSize({ width: 844, height: 390 });
   await expect(page.locator(".rotate-screen")).toHaveCount(0);
   await page.locator("[data-start]").tap();

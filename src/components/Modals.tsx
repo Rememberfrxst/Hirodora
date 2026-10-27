@@ -1,5 +1,6 @@
 import { X, ArrowRight } from "lucide-react";
 import { EndingType, PlayerStats } from "../game/types";
+import { CELL_ROOMS } from "../game/cell-block";
 
 export function StoryPrologueModal({
   onClose,
@@ -69,24 +70,8 @@ export function TacticalMapModal({
   act?: number;
   opening?: boolean;
 }) {
-  const rooms = opening
-    ? [
-        ...[42, 43, 44, 45, 46, 47].map((n, i) => ({
-          x: 10 + i * 11,
-          y: 18,
-          w: 10,
-          h: 30,
-          label: `0${n}${n < 46 ? " / LOCKED" : ""}`,
-        })),
-      ]
-    : [
-        { x: 13, y: 18, w: 18, h: 30, label: "046 / BOULDER" },
-        { x: 33, y: 18, w: 18, h: 30, label: "047 / KABIR" },
-        { x: 69, y: 18, w: 16, h: 30, label: "VOSS / VAULT" },
-        { x: 13, y: 59, w: 31, h: 26, label: "INFIRMARY" },
-        { x: 46, y: 59, w: 17, h: 26, label: "LAUNDRY" },
-        { x: 65, y: 59, w: 20, h: 26, label: "WORKSHOP" },
-      ];
+  const px = (x: number) => 50 + (x + 70) * 10.8,
+    pz = (z: number) => 80 + (z + 11.5) * 18.5;
   return (
     <div className="modal-backdrop">
       <section className="game-panel map-panel">
@@ -121,47 +106,43 @@ export function TacticalMapModal({
             </pattern>
           </defs>
           <rect width="1200" height="700" fill="url(#grid)" />
-          <g transform="translate(0,-50) scale(10,8)">
-            {rooms.map((r) => (
-              <g key={r.label}>
+          <g>
+            {CELL_ROOMS.map((r) => (
+              <g key={r.number}>
                 <rect
-                  x={r.x}
-                  y={r.y}
-                  width={r.w}
-                  height={r.h}
+                  x={px(r.left)}
+                  y={pz(Math.min(r.front, r.rear))}
+                  width={(r.right - r.left) * 10.8}
+                  height={Math.abs(r.front - r.rear) * 18.5}
                   fill="#183337"
                   stroke="#75928b"
-                  strokeWidth=".2"
+                  strokeWidth="2"
                 />
                 <text
-                  x={r.x + r.w / 2}
-                  y={r.y + r.h / 2}
+                  x={px(r.centerX)}
+                  y={pz((r.front + r.rear) / 2)}
                   textAnchor="middle"
                   fill="#ccd5bf"
-                  fontSize="1.3"
+                  fontSize="14"
                   fontFamily="monospace"
                 >
-                  {r.label}
+                  {r.number}
                 </text>
               </g>
             ))}
             <path
-              d="M 14 53 H 110"
+              d={`M ${px(-68)} ${pz(1.5)} H ${px(-4)} L ${px(0)} ${pz(0)} H ${px(28)}`}
               stroke="#cfac70"
-              strokeWidth=".5"
-              strokeDasharray="1 1"
+              strokeWidth="3"
+              strokeDasharray="9 8"
             />
-            <text x="91" y="49" fill="#cfac70" fontSize="1.4">
+            <text x={px(13)} y={pz(-1)} fill="#cfac70" fontSize="14">
               TIDAL GATE → IYER
             </text>
             <circle
-              cx={
-                opening
-                  ? 15 + (playerPos[0] + 33.5) * 2
-                  : 13 + (playerPos[0] + 14) * 2.3
-              }
-              cy={53 + playerPos[2] * 3.1}
-              r="1"
+              cx={px(playerPos[0])}
+              cy={pz(playerPos[2])}
+              r="7"
               fill="#f0c983"
             />
           </g>
@@ -173,7 +154,7 @@ export function TacticalMapModal({
         </div>
         <p className="muted">
           {opening
-            ? "CELL BLOCK: 42 · 43 · 44 · 45 · 46 · 47. Cells 42–45 remain locked. The shared service wall connects Cells 47 and 46. This chapter ends inside Cell 46."
+            ? "24 CELLS: 36–47 north, 48–59 south. Seven-metre central corridor. The shared wall connects Cells 47 and 46; reach Cell 46 to unlock its exploration gate. Cells 42–45 remain story-locked. Medical cells 48/49 retain infirmary access."
             : "The service duct connects Cell 47 to Cell 46. The Block C gate leads east; utility rooms are south of the corridor. Voss’s office is north. Reach the sea gate with the ledger and a lockpick."}
         </p>
       </section>

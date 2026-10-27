@@ -125,6 +125,14 @@ export function createEnvironment(scene: THREE.Scene) {
           });
           return;
         }
+        const batches = new Map<
+          string,
+          {
+            geometry: THREE.BufferGeometry;
+            material: THREE.Material | THREE.Material[];
+            matrices: THREE.Matrix4[];
+          }
+        >();
         for (const anchor of anchors) {
           const suppliedName = anchor.name === "Bunk" ? "Table" : anchor.name;
           const template =
@@ -148,6 +156,51 @@ export function createEnvironment(scene: THREE.Scene) {
               : replace(o.material);
           });
           anchor.root.add(clone);
+          // Reuse actual GLB primitives through spatially chunked instancing.
+          // Opening movable fixtures and the inspected washstand remain unique.
+          const movable =
+            anchor.name === "Screwdriver" ||
+            (anchor.name === "Bunk" &&
+              anchor.root.position.x === -4.25 &&
+              anchor.root.position.z === -8.4) ||
+            (anchor.name === "Toilet" && anchor.root.position.x === -8.05) ||
+            (anchor.name === "Sink" && anchor.root.position.x === -8.27);
+          if (!movable) {
+            anchor.root.updateMatrixWorld(true);
+            clone.traverse((o) => {
+              if (!(o instanceof THREE.Mesh)) return;
+              const materials = Array.isArray(o.material)
+                ? o.material
+                : [o.material];
+              const key = [
+                o.geometry.uuid,
+                ...materials.map((m) => m.uuid),
+                Math.floor(anchor.root.position.x / 8),
+              ].join(":");
+              const batch = batches.get(key) || {
+                geometry: o.geometry,
+                material: o.material,
+                matrices: [] as THREE.Matrix4[],
+              };
+              batch.matrices.push(o.matrixWorld.clone());
+              batches.set(key, batch);
+              o.visible = false; // Retain inspectable source bounds, not duplicate draws.
+            });
+          }
+        }
+        for (const batch of batches.values()) {
+          const mesh = new THREE.InstancedMesh(
+            batch.geometry,
+            batch.material,
+            batch.matrices.length,
+          );
+          mesh.name = "CellFixtureInstances";
+          batch.matrices.forEach((matrix, i) => mesh.setMatrixAt(i, matrix));
+          mesh.instanceMatrix.needsUpdate = true;
+          mesh.castShadow = mesh.receiveShadow = true;
+          mesh.computeBoundingBox();
+          mesh.computeBoundingSphere();
+          scene.add(mesh);
         }
         loaded = true;
       })

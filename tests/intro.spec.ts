@@ -48,8 +48,11 @@ test("new-game cinematic fires once, pauses safely, closes gate and releases a p
     };
     e.overlayOpen = true;
     e.cinematic.start();
-    const screen=e.camera.position.clone().set(-5.25,1.3,-4.4).project(e.camera);
-    const startsVisible=Math.abs(screen.x)<1&&Math.abs(screen.y)<1;
+    const screen = e.camera.position
+      .clone()
+      .set(-5.25, 1.3, -4.4)
+      .project(e.camera);
+    const startsVisible = Math.abs(screen.x) < 1 && Math.abs(screen.y) < 1;
     e.updateIntro(4.5);
     e.updateIntro(0.2);
     e.pauseGame();
@@ -73,7 +76,7 @@ test("new-game cinematic fires once, pauses safely, closes gate and releases a p
   });
   expect(result).toEqual({
     shots: 1,
-    startsVisible:true,
+    startsVisible: true,
     paused: true,
     state: "playing",
     door: 0,
@@ -83,7 +86,11 @@ test("new-game cinematic fires once, pauses safely, closes gate and releases a p
     inventory: [],
   });
   await page.getByRole("button", { name: "Pause game", exact: true }).click();
-  await page.getByRole("button", { name: "Main menu", exact: true }).click();
+  await page.getByRole("button", { name: "To main menu", exact: true }).click();
+  await page
+    .getByRole("dialog", { name: "Exit to the main menu?" })
+    .getByRole("button", { name: "Yes", exact: true })
+    .click();
   await page.getByRole("button", { name: "Continue", exact: true }).click();
   await expect(page.getByRole("button", { name: /Skip intro/ })).toHaveCount(0);
   await expect(

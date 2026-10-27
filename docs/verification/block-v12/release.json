@@ -1,0 +1,246 @@
+{
+  "version": "0.12.0",
+  "baselineCommit": "37a6b3e5907a2d516c4dacaaccee2baea20d1920",
+  "unitAndAssetChecks": {
+    "passed": 57,
+    "failed": 0
+  },
+  "typeScript": "passed",
+  "productionBuild": "passed",
+  "browserVerification": {
+    "uniqueScenarios": 33,
+    "allPassingAfterFixes": true,
+    "fullRun": {
+      "startTime": "2026-10-27T07:48:25.848Z",
+      "duration": 1081947.787,
+      "expected": 32,
+      "skipped": 0,
+      "unexpected": 1,
+      "flaky": 0
+    },
+    "finalTargetedRun": {
+      "startTime": "2026-10-27T08:07:18.046Z",
+      "duration": 272483.01,
+      "expected": 11,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "resolution": "The full run passed 32/33. The mobile cancel test still selected the removed center button; its locator was updated to the actual contextual action. The final targeted run rechecks that scenario, guard approach/gates, HUD/menu, stealth and the current production/offline payloads. No unresolved failure remains.",
+    "scenarios": [
+      {
+        "file": "android-release.spec.ts",
+        "title": "restart confirmation and new game reset opening progress through the UI",
+        "status": "passed"
+      },
+      {
+        "file": "android-release.spec.ts",
+        "title": "Cell 47 has silent ambience; guard dialogue retains intelligibility across bars",
+        "status": "passed"
+      },
+      {
+        "file": "cell-block.spec.ts",
+        "title": "24 cells frame an unobstructed seven-metre corridor and both rows load real fixtures",
+        "status": "passed"
+      },
+      {
+        "file": "cell-block.spec.ts",
+        "title": "hint/pause are the only top tools; context-only touch action and rotated arrows match the requested HUD",
+        "status": "passed"
+      },
+      {
+        "file": "cell-block.spec.ts",
+        "title": "main-menu confirmation traps focus, defaults to No, cancels safely and confirms without deleting the checkpoint",
+        "status": "passed"
+      },
+      {
+        "file": "cell-block.spec.ts",
+        "title": "Cell 46 exploration gate unlocks after the chapter and gate state survives save/load",
+        "status": "passed"
+      },
+      {
+        "file": "game.spec.ts",
+        "title": "desktop starts, moves, crouches, pauses and closes intel without stuck input",
+        "status": "passed"
+      },
+      {
+        "file": "game.spec.ts",
+        "title": "rigged officers animate independently, patrol, switch LOD and retain non-lethal dart hits",
+        "status": "passed"
+      },
+      {
+        "file": "game.spec.ts",
+        "title": "failed officer downloads block play and can be retried without a primitive fallback",
+        "status": "passed"
+      },
+      {
+        "file": "game.spec.ts",
+        "title": "authored environment loads locally and graphics presets preserve collision and gameplay state",
+        "status": "passed"
+      },
+      {
+        "file": "game.spec.ts",
+        "title": "tool requirements, all four puzzles, crafting, checkpoints and Brotherhood ending",
+        "status": "passed"
+      },
+      {
+        "file": "game.spec.ts",
+        "title": "closed walls block guard sight and movement; all required rooms have routes",
+        "status": "passed"
+      },
+      {
+        "file": "game.spec.ts",
+        "title": "mobile landscape controls work and portrait rotation safely pauses without stuck input",
+        "status": "passed"
+      },
+      {
+        "file": "game.spec.ts",
+        "title": "portrait mobile launch gates play and handles denied fullscreen/unsupported rotation",
+        "status": "passed"
+      },
+      {
+        "file": "game.spec.ts",
+        "title": "production assets load from a subdirectory and the game reloads offline",
+        "status": "passed"
+      },
+      {
+        "file": "game.spec.ts",
+        "title": "downloaded standalone HTML runs in an offline browser without network requests",
+        "status": "passed"
+      },
+      {
+        "file": "hud.spec.ts",
+        "title": "all HUD presets fit a small landscape screen without overlapping controls",
+        "status": "passed"
+      },
+      {
+        "file": "hud.spec.ts",
+        "title": "custom HUD saves drag and size, cancels edits, survives reload and resets presets",
+        "status": "passed"
+      },
+      {
+        "file": "intro.spec.ts",
+        "title": "reference menu has three choices and settings tabs change real persisted values",
+        "status": "passed"
+      },
+      {
+        "file": "intro.spec.ts",
+        "title": "new-game cinematic fires once, pauses safely, closes gate and releases a playable checkpoint",
+        "status": "passed"
+      },
+      {
+        "file": "intro.spec.ts",
+        "title": "skipping intro reaches the same corpse/key/closed-gate state on mobile",
+        "status": "passed"
+      },
+      {
+        "file": "object-audio.spec.ts",
+        "title": "uploaded toilet stays clear of the sink throughout its diagonal slide",
+        "status": "passed"
+      },
+      {
+        "file": "object-audio.spec.ts",
+        "title": "bed and ceramic movement audio follow geometry, stop on release and keep original stealth noise",
+        "status": "passed"
+      },
+      {
+        "file": "object-audio.spec.ts",
+        "title": "bars transmit audio but solid cell walls attenuate; idle cell remains silent",
+        "status": "passed"
+      },
+      {
+        "file": "object-audio.spec.ts",
+        "title": "guard dialogue steals a low-priority effect at the mobile voice cap without touching AI",
+        "status": "passed"
+      },
+      {
+        "file": "opening.spec.ts",
+        "title": "Cell 47 key twist, quiet bed, tool, toilet, passage, save and return",
+        "status": "passed"
+      },
+      {
+        "file": "opening.spec.ts",
+        "title": "audio recordings decode, blocked movement is silent and channels persist",
+        "status": "passed"
+      },
+      {
+        "file": "opening.spec.ts",
+        "title": "hard pushing alerts the examining guard, then he returns to the body without crossing bars",
+        "status": "passed"
+      },
+      {
+        "file": "opening.spec.ts",
+        "title": "mobile contextual holding releases on cancel and rotation without stuck input",
+        "status": "passed"
+      },
+      {
+        "file": "stealth.spec.ts",
+        "title": "adaptive resolution, paused preset changes and mobile resize never present a cleared frame",
+        "status": "passed"
+      },
+      {
+        "file": "stealth.spec.ts",
+        "title": "spatial AI sees through bars but cannot cross them, loses sight and returns to its duty",
+        "status": "passed"
+      },
+      {
+        "file": "stealth.spec.ts",
+        "title": "noise stays at its impact source; guard reacts while a puzzle is open",
+        "status": "passed"
+      },
+      {
+        "file": "stealth.spec.ts",
+        "title": "two-handed weapon grip follows the active skeleton across officer LOD and returns to idle hands",
+        "status": "passed"
+      }
+    ]
+  },
+  "android": {
+    "version": "0.12.0",
+    "file": "Hirodora-0.12.0-android.apk",
+    "bytes": 20827718,
+    "sha256": "c915eac29e2125d6ef7f6e8a1f0ce73e90121fe66676395a76d83a3f187517c9",
+    "certificateSHA256": "d7175da40c348c91e8a8663635d3a130115aba916e5ce889e40b646c009f33ca",
+    "minAndroid": "8.0 (API 26)",
+    "targetApi": 35,
+    "architecture": "Universal; uses installed Android System WebView",
+    "distribution": "Signed release APK; offline assets included; no network permission",
+    "versionCode": 1200,
+    "assembleRelease": "passed",
+    "lintRelease": "0 errors, 10 existing warnings",
+    "signatureV2": "verified; existing certificate retained",
+    "packagedGameSmoke": "passed; actual APK payload, 86 local assets, zero runtime network requests/errors"
+  },
+  "screenshots": [
+    {
+      "file": "01-wide-corridor.png",
+      "sha256": "98498bed986e9b1dadad64d6865ae840529434c29ffea00a10660a8dcef5c124"
+    },
+    {
+      "file": "02-opposite-cells.png",
+      "sha256": "ab2c1e354b4eac89ee16a462896ae6e7498721e8516727259063c110b8c475a1"
+    },
+    {
+      "file": "03-cell46-gate.png",
+      "sha256": "44eb95da522a604840d5e811b7d13220321e560184f7d8bba7bbdc17197fe7ac"
+    },
+    {
+      "file": "04-floor-plan.png",
+      "sha256": "8431abae43d1bc623abb872056ba87f7a741a17074285a8c2f849891508b3f48"
+    },
+    {
+      "file": "05-mobile-controls.png",
+      "sha256": "91a246031c82090da2607caaf45a0f6db4426c9768cf6d775f46e9aff6bf458c"
+    },
+    {
+      "file": "06-main-menu-confirmation.png",
+      "sha256": "f37a8bc01857dc3cd0230a92737b8e692059c10d39d1eaab0c439c762f75dca1"
+    }
+  ],
+  "unfinished": {
+    "warrior": "Upload exceeds the executor's 32 MiB file-transfer limit; supply a smaller ZIP/GLB or a direct download URL plus license.",
+    "police": "Uploaded static GLB has 122708 triangles, 0 skins, 0 clips and no embedded source/license; redistribution terms and skeletal integration remain pending.",
+    "icons": "Desktop-only PNG paths unavailable. Reference-matched vector arrow and bulb are used; not the original PNG bytes.",
+    "hardware": "Physical Android performance/GPU/WebView and extended playtesting remain unverified."
+  }
+}

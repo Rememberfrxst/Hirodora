@@ -40,6 +40,11 @@ import { OpeningCinematic } from "./cinematic";
 import { INTRO_DURATION } from "./intro";
 import { loadSettings, type GameSettings } from "./settings";
 import { findPath, isBlocked, movementVector, stepJump } from "./navigation";
+import {
+  CELL_ROOMS,
+  isExplorationCell,
+  cellApproachTarget,
+} from "./cell-block";
 import { GuardAssetPool, GuardActor, type GuardQuality } from "./guard-actor";
 import {
   nextAdaptiveScale,
@@ -524,7 +529,7 @@ export class GameEngine {
           e.preventDefault();
         if (e.repeat) return;
         this.keys[e.code] = true;
-        if (e.code === "Escape" || e.code === "KeyP") {
+        if (e.code === "Escape" || e.code === "KeyP" || e.code === "Tab") {
           if (this.activeMiniGame) this.cancelMiniGame();
           else if (!this.overlayOpen)
             this.gameState === "playing" || this.gameState === "intro"
@@ -956,29 +961,44 @@ export class GameEngine {
   }
 
   private blockers() {
-    const signature =
+    let signature =
       (this.gameFlags.locker_open ? 1 : 0) |
       (this.gameFlags.master_door_unlocked ? 2 : 0) |
       (this.gameFlags.sea_gate_open ? 4 : 0) |
       (this.gameFlags.passage_open ? 8 : 0);
+    CELL_ROOMS.filter(
+      (c) => isExplorationCell(c.number) || c.number === 46,
+    ).forEach((cell, i) => {
+      if (this.gameFlags[`cell_${cell.number}_open`]) signature += 2 ** (i + 4);
+    });
     if (signature === this.collisionSignature) return this.collisionCache;
     const blocks = [...this.worldData.colliders];
     if (!this.gameFlags.passage_open)
       blocks.push(this.worldData.opening.passageBounds);
     for (const [id, bounds] of this.worldData.doorColliders) {
-      const open =
-        id === "cell_46_door"
-          ? this.gameFlags.locker_open
-          : id === "master_c_door"
-            ? this.gameFlags.master_door_unlocked
-            : id === "sea_gate_door"
-              ? this.gameFlags.sea_gate_open
-              : false;
-      if (!open) blocks.push(bounds);
+      const cellNumber = Number(id.match(/^cell_(\d+)_door$/)?.[1]);
+      const hinged =
+        isExplorationCell(cellNumber) ||
+        (cellNumber === 46 && !!this.gameFlags.opening_v3);
+      if (!this.doorIsOpen(id) || hinged) blocks.push(bounds);
     }
     this.collisionSignature = signature;
     this.collisionCache = blocks;
     return blocks;
+  }
+  private doorIsOpen(id: string) {
+    if (
+      (id === "cell_48_door" || id === "cell_49_door") &&
+      !this.gameFlags.opening_v3
+    )
+      return this.gameFlags[id.replace(/_door$/, "_open")] !== false;
+    return id === "cell_46_door"
+      ? !!(this.gameFlags.locker_open || this.gameFlags.cell_46_open)
+      : id === "master_c_door"
+        ? !!this.gameFlags.master_door_unlocked
+        : id === "sea_gate_door"
+          ? !!this.gameFlags.sea_gate_open
+          : !!this.gameFlags[id.replace(/_door$/, "_open")];
   }
   private obstructed(
     a: [number, number, number],
@@ -1075,6 +1095,29 @@ export class GameEngine {
     ) {
       sound.playLockClick(false, obj.position);
       this.notice("Required: " + ALL_ITEMS[obj.actionRequiredItem].name);
+      return;
+    }
+    const latch = obj.id.match(/^cell_latch_(\d+)$/);
+    if (latch) {
+      const number = Number(latch[1]),
+        cell = CELL_ROOMS.find((c) => c.number === number)!;
+      const key = `cell_${number}_open`,
+        closing = this.doorIsOpen(`cell_${number}_door`);
+      if (
+        closing &&
+        this.playerPos[0] > cell.doorX - 0.35 &&
+        this.playerPos[0] < cell.doorX + 1.75 &&
+        Math.abs(this.playerPos[2] - cell.front) < 0.6
+      ) {
+        this.notice("Step clear of the doorway before closing the gate.");
+        return;
+      }
+      this.gameFlags[key] = !closing;
+      sound.playDoorOpen(obj.position, closing, obj.id);
+      this.emitNoise(closing ? 16 : 12, "door", obj.position);
+      this.syncWorld();
+      this.saveCheckpoint();
+      this.emitChange();
       return;
     }
     const pickup: Record<string, ItemId> = {
@@ -1571,6 +1614,13 @@ export class GameEngine {
               ["pipe", "steel_wool", "rubber_washer"].includes(pickups[obj.id]))
           : false);
     for (const obj of this.worldData.interactables) {
+      const latch = obj.id.match(/^cell_latch_(\d+)$/);
+      if (latch) {
+        const number = Number(latch[1]);
+        obj.disabled =
+          number === 46 && (!opening || !this.gameFlags.cell46_reached);
+        obj.prompt = `${this.doorIsOpen(`cell_${number}_door`) ? "Close" : "Open"} Cell ${number} gate`;
+      }
       if (
         [
           "cell_key_pickup",
@@ -1613,15 +1663,29 @@ export class GameEngine {
         obj.disabled = true;
     }
     for (const [id, group] of this.worldData.doors) {
-      const open =
-        id === "cell_46_door"
-          ? this.gameFlags.locker_open
-          : id === "master_c_door"
-            ? this.gameFlags.master_door_unlocked
-            : id === "sea_gate_door"
-              ? this.gameFlags.sea_gate_open
-              : false;
-      group.position.y = open ? 3.7 : 0;
+      const open = this.doorIsOpen(id),
+        number = Number(id.match(/^cell_(\d+)_door$/)?.[1]);
+      if (isExplorationCell(number) || (number === 46 && opening)) {
+        const cell = CELL_ROOMS.find((c) => c.number === number)!;
+        group.position.y = 0;
+        group.rotation.y = open
+          ? cell.side === "north"
+            ? Math.PI / 2
+            : -Math.PI / 2
+          : 0;
+        this.worldData.doorColliders
+          .get(id)!
+          .setFromObject(group)
+          .expandByScalar(0.03);
+      } else {
+        group.position.y = open ? 3.7 : 0;
+        if (id === "cell_46_door") {
+          group.rotation.y = 0;
+          this.worldData.doorColliders
+            .get(id)!
+            .copy(group.userData.closedBounds);
+        }
+      }
       if (id === "cell_47_door" && this.gameState !== "intro")
         group.rotation.y = 0;
     }
@@ -2066,25 +2130,10 @@ export class GameEngine {
       const mesh = this.worldData.guardMeshes.get(guard.id)!;
       const examiner =
         !!this.gameFlags.opening_v3 && guard.id === "guard_dunne";
-      const approach = (
-        point: [number, number, number] | undefined,
-      ): [number, number, number] | undefined => {
-        // An unlocked Cell 46 must remain reachable through its real doorway.
-        const openCell46 =
-          point &&
-          this.gameFlags.locker_open &&
-          point[0] > -14.2 &&
-          point[0] < -8.8;
-        if (
-          point &&
-          !openCell46 &&
-          guard.position[2] > -1.8 &&
-          point[2] < -2 &&
-          point[0] < -3.1
-        )
-          return [THREE.MathUtils.clamp(point[0], -35.5, -4), 0, -1.5];
-        return point;
-      };
+      const approach = (point: [number, number, number] | undefined) =>
+        cellApproachTarget(point, guard.position, (number) =>
+          this.doorIsOpen(`cell_${number}_door`),
+        );
       const oldTarget = approach(guard.investigationTarget);
       const vision = sightEvidence(
         guard,

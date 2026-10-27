@@ -1,0 +1,20 @@
+{
+  "version": "0.14.1",
+  "mainCommit": "d429d095aacc581cb313f94227ae84cf9b4c5477",
+  "downloads": [
+    {
+      "url": "https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.14.1-offline.zip",
+      "status": 200,
+      "bytes": 22567649,
+      "sha256": "73db23789410cf0734ce865919fe6000e3c1f3a5cf1b97d796495366e942371b",
+      "integrity": "passed"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.14.1-android.apk",
+      "status": 200,
+      "bytes": 22972826,
+      "sha256": "3b27f4924b10f6a37cdebcd1ca1b6d56fa2c1aba9d8831c9c1ff914a916fba71",
+      "integrity": "passed"
+    }
+  ]
+}

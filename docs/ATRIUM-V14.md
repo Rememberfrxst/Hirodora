@@ -14,6 +14,8 @@ The roof has ceiling-mounted luminaires without the former iron pipe/beam grid. 
 
 README download buttons now point directly to `raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/…`, bypassing the GitHub file viewer and relative `?raw=true` navigation. The previous ZIP's direct endpoint returned HTTP 200 during inspection; the reported browser 400 could not be reproduced there. New public files must be checked with a complete GET, ZIP integrity and SHA-256 against `downloads/latest.json` after pushing. New APK versionCode 1400 retains the existing release certificate.
 
+After publishing, complete downloads of the public v0.14.0 ZIP and APK both returned HTTP 200. Their byte counts and SHA-256 values match the verified local artifacts; the downloaded ZIP also passed CRC integrity checks. [Public download verification](verification/atrium-v14/public-downloads.json).
+
 ## Verification
 
 Run `npm run check`, all Playwright scenarios, mobile/offline packaging, Android assemble/lint/signature verification and `scripts/verify-apk-assets.mjs`. The added browser scenario checks all nine actor instances, the 4/5 floor assignment, actual patrol displacement, lower gate entry and checkpoint restoration. Existing stairs, legacy campaign, opening puzzle, audio, graphics and mobile checks remain in the suite. Machine-readable run results and final screenshots are retained under `docs/verification/atrium-v14/` and `docs/screenshots/atrium-v14/`.

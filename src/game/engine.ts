@@ -39,7 +39,16 @@ import { PrisonerActor } from "./prisoner";
 import { OpeningCinematic } from "./cinematic";
 import { INTRO_DURATION } from "./intro";
 import { loadSettings, type GameSettings } from "./settings";
-import { findPath, isBlocked, movementVector, stepJump } from "./navigation";
+import { movementVector, stepJump } from "./navigation";
+import {
+  bodyBlocked,
+  supportHeight,
+  findSurfacePath,
+  migratePosition,
+  LAYOUT_VERSION,
+} from "./atrium";
+import { WarriorActor } from "./warrior";
+import { FirstPersonView } from "./viewmodel";
 import {
   CELL_ROOMS,
   isExplorationCell,
@@ -225,7 +234,7 @@ export class GameEngine {
   private touchMove: [number, number] = [0, 0];
   private drag: { id: number; x: number; y: number } | null = null;
   private pathTime = 0;
-  private paths = new Map<string, [number, number][]>();
+  private paths = new Map<string, [number, number, number][]>();
   private saveKey = "hirodora-checkpoint-v3";
   public openingProgress: OpeningProgress = { bed: 0, bolts: 0, toilet: 0 };
   public activeHold: HoldAction | null = null;
@@ -248,6 +257,8 @@ export class GameEngine {
   public guardActors = new Map<string, GuardActor>();
   private guardAssets = new GuardAssetPool();
   private bodyActor?: PrisonerActor;
+  private warriorActor?: WarriorActor;
+  public firstPerson = new FirstPersonView();
   public cinematic?: OpeningCinematic;
   public introCaption = "";
   private introPaused = false;
@@ -320,7 +331,7 @@ export class GameEngine {
     sound.occlusion = (position) => {
       const origin: [number, number, number] = [
         this.playerPos[0],
-        this.stats.isCrouching ? 0.95 : 1.55,
+        this.playerPos[1] + (this.stats.isCrouching ? 0.95 : 1.55),
         this.playerPos[2],
       ];
       const target: [number, number, number] = [
@@ -396,6 +407,15 @@ export class GameEngine {
     this.emitChange();
     try {
       await this.worldData.loadEnvironment();
+      await this.firstPerson.load(
+        this.worldData.pickupMeshes.get("screwdriver_pickup")!,
+        this.worldData.pickupMeshes.get("cell_key_pickup")!,
+        this.worldData.pickupMeshes,
+      );
+      if (!this.warriorActor) {
+        this.warriorActor = new WarriorActor(this.worldData.cell46NPC);
+        await this.warriorActor.load();
+      }
       await this.guardAssets.preload(
         Math.min(8, this.renderer.capabilities.getMaxAnisotropy()),
       );
@@ -470,7 +490,7 @@ export class GameEngine {
       preset === "ultra" ? 2048 : 1024,
     );
     this.renderer.toneMappingExposure = exposure;
-    if (this.guardsReady) this.renderer.render(this.scene, this.camera);
+    if (this.guardsReady) this.renderFrame(0);
     this.emitChange();
   }
 
@@ -484,7 +504,7 @@ export class GameEngine {
     sound.setBusVolume("music", settings.music);
     sound.setEffectsVolume(settings.sfx);
     this.renderer.setPixelRatio(this.renderScale * this.userRenderScale);
-    this.renderer.render(this.scene, this.camera);
+    this.renderFrame(0);
     this.emitChange();
   }
 
@@ -704,7 +724,7 @@ export class GameEngine {
       this.camera.aspect = w / h;
       this.camera.updateProjectionMatrix();
       this.renderer.setSize(w, h);
-      if (this.guardsReady) this.renderer.render(this.scene, this.camera);
+      if (this.guardsReady) this.renderFrame(0);
     }
     const blocked = this.mobile && h > w;
     if (blocked !== this.orientationBlocked) {
@@ -1004,12 +1024,18 @@ export class GameEngine {
     a: [number, number, number],
     b: [number, number, number],
     reachKey = false,
+    ignoreDoor?: string,
   ) {
-    const origin = this.scratchFrom.set(a[0], 1.45, a[2]),
-      target = this.scratchTo.set(b[0], 1.45, b[2]);
+    const origin = this.scratchFrom.set(a[0], a[1] + 1.45, a[2]),
+      target = this.scratchTo.set(b[0], b[1] + 1.45, b[2]);
     const distance = origin.distanceTo(target),
       ray = this.visibilityRay.set(origin, target.sub(origin).normalize());
-    return this.blockers().some((box) => {
+    return [
+      ...this.blockers(),
+      ...this.worldData.visionColliders.filter((b) => b.max.y <= 0),
+    ].some((box) => {
+      if (ignoreDoor && box === this.worldData.doorColliders.get(ignoreDoor))
+        return false;
       // Only the reachable key may be picked through this specific barred face.
       // The full face remains authoritative for player/guard movement and capture.
       if (
@@ -1041,7 +1067,7 @@ export class GameEngine {
       if (obj.id === "boulder_rescue_tunnel" && this.stats.act !== 3) continue;
       const dx = obj.position[0] - this.playerPos[0],
         dz = obj.position[2] - this.playerPos[2],
-        distance = Math.hypot(dx, dz);
+        distance = Math.hypot(dx, dz, obj.position[1] - 1 - this.playerPos[1]);
       const focused =
         this.gameFlags.opening_v3 &&
         [
@@ -1066,8 +1092,11 @@ export class GameEngine {
         facing &&
         !this.obstructed(
           this.playerPos,
-          obj.position,
+          [obj.position[0], obj.position[1] - 1, obj.position[2]],
           obj.id === "cell_key_pickup",
+          obj.id.startsWith("cell_latch_")
+            ? `cell_${obj.id.slice(11)}_door`
+            : undefined,
         )
       ) {
         closest = obj;
@@ -1075,6 +1104,56 @@ export class GameEngine {
       }
     }
     return closest;
+  }
+  public equipItem(item: ItemId | null) {
+    if (
+      item &&
+      (!this.inventory.includes(item) ||
+        ALL_ITEMS[item].category === "document")
+    )
+      return;
+    this.equippedItem = item;
+    this.saveCheckpoint();
+    this.emitChange();
+  }
+  public renderFrame(dt = 0.016) {
+    const item =
+      this.activeHold === "toilet_bolts" ? "screwdriver" : this.equippedItem;
+    const direction = new THREE.Vector3(0, 0, -1).applyQuaternion(
+      this.camera.quaternion,
+    );
+    const origin = this.camera.position;
+    const ray = new THREE.Ray(origin, direction);
+    const hit = new THREE.Vector3();
+    const near = this.blockers().some(
+      (b) => ray.intersectBox(b, hit) !== null && hit.distanceTo(origin) < 0.7,
+    );
+    this.firstPerson.update(
+      item,
+      this.elapsed,
+      dt,
+      this.stats.isSprinting ||
+        this.touchMove.some((v) => Math.abs(v) > 0.1) ||
+        !!(
+          this.keys.KeyW ||
+          this.keys.KeyA ||
+          this.keys.KeyS ||
+          this.keys.KeyD
+        ),
+      this.reducedMotion,
+      near,
+      this.gameState === "playing" || this.gameState === "paused",
+    );
+    this.renderer.render(this.scene, this.camera);
+    const calls = this.renderer.info.render.calls,
+      triangles = this.renderer.info.render.triangles;
+    this.firstPerson.render(this.renderer, this.camera.aspect);
+    this.drawCalls =
+      calls +
+      (this.firstPerson.root.visible ? this.renderer.info.render.calls : 0);
+    this.triangles =
+      triangles +
+      (this.firstPerson.root.visible ? this.renderer.info.render.triangles : 0);
   }
   public interact() {
     if (this.gameState !== "playing" || this.activeMiniGame || this.overlayOpen)
@@ -1131,6 +1210,8 @@ export class GameEngine {
     if (pickup[obj.id]) {
       const item = pickup[obj.id];
       if (!this.inventory.includes(item)) this.inventory.push(item);
+      if (!this.equippedItem && ALL_ITEMS[item].category !== "document")
+        this.equippedItem = item;
       obj.disabled = true;
       sound.playObject(
         item === "steel_wool" || item === "rubber_washer" ? "cloth" : "metal",
@@ -1297,6 +1378,7 @@ export class GameEngine {
   private interactOpening(id: string) {
     if (id === "cell_key_pickup") {
       this.inventory.push("cell_key");
+      this.equippedItem ??= "cell_key";
       sound.cue(
         "keys",
         this.worldData.interactables.find((o) => o.id === id)!.position,
@@ -1316,6 +1398,7 @@ export class GameEngine {
       this.triggerSubtitle("KABIR", wrongKeyNotice, "monologue", 6);
     } else if (id === "screwdriver_pickup") {
       this.inventory.push("screwdriver");
+      this.equippedItem ??= "screwdriver";
       sound.playObject(
         "metal",
         0,
@@ -1705,6 +1788,8 @@ export class GameEngine {
   private saveCheckpoint() {
     this.checkpoint = {
       id: "checkpoint",
+      layoutVersion: LAYOUT_VERSION,
+      equippedItem: this.equippedItem,
       openingProgress: { ...this.openingProgress },
       name: this.activeObjective,
       playerPosition: [...this.playerPos],
@@ -1762,7 +1847,7 @@ export class GameEngine {
       hidingSpotName: null,
     };
     this.stats.act = cp.act;
-    this.playerPos = [...cp.playerPosition];
+    this.playerPos = migratePosition(cp.playerPosition, cp.layoutVersion);
     this.playerRotY = cp.playerRotationY;
     this.cameraPitch = 0;
     this.inventory = [...cp.inventory];
@@ -1795,9 +1880,14 @@ export class GameEngine {
           ? openingObjective(this.gameFlags, this.inventory)
           : "Find the sharpened spoon beneath your table."
         : cp.name;
-    this.equippedItem = this.inventory.includes("dart_pistol")
-      ? "dart_pistol"
-      : null;
+    this.equippedItem =
+      cp.equippedItem !== undefined
+        ? cp.equippedItem && this.inventory.includes(cp.equippedItem)
+          ? cp.equippedItem
+          : null
+        : this.inventory.includes("dart_pistol")
+          ? "dart_pistol"
+          : null;
     this.activeMiniGame = null;
     this.munshiHint = null;
     for (const g of this.worldData.guards) {
@@ -1974,11 +2064,9 @@ export class GameEngine {
         }
       }
       const renderStart = performance.now();
-      this.renderer.render(this.scene, this.camera);
+      this.renderFrame(dt);
       this.frameAverage =
         this.frameAverage * 0.95 + (performance.now() - renderStart) * 0.05;
-      this.drawCalls = this.renderer.info.render.calls;
-      this.triangles = this.renderer.info.render.triangles;
     }
     if (
       (simulationActive || this.gameState === "intro") &&
@@ -1990,6 +2078,7 @@ export class GameEngine {
     this.frameId = requestAnimationFrame(this.tick);
   };
   private move(dt: number) {
+    this.warriorActor?.update(this.elapsed, this.reducedMotion);
     const [mx, mz] = [
       (this.keys.KeyD ? 1 : 0) - (this.keys.KeyA ? 1 : 0) + this.touchMove[0],
       (this.keys.KeyS ? 1 : 0) - (this.keys.KeyW ? 1 : 0) + this.touchMove[1],
@@ -2024,10 +2113,16 @@ export class GameEngine {
           : 3;
       const [dx, dz] = movementVector(mx, mz, this.playerRotY, speed * dt);
       const blocks = this.blockers();
-      if (!isBlocked(this.playerPos[0] + dx, this.playerPos[2], blocks, 0.27))
-        this.playerPos[0] += dx;
-      if (!isBlocked(this.playerPos[0], this.playerPos[2] + dz, blocks, 0.27))
-        this.playerPos[2] += dz;
+      for (const [ax, az] of [
+        [dx, 0],
+        [0, dz],
+      ]) {
+        const x = this.playerPos[0] + ax,
+          z = this.playerPos[2] + az;
+        const y = supportHeight(x, z, this.playerPos[1]);
+        if (y !== undefined && !bodyBlocked(x, y, z, blocks))
+          this.playerPos = [x, y, z];
+      }
       const travelled = Math.hypot(
         this.playerPos[0] - beforeX,
         this.playerPos[2] - beforeZ,
@@ -2072,7 +2167,7 @@ export class GameEngine {
         : 0;
     this.camera.position.set(
       this.playerPos[0],
-      height + bob + this.jumpHeight,
+      this.playerPos[1] + height + bob + this.jumpHeight,
       this.playerPos[2],
     );
     this.camera.rotation.order = "YXZ";
@@ -2152,12 +2247,16 @@ export class GameEngine {
           vision,
           player: this.playerPos,
           noise: heard,
-          captureClear: !wall && !this.stats.isInHidingSpot,
+          captureClear:
+            !wall &&
+            !this.stats.isInHidingSpot &&
+            Math.abs(guard.position[1] - this.playerPos[1]) < 0.65,
           atTarget:
             !!oldTarget &&
             Math.hypot(
               oldTarget[0] - guard.position[0],
               oldTarget[2] - guard.position[2],
+              oldTarget[1] - guard.position[1],
             ) < 0.4,
           dutyPoint: examiner ? [-5.7, 0, -0.7] : undefined,
         },
@@ -2195,10 +2294,27 @@ export class GameEngine {
       if (
         guard.state !== "knocked_out" &&
         target &&
-        Math.hypot(target[0] - beforeX, target[2] - beforeZ) > 0.3
+        Math.hypot(
+          target[0] - beforeX,
+          target[2] - beforeZ,
+          target[1] - guard.position[1],
+        ) > 0.3
       ) {
         let destination: [number, number] = [target[0], target[2]];
-        if (pathObstructed([beforeX, beforeZ], destination, blocks)) {
+        const localBlocks = blocks.filter(
+          (b) =>
+            b.max.y > guard.position[1] + 0.12 &&
+            b.min.y < guard.position[1] + 1.7,
+        );
+        if (
+          pathObstructed([beforeX, beforeZ], destination, localBlocks) ||
+          Math.abs(guard.position[1] - target[1]) > 0.3 ||
+          supportHeight(
+            (beforeX + target[0]) / 2,
+            (beforeZ + target[2]) / 2,
+            guard.position[1],
+          ) === undefined
+        ) {
           const old = this.pathGoals.get(guard.id),
             changed =
               !old ||
@@ -2209,16 +2325,20 @@ export class GameEngine {
             this.pathGoals.set(guard.id, [...destination]);
             this.paths.set(
               guard.id,
-              findPath([beforeX, beforeZ], destination, blocks),
+              findSurfacePath(guard.position, target, blocks),
             );
           }
           const path = this.paths.get(guard.id) ?? [];
           while (
             path.length &&
-            Math.hypot(path[0][0] - beforeX, path[0][1] - beforeZ) < 0.3
+            Math.hypot(
+              path[0][0] - beforeX,
+              path[0][2] - beforeZ,
+              path[0][1] - guard.position[1],
+            ) < 0.3
           )
             path.shift();
-          if (path[0]) destination = path[0];
+          if (path[0]) destination = [path[0][0], path[0][2]];
           else destination = [beforeX, beforeZ];
         } else {
           this.paths.delete(guard.id);
@@ -2232,9 +2352,16 @@ export class GameEngine {
           const step = Math.min(length, decision.speed * dt),
             nx = beforeX + (dx / length) * step,
             nz = beforeZ + (dz / length) * step;
-          if (!isBlocked(nx, beforeZ, blocks, 0.22)) guard.position[0] = nx;
-          if (!isBlocked(guard.position[0], nz, blocks, 0.22))
-            guard.position[2] = nz;
+          for (const [ax, az] of [
+            [nx - beforeX, 0],
+            [0, nz - beforeZ],
+          ]) {
+            const x = guard.position[0] + ax,
+              z = guard.position[2] + az;
+            const y = supportHeight(x, z, guard.position[1]);
+            if (y !== undefined && !bodyBlocked(x, y, z, blocks, 0.22))
+              guard.position = [x, y, z];
+          }
         }
       } else if (
         desiredYaw === undefined &&
@@ -2321,6 +2448,8 @@ export class GameEngine {
     sound.dispose();
     this.guardActors.forEach((actor) => actor.dispose());
     this.bodyActor?.dispose();
+    this.warriorActor?.dispose();
+    this.firstPerson.dispose();
     this.cinematic?.dispose();
     this.guardActors.clear();
     this.guardAssets.dispose();

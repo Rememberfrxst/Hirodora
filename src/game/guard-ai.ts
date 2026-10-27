@@ -26,7 +26,8 @@ export interface GuardDecision {
   scanYaw?: number;
   caughtPlayer: boolean;
 }
-const distance = (a: Vec3, b: Vec3) => Math.hypot(a[0] - b[0], a[2] - b[2]);
+const distance = (a: Vec3, b: Vec3) =>
+  Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
 const copy = (p: Vec3 | undefined) => (p ? ([...p] as Vec3) : undefined);
 
 /** Authoritative perception memory and decisions. No renderer, bones or camera. */

@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { skipOpening } from "./helpers";
 
-test("24 cells frame an unobstructed seven-metre corridor and both rows load real fixtures", async ({
+test("24 independent gates frame the upper galleries and both rows load real fixtures", async ({
   page,
 }) => {
   await page.goto("/");
@@ -14,7 +14,7 @@ test("24 cells frame an unobstructed seven-metre corridor and both rows load rea
     const cells = e.worldData.cells;
     const cuts = [];
     for (let x = -67; x < -4; x += 0.5)
-      for (const z of [-1, 0, 1, 2, 3, 4])
+      for (const z of [-1, 0, 10, 11])
         if (
           e.worldData.colliders.some(
             (b: any) =>
@@ -154,7 +154,7 @@ test("Cell 46 exploration gate unlocks after the chapter and gate state survives
   const westward = await page.evaluate(() => {
     const e = window.__HIRODORA__ as any,
       g = e.worldData.guards[1];
-    g.position = [-62, 0, 1];
+    g.position = [-62, 0, 0];
     g.state = "suspicious";
     g.suspicion = 50;
     g.stateTimer = 0;

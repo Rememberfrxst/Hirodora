@@ -1,0 +1,162 @@
+{
+  "version": "0.13.0",
+  "baselineCommit": "833e2b8927cc4574b06e7b6db25a8d4b8e84dc28",
+  "typeScript": "passed",
+  "unitAndAssetChecks": {
+    "passed": 61,
+    "failed": 0
+  },
+  "productionBuild": "passed",
+  "browserVerification": {
+    "initialFullRun": {
+      "total": 35,
+      "passed": 28,
+      "failed": 7
+    },
+    "finalRerun": {
+      "startTime": "2026-10-27T13:25:49.552Z",
+      "duration": 329592.62100000004,
+      "expected": 10,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "finalEquipmentRerun": {
+      "startTime": "2026-10-27T13:32:23.283Z",
+      "duration": 92559.292,
+      "expected": 2,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "uniqueScenariosVerifiedAfterFixes": 35,
+    "method": "Full run plus final targeted reruns; all seven initial failures are rechecked and pass. Not a new single full-green invocation.",
+    "resolved": [
+      "stairs support actual player movement, gates are independent, and equipped tools persist",
+      "guards route down stairs and cannot capture a player through the gallery floor",
+      "Cell 46 exploration gate unlocks after the chapter and gate state survives save/load",
+      "rigged officers animate independently, patrol, switch LOD and retain non-lethal dart hits",
+      "authored environment loads locally and graphics presets preserve collision and gameplay state",
+      "closed walls block guard sight and movement; all required rooms have routes",
+      "spatial AI sees through bars but cannot cross them, loses sight and returns to its duty"
+    ],
+    "latestScenarios": [
+      {
+        "title": "stairs support actual player movement, gates are independent, and equipped tools persist",
+        "status": "passed"
+      },
+      {
+        "title": "guards route down stairs and cannot capture a player through the gallery floor",
+        "status": "passed"
+      },
+      {
+        "title": "Cell 46 exploration gate unlocks after the chapter and gate state survives save/load",
+        "status": "passed"
+      },
+      {
+        "title": "rigged officers animate independently, patrol, switch LOD and retain non-lethal dart hits",
+        "status": "passed"
+      },
+      {
+        "title": "authored environment loads locally and graphics presets preserve collision and gameplay state",
+        "status": "passed"
+      },
+      {
+        "title": "closed walls block guard sight and movement; all required rooms have routes",
+        "status": "passed"
+      },
+      {
+        "title": "adaptive resolution, paused preset changes and mobile resize never present a cleared frame",
+        "status": "passed"
+      },
+      {
+        "title": "spatial AI sees through bars but cannot cross them, loses sight and returns to its duty",
+        "status": "passed"
+      },
+      {
+        "title": "noise stays at its impact source; guard reacts while a puzzle is open",
+        "status": "passed"
+      },
+      {
+        "title": "two-handed weapon grip follows the active skeleton across officer LOD and returns to idle hands",
+        "status": "passed"
+      }
+    ]
+  },
+  "android": {
+    "version": "0.13.0",
+    "file": "Hirodora-0.13.0-android.apk",
+    "bytes": 22972126,
+    "sha256": "979ddb26b5d9850f3ef42cc84ed9303aba4584f71e0f19e95b5deef18ed083a0",
+    "certificateSHA256": "d7175da40c348c91e8a8663635d3a130115aba916e5ce889e40b646c009f33ca",
+    "minAndroid": "8.0 (API 26)",
+    "targetApi": 35,
+    "architecture": "Universal; uses installed Android System WebView",
+    "distribution": "Signed release APK; offline assets included; no network permission",
+    "versionCode": 1300,
+    "gradleAssembleAndLint": "passed",
+    "nativeDeviceCertification": false
+  },
+  "screenshots": [
+    {
+      "file": "docs/screenshots/atrium-v13/01-atrium.png",
+      "sha256": "d9865ccac0bec3215be2b0ecb398e593bd7575745891820e2908252fec5c83d0"
+    },
+    {
+      "file": "docs/screenshots/atrium-v13/02-independent-gates.png",
+      "sha256": "bd2b2cea14edd7c60e558df12caf8ba698e609eb9a8d5f14c89032289040662a"
+    },
+    {
+      "file": "docs/screenshots/atrium-v13/03-redeemed-warrior.png",
+      "sha256": "3fca506dc9202e88349380431b19b16825de3b3699c95a071de6fd3f233329cd"
+    },
+    {
+      "file": "docs/screenshots/atrium-v13/04-screwdriver-in-hand.png",
+      "sha256": "f88ec3a8cf0d32e3bcb308d9e0a8661fa609a1e3c6f880c25aec4c8743fa9ec5"
+    },
+    {
+      "file": "docs/screenshots/atrium-v13/05-lower-hall.png",
+      "sha256": "5009bcb1aa5e1a6c4ac9116a56b73f62ae8ccef45722c0797e4ef78837a01e26"
+    },
+    {
+      "file": "docs/screenshots/atrium-v13/06-mobile-key.png",
+      "sha256": "ea1e50aed84ff8e75f26eda050903919f1ca0b9098f5cc9f7b2cd6dd835f4bba"
+    }
+  ],
+  "matchedCameras": [
+    {
+      "before": "docs/screenshots/block-v12/01-wide-corridor.png",
+      "after": "docs/screenshots/atrium-v13/01-atrium.png",
+      "position": [
+        -5.8,
+        1.65,
+        2
+      ],
+      "target": [
+        -60,
+        1.5,
+        1.5
+      ]
+    },
+    {
+      "before": "docs/screenshots/block-v12/03-cell46-gate.png",
+      "after": "docs/screenshots/atrium-v13/02-independent-gates.png",
+      "position": [
+        -12.5,
+        1.6,
+        -8.5
+      ],
+      "target": [
+        -10.5,
+        1.3,
+        -2
+      ]
+    }
+  ],
+  "remaining": [
+    "Supplied police asset-level source/license and grip/deformation refinement",
+    "Warrior skeletal seated/challenge performance",
+    "Physical-phone GPU/thermal/extended playtesting",
+    "Cells 42–45 extended story"
+  ]
+}

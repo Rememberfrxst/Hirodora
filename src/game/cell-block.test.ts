@@ -13,8 +13,8 @@ test("guard approach uses the expanded corridor and respects open gates on eithe
     [-66, 0, -1.5],
   );
   assert.deepEqual(
-    cellApproachTarget([-22, 0, 10], [-22, 0, 1], () => false),
-    [-22, 0, 4.5],
+    cellApproachTarget([-22, 0, 17], [-22, 0, 1], () => false),
+    [-22, 0, 11.5],
   );
   const point: [number, number, number] = [-11, 0, -8];
   assert.equal(
@@ -26,10 +26,10 @@ test("guard approach uses the expanded corridor and respects open gates on eithe
     point,
   );
 });
-test("24 distinct cells have 12 on each side of a seven-metre corridor", () => {
+test("24 distinct cells have 12 on each side of a fourteen-metre atrium", () => {
   assert.equal(CELL_ROOMS.length, 24);
   assert.equal(new Set(CELL_ROOMS.map((c) => c.number)).size, 24);
-  assert.equal(CELL_BLOCK.southFront - CELL_BLOCK.northFront, 7);
+  assert.equal(CELL_BLOCK.southFront - CELL_BLOCK.northFront, 14);
   for (const side of ["north", "south"]) {
     const cells = CELL_ROOMS.filter((c) => c.side === side).sort(
       (a, b) => a.left - b.left,

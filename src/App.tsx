@@ -283,10 +283,14 @@ export default function App() {
                       <p>
                         Human and clothing: MakeHuman CC0 / Ara 3D Gen MIT.
                         Motion: CMU. Stone: Rock Wall 16 by Amal Kumar / Poly
-                        Haven, CC0 — https://polyhaven.com/a/rock_wall_16.
-                        Gunshot: Vincent Sevedge / Tabasco, CC-BY 3.0. Complete
-                        sources ship in CHARACTER-LICENSES.txt,
-                        ENVIRONMENT-LICENSES.txt and AUDIO-LICENSES.json.
+                        Haven, CC0 — https://polyhaven.com/a/rock_wall_16. The
+                        Redeemed Warrior: denizuchia, CC BY 4.0 —
+                        https://sketchfab.com/3d-models/the-redeemed-warrior-65f5d47ef460496d9fc9a312c2cf9b5e.
+                        Adapted: scale, orientation, geometry simplification and
+                        texture compression. Gunshot: Vincent Sevedge / Tabasco,
+                        CC-BY 3.0. Complete sources ship in
+                        CHARACTER-LICENSES.txt, ENVIRONMENT-LICENSES.txt and
+                        AUDIO-LICENSES.json.
                       </p>
                       {environmentAssets.uploadedAssets.models.map((asset) => (
                         <p

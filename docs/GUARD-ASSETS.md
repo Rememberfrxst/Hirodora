@@ -1,4 +1,30 @@
-# Character asset pipeline · v0.8.0
+# Character asset pipeline · v0.13.0
+
+## Supplied Redeemed Warrior and first-person arm
+
+**The Redeemed Warrior** by **denizuchia**, source:
+https://sketchfab.com/3d-models/the-redeemed-warrior-65f5d47ef460496d9fc9a312c2cf9b5e
+and author https://sketchfab.com/denizuchia . The supplied USDZ contains explicit
+`copyright: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)` metadata.
+License: https://creativecommons.org/licenses/by/4.0/ . This is the asset author's
+declared license, not an independent ownership audit of any franchise likeness.
+Changes: USD transforms baked, metre/feet normalization, preserved UVs/normals and
+embedded colour texture, silhouette-preserving mesh simplification from 857,264
+to 102,296 triangles, 2K WebP/Meshopt encoding and Cell 46 placement. The runtime
+asset is about 2.1 MB; it is static source geometry, not a newly rigged character.
+The existing Boulder interaction, challenge and locker logic retain their IDs.
+
+The first-person forearm is extracted from the existing licensed CC0-derived
+prisoner below, retaining its anatomical geometry, skin UVs and finger skeleton.
+Project-authored finger poses and tool placements drive the held objects. The
+screwdriver uses the credited Filip GLB; keys use the project's pickup geometry.
+
+The supplied `professional-police-officer.glb` is **not distributed in this
+release**. It contains MPFB component metadata but no complete asset-level author,
+source URL or redistribution license. The offline `rig-supplied-police.mjs`
+pipeline produces locally inspected 69-bone derivatives with existing clips and
+three LODs; publishing them remains pending those source/permission details.
+The previously licensed correctional officers remain the shipped models.
 
 The new Cell 47 prisoner uses a separate **45,164-triangle, 69-bone GLB**, not a recoloured officer. It has source-fitted `male_casualsuit06` short-sleeve T-shirt/jeans, photographic skin, short hair, shoes and Idle/Walk/Run/Death clips. `scripts/build-prisoner.mjs` validates the same pinned sources below and exports local embedded textures through Meshopt/WebP. Parameters and source references are in `src/assets/guards/prisoner-manifest.json`. The MakeHuman CC0 and CMU/MIT acknowledgements below apply to both characters. The new death motion is a baked, grounded skeletal fall from the licensed pipeline. Guard Aim and sweeping body inspection are runtime-authored poses; all underlying AI rules remain in the game engine.
 

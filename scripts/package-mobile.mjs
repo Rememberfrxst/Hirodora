@@ -13,12 +13,20 @@ import { resolve } from "node:path";
 const { version } = JSON.parse(await readFile("package.json", "utf8"));
 const basename = `Hirodora-${version}`;
 const environmentCredits =
-  (await readFile("src/assets/audio/manifest.json", "utf8")) + "\n" +
+  (await readFile("docs/GUARD-ASSETS.md", "utf8")) +
+  "\n" +
+  (await readFile("src/assets/audio/manifest.json", "utf8")) +
+  "\n" +
   (await readFile("src/assets/environment/GODOT-MIT-LICENSE.txt", "utf8")) +
   "\n" +
-  (await readFile("src/assets/environment/TPS-ASSET-LICENSE.txt", "utf8")) + "\n" +
-  (await readFile("src/assets/environment/CONCRETE-LICENSE.txt", "utf8")) + "\n" +
-  (await readFile("src/assets/environment/UPLOADED-ASSET-LICENSES.txt", "utf8"));
+  (await readFile("src/assets/environment/TPS-ASSET-LICENSE.txt", "utf8")) +
+  "\n" +
+  (await readFile("src/assets/environment/CONCRETE-LICENSE.txt", "utf8")) +
+  "\n" +
+  (await readFile(
+    "src/assets/environment/UPLOADED-ASSET-LICENSES.txt",
+    "utf8",
+  ));
 const assetCredits = `Officer and prisoner assets: MakeHuman CC0 1.0 (Data Collection AB, Joel Palmius, Jonas Hauquier), adapted through the MIT Ara 3D Gen pipeline. Walk/run: CMU Graphics Lab Motion Capture Database. The data used in this project was obtained from mocap.cs.cmu.edu. The database was created with funding from NSF EIA-0196217. Motion data may not be resold on its own. Sources and terms: https://github.com/Rememberfrxst/Hirodora/blob/main/docs/GUARD-ASSETS.md`;
 const result = await build({
   entryPoints: ["src/main.tsx"],

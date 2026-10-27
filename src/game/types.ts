@@ -15,11 +15,7 @@ export type GameState =
 export type EndingType = "ghost" | "loud" | "brotherhood";
 
 export type GuardState =
-  | "patrol"
-  | "suspicious"
-  | "searching"
-  | "chase"
-  | "knocked_out";
+  "patrol" | "suspicious" | "searching" | "chase" | "knocked_out";
 
 export type GuardType = "patrol_dunne" | "sentry" | "night_captain";
 
@@ -135,6 +131,8 @@ export interface InteractiveObject {
 }
 
 export interface GameCheckpoint {
+  layoutVersion?: number;
+  equippedItem?: ItemId | null;
   openingProgress?: { bed: number; bolts: number; toilet: number };
   stats?: PlayerStats;
   id: string;

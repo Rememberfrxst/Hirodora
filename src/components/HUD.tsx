@@ -245,7 +245,9 @@ export function HUD({ engine, onPause }: Props) {
           <span>
             SATCHEL<small>{engine.inventory.length} ITEMS</small>
           </span>
-          {engine.equippedItem && <b>{stats.dartAmmo} DARTS</b>}
+          {engine.equippedItem === "dart_pistol" && (
+            <b>{stats.dartAmmo} DARTS</b>
+          )}
         </button>
       </div>
       {satchel && (
@@ -277,6 +279,17 @@ export function HUD({ engine, onPause }: Props) {
               <div>
                 <strong>{engine.getItem(id).name}</strong>
                 <p>{engine.getItem(id).description}</p>
+                {engine.getItem(id).category !== "document" && (
+                  <button
+                    className="equip-button"
+                    aria-pressed={engine.equippedItem === id}
+                    onClick={() =>
+                      engine.equipItem(engine.equippedItem === id ? null : id)
+                    }
+                  >
+                    {engine.equippedItem === id ? "Unequip" : "Equip"}
+                  </button>
+                )}
               </div>
             </div>
           ))}
@@ -381,7 +394,7 @@ export function HUD({ engine, onPause }: Props) {
                 )}
               </button>
             )}
-            {engine.equippedItem && (
+            {engine.equippedItem === "dart_pistol" && (
               <button
                 className="custom-control touch-fire"
                 style={placementStyle(layout.controls.fire)}

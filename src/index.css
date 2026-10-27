@@ -2072,6 +2072,17 @@ input[type="range"] {
 .inventory-card p {
   margin-bottom: 0;
 }
+.equip-button {
+  margin-top: .6rem;
+  padding: .45rem .9rem;
+  border: 1px solid #738071;
+  border-radius: .3rem;
+  background: #23372b;
+  color: #f2ecd5;
+  cursor: pointer;
+}
+.equip-button[aria-pressed="true"] { background: #4c692d; }
+.equip-button:focus-visible { outline: 2px solid #e6c48a; outline-offset: 3px; }
 .satchel-empty {
   text-align: center;
   display: grid;

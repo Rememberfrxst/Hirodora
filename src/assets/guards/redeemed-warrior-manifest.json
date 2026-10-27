@@ -1,0 +1,12 @@
+{
+  "title": "The Redeemed Warrior",
+  "author": "denizuchia",
+  "license": "CC BY 4.0",
+  "licenseURL": "https://creativecommons.org/licenses/by/4.0/",
+  "source": "https://sketchfab.com/3d-models/the-redeemed-warrior-65f5d47ef460496d9fc9a312c2cf9b5e",
+  "sourceTriangles": 857264,
+  "triangles": 102296,
+  "sourceSHA256": "9be5674c8f542e74db9db289f15ea45af5434c11c2f16b65e34df509406c4bab",
+  "runtimeSHA256": "607e1140e669f3a9073269b4fe344ea5cca6a3e665e54b2cb8ffa2f026ef21df",
+  "changes": "USD transforms baked; floor/scale normalization; normals and UVs retained; mesh simplification; 2K WebP and Meshopt encoding"
+}

@@ -49,7 +49,7 @@ export function sightEvidence(
   if (hidden) return 0;
   const dx = player[0] - guard.position[0],
     dz = player[2] - guard.position[2],
-    distance = Math.hypot(dx, dz);
+    distance = Math.hypot(dx, dz, player[1] - guard.position[1]);
   const range = guard.visionRange * (crouched ? 0.55 : 1);
   if (distance > range) return 0;
   const angle = Math.atan2(dx, dz) - guard.rotationY;
@@ -58,13 +58,17 @@ export function sightEvidence(
     (guard.visionAngle * Math.PI) / 360
   )
     return 0;
-  const eye: Vec3 = [guard.position[0], 1.58, guard.position[2]];
+  const eye: Vec3 = [
+    guard.position[0],
+    guard.position[1] + 1.58,
+    guard.position[2],
+  ];
   const samples = [crouched ? 0.9 : 1.55, crouched ? 0.55 : 0.95];
   const visible =
     samples.filter(
       (height) =>
         !obstacles.some((box) =>
-          segmentBlocked(eye, [player[0], height, player[2]], box),
+          segmentBlocked(eye, [player[0], player[1] + height, player[2]], box),
         ),
     ).length / samples.length;
   return Math.min(
@@ -81,15 +85,24 @@ export function strongestNoise(
   obstacles: Bounds[],
 ): HeardEvidence | undefined {
   let best: HeardEvidence | undefined;
-  const ear: Vec3 = [guard.position[0], 1.5, guard.position[2]];
+  const ear: Vec3 = [
+    guard.position[0],
+    guard.position[1] + 1.5,
+    guard.position[2],
+  ];
   for (const event of events) {
     if (event.age > 1.6) continue;
     const d = Math.hypot(
       event.position[0] - ear[0],
       event.position[2] - ear[2],
+      event.position[1] + 0.8 - ear[1],
     );
     if (d >= 14) continue;
-    const source: Vec3 = [event.position[0], 0.8, event.position[2]];
+    const source: Vec3 = [
+      event.position[0],
+      event.position[1] + 0.8,
+      event.position[2],
+    ];
     const walls = obstacles.filter((box) =>
       segmentBlocked(ear, source, box),
     ).length;

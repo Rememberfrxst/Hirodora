@@ -71,7 +71,7 @@ export function TacticalMapModal({
   opening?: boolean;
 }) {
   const px = (x: number) => 50 + (x + 70) * 10.8,
-    pz = (z: number) => 80 + (z + 11.5) * 18.5;
+    pz = (z: number) => 55 + (z + 11.5) * 17;
   return (
     <div className="modal-backdrop">
       <section className="game-panel map-panel">
@@ -149,12 +149,12 @@ export function TacticalMapModal({
         </svg>
         <div className="map-legend">
           <span>● YOUR POSITION</span>
-          <span>--- ESCAPE CORRIDOR</span>
+          <span>--- UPPER GALLERY · LOWER HALL VIA END STAIRS</span>
           <span>N ↑</span>
         </div>
         <p className="muted">
           {opening
-            ? "24 CELLS: 36–47 north, 48–59 south. Seven-metre central corridor. The shared wall connects Cells 47 and 46; reach Cell 46 to unlock its exploration gate. Cells 42–45 remain story-locked. Medical cells 48/49 retain infirmary access."
+            ? "24 CELLS: 36–47 north, 48–59 south. Fourteen-metre atrium with upper galleries, an exercise hall below and stairs at both ends. Each cell has an independent gate. The service passage links Cells 47 and 46; medical cells 48/49 retain infirmary access."
             : "The service duct connects Cell 47 to Cell 46. The Block C gate leads east; utility rooms are south of the corridor. Voss’s office is north. Reach the sea gate with the ledger and a lockpick."}
         </p>
       </section>

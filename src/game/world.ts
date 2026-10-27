@@ -5,6 +5,7 @@ import { GuardData, InteractiveObject } from "./types";
 import { buildHumanOfficer } from "./characters";
 import { createEnvironment } from "./environment";
 import { CELL_BLOCK, CELL_ROOMS, type CellRoom } from "./cell-block";
+import { ATRIUM } from "./atrium";
 
 export interface PrisonWorldData {
   cells: readonly CellRoom[];
@@ -21,6 +22,7 @@ export interface PrisonWorldData {
   guardMeshes: Map<string, THREE.Group>;
   pickupMeshes: Map<string, THREE.Object3D>;
   rescuedBoulder: THREE.Group;
+  cell46NPC: THREE.Group;
   waterMesh: THREE.Mesh;
   searchlight: THREE.SpotLight;
   soundMaskingMachinePos: [number, number, number];
@@ -196,7 +198,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
       actionRequiredItem,
     });
   };
-  const ground = box(staticWorld, [46, 0.3, 23], [7, -0.2, 0], floor);
+  const ground = box(staticWorld, [33.1, 0.3, 23], [13.45, -0.15, 0], floor);
   const projectUV = (mesh: THREE.Mesh, scale: number) => {
     const p = mesh.geometry.getAttribute("position"),
       n = mesh.geometry.getAttribute("normal"),
@@ -216,7 +218,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   // A concrete ceiling closes the cell volume; beams and conduits give the formerly
   // black void a readable institutional structure without altering walkable space.
   projectUV(
-    box(staticWorld, [46, 0.22, 23], [7, 4.18, 0], environment.ceiling),
+    box(staticWorld, [33.1, 0.22, 23], [13.45, 4.18, 0], environment.ceiling),
     2,
   );
   for (const x of [-13.5, -3.5, 6.5, 16.5, 26.5])
@@ -234,12 +236,12 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     box(staticWorld, [45.4, 0.09, 0.13], [7, 3.92, z], rust, 0.008);
   const extensionLength = -16 - CELL_BLOCK.west,
     extensionCenter = (CELL_BLOCK.west - 16) / 2;
-  wall([0.5, 4.3, 26], [CELL_BLOCK.west, 2, 1.5]);
+  wall([0.5, 7.5, 33], [CELL_BLOCK.west, 0.4, 5]);
   projectUV(
     box(
       staticWorld,
-      [extensionLength, 0.3, 23],
-      [extensionCenter, -0.2, 0],
+      [extensionLength, 0.3, 12.5],
+      [extensionCenter, -0.15, -5.25],
       floor,
     ),
     2,
@@ -247,8 +249,8 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   projectUV(
     box(
       staticWorld,
-      [extensionLength, 0.22, 23],
-      [extensionCenter, 4.18, 0],
+      [extensionLength, 0.22, 33],
+      [extensionCenter, 4.18, 5],
       environment.ceiling,
     ),
     2,
@@ -257,19 +259,155 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   const blockLength = CELL_BLOCK.east - CELL_BLOCK.west,
     blockCenter = (CELL_BLOCK.east + CELL_BLOCK.west) / 2;
   projectUV(
-    box(staticWorld, [blockLength, 0.3, 3], [blockCenter, -0.2, 13], floor),
+    box(
+      staticWorld,
+      [blockLength, 0.3, 12.5],
+      [blockCenter, -0.15, 15.25],
+      floor,
+    ),
     2,
   );
   projectUV(
     box(
       staticWorld,
-      [blockLength, 0.22, 3],
-      [blockCenter, 4.18, 13],
+      [12.9, 0.22, 33],
+      [(-16 + CELL_BLOCK.east) / 2, 4.18, 5],
       environment.ceiling,
     ),
     2,
   );
   wall([blockLength, 4.3, 0.5], [blockCenter, 2, CELL_BLOCK.south]);
+  wall([0.35, 4.2, 7], [CELL_BLOCK.east, 2, 18]);
+  wall([0.35, 3.2, 8], [CELL_BLOCK.east, -1.6, 5]);
+  // Upper galleries remain at the original gameplay datum; the hall is below.
+  projectUV(
+    box(staticWorld, [12.9, 0.3, 12.5], [-9.55, -0.15, -5.25], floor),
+    2,
+  );
+  for (const x of [CELL_BLOCK.west + 1.5, CELL_BLOCK.east - 1.5])
+    projectUV(box(staticWorld, [3, 0.3, 8], [x, -0.15, 5], floor), 2);
+  projectUV(
+    box(
+      staticWorld,
+      [blockLength, 0.3, 8],
+      [blockCenter, ATRIUM.depth - 0.15, 5],
+      floor,
+    ),
+    2,
+  );
+  wall([blockLength, 3.2, 0.3], [blockCenter, -1.6, 1]);
+  wall([blockLength, 3.2, 0.3], [blockCenter, -1.6, 9]);
+  // A continuous underside blocks sight/hearing through the upper galleries.
+  const floorOccluders = [
+    new THREE.Box3(
+      new THREE.Vector3(CELL_BLOCK.west, -0.3, -11.5),
+      new THREE.Vector3(CELL_BLOCK.east, 0, 1),
+    ),
+    new THREE.Box3(
+      new THREE.Vector3(CELL_BLOCK.west, -0.3, 9),
+      new THREE.Vector3(CELL_BLOCK.east, 0, 21.5),
+    ),
+  ];
+  for (const x of [CELL_BLOCK.west, CELL_BLOCK.east - 3])
+    floorOccluders.push(
+      new THREE.Box3(
+        new THREE.Vector3(x, -0.3, 1),
+        new THREE.Vector3(x + 3, 0, 9),
+      ),
+    );
+  const rail = (x1: number, z1: number, x2: number, z2: number, y = 0) => {
+    const length = Math.hypot(x2 - x1, z2 - z1),
+      root = new THREE.Group();
+    for (const h of [0.12, 0.58, 1.1])
+      box(root, [length, 0.055, 0.055], [length / 2, y + h, 0], iron, 0.014);
+    for (let p = 0; p <= length; p += 0.45)
+      box(root, [0.032, 1.08, 0.032], [p, y + 0.55, 0], iron, 0.009);
+    root.position.set(x1, 0, z1);
+    root.rotation.y = -Math.atan2(z2 - z1, x2 - x1);
+    staticWorld.add(root);
+    const bounds = new THREE.Box3().setFromObject(root);
+    colliders.push(bounds);
+    barredFaces.add(bounds);
+  };
+  for (const z of [1, 9]) rail(CELL_BLOCK.west + 3, z, CELL_BLOCK.east - 3, z);
+  for (const x of [CELL_BLOCK.west + 3, CELL_BLOCK.east - 3]) {
+    rail(x, 1, x, 4);
+    rail(x, 6, x, 9);
+  }
+  for (const stair of ATRIUM.stairs) {
+    const run = stair.bottom - stair.top,
+      steps = 18;
+    for (let i = 0; i < steps; i++) {
+      const y = (ATRIUM.depth * (i + 1)) / steps;
+      projectUV(
+        box(
+          staticWorld,
+          [Math.abs(run) / steps, 0.22, 1.8],
+          [stair.top + (run * (i + 0.5)) / steps, y - 0.11, 5],
+          concrete,
+        ),
+        2,
+      );
+    }
+    // Handrails follow the pitch, with vertical posts at regular tread stations.
+    for (const z of [4.04, 5.96]) {
+      const a = new THREE.Vector3(stair.top, 1.1, z),
+        b = new THREE.Vector3(stair.bottom, ATRIUM.depth + 1.1, z);
+      const bar = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.035, 0.035, a.distanceTo(b), 12),
+        iron,
+      );
+      bar.position.copy(a).add(b).multiplyScalar(0.5);
+      bar.quaternion.setFromUnitVectors(
+        new THREE.Vector3(0, 1, 0),
+        b.clone().sub(a).normalize(),
+      );
+      staticWorld.add(bar);
+      for (let i = 0; i <= 6; i++)
+        cylinder(staticWorld, 0.025, 1.08, [
+          stair.top + (run * i) / 6,
+          (ATRIUM.depth * i) / 6 + 0.55,
+          z,
+        ]);
+      const railBounds = new THREE.Box3(
+        new THREE.Vector3(
+          Math.min(stair.top, stair.bottom),
+          ATRIUM.depth,
+          z - 0.035,
+        ),
+        new THREE.Vector3(Math.max(stair.top, stair.bottom), 1.13, z + 0.035),
+      );
+      colliders.push(railBounds);
+      barredFaces.add(railBounds);
+    }
+  }
+  for (let x = -64; x < -5; x += 5.5) {
+    projectUV(
+      box(
+        staticWorld,
+        [0.22, 0.38, 32],
+        [x, 3.96, 5],
+        environment.ceiling,
+        0.02,
+      ),
+      2,
+    );
+    environment.add("Luminaire", x, 3.35, 5);
+    const light = new THREE.PointLight(0xb8cebd, 28, 15, 2);
+    light.position.set(x, 3.15, 5);
+    scene.add(light);
+    for (const z of [1, 9])
+      projectUV(
+        box(staticWorld, [0.35, 3.2, 0.4], [x, -1.6, z], concrete, 0.025),
+        2,
+      );
+  }
+  label(
+    staticWorld,
+    "C BLOCK / EXERCISE HALL",
+    [blockCenter, -1.2, 1.17],
+    4,
+  ).rotation.y = Math.PI;
   const rearWall = wall([46, 4.3, 0.5], [7, 2, -11.5]);
   // Keep the original solid gameplay/vision collider, but cut real visual apertures.
   staticWorld.remove(rearWall);
@@ -357,18 +495,24 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     doorColliders.set(id, closedBounds);
     return group;
   }
-  bars(-12.5, -2, 3);
-  bars(-9.4, -2, 1);
-  door("cell_46_door", -11, -2, 1.4);
-  bars(-7.3, -2, 2.6);
-  bars(-3.8, -2, 1.1);
-  door("cell_47_door", -6, -2, 1.4);
+  function cellEntrance(cell: CellRoom) {
+    const { left, right, doorX: x, front: z, number } = cell;
+    // Each opening has solid masonry shoulders, its own jamb, lintel and leaf.
+    wall([x - left - 0.07, 4.2, 0.36], [(left + x - 0.07) / 2, 2, z]);
+    wall([right - x - 1.47, 4.2, 0.36], [(x + 1.47 + right) / 2, 2, z]);
+    wall([1.54, 0.65, 0.4], [x + 0.7, 3.875, z]);
+    for (const j of [x - 0.045, x + 1.445])
+      box(staticWorld, [0.09, 3.55, 0.16], [j, 1.775, z], iron, 0.012);
+    door(`cell_${number}_door`, x, z, 1.4);
+  }
+  for (const cell of CELL_ROOMS.filter(
+    (c) => c.number === 46 || c.number === 47,
+  ))
+    cellEntrance(cell);
   for (let n = 45; n >= 36; n--) {
     const cx = -17 - (45 - n) * 5.5;
     wall([0.35, 4.2, 9.3], [cx - 2.75, 2, -6.7]);
-    bars(cx - 1.65, -2, 2.2);
-    bars(cx + 1.8, -2, 1.8);
-    door(`cell_${n}_door`, cx - 0.55, -2, 1.4);
+    cellEntrance(CELL_ROOMS.find((c) => c.number === n)!);
     label(staticWorld, `C / 0${n}`, [cx, 3.65, -2]);
     environment.add("Bunk", cx + 1.7, -0.05, -8.4, Math.PI);
     environment.add("Toilet", cx - 1.6, -0.05, -9.85, Math.PI);
@@ -382,10 +526,8 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   }
   for (const cell of CELL_ROOMS.filter((c) => c.side === "south")) {
     const { left, right, centerX: cx, doorX, front, number } = cell;
-    wall([0.35, 4.2, 9.5], [left, 2, 9.75]);
-    bars((left + doorX) / 2, front, doorX - left);
-    bars((doorX + 1.4 + right) / 2, front, right - doorX - 1.4);
-    door(`cell_${number}_door`, doorX, front, 1.4);
+    wall([0.35, 4.2, 9.5], [left, 2, 16.75]);
+    cellEntrance(cell);
     const sign = label(
       staticWorld,
       `C / 0${number}${cell.medical ? " / MEDICAL" : ""}`,
@@ -393,14 +535,14 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
       cell.medical ? 2.2 : 1.8,
     );
     sign.rotation.y = Math.PI;
-    environment.add("Bunk", cx + 1.65, -0.05, 11.4);
-    environment.add("Toilet", cx - 1.6, -0.05, 13.3);
-    environment.add("Sink", left + 0.53, 0, 11.1, -Math.PI / 2);
-    environment.add("Luminaire", cx, 3.32, 9.5);
-    prop(buildTableBounds(), cx + 1.65, 11.4);
-    prop(buildLegacyToiletBounds(), cx - 1.6, 13.3);
+    environment.add("Bunk", cx + 1.65, -0.05, 18.4);
+    environment.add("Toilet", cx - 1.6, -0.05, 20.3);
+    environment.add("Sink", left + 0.53, 0, 18.1, -Math.PI / 2);
+    environment.add("Luminaire", cx, 3.32, 16.5);
+    prop(buildTableBounds(), cx + 1.65, 18.4);
+    prop(buildLegacyToiletBounds(), cx - 1.6, 20.3);
     const light = new THREE.PointLight(0xd8cbb1, 16, 10, 2);
-    light.position.set(cx, 3.2, 9.5);
+    light.position.set(cx, 3.2, 16.5);
     scene.add(light);
   }
   // Latched exploration gates; original Cell 46 becomes usable after its chapter.
@@ -610,9 +752,10 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     -10.7,
     "interact",
   );
-  const boulder = buildSupportingNPC(false, true);
+  const boulder = new THREE.Group();
+  boulder.name = "Cell46_RedeemedWarrior";
   boulder.position.set(-10.7, 0, -6.6);
-  staticWorld.add(boulder);
+  scene.add(boulder);
   box(staticWorld, [0.9, 0.08, 0.75], [-10.7, 0.9, -5.75], wood, 0.02);
   for (const x of [-11.05, -10.35])
     for (const z of [-6, -5.5])
@@ -664,22 +807,23 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   );
   const medical = material(0x7d9d94, 0.85);
   for (const x of [-11, -6]) {
-    box(staticWorld, [1.4, 0.12, 2.5], [x, 0.6, 7.5], iron, 0.03);
-    box(staticWorld, [1.3, 0.2, 2.35], [x, 0.77, 7.5], linen, 0.06);
-    box(staticWorld, [1.32, 0.07, 1.4], [x, 0.91, 7.95], medical, 0.025);
-    for (const z of [6.4, 8.6])
+    box(staticWorld, [1.4, 0.12, 2.5], [x, 0.6, 14.5], iron, 0.03);
+    box(staticWorld, [1.3, 0.2, 2.35], [x, 0.77, 14.5], linen, 0.06);
+    box(staticWorld, [1.32, 0.07, 1.4], [x, 0.91, 14.95], medical, 0.025);
+    for (const z of [13.4, 15.6])
       box(staticWorld, [1.4, 0.7, 0.05], [x, 0.9, z], iron);
   }
-  label(staticWorld, "+  INFIRMARY", [-5.95, 3, 4.9], 2.5).rotation.y = Math.PI;
-  wall([1.4, 1.9, 0.5], [-8, 0.95, 10.7], medical);
+  label(staticWorld, "+  INFIRMARY", [-5.95, 3, 11.9], 2.5).rotation.y =
+    Math.PI;
+  wall([1.4, 1.9, 0.5], [-8, 0.95, 17.7], medical);
   const stethoscope = new THREE.Group();
   const tube = new THREE.Mesh(
     new THREE.TorusGeometry(0.12, 0.015, 8, 20, Math.PI * 1.65),
     dark,
   );
-  tube.position.set(-8, 1.55, 10.41);
+  tube.position.set(-8, 1.55, 17.41);
   stethoscope.add(tube);
-  cylinder(stethoscope, 0.045, 0.025, [-8.1, 1.35, 10.4], iron).rotation.x =
+  cylinder(stethoscope, 0.045, 0.025, [-8.1, 1.35, 17.4], iron).rotation.x =
     Math.PI / 2;
   scene.add(stethoscope);
   pickupMeshes.set("stethoscope_pickup", stethoscope);
@@ -688,7 +832,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     "Medical cabinet",
     "Take the acoustic stethoscope",
     -8,
-    9.7,
+    16.7,
     "pickup",
   );
   // Laundry: glazed drum doors, pipes, linen and mechanical sound masking.
@@ -1024,6 +1168,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   }
   return {
     cells: CELL_ROOMS,
+    cell46NPC: boulder,
     opening: {
       bed,
       toilet,
@@ -1039,7 +1184,10 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     disposeEnvironment: environment.dispose,
     windowLight,
     colliders,
-    visionColliders: colliders.filter((b) => !barredFaces.has(b)),
+    visionColliders: [
+      ...colliders.filter((b) => !barredFaces.has(b)),
+      ...floorOccluders,
+    ],
     doors,
     doorColliders,
     interactables,

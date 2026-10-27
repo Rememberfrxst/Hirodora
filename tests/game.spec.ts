@@ -312,12 +312,29 @@ test("authored environment loads locally and graphics presets preserve collision
   for (const interaction of baseline.gameplay.interactions)
     expect(
       current.interactions.find((o: any) => o.id === interaction.id),
-    ).toEqual(interaction);
+    ).toEqual(
+      interaction.id === "stethoscope_pickup"
+        ? {
+            ...interaction,
+            position: [
+              interaction.position[0],
+              interaction.position[1],
+              interaction.position[2] + 7,
+            ],
+          }
+        : interaction,
+    );
   expect(
-    current.doors.filter(([id]: [string]) =>
-      baseline.gameplay.doors.some(([old]: [string]) => old === id),
+    current.doors
+      .filter(([id]: [string]) =>
+        baseline.gameplay.doors.some(([old]: [string]) => old === id),
+      )
+      .sort(([a]: [string], [b]: [string]) => a.localeCompare(b)),
+  ).toEqual(
+    [...baseline.gameplay.doors].sort(([a]: [string], [b]: [string]) =>
+      a.localeCompare(b),
     ),
-  ).toEqual(baseline.gameplay.doors);
+  );
   expect(
     current.doors.filter(([id]: [string]) => /^cell_4[2-5]_door$/.test(id)),
   ).toHaveLength(4);
@@ -417,7 +434,7 @@ test("tool requirements, all four puzzles, crafting, checkpoints and Brotherhood
   await approach(page, "master_c_door_interact", [0.2, 0]);
   expect(await page.evaluate(() => window.__HIRODORA__.stats.act)).toBe(2);
   await approach(page, "lockpick_pickup", [0, 3.5]);
-  await approach(page, "stethoscope_pickup", [-8, 9]);
+  await approach(page, "stethoscope_pickup", [-8, 16]);
   await approach(page, "pipe_pickup", [4.8, 8]);
   await approach(page, "steel_wool_pickup", [6.1, 8]);
   await approach(page, "rubber_washer_pickup", [7.5, 8]);
@@ -485,8 +502,8 @@ test("closed walls block guard sight and movement; all required rooms have route
   await start(page);
   const result = await page.evaluate(async () => {
     const e = window.__HIRODORA__;
-    const modulePath = "/src/game/navigation.ts";
-    const navigation: typeof import("../src/game/navigation") = await import(
+    const modulePath = "/src/game/atrium.ts";
+    const navigation: typeof import("../src/game/atrium") = await import(
       /* @vite-ignore */ modulePath
     );
     const before = e.worldData.guards[0].suspicion;
@@ -495,7 +512,7 @@ test("closed walls block guard sight and movement; all required rooms have route
     e.worldData.guards[0].rotationY = Math.PI;
     const internal = e as unknown as {
       obstructed(a: number[], b: number[]): boolean;
-      blockers(): Parameters<typeof navigation.findPath>[2];
+      blockers(): Parameters<typeof navigation.findSurfacePath>[2];
     };
     const occluded = internal.obstructed(
       e.worldData.guards[0].position,
@@ -507,7 +524,7 @@ test("closed walls block guard sight and movement; all required rooms have route
     const blocks = internal.blockers();
     const goals: [number, number][] = [
       [-11.4, -4],
-      [-8, 9],
+      [-8, 16],
       [0, 4],
       [6, 5],
       [11.3, -9],
@@ -517,7 +534,9 @@ test("closed walls block guard sight and movement; all required rooms have route
       occluded,
       before,
       reachable: goals.map(
-        (goal) => navigation.findPath([-10, 0], goal, blocks).length > 0,
+        (goal) =>
+          navigation.findSurfacePath([-10, 0, 0], [goal[0], 0, goal[1]], blocks)
+            .length > 0,
       ),
     };
   });

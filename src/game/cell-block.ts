@@ -4,8 +4,8 @@ export const CELL_BLOCK = {
   east: -3.1,
   north: -11.5,
   northFront: -2,
-  southFront: 5,
-  south: 14.5,
+  southFront: 12,
+  south: 21.5,
   height: 4.2,
 } as const;
 export interface CellRoom {
@@ -81,5 +81,5 @@ export const NAV_BOUNDS = {
   minX: -70,
   maxX: 30.5,
   minZ: -11,
-  maxZ: 14.75,
+  maxZ: 21.75,
 } as const;

@@ -2546,6 +2546,65 @@ input[type="range"] {
   max-width: min(64vw, 700px);
   pointer-events: auto;
 }
+.health-hud {
+  position: absolute;
+  top: 100px;
+  left: max(30px, env(safe-area-inset-left));
+  width: 170px;
+  color: #ecefdf;
+  text-shadow: 0 1px 3px #000;
+}
+.health-hud > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font: 10px monospace;
+  letter-spacing: 1px;
+  margin-bottom: 7px;
+}
+.health-hud strong {
+  font-size: 14px;
+  letter-spacing: 0;
+}
+.health-hud small {
+  font-size: 10px;
+  color: #aab7a5;
+}
+.health-hud [role="progressbar"] {
+  height: 5px;
+  background: #162119a0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.health-hud i {
+  display: block;
+  height: 100%;
+  background: #a7bc83;
+  transition: width 0.18s ease-out;
+}
+.health-hud.low-health i {
+  background: #ce836f;
+}
+.damage-feedback {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 85px #9c342b38;
+}
+@media (pointer: coarse) {
+  .health-hud {
+    top: 80px;
+    left: max(22px, env(safe-area-inset-left));
+    width: 135px;
+  }
+  .health-hud > div:first-child {
+    font-size: 8px;
+    margin-bottom: 4px;
+  }
+  .health-hud strong {
+    font-size: 12px;
+  }
+}
 .pocket-items {
   display: flex;
   gap: 4px;

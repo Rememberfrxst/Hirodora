@@ -21,14 +21,21 @@ export function poseGrip(
   arm: THREE.Object3D,
   rest: Map<string, THREE.Quaternion>,
   style: GripStyle,
+  side: "Right" | "Left" = "Right",
 ) {
-  const hand = arm.getObjectByName("RightHand")!;
-  for (const [name, q] of rest) arm.getObjectByName(name)!.quaternion.copy(q);
+  const hand = arm.getObjectByName(side + "Hand")!;
+  for (const [name, q] of rest)
+    if (name.startsWith(side + "Hand"))
+      arm.getObjectByName(name)!.quaternion.copy(q);
   arm.updateMatrixWorld(true);
   const aim = (name: string, direction: number[]) => {
     const bone = arm.getObjectByName(name);
     if (!bone) return;
-    const target = new THREE.Vector3(...direction)
+    const target = new THREE.Vector3(
+      direction[0] * (side === "Left" ? -1 : 1),
+      direction[1],
+      direction[2] * (side === "Left" ? -1 : 1),
+    )
       .normalize()
       .applyQuaternion(hand.getWorldQuaternion(new THREE.Quaternion()))
       .applyQuaternion(
@@ -60,12 +67,12 @@ export function poseGrip(
             [-0.92, -0.39, 0],
             [0.08, -1, 0],
           ];
-    directions.forEach((d, i) => aim(`RightHand${finger}${i + 1}`, d));
+    directions.forEach((d, i) => aim(`${side}Hand${finger}${i + 1}`, d));
   }
-  aim("RightHandThumb1", [-0.7, 0.65, 0.3]);
-  aim("RightHandThumb2", [-0.15, 0.93, -0.34]);
+  aim(side + "HandThumb1", [-0.7, 0.65, 0.3]);
+  aim(side + "HandThumb2", [-0.15, 0.93, -0.34]);
   aim(
-    "RightHandThumb3",
+    side + "HandThumb3",
     style === "pinch" ? [-0.5, 0.85, 0.14] : [0.65, 0.56, -0.51],
   );
 }

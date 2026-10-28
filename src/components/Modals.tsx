@@ -159,7 +159,7 @@ export function TacticalMapModal({
         </div>
         <p className="muted">
           {opening
-            ? "48 CELLS: 24 upstairs (36–59), 24 downstairs (12–35). The 14-metre atrium connects through stairs at both ends. Each full-width grille has a small sliding door. The passage links Cells 47 and 46; medical cells 48/49 retain infirmary access. This map shows your current level."
+            ? "48 CELLS: 24 upstairs (36–59), 24 downstairs (12–35). The 12-metre atrium connects through wooden stairs at both ends. Cargo crates provide cover downstairs; side lanes and gates remain clear. Each full-width grille has a small sliding door. The passage links Cells 47 and 46. This map shows your current level."
             : "The service duct connects Cell 47 to Cell 46. The Block C gate leads east; utility rooms are south of the corridor. Voss’s office is north. Reach the sea gate with the ledger and a lockpick."}
         </p>
       </section>

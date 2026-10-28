@@ -190,7 +190,7 @@ export function decideGuard(
       state === "chase" &&
       seen &&
       s.captureClear &&
-      distance(g.position, s.player) <= 1.2,
+      distance(g.position, s.player) <= 1.05,
   };
 }
 

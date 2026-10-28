@@ -69,7 +69,7 @@ test("reference corridor, fog and gloved grips retain saved equipment through qu
       guards: e.worldData.guards.length,
     };
   });
-  expect(data.width).toBe(14);
+  expect(data.width).toBe(12);
   expect(data.depth).toBe(9.5);
   expect(data.fog).toBe(0.028);
   expect(data.stable).toBe(true);

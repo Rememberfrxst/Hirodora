@@ -3,6 +3,9 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
 import modelURL from "../assets/environment/retained-fixtures.glb";
 import uploadedURL from "../assets/environment/uploaded-props.glb";
+import stairsURL from "../assets/environment/wood-stairs.glb";
+import boxURL from "../assets/environment/wood-box.glb";
+import palletURL from "../assets/environment/cargo-pallet.glb";
 import rockColor from "../assets/environment/rock16-albedo.webp";
 import rockNormal from "../assets/environment/rock16-normal.webp";
 import rockORM from "../assets/environment/rock16-orm.webp";
@@ -117,8 +120,11 @@ export function createEnvironment(scene: THREE.Scene) {
       ),
       new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(modelURL),
       new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(uploadedURL),
+      new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(stairsURL),
+      new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(boxURL),
+      new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(palletURL),
     ])
-      .then(([, gltf, uploaded]) => {
+      .then(([, gltf, uploaded, stairs, box, pallet]) => {
         if (disposed) {
           gltf.scene.traverse((o) => {
             if (o instanceof THREE.Mesh) o.geometry.dispose();
@@ -136,6 +142,9 @@ export function createEnvironment(scene: THREE.Scene) {
         for (const anchor of anchors) {
           const suppliedName = anchor.name === "Bunk" ? "Table" : anchor.name;
           const template =
+            [stairs, box, pallet]
+              .map((g) => g.scene.getObjectByName(anchor.name))
+              .find(Boolean) ||
             uploaded.scene.getObjectByName(suppliedName) ||
             gltf.scene.getObjectByName(anchor.name);
           if (!template)
@@ -143,7 +152,16 @@ export function createEnvironment(scene: THREE.Scene) {
           const clone = template.clone(true);
           clone.name = `CellAsset_${suppliedName}`;
           // Supplied roots contain metre/floor normalization: preserve transforms.
-          if (!["Bunk", "Toilet", "Screwdriver"].includes(anchor.name))
+          if (
+            ![
+              "Bunk",
+              "Toilet",
+              "Screwdriver",
+              "WoodStairs",
+              "WoodBox",
+              "CargoPallet",
+            ].includes(anchor.name)
+          )
             clone.position.set(0, 0, 0);
           clone.userData.sourceAsset = suppliedName;
           clone.traverse((o) => {

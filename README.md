@@ -8,11 +8,11 @@
 
 **Every sound has a consequence.**
 
-**v0.16.0 · Reference Atmosphere / Black Gloves / Pocket HUD**
+**v0.17.0 · Wooden Stairs / Cargo Cover / 200 HP**
 
-**[↓ DOWNLOAD ANDROID APK](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.16.0-android.apk)**
+**[↓ DOWNLOAD ANDROID APK](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.17.0-android.apk)**
 
-[↓ Offline web ZIP](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.16.0-offline.zip) · [Single-file HTML download](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.16.0.html) · [ZIP checksum](downloads/latest.json) · [APK checksums](downloads/android-latest.json) · [Android installation](docs/ANDROID.md)
+[↓ Offline web ZIP](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.17.0-offline.zip) · [Single-file HTML download](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.17.0.html) · [ZIP checksum](downloads/latest.json) · [APK checksums](downloads/android-latest.json) · [Android installation](docs/ANDROID.md)
 
 </div>
 
@@ -20,7 +20,9 @@
 
 **Cell 46's gate now stays open in the current opening chapter**, including previously closed saves. Complete the Cell 47 passage, choose **Explore Cell 46**, then walk through its open gate to inspect both floors. The gate's Close action is disabled so it stays available for testing. Guards remain active. [Exploration patch](docs/CELL46-EXPLORATION.md).
 
-Block C has **48 cells: 12 left and 12 right on each of two playable floors**. The reference-inspired corridor is now **14 metres wide**, down from 18m: two 3-metre upper galleries surround an **8-metre central opening**. Muted green distance fog softens the far end without a screen overlay. Stairs and end bridges connect the lower corridor 3.2 metres below. Cell interiors retain their original width and 9.5m depth; every cell has a **full-width barred front** containing a smaller **1.4m sliding door**, overhead track and separate latch. Leaves park over their own fixed panel and pause if a player or officer blocks their sweep. The higher roof and ceiling lights remain. **Four officers serve upstairs (including the opening examination duty), and five patrol downstairs**; their AI can investigate and traverse the stairs.
+Block C has **48 cells: 12 left and 12 right on each of two playable floors**. The corridor is now **12 metres wide**, down from 14m: two unchanged 3-metre upper galleries surround a **6-metre central opening**. The supplied textured **wooden stair GLB replaces both concrete flights**, with navigation following the actual eleven treads. **Five strapped pallets and eight wooden crates** form staggered lower-floor cargo bays and crouch cover, leaving cell fronts and stair landings accessible. Muted green distance fog remains. Cell interiors retain their original widths and 9.5m depths; every cell has a **full-width barred front** with its own **1.4m sliding door**. Leaves park over their own fixed panel and pause if a player or officer blocks their sweep. Four officers serve upstairs and five patrol downstairs.
+
+You now have **200 HP**. A confirmed guard at close range winds up and strikes for **25 damage** at the animation's contact moment, rather than instantly ending the game. Back away or break line of sight to make a punch miss. Solid walls, closed bars and different floor levels prevent hits; a short shared grace window prevents simultaneous officers deleting your health in one frame. Guards hold their spacing between swings. HP is saved at checkpoints, old saves default to 200, and New game restores 200. No passive healing is added. Walking cadence follows travelled distance, kneeling search/body-check poses transition from locomotion, and punches use clenched skeletal hands. These are authored animations, not a full physics fighting system.
 
 The supplied **Redeemed Warrior** occupies Cell 46, preserving Boulder's interaction and challenge. Its USDZ is converted to a local 2.1 MB textured GLB. Equipment now uses a **black-gloved anatomical hand**, a neutral wrist and separate power, key-pinch and pistol poses. The screwdriver handle crosses the curled fingers instead of sitting along them. **Bottom-left pocket icons** show collected items using transparent renders of the actual game meshes; tap/click an icon to equip or unequip it. The selection is saved. Mobile pockets dock below the joystick when space allows, or above left-side controls for large/mirrored layouts. The satchel remains available for item descriptions and documents. Dart ammo/fire controls only appear for the dart pistol.
 
@@ -28,30 +30,30 @@ The top-right HUD has only **Hint** and **Pause**. The bulb and up-arrow referen
 
 **Police replacement remains pending:** a local 69-bone conversion of the supplied mesh has been prepared for inspection. Complete source/license details are required before publishing it; grip/deformation polishing remains open. This release ships the previously licensed officers. The Warrior is static source geometry; breathing presentation does not imply a new skeletal performance.
 
-[Current implementation and verification](docs/REFERENCE-V16.md) · [Sliding gate mechanics](docs/SLIDING-GATES-V15.md) · [Character credits](docs/GUARD-ASSETS.md) · [Environment credits](src/assets/environment/UPLOADED-ASSET-LICENSES.txt)
+[Current implementation and verification](docs/CARGO-COMBAT-V17.md) · [Gloves / pocket HUD](docs/REFERENCE-V16.md) · [Character credits](docs/GUARD-ASSETS.md) · [New asset credits](src/assets/environment/CARGO-LICENSES.txt)
 
 ## Latest screenshots — exactly six
 
-Six actual game renders, not generated artwork. [Camera positions and render statistics](docs/screenshots/reference-v16/capture.json).
+Six actual game renders, not generated artwork. [Camera positions and render statistics](docs/screenshots/cargo-v17/capture.json).
 
-Identical-camera comparisons: [previous atrium](docs/screenshots/sliding-v15/01-atrium.png) → [narrower foggy atrium](docs/screenshots/reference-v16/02-atrium.png); [previous hand/tool](docs/screenshots/sliding-v15/04-screwdriver-in-hand.png) → [black glove and corrected grip](docs/screenshots/reference-v16/04-gloved-screwdriver.png). Historical captures remain available.
+Identical-camera comparisons: [previous corridor](docs/screenshots/reference-v16/01-corridor.png) → [narrower corridor](docs/screenshots/cargo-v17/01-corridor.png); [concrete stairs before](docs/screenshots/reference-v16/03-lower-hall.png) → [supplied wooden stairs after](docs/screenshots/cargo-v17/03-wooden-stairs.png). Inventory and HP displays differ with the new features. Historical captures remain available.
 
 <table>
-<tr><td width="50%"><img src="docs/screenshots/reference-v16/01-corridor.png" alt="Green distance fog along the narrower prison corridor" /></td><td width="50%"><img src="docs/screenshots/reference-v16/02-atrium.png" alt="14-metre atrium and cells on both floors" /></td></tr>
-<tr><td align="center"><sub>REFERENCE-INSPIRED FOG</sub></td><td align="center"><sub>8-METRE OPENING · 48 CELLS</sub></td></tr>
-<tr><td><img src="docs/screenshots/reference-v16/03-lower-hall.png" alt="Connected lower corridor and end stairs" /></td><td><img src="docs/screenshots/reference-v16/04-gloved-screwdriver.png" alt="Black glove wrapping the screwdriver handle" /></td></tr>
-<tr><td align="center"><sub>LOWER HALL · NINE OFFICERS</sub></td><td align="center"><sub>NEUTRAL WRIST · POWER GRIP</sub></td></tr>
-<tr><td><img src="docs/screenshots/reference-v16/05-gloved-key.png" alt="Cell 46 and a key held between gloved fingers" /></td><td><img src="docs/screenshots/reference-v16/06-mobile-inventory.png" alt="Landscape mobile game with collected tool icons at bottom left" /></td></tr>
-<tr><td align="center"><sub>KEY PINCH · CELL 46 OPEN</sub></td><td align="center"><sub>MOBILE · TAP TO EQUIP</sub></td></tr>
+<tr><td width="50%"><img src="docs/screenshots/cargo-v17/01-corridor.png" alt="Narrower corridor with consistent green fog" /></td><td width="50%"><img src="docs/screenshots/cargo-v17/02-cargo-cover.png" alt="Supplied wooden crates and strapped pallets in the lower hall" /></td></tr>
+<tr><td align="center"><sub>6-METRE OPENING · 48 CELLS</sub></td><td align="center"><sub>REAL GLB CARGO · CROUCH COVER</sub></td></tr>
+<tr><td><img src="docs/screenshots/cargo-v17/03-wooden-stairs.png" alt="Imported wooden stairs connecting both floors" /></td><td><img src="docs/screenshots/cargo-v17/04-officer-walk.png" alt="Rigged officer mid-stride" /></td></tr>
+<tr><td align="center"><sub>WOODEN STAIRS · REAL TREAD HEIGHTS</sub></td><td align="center"><sub>DISTANCE-DRIVEN WALK CYCLE</sub></td></tr>
+<tr><td><img src="docs/screenshots/cargo-v17/05-officer-kneel.png" alt="Officer kneeling to inspect the prisoner" /></td><td><img src="docs/screenshots/cargo-v17/06-mobile-health.png" alt="Close-range guard attack and 175 out of 200 HP on mobile" /></td></tr>
+<tr><td align="center"><sub>KNEEL · BODY INSPECTION</sub></td><td align="center"><sub>MOBILE · TIMED STRIKES · 200 HP</sub></td></tr>
 </table>
 
 ## Play on mobile
 
 Download the APK above, open it in Android Files and allow installation from that source when prompted. Requires **Android 8.0+**, an updated Android System WebView and WebGL 2. The app opens horizontally and includes all models, textures and audio offline, with **no Internet, storage, microphone or tracking permission**.
 
-Version 0.16.0 uses the existing release certificate and versionCode **1600**. Older saves migrate to safe walkways, retaining inventory and puzzles. Install over an earlier release to retain app-local saves and settings; uninstalling clears them.
+Version 0.17.0 uses the existing release certificate and versionCode **1700**. Older saves migrate to safe walkways and fitted stair treads, retaining inventory and puzzles. Install over an earlier release to retain app-local saves and settings; uninstalling clears them.
 
-For the web edition, download through the direct ZIP link above, extract it and open `Hirodora-0.16.0.html` in a full WebGL 2 browser. The links bypass GitHub's large-file preview. File handling depends on your device. On iPhone/iPad, use the hosted PWA; a local HTML viewer may block scripts. Portrait play pauses behind a rotate notice.
+For the web edition, download through the direct ZIP link above, extract it and open `Hirodora-0.17.0.html` in a full WebGL 2 browser. The links bypass GitHub's large-file preview. File handling depends on your device. On iPhone/iPad, use the hosted PWA; a local HTML viewer may block scripts. Portrait play pauses behind a rotate notice.
 
 ## How to finish the current chapter
 
@@ -97,27 +99,31 @@ To regenerate the supplied-asset derivatives:
 
 ```sh
 node scripts/prepare-uploaded-assets.mjs rock_wall_16_2k.zip basic_table.glb dirty_toilet.glb free_screwdriver.glb
+node scripts/prepare-cargo-assets.mjs wooden_stairs_5_mb.glb wood_box.glb wood__boxes_strapped_on_palet.glb
 ```
 
 The offline pipeline needs ffmpeg and preserves attribution. Original source uploads are not required at runtime. Textures are shared across rooms; superseded bunk/toilet meshes are excluded from the loaded fixture library. The build enforces a 100 MiB offline budget; exact download sizes and hashes are in [the manifests](downloads/android-latest.json).
 
 ## Quality and release status
 
-Asset/logic tests, browser gameplay tests, production packaging and signed-APK validation are documented in [ATRIUM-V14.md](docs/SLIDING-GATES-V15.md). Browser tests cover both floors, patrol movement, the opening and legacy campaign, audio, HUD, save/load, intro, collision, stealth and offline startup.
+Asset/logic tests, browser gameplay tests, production packaging and signed-APK validation are documented in [CARGO-COMBAT-V17.md](docs/CARGO-COMBAT-V17.md). The current checks cover real stair surfaces/cargo bounds, 200 HP combat, both floors, patrol movement, the opening and legacy campaign, HUD, checkpoints, intro, stealth and offline startup. See the [release verification report](docs/verification/cargo-v17/report.json) for exact run outcomes; physical-phone testing is separate.
 
 Physical-phone frame rate, thermal behavior and device-specific WebView/GPU compatibility still need hardware testing. Software-rendered browser checks are not Android-device certification or a promise of glitch-free gameplay. Existing licensed guard models are preserved; the supplied police replacement still needs its source/license details and grip polish. The supplied Warrior is integrated.
 
 ## Sources and credits
 
-| Asset                                                                                                 | Creator                 | License   |
-| ----------------------------------------------------------------------------------------------------- | ----------------------- | --------- |
-| [Rock Wall 16](https://polyhaven.com/a/rock_wall_16)                                                  | Amal Kumar / Poly Haven | CC0 1.0   |
-| [Basic Table](https://sketchfab.com/3d-models/basic-table-a017d2120a504b6ebccf94d651321ca4)           | Blender3D               | CC BY 4.0 |
-| [Dirty Toilet](https://sketchfab.com/3d-models/dirty-toilet-389d5427a1f344c4aa4883ec5a6aaf05)         | shedmon                 | CC BY 4.0 |
-| [Free Screwdriver](https://sketchfab.com/3d-models/free-screwdriver-daa1a4a4013b479097633f75a33bb543) | Filip                   | CC BY 4.0 |
-| [Wood furniture movement](https://freesound.org/people/ralph.whitehead/sounds/565727/)                | ralph.whitehead         | CC0 1.0   |
+| Asset                                                                                                            | Creator                 | License   |
+| ---------------------------------------------------------------------------------------------------------------- | ----------------------- | --------- |
+| [Rock Wall 16](https://polyhaven.com/a/rock_wall_16)                                                             | Amal Kumar / Poly Haven | CC0 1.0   |
+| [Basic Table](https://sketchfab.com/3d-models/basic-table-a017d2120a504b6ebccf94d651321ca4)                      | Blender3D               | CC BY 4.0 |
+| [Dirty Toilet](https://sketchfab.com/3d-models/dirty-toilet-389d5427a1f344c4aa4883ec5a6aaf05)                    | shedmon                 | CC BY 4.0 |
+| [Free Screwdriver](https://sketchfab.com/3d-models/free-screwdriver-daa1a4a4013b479097633f75a33bb543)            | Filip                   | CC BY 4.0 |
+| [Wooden Stairs](https://sketchfab.com/3d-models/wooden-stairs-5-mb-56271a83e8ff487b84289e39a159d3c5)             | Mehdi Shahsavan         | CC BY 4.0 |
+| [Wood Box](https://sketchfab.com/3d-models/wood-box-ed74acd9b510481eb43a7753754d7ac8)                            | kakou3991               | CC BY 4.0 |
+| [Strapped Pallet](https://sketchfab.com/3d-models/wood-boxes-strapped-on-palet-42652beb14e34e0a94d5f980ebb1869e) | Claudiu                 | CC BY 4.0 |
+| [Wood furniture movement](https://freesound.org/people/ralph.whitehead/sounds/565727/)                           | ralph.whitehead         | CC0 1.0   |
 
-Adaptations: real-world scaling/orientation, table PBR conversion, texture encoding, normalized stone normals, meshopt compression and project-authored mounting/puzzle integration. License links and modification notices ship inside the web build, offline HTML/ZIP and APK. [Full uploaded-asset credits](src/assets/environment/UPLOADED-ASSET-LICENSES.txt).
+Adaptations: real-world scaling/orientation, table PBR conversion, texture encoding, normalized stone normals, tread/railing fitting, pallet simplification, meshopt compression and project-authored mounting/puzzle integration. License links and modification notices ship inside the web build, offline HTML/ZIP and APK. [Previous uploaded-asset credits](src/assets/environment/UPLOADED-ASSET-LICENSES.txt) · [Wood asset credits](src/assets/environment/CARGO-LICENSES.txt).
 
 Officers/prisoner derive from MakeHuman CC0 anatomy, licensed photo skin and authored clothing; walk/run use CMU motion capture under its terms. [Character sources and changes](docs/GUARD-ASSETS.md). Retained fixture geometry is project-authored; retained metal maps have their [original license](src/assets/environment/TPS-ASSET-LICENSE.txt). [Audio credits](docs/AUDIO.md) and [recording manifest](src/assets/audio/manifest.json). No Rockstar assets are included.
 

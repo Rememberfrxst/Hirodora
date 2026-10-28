@@ -43,6 +43,9 @@ export interface GuardData {
   scanTime?: number;
   scanOriginYaw?: number;
   lastNoiseId?: number;
+  attackElapsed?: number;
+  attackCooldown?: number;
+  crouchInspect?: boolean;
 }
 
 export type ItemId =
@@ -103,6 +106,7 @@ export interface NarrativeSubtitle {
 }
 
 export interface PlayerStats {
+  health: number; // 0–200; guard contact no longer causes instant game over.
   noiseLevel: number; // 0 - 100
   peakNoise: number;
   isCrouching: boolean;

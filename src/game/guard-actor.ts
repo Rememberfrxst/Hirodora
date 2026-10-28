@@ -10,6 +10,7 @@ import mobileURL from "../assets/guards/officer-mobile.glb";
 import distantURL from "../assets/guards/officer-distant.glb";
 import type { GuardData } from "./types";
 import { angleDelta, guardClip, type GuardClip } from "./guard-motion";
+import { makeStrikeClip } from "./guard-action-clips";
 
 export type GuardQuality = "auto" | "desktop" | "mobile";
 type Tier = "hero" | "mobile" | "distant";
@@ -135,6 +136,7 @@ export class GuardActor {
   private lookYaw = 0;
   private handRest = new Map<THREE.Object3D, THREE.Quaternion>();
   private gripping = false;
+  private stridePhase = Math.random();
   public get hitTarget() {
     return this.views.get(this.tier)!.root;
   }
@@ -151,7 +153,7 @@ export class GuardActor {
     const tracks: THREE.KeyframeTrack[] = [];
     const offsets: Record<string, [number, number, number]> = {
       Hips: [0.25, 0, 0],
-      Spine: [0.3, 0, 0],
+      Spine: [0.65, 0, 0],
       LeftUpLeg: [-1.45, 0, 0],
       LeftLeg: [1.55, 0, 0],
       RightUpLeg: [-0.55, 0, 0],
@@ -170,6 +172,10 @@ export class GuardActor {
         LeftLeg: [0, -1, 0],
         RightUpLeg: [-0.05, -1, -0.1],
         RightLeg: [0, -0.12, -1],
+        LeftArm: [0.12, -0.9, 0.35],
+        LeftForeArm: [-0.1, -0.75, 0.65],
+        RightArm: [-0.12, -0.85, 0.5],
+        RightForeArm: [0.05, -0.9, 0.3],
       };
       let q: THREE.Quaternion;
       if (directions[name]) {
@@ -181,9 +187,12 @@ export class GuardActor {
           .normalize()
           .applyQuaternion(parentWorld.invert());
         q = new THREE.Quaternion().setFromUnitVectors(
-          new THREE.Vector3(0, 1, 0),
+          /Arm/.test(name)
+            ? new THREE.Vector3(0, 1, 0).applyQuaternion(bone.quaternion)
+            : new THREE.Vector3(0, 1, 0),
           localDirection,
         );
+        if (/Arm/.test(name)) q.multiply(bone.quaternion);
       } else
         q = bone.quaternion
           .clone()
@@ -269,6 +278,15 @@ export class GuardActor {
     const animations = [
       ...hero.animations,
       new THREE.AnimationClip("Examine", 6, tracks),
+      new THREE.AnimationClip(
+        "Kneel",
+        6,
+        tracks.map((t) => t.clone()),
+      ),
+      makeStrikeClip(
+        hero.scene,
+        hero.animations.find((c) => c.name === "Idle")!,
+      ),
       new THREE.AnimationClip("Aim", 1, [
         ...hero.animations
           .find((c) => c.name === "Idle")!
@@ -291,7 +309,7 @@ export class GuardActor {
         actions = new Map<string, THREE.AnimationAction>();
       for (const clip of animations) {
         const action = mixer.clipAction(clip);
-        if (clip.name === "Collapse") {
+        if (clip.name === "Collapse" || clip.name === "Strike") {
           action.setLoop(THREE.LoopOnce, 1);
           action.clampWhenFinished = true;
         }
@@ -336,11 +354,21 @@ export class GuardActor {
       : quality === "mobile" || (quality === "auto" && mobile)
         ? "mobile"
         : "hero";
-    const nextClip = guard.cinematicAim
-      ? "Aim"
-      : guard.examining
-        ? "Examine"
-        : guardClip(guard.state, speed, turn);
+    const nextClip: GuardClip =
+      guard.attackElapsed !== undefined
+        ? "Strike"
+        : guard.cinematicAim
+          ? "Aim"
+          : guard.examining
+            ? "Examine"
+            : guard.crouchInspect
+              ? "Kneel"
+              : guardClip(guard.state, speed, turn);
+    if (nextClip === "Walk" || nextClip === "Run")
+      this.stridePhase =
+        (this.stridePhase +
+          (speed * dt) / (nextClip === "Walk" ? 1.42 : 2.35)) %
+        1;
     const changedTier = nextTier !== this.tier;
     const previousTime = this.current?.time || 0;
     if (changedTier) {
@@ -373,7 +401,11 @@ export class GuardActor {
       if (previous)
         this.current.crossFadeFrom(
           previous,
-          nextClip === "Collapse" ? 0.12 : 0.22,
+          nextClip === "Collapse" || nextClip === "Strike"
+            ? 0.12
+            : nextClip === "Kneel" || previous.getClip().name === "Kneel"
+              ? 0.35
+              : 0.24,
           false,
         );
       this.animation = nextClip;
@@ -395,6 +427,13 @@ export class GuardActor {
     if (!visible || (this.tier === "distant" && this.accumulated < 1 / 15))
       return;
     view.mixer.update(this.accumulated);
+    if (nextClip === "Strike" || nextClip === "Walk" || nextClip === "Run") {
+      this.current.time =
+        nextClip === "Strike"
+          ? guard.attackElapsed!
+          : this.stridePhase * this.current.getClip().duration;
+      view.mixer.update(0);
+    }
     this.accumulated = 0;
     if (!guard.cinematicAim && this.gripping) {
       for (const [bone, rest] of this.handRest) {

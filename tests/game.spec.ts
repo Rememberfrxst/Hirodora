@@ -326,7 +326,7 @@ test("authored environment loads locally and graphics presets preserve collision
             position: [
               interaction.position[0],
               interaction.position[1],
-              interaction.position[2] + 7,
+              interaction.position[2] + 5,
             ],
           }
         : interaction,
@@ -401,12 +401,16 @@ test("tool requirements, all four puzzles, crafting, checkpoints and Brotherhood
   test.setTimeout(180_000);
   await start(page);
   // Deterministic progression fixture isolates puzzle logic from patrol timing.
-  await page.evaluate(() =>
+  await page.evaluate(() => {
+    // This fixture checks the puzzle UI/timers, not GPU throughput. Freeze the
+    // expensive software-rendered RAF loop; real controls still solve every
+    // puzzle. Navigation, animation and puzzle-time AI have separate coverage.
+    cancelAnimationFrame((window.__HIRODORA__ as any).frameId);
     window.__HIRODORA__.worldData.guards.forEach((g) => {
       g.state = "knocked_out";
       g.stateTimer = 9999;
-    }),
-  );
+    });
+  });
   await approach(page, "vent_bolts_interact", [-7.5, -8.6]);
   await expect(page.getByText("Required: Reinforced Spoon")).toBeVisible();
   await approach(page, "spoon_pickup", [-6, -7]);
@@ -446,7 +450,7 @@ test("tool requirements, all four puzzles, crafting, checkpoints and Brotherhood
   await approach(page, "master_c_door_interact", [0.2, 0]);
   expect(await page.evaluate(() => window.__HIRODORA__.stats.act)).toBe(2);
   await approach(page, "lockpick_pickup", [0, 3.5]);
-  await approach(page, "stethoscope_pickup", [-8, 16]);
+  await approach(page, "stethoscope_pickup", [-8, 14]);
   await approach(page, "pipe_pickup", [4.8, 8]);
   await approach(page, "steel_wool_pickup", [6.1, 8]);
   await approach(page, "rubber_washer_pickup", [7.5, 8]);
@@ -489,12 +493,13 @@ test("tool requirements, all four puzzles, crafting, checkpoints and Brotherhood
       window.__HIRODORA__.inventory.includes("warden_ledger"),
     ),
   ).toBe(true);
-  await page.evaluate(() =>
+  await page.evaluate(() => {
+    cancelAnimationFrame((window.__HIRODORA__ as any).frameId);
     window.__HIRODORA__.worldData.guards.forEach((g) => {
       g.state = "knocked_out";
       g.stateTimer = 9999;
-    }),
-  );
+    });
+  });
   await approach(page, "sea_gate_interact", [13, 0]);
   for (const angle of [35, -42, 18]) {
     await page.getByLabel("Pick angle").fill(String(angle));
@@ -538,7 +543,7 @@ test("closed walls block guard sight and movement; all required rooms have route
     const blocks = internal.blockers();
     const goals: [number, number][] = [
       [-11.4, -4],
-      [-8, 16],
+      [-8, 14],
       [0, 4],
       [6, 5],
       [11.3, -9],

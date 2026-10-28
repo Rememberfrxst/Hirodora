@@ -1,5 +1,6 @@
 import { CELL_BLOCK, NAV_BOUNDS } from "./cell-block";
 import type { Bounds, Vec3 } from "./perception";
+import cargoAssets from "../assets/environment/cargo-manifest.json";
 
 export const ATRIUM = {
   north: 1,
@@ -13,7 +14,24 @@ export const ATRIUM = {
     { top: CELL_BLOCK.west + 3, bottom: CELL_BLOCK.west + 10.2 },
   ],
 } as const;
-export const LAYOUT_VERSION = 16;
+export const LAYOUT_VERSION = 17;
+/** Canonical asset runs from the lower end (u=0) to the top (u=1). */
+export function stairHeight(t: number) {
+  const u = Math.max(0, Math.min(1, 1 - t));
+  return (
+    ATRIUM.depth +
+    (cargoAssets.treads.find((step) => u <= step.end)?.height ?? 3.2)
+  );
+}
+export function onWoodStairs([x, y, z]: Vec3) {
+  return (
+    Math.abs(z - ATRIUM.centerZ) < ATRIUM.stairWidth / 2 &&
+    ATRIUM.stairs.some((s) => {
+      const t = (x - s.top) / (s.bottom - s.top);
+      return t >= 0 && t <= 1 && Math.abs(y - stairHeight(t)) < 0.15;
+    })
+  );
+}
 export function inAtrium(x: number, z: number) {
   return (
     x > CELL_BLOCK.west &&
@@ -41,7 +59,7 @@ export function surfaceHeights(x: number, z: number): number[] {
       t >= 0 &&
       t <= 1
     ) {
-      const y = t * ATRIUM.depth;
+      const y = stairHeight(t);
       // Do not let a character walk into the solid underside of a staircase.
       if (y - ATRIUM.depth < 1.9) heights.length = 0;
       heights.push(y);
@@ -111,10 +129,27 @@ export function migratePosition(position: Vec3, version?: number): Vec3 {
     else if (migratedZ > 1) migratedZ = 1 + (migratedZ - 1) * 0.75;
   }
   // v16: 18m -> 14m corridor. The north puzzle rooms remain untouched.
-  if (onStairs && Math.abs(migratedZ - 7) <= ATRIUM.stairWidth / 2)
-    migratedZ -= 2;
-  else if (migratedZ >= 13) migratedZ -= 4;
-  else if (migratedZ > 1) migratedZ = 1 + (migratedZ - 1) * (2 / 3);
+  if ((version ?? 0) < 16) {
+    if (onStairs && Math.abs(migratedZ - 7) <= ATRIUM.stairWidth / 2)
+      migratedZ -= 2;
+    else if (migratedZ >= 13) migratedZ -= 4;
+    else if (migratedZ > 1) migratedZ = 1 + (migratedZ - 1) * (2 / 3);
+  }
+  if (onStairs && Math.abs(migratedZ - 5) <= ATRIUM.stairWidth / 2)
+    migratedZ -= 1;
+  else if (migratedZ >= 9) migratedZ -= 2;
+  else if (migratedZ > 1) migratedZ = 1 + (migratedZ - 1) * 0.75;
+  if (onStairs) {
+    for (const stair of ATRIUM.stairs) {
+      const t = (x - stair.top) / (stair.bottom - stair.top);
+      if (
+        t >= 0 &&
+        t <= 1 &&
+        Math.abs(migratedZ - ATRIUM.centerZ) <= ATRIUM.stairWidth / 2
+      )
+        return [x, stairHeight(t), migratedZ];
+    }
+  }
   if (
     y >= -0.1 &&
     inAtrium(x, migratedZ) &&

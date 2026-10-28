@@ -1,4 +1,5 @@
 import { audioURLs } from "../assets/audio/urls";
+import { onWoodStairs } from "./atrium";
 import {
   actionFoley,
   clampAudioIntensity,
@@ -324,7 +325,8 @@ class SoundManager {
     }
     if (now >= this.occlusionTime) this.occlusionTime = now + 0.2;
   }
-  public surfaceAt([x, , z]: Position): Surface {
+  public surfaceAt([x, y, z]: Position): Surface {
+    if (onWoodStairs([x, y, z])) return "wood";
     if (x > 15) return "water";
     if (z > 3 && x < -4) return "tile";
     if (z > 3 && x < 3) return "wet";
@@ -774,6 +776,9 @@ class SoundManager {
   }
   public playDefeatSting() {
     this.play(this.choose("impactMetal_heavy_"), "ui", 0.35);
+  }
+  public playPlayerHit(position: Position) {
+    this.play(this.choose("impactGeneric_light_"), "sfx", 0.55, position, 0);
   }
   public dispose() {
     this.stopObjectActions();

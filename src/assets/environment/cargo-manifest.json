@@ -1,0 +1,125 @@
+{
+  "sources": [
+    {
+      "author": "Mehdi Shahsavan (https://sketchfab.com/ahmagh2e)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/wooden-stairs-5-mb-56271a83e8ff487b84289e39a159d3c5",
+      "title": "Wooden Stairs_5_MB",
+      "name": "WoodStairs",
+      "file": "wood-stairs.glb",
+      "sourceSHA256": "41b6d8a7a4605b9c86776387af5f5d01f061a18377614d82b9b74eb39bb62e25",
+      "runtimeSHA256": "7d37bfbc9697d5157ee130ec493076e8aa2b85365a0b06b3314736c3013b416a",
+      "bounds": {
+        "min": [
+          -0.11803655326366425,
+          -0.26419568233455504,
+          -0.8998597333786468
+        ],
+        "max": [
+          7.235006809234619,
+          4.297038467454565,
+          0.8998597333786468
+        ]
+      },
+      "bytes": 841864,
+      "triangles": 892,
+      "changes": "World transforms baked; tread run fitted to 7.2m, top tread 3.2m, clear width 1.8m; railing height adapted separately; real tread profile retained for navigation; normals recomputed; 2K WebP and meshopt"
+    },
+    {
+      "author": "kakou3991 (https://sketchfab.com/kakou3991)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/wood-box-ed74acd9b510481eb43a7753754d7ac8",
+      "title": "wood box",
+      "name": "WoodBox",
+      "file": "wood-box.glb",
+      "sourceSHA256": "a2406802551a9038ed651c2121e94dc4a3812cae74a9ee5bb679b8540b5bd41f",
+      "runtimeSHA256": "13e33c27098969fa8901260b634919fca1329276809feae606e36cd797504da5",
+      "bounds": {
+        "min": [
+          -0.4180527925491333,
+          -0.000009899980057737068,
+          -0.4180527925491333
+        ],
+        "max": [
+          0.4180527925491333,
+          0.7432149108710184,
+          0.4180527925491333
+        ]
+      },
+      "bytes": 1023732,
+      "triangles": 216,
+      "changes": "World transforms baked, floor/centre aligned; normals recomputed; source PBR maps retained as 1K WebP; meshopt compression"
+    },
+    {
+      "author": "Claudiu (https://sketchfab.com/claudiupusuc)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/wood-boxes-strapped-on-palet-42652beb14e34e0a94d5f980ebb1869e",
+      "title": "Wood  Boxes strapped on Palet",
+      "name": "CargoPallet",
+      "file": "cargo-pallet.glb",
+      "sourceSHA256": "8637f8125d3bca40d0ff613befa789da44e8e419020ad8238bf7e565b1345c46",
+      "runtimeSHA256": "704584cc6ae33853f382e18f81e8bc96a0a8c7b97b835a4baa1ca1bd8edb782c",
+      "bounds": {
+        "min": [
+          -1.2000000476837158,
+          0.00008249300845453167,
+          -0.5681203875764483
+        ],
+        "max": [
+          1.2000000476837158,
+          1.1087833641158742,
+          0.5681203875764483
+        ]
+      },
+      "bytes": 4855772,
+      "triangles": 48879,
+      "changes": "World transforms baked, floor/centre aligned; pallet turned and fitted to 2.4m long axis, mesh simplified; source PBR maps retained as 1K WebP; meshopt compression"
+    }
+  ],
+  "treads": [
+    {
+      "end": 0.09618201333958894,
+      "height": 0.18
+    },
+    {
+      "end": 0.1883122886601394,
+      "height": 0.5125786184136838
+    },
+    {
+      "end": 0.2742247079295619,
+      "height": 0.8074552995855577
+    },
+    {
+      "end": 0.3634564511659805,
+      "height": 1.11051426905674
+    },
+    {
+      "end": 0.45410628030148587,
+      "height": 1.409722653443405
+    },
+    {
+      "end": 0.5399875530392942,
+      "height": 1.7042785891950962
+    },
+    {
+      "end": 0.6284244995301356,
+      "height": 1.9991553875128503
+    },
+    {
+      "end": 0.7211469622877347,
+      "height": 2.31135899868977
+    },
+    {
+      "end": 0.8099111938438679,
+      "height": 2.610567383076435
+    },
+    {
+      "end": 0.9006389341235619,
+      "height": 2.905123201682246
+    },
+    {
+      "end": 1,
+      "height": 3.2
+    }
+  ]
+}

@@ -1,0 +1,323 @@
+{
+  "version": "0.17.0",
+  "unitPassed": 70,
+  "selectedBrowserCasesPassed": 24,
+  "wholeBrowserSuiteRerun": false,
+  "typescript": "passed",
+  "androidLint": {
+    "errors": 0,
+    "warnings": 10
+  },
+  "apkV2Signature": "passed; existing release certificate",
+  "runs": [
+    {
+      "file": "browser-1.json",
+      "stats": {
+        "startTime": "2026-10-28T03:34:56.123Z",
+        "duration": 1197793.263,
+        "expected": 23,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "browser-2.json",
+      "stats": {
+        "startTime": "2026-10-28T03:40:15.537Z",
+        "duration": 72955.78899999999,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "browser-3.json",
+      "stats": {
+        "startTime": "2026-10-28T03:45:41.280Z",
+        "duration": 122660.254,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "nine officers patrol both levels and a lower cell can be opened, entered and saved",
+      "status": "passed"
+    },
+    {
+      "name": "stairs support actual player movement, gates are independent, and equipped tools persist",
+      "status": "passed"
+    },
+    {
+      "name": "guards route down stairs and cannot capture a player through the gallery floor",
+      "status": "passed"
+    },
+    {
+      "name": "supplied cargo matches physical bounds, leaves cell lanes clear and uses real wooden stairs",
+      "status": "passed"
+    },
+    {
+      "name": "guard strikes have windup, can miss, respect walls/floors and reduce 200 HP until defeat",
+      "status": "passed"
+    },
+    {
+      "name": "HP persists through checkpoints, old saves get 200, and searches kneel without replacing AI",
+      "status": "passed"
+    },
+    {
+      "name": "48 independent wide gates frame both floors and all rows load real fixtures",
+      "status": "passed"
+    },
+    {
+      "name": "hint/pause are the only top tools; context-only touch action and rotated arrows match the requested HUD",
+      "status": "passed"
+    },
+    {
+      "name": "Cell 46 stays open for exploration in new games and previously closed saves",
+      "status": "passed"
+    },
+    {
+      "name": "rigged officers animate independently, patrol, switch LOD and retain non-lethal dart hits",
+      "status": "passed"
+    },
+    {
+      "name": "tool requirements, all four puzzles, crafting, checkpoints and Brotherhood ending",
+      "status": "passed"
+    },
+    {
+      "name": "closed walls block guard sight and movement; all required rooms have routes",
+      "status": "passed"
+    },
+    {
+      "name": "production assets load from a subdirectory and the game reloads offline",
+      "status": "passed"
+    },
+    {
+      "name": "downloaded standalone HTML runs in an offline browser without network requests",
+      "status": "passed"
+    },
+    {
+      "name": "new-game cinematic fires once, pauses safely, closes gate and releases a playable checkpoint",
+      "status": "passed"
+    },
+    {
+      "name": "Cell 47 key twist, quiet bed, tool, toilet, passage, save and return",
+      "status": "passed"
+    },
+    {
+      "name": "hard pushing alerts the examining guard, then he returns to the body without crossing bars",
+      "status": "passed"
+    },
+    {
+      "name": "reference corridor, fog and gloved grips retain saved equipment through quick slots",
+      "status": "passed"
+    },
+    {
+      "name": "mobile pocket icons remain tappable and clear of left controls on small landscape screens",
+      "status": "passed"
+    },
+    {
+      "name": "full barred cell fronts retain collision while small doors slide, protect actors and restore",
+      "status": "passed"
+    },
+    {
+      "name": "adaptive resolution, paused preset changes and mobile resize never present a cleared frame",
+      "status": "passed"
+    },
+    {
+      "name": "spatial AI sees through bars but cannot cross them, loses sight and returns to its duty",
+      "status": "passed"
+    },
+    {
+      "name": "noise stays at its impact source; guard reacts while a puzzle is open",
+      "status": "passed"
+    },
+    {
+      "name": "two-handed weapon grip follows the active skeleton across officer LOD and returns to idle hands",
+      "status": "passed"
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "01-corridor",
+      "hp": 200,
+      "triangles": 3750983,
+      "calls": 593
+    },
+    {
+      "name": "02-cargo-cover",
+      "hp": 200,
+      "triangles": 2902561,
+      "calls": 477
+    },
+    {
+      "name": "03-wooden-stairs",
+      "hp": 200,
+      "triangles": 3225172,
+      "calls": 395
+    },
+    {
+      "name": "04-officer-walk",
+      "hp": 200,
+      "triangles": 2344466,
+      "calls": 305
+    },
+    {
+      "name": "05-officer-kneel",
+      "hp": 200,
+      "triangles": 2857497,
+      "calls": 327
+    },
+    {
+      "name": "06-mobile-health",
+      "hp": 175,
+      "triangles": 2097133,
+      "calls": 303
+    }
+  ],
+  "comparison": [
+    {
+      "before": "docs/screenshots/reference-v16/01-corridor.png",
+      "after": "docs/screenshots/cargo-v17/01-corridor.png",
+      "position": [
+        -6.5,
+        1.65,
+        0
+      ],
+      "target": [
+        -65,
+        1.4,
+        4
+      ],
+      "beforeSHA256": "16a4023146ea89c880b3e53ef1a33149272b91f50031b7f05485ffcabb7cfd59",
+      "afterSHA256": "6a3ad76b943ea213b21c08fc1a633d730b0ecb1d3543a17102271ed9e0e13417",
+      "note": "Same camera position and target; inventory and health HUD differ."
+    },
+    {
+      "before": "docs/screenshots/reference-v16/03-lower-hall.png",
+      "after": "docs/screenshots/cargo-v17/03-wooden-stairs.png",
+      "position": [
+        -18,
+        -1.55,
+        5
+      ],
+      "target": [
+        -4,
+        0,
+        5
+      ],
+      "beforeSHA256": "6426e441a698c67e70a95d7993ea307d77c9f8598a13ae7f8d519c6a85663303",
+      "afterSHA256": "8ae04095447280507439dd4f67dfe45a52c532fb98cd18ec537b159dd475201a",
+      "note": "Same camera position and target; inventory and health HUD differ."
+    }
+  ],
+  "assets": [
+    {
+      "author": "Mehdi Shahsavan (https://sketchfab.com/ahmagh2e)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/wooden-stairs-5-mb-56271a83e8ff487b84289e39a159d3c5",
+      "title": "Wooden Stairs_5_MB",
+      "name": "WoodStairs",
+      "file": "wood-stairs.glb",
+      "sourceSHA256": "41b6d8a7a4605b9c86776387af5f5d01f061a18377614d82b9b74eb39bb62e25",
+      "runtimeSHA256": "7d37bfbc9697d5157ee130ec493076e8aa2b85365a0b06b3314736c3013b416a",
+      "bounds": {
+        "min": [
+          -0.11803655326366425,
+          -0.26419568233455504,
+          -0.8998597333786468
+        ],
+        "max": [
+          7.235006809234619,
+          4.297038467454565,
+          0.8998597333786468
+        ]
+      },
+      "bytes": 841864,
+      "triangles": 892,
+      "changes": "World transforms baked; tread run fitted to 7.2m, top tread 3.2m, clear width 1.8m; railing height adapted separately; real tread profile retained for navigation; normals recomputed; 2K WebP and meshopt"
+    },
+    {
+      "author": "kakou3991 (https://sketchfab.com/kakou3991)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/wood-box-ed74acd9b510481eb43a7753754d7ac8",
+      "title": "wood box",
+      "name": "WoodBox",
+      "file": "wood-box.glb",
+      "sourceSHA256": "a2406802551a9038ed651c2121e94dc4a3812cae74a9ee5bb679b8540b5bd41f",
+      "runtimeSHA256": "13e33c27098969fa8901260b634919fca1329276809feae606e36cd797504da5",
+      "bounds": {
+        "min": [
+          -0.4180527925491333,
+          -0.000009899980057737068,
+          -0.4180527925491333
+        ],
+        "max": [
+          0.4180527925491333,
+          0.7432149108710184,
+          0.4180527925491333
+        ]
+      },
+      "bytes": 1023732,
+      "triangles": 216,
+      "changes": "World transforms baked, floor/centre aligned; normals recomputed; source PBR maps retained as 1K WebP; meshopt compression"
+    },
+    {
+      "author": "Claudiu (https://sketchfab.com/claudiupusuc)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/wood-boxes-strapped-on-palet-42652beb14e34e0a94d5f980ebb1869e",
+      "title": "Wood  Boxes strapped on Palet",
+      "name": "CargoPallet",
+      "file": "cargo-pallet.glb",
+      "sourceSHA256": "8637f8125d3bca40d0ff613befa789da44e8e419020ad8238bf7e565b1345c46",
+      "runtimeSHA256": "704584cc6ae33853f382e18f81e8bc96a0a8c7b97b835a4baa1ca1bd8edb782c",
+      "bounds": {
+        "min": [
+          -1.2000000476837158,
+          0.00008249300845453167,
+          -0.5681203875764483
+        ],
+        "max": [
+          1.2000000476837158,
+          1.1087833641158742,
+          0.5681203875764483
+        ]
+      },
+      "bytes": 4855772,
+      "triangles": 48879,
+      "changes": "World transforms baked, floor/centre aligned; pallet turned and fitted to 2.4m long axis, mesh simplified; source PBR maps retained as 1K WebP; meshopt compression"
+    }
+  ],
+  "artifacts": {
+    "web": {
+      "version": "0.17.0",
+      "archive": "Hirodora-0.17.0-offline.zip",
+      "html": "Hirodora-0.17.0.html",
+      "sha256": "00de5484d78c69aee0c712e560636e6b5db5be53248e26b9ff38ad57e18ab134",
+      "bytes": 29077825
+    },
+    "android": {
+      "version": "0.17.0",
+      "file": "Hirodora-0.17.0-android.apk",
+      "bytes": 29375299,
+      "sha256": "68fa53fd3a7e40e2aec0e3620e930307d9b77f63d94cc0fe731cfbd46a03c9eb",
+      "certificateSHA256": "d7175da40c348c91e8a8663635d3a130115aba916e5ce889e40b646c009f33ca",
+      "minAndroid": "8.0 (API 26)",
+      "targetApi": 35,
+      "architecture": "Universal; uses installed Android System WebView",
+      "distribution": "Signed release APK; offline assets included; no network permission"
+    }
+  },
+  "limits": [
+    "Browser checks use SwiftShader, not physical phone GPUs.",
+    "Only selected regression scenarios were rerun; individual run statistics retain failures and focused reruns if any.",
+    "Earlier temporary run files were lost on environment resume; this report records the retained final-code rerun.",
+    "Kneeling/strike clips are authored skeletal poses, not new motion capture, chair-sitting AI or physics combat.",
+    "Hardware FPS, thermal and device-specific WebView testing remains pending."
+  ]
+}

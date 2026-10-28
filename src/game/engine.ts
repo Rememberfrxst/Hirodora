@@ -43,6 +43,7 @@ import { movementVector, stepJump } from "./navigation";
 import {
   bodyBlocked,
   supportHeight,
+  inAtrium,
   evidenceTarget,
   findSurfacePath,
   migratePosition,
@@ -50,6 +51,7 @@ import {
 } from "./atrium";
 import { WarriorActor } from "./warrior";
 import { FirstPersonView } from "./viewmodel";
+import { COMBAT, checkpointHealth, stepMelee } from "./combat";
 import {
   nextCellSlide,
   positionCellSlider,
@@ -291,9 +293,12 @@ export class GameEngine {
   public sensitivity = 0.0022;
   public reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
   public stats: PlayerStats = this.freshStats();
+  public damageFeedback = 0;
+  private damageGrace = 0;
 
   private freshStats(): PlayerStats {
     return {
+      health: COMBAT.maxHealth,
       noiseLevel: 0,
       peakNoise: 0,
       isCrouching: false,
@@ -1842,6 +1847,9 @@ export class GameEngine {
       hidingSpotName: null,
     };
     this.stats.act = cp.act;
+    this.stats.health = checkpointHealth(cp.stats?.health);
+    this.damageGrace = 0;
+    this.damageFeedback = 0;
     this.playerPos = migratePosition(cp.playerPosition, cp.layoutVersion);
     this.playerRotY = cp.playerRotationY;
     this.cameraPitch = 0;
@@ -1894,6 +1902,9 @@ export class GameEngine {
       g.scanTime = 0;
       g.scanOriginYaw = undefined;
       g.lastNoiseId = undefined;
+      g.attackElapsed = undefined;
+      g.attackCooldown = 0;
+      g.crouchInspect = false;
       g.state = "patrol";
       g.suspicion = 0;
       g.currentWaypoint = 1;
@@ -1911,6 +1922,31 @@ export class GameEngine {
     }
     this.paths.clear();
     this.syncWorld(true);
+    // v17 adds physical cargo to previously empty space. An older lower-hall
+    // checkpoint must not resume inside a new crate. Keep valid saves untouched
+    // and relocate only an overlapping legacy save to the nearest clear support.
+    if ((cp.layoutVersion ?? 0) < 17) {
+      const cargo = this.worldData.cargo.map((root) =>
+        new THREE.Box3().setFromObject(root),
+      );
+      const [x, y, z] = this.playerPos;
+      if (bodyBlocked(x, y, z, cargo)) {
+        recovery: for (let r = 0.3; r <= 3; r += 0.15)
+          for (let i = 0; i < 24; i++) {
+            const nx = x + Math.cos((i * Math.PI) / 12) * r,
+              nz = z + Math.sin((i * Math.PI) / 12) * r,
+              ny = supportHeight(nx, nz, y);
+            if (
+              ny !== undefined &&
+              inAtrium(nx, nz) &&
+              !bodyBlocked(nx, ny, nz, this.worldData.colliders)
+            ) {
+              this.playerPos = [nx, ny, nz];
+              break recovery;
+            }
+          }
+      }
+    }
     this.clearInput();
     this.emitChange();
   }
@@ -2222,6 +2258,8 @@ export class GameEngine {
     if (this.noiseEvents.length > 48) this.noiseEvents.shift();
   }
   private updateGuards(dt: number) {
+    this.damageGrace = Math.max(0, this.damageGrace - dt);
+    this.damageFeedback = Math.max(0, this.damageFeedback - dt);
     this.noiseClock += dt;
     this.noiseEvents = this.noiseEvents.filter(
       (event) => (event.age += dt) < 1.6,
@@ -2298,11 +2336,42 @@ export class GameEngine {
           5,
         );
       }
-      if (decision.caughtPlayer) {
-        this.triggerGameOver(
-          "Intercepted by " + guard.name + ". Your checkpoint is safe.",
-        );
-        break;
+      const strike = stepMelee(
+        { elapsed: guard.attackElapsed, cooldown: guard.attackCooldown ?? 0 },
+        decision.caughtPlayer,
+        !wall &&
+          !this.stats.isInHidingSpot &&
+          vision > 0 &&
+          Math.abs(guard.position[1] - this.playerPos[1]) < 0.65 &&
+          Math.hypot(
+            guard.position[0] - this.playerPos[0],
+            guard.position[2] - this.playerPos[2],
+          ) <= 1.25,
+        dt,
+        guard.state === "chase",
+      );
+      if (guard.attackElapsed === undefined && strike.elapsed !== undefined)
+        sound.playObject("cloth", 0, 0.25, guard.position);
+      guard.attackElapsed = strike.elapsed;
+      guard.attackCooldown = strike.cooldown;
+      if (
+        strike.hit &&
+        this.damageGrace === 0 &&
+        this.gameState === "playing"
+      ) {
+        this.stats.health = Math.max(0, this.stats.health - COMBAT.damage);
+        this.damageGrace = COMBAT.grace;
+        this.damageFeedback = 0.35;
+        this.activeMiniGame = null;
+        this.endInteract();
+        sound.playPlayerHit(guard.position);
+        this.emitChange();
+        if (this.stats.health === 0) {
+          this.triggerGameOver(
+            "Beaten by " + guard.name + ". Your checkpoint is safe.",
+          );
+          break;
+        }
       }
       const target = approach(decision.target);
       const beforeX = guard.position[0],
@@ -2310,6 +2379,7 @@ export class GameEngine {
       let desiredYaw = decision.scanYaw;
       if (
         guard.state !== "knocked_out" &&
+        guard.attackElapsed === undefined &&
         target &&
         Math.hypot(
           target[0] - beforeX,
@@ -2366,7 +2436,20 @@ export class GameEngine {
           length = Math.hypot(dx, dz);
         if (length > 0.05) {
           desiredYaw = Math.atan2(dx, dz);
-          const step = Math.min(length, decision.speed * dt),
+          const clearance =
+            guard.state === "chase" &&
+            vision > 0 &&
+            !wall &&
+            Math.abs(guard.position[1] - this.playerPos[1]) < 0.65
+              ? Math.max(
+                  0,
+                  Math.hypot(
+                    beforeX - this.playerPos[0],
+                    beforeZ - this.playerPos[2],
+                  ) - COMBAT.standOff,
+                )
+              : Infinity;
+          const step = Math.min(length, decision.speed * dt, clearance),
             nx = beforeX + (dx / length) * step,
             nz = beforeZ + (dz / length) * step;
           for (const [ax, az] of [
@@ -2404,6 +2487,10 @@ export class GameEngine {
         speed < 0.05 &&
         Math.hypot(guard.position[0] + 5.7, guard.position[2] + 0.7) < 0.4;
       if (guard.examining) guard.rotationY = 0;
+      guard.crouchInspect =
+        guard.state === "searching" &&
+        (guard.scanTime ?? 0) > 0.3 &&
+        speed < 0.05;
       this.guardActors
         .get(guard.id)
         ?.update(guard, speed, dt, this.camera, this.guardQuality, this.mobile);

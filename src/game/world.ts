@@ -12,10 +12,13 @@ import {
 } from "./cell-block";
 import { ATRIUM } from "./atrium";
 import { configureCellSlider } from "./cell-gates";
+import { CARGO } from "./cargo-layout";
+import cargoAssets from "../assets/environment/cargo-manifest.json";
 
 export interface PrisonWorldData {
   cells: readonly CellRoom[];
   scene: THREE.Scene;
+  cargo: THREE.Group[];
   loadEnvironment: () => Promise<void>;
   disposeEnvironment: () => void;
   windowLight: THREE.SpotLight;
@@ -334,40 +337,17 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     rail(x, centerZ + 1, x, ATRIUM.south);
   }
   for (const stair of ATRIUM.stairs) {
-    const run = stair.bottom - stair.top,
-      steps = 18;
-    for (let i = 0; i < steps; i++) {
-      const y = (ATRIUM.depth * (i + 1)) / steps;
-      projectUV(
-        box(
-          staticWorld,
-          [Math.abs(run) / steps, 0.22, 1.8],
-          [stair.top + (run * (i + 0.5)) / steps, y - 0.11, centerZ],
-          concrete,
-        ),
-        2,
-      );
-    }
-    // Handrails follow the pitch, with vertical posts at regular tread stations.
-    for (const z of [centerZ - 0.96, centerZ + 0.96]) {
-      const a = new THREE.Vector3(stair.top, 1.1, z),
-        b = new THREE.Vector3(stair.bottom, ATRIUM.depth + 1.1, z);
-      const bar = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.035, 0.035, a.distanceTo(b), 12),
-        iron,
-      );
-      bar.position.copy(a).add(b).multiplyScalar(0.5);
-      bar.quaternion.setFromUnitVectors(
-        new THREE.Vector3(0, 1, 0),
-        b.clone().sub(a).normalize(),
-      );
-      staticWorld.add(bar);
-      for (let i = 0; i <= 6; i++)
-        cylinder(staticWorld, 0.025, 1.08, [
-          stair.top + (run * i) / 6,
-          (ATRIUM.depth * i) / 6 + 0.55,
-          z,
-        ]);
+    // The imported staircase includes its own wooden treads/posts/handrails.
+    // Its real tread heights are also the authoritative navigation surface.
+    environment.add(
+      "WoodStairs",
+      stair.bottom,
+      ATRIUM.depth,
+      centerZ,
+      stair.top > stair.bottom ? 0 : Math.PI,
+    );
+    // Physical rail proxies transmit sight/hearing, matching the open wood rails.
+    for (const z of [centerZ - 0.86, centerZ + 0.86]) {
       const railBounds = new THREE.Box3(
         new THREE.Vector3(
           Math.min(stair.top, stair.bottom),
@@ -380,6 +360,19 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
       barredFaces.add(railBounds);
     }
   }
+  const cargo = CARGO.map(({ asset, x, y, z, yaw }) => {
+    const root = environment.add(asset, x, y, z, yaw);
+    root.name = `LowerHall_${asset}`;
+    const source = cargoAssets.sources.find((s) => s.name === asset)!;
+    root.updateMatrixWorld(true);
+    colliders.push(
+      new THREE.Box3(
+        new THREE.Vector3(...source.bounds.min),
+        new THREE.Vector3(...source.bounds.max),
+      ).applyMatrix4(root.matrixWorld),
+    );
+    return root;
+  });
   for (let x = -64; x < -5; x += 5.5) {
     for (const z of [-0.5, centerZ, CELL_BLOCK.southFront - 1.5]) {
       environment.add("Luminaire", x, 4.8, z);
@@ -1370,6 +1363,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     for (const geometry of geometries) geometry.dispose();
   }
   return {
+    cargo,
     cells: CELL_ROOMS,
     cell46NPC: boulder,
     opening: {

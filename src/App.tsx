@@ -7,6 +7,7 @@ import { SettingsPanel } from "./components/SettingsPanel";
 import { HUD } from "./components/HUD";
 import { HudEditor } from "./components/HudEditor";
 import environmentAssets from "./assets/environment/manifest.json";
+import cargoAssets from "./assets/environment/cargo-manifest.json";
 import { MiniGames } from "./components/MiniGames";
 import {
   GameOverModal,
@@ -292,7 +293,10 @@ export default function App() {
                         CHARACTER-LICENSES.txt, ENVIRONMENT-LICENSES.txt and
                         AUDIO-LICENSES.json.
                       </p>
-                      {environmentAssets.uploadedAssets.models.map((asset) => (
+                      {[
+                        ...environmentAssets.uploadedAssets.models,
+                        ...cargoAssets.sources,
+                      ].map((asset) => (
                         <p
                           key={asset.name}
                           style={{ overflowWrap: "anywhere" }}

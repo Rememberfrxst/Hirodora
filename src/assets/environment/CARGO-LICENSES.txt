@@ -1,0 +1,17 @@
+Wooden Stairs_5_MB
+Author: Mehdi Shahsavan (https://sketchfab.com/ahmagh2e)
+Source: https://sketchfab.com/3d-models/wooden-stairs-5-mb-56271a83e8ff487b84289e39a159d3c5
+License: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+Changes: World transforms baked; tread run fitted to 7.2m, top tread 3.2m, clear width 1.8m; railing height adapted separately; real tread profile retained for navigation; normals recomputed; 2K WebP and meshopt
+
+wood box
+Author: kakou3991 (https://sketchfab.com/kakou3991)
+Source: https://sketchfab.com/3d-models/wood-box-ed74acd9b510481eb43a7753754d7ac8
+License: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+Changes: World transforms baked, floor/centre aligned; normals recomputed; source PBR maps retained as 1K WebP; meshopt compression
+
+Wood  Boxes strapped on Palet
+Author: Claudiu (https://sketchfab.com/claudiupusuc)
+Source: https://sketchfab.com/3d-models/wood-boxes-strapped-on-palet-42652beb14e34e0a94d5f980ebb1869e
+License: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+Changes: World transforms baked, floor/centre aligned; pallet turned and fitted to 2.4m long axis, mesh simplified; source PBR maps retained as 1K WebP; meshopt compression

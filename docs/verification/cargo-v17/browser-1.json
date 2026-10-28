@@ -1,0 +1,1062 @@
+{
+  "config": {
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "/workspace/Hirodora/node_modules/.bin/playwright",
+      "test",
+      "tests/cargo-combat.spec.ts",
+      "tests/atrium.spec.ts",
+      "tests/cell-block.spec.ts",
+      "tests/sliding-gates.spec.ts",
+      "tests/opening.spec.ts",
+      "tests/stealth.spec.ts",
+      "tests/reference-hud.spec.ts",
+      "tests/game.spec.ts",
+      "tests/intro.spec.ts",
+      "--grep",
+      "supplied cargo|guard strikes|HP persists|nine officers|stairs support|guards route|48 independent|hint/pause|Cell 46 stays|full barred|Cell 47 key twist|hard pushing|spatial AI|noise stays|two-handed weapon|reference corridor|mobile pocket icons|all four puzzles|all required rooms|rigged officers|production assets load|downloaded standalone|new-game cinematic|adaptive resolution",
+      "--output=/workspace/hirodora-v17-browser-results",
+      "--reporter=list,json"
+    ],
+    "configFile": "/workspace/Hirodora/playwright.config.ts",
+    "rootDir": "/workspace/Hirodora/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/workspace/hirodora-v17-browser-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/workspace/Hirodora/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/workspace/hirodora-v17-browser-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "/workspace/Hirodora/tests",
+        "snapshotDir": "/workspace/Hirodora/tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 120000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3710",
+          "viewport": {
+            "width": 1100,
+            "height": 720
+          },
+          "launchOptions": {
+            "executablePath": "/usr/bin/chromium",
+            "args": [
+              "--no-sandbox",
+              "--use-angle=swiftshader",
+              "--enable-unsafe-swiftshader"
+            ]
+          },
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "atrium.spec.ts",
+      "file": "atrium.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "nine officers patrol both levels and a lower cell can be opened, entered and saved",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 37549,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T03:35:01.367Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "14fad864cf1ee8491372-81ccfce8b06534208ab1",
+          "file": "atrium.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "stairs support actual player movement, gates are independent, and equipped tools persist",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 48826,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T03:35:40.453Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "14fad864cf1ee8491372-386c01ac83cc1bcee92a",
+          "file": "atrium.spec.ts",
+          "line": 76,
+          "column": 1
+        },
+        {
+          "title": "guards route down stairs and cannot capture a player through the gallery floor",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 43279,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T03:36:29.337Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "14fad864cf1ee8491372-130c74b5e9602ebebc5c",
+          "file": "atrium.spec.ts",
+          "line": 149,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "cargo-combat.spec.ts",
+      "file": "cargo-combat.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "supplied cargo matches physical bounds, leaves cell lanes clear and uses real wooden stairs",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 46030,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T03:37:12.696Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "cff0609a8b2d8aa5f254-8acd5423bd90e5dd2e23",
+          "file": "cargo-combat.spec.ts",
+          "line": 4,
+          "column": 1
+        },
+        {
+          "title": "guard strikes have windup, can miss, respect walls/floors and reduce 200 HP until defeat",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 45664,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T03:37:58.775Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "cff0609a8b2d8aa5f254-9ebdf77d6d6d2fe475df",
+          "file": "cargo-combat.spec.ts",
+          "line": 67,
+          "column": 1
+        },
+        {
+          "title": "HP persists through checkpoints, old saves get 200, and searches kneel without replacing AI",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 46209,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T03:38:44.491Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "cff0609a8b2d8aa5f254-324ccf2bb1a478326372",
+          "file": "cargo-combat.spec.ts",
+          "line": 158,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "cell-block.spec.ts",
+      "file": "cell-block.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "48 independent wide gates frame both floors and all rows load real fixtures",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 47541,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T03:39:30.792Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "2ca4c803269aad8fd307-116951352767274ceb15",
+          "file": "cell-block.spec.ts",
+          "line": 4,
+          "column": 1
+        },
+        {
+          "title": "hint/pause are the only top tools; context-only touch action and rotated arrows match the requested HUD",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 72455,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T03:40:18.387Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "2ca4c803269aad8fd307-cb33291872c19700761b",
+          "file": "cell-block.spec.ts",
+          "line": 51,
+          "column": 1
+        },
+        {
+          "title": "Cell 46 stays open for exploration in new games and previously closed saves",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 64354,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T03:41:30.962Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "2ca4c803269aad8fd307-481c4e817d43119830fd",
+          "file": "cell-block.spec.ts",
+          "line": 121,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "game.spec.ts",
+      "file": "game.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "rigged officers animate independently, patrol, switch LOD and retain non-lethal dart hits",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 41422,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T03:42:35.442Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8b1bb1493a64c9fc3ab6-d900275024c00c844603",
+          "file": "game.spec.ts",
+          "line": 126,
+          "column": 1
+        },
+        {
+          "title": "tool requirements, all four puzzles, crafting, checkpoints and Brotherhood ending",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 56057,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('dialog')\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" getByRole('dialog') with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('dialog')\u001b[22m\n\u001b[2m    16 × locator resolved to 1 element\u001b[22m\n\u001b[2m       - unexpected value \"1\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('dialog')\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" getByRole('dialog') with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('dialog')\u001b[22m\n\u001b[2m    16 × locator resolved to 1 element\u001b[22m\n\u001b[2m       - unexpected value \"1\"\u001b[22m\n\n    at /workspace/Hirodora/tests/game.spec.ts:423:42",
+                    "location": {
+                      "file": "/workspace/Hirodora/tests/game.spec.ts",
+                      "column": 42,
+                      "line": 423
+                    },
+                    "snippet": "  421 |   await steady.focus();\n  422 |   await page.keyboard.down(\"Space\");\n> 423 |   await expect(page.getByRole(\"dialog\")).toHaveCount(0, { timeout: 15000 });\n      |                                          ^\n  424 |   await page.keyboard.up(\"Space\");\n  425 |   expect(\n  426 |     await page.evaluate(() => window.__HIRODORA__.gameFlags.vent_unbolted),"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/workspace/Hirodora/tests/game.spec.ts",
+                        "column": 42,
+                        "line": 423
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('dialog')\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" getByRole('dialog') with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('dialog')\u001b[22m\n\u001b[2m    16 × locator resolved to 1 element\u001b[22m\n\u001b[2m       - unexpected value \"1\"\u001b[22m\n\n\n  421 |   await steady.focus();\n  422 |   await page.keyboard.down(\"Space\");\n> 423 |   await expect(page.getByRole(\"dialog\")).toHaveCount(0, { timeout: 15000 });\n      |                                          ^\n  424 |   await page.keyboard.up(\"Space\");\n  425 |   expect(\n  426 |     await page.evaluate(() => window.__HIRODORA__.gameFlags.vent_unbolted),\n    at /workspace/Hirodora/tests/game.spec.ts:423:42"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T03:43:16.936Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/workspace/hirodora-v17-browser-results/game-tool-requirements-all-3c790-ints-and-Brotherhood-ending/test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/workspace/hirodora-v17-browser-results/game-tool-requirements-all-3c790-ints-and-Brotherhood-ending/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/workspace/hirodora-v17-browser-results/game-tool-requirements-all-3c790-ints-and-Brotherhood-ending/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/workspace/Hirodora/tests/game.spec.ts",
+                    "column": 42,
+                    "line": 423
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "8b1bb1493a64c9fc3ab6-35940554089e017df955",
+          "file": "game.spec.ts",
+          "line": 398,
+          "column": 1
+        },
+        {
+          "title": "closed walls block guard sight and movement; all required rooms have routes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 29928,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T03:44:15.935Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8b1bb1493a64c9fc3ab6-5956ff8ce84ec7fe0d8a",
+          "file": "game.spec.ts",
+          "line": 511,
+          "column": 1
+        },
+        {
+          "title": "production assets load from a subdirectory and the game reloads offline",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 49708,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T03:44:46.248Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8b1bb1493a64c9fc3ab6-28b3f602396f6c5df4d9",
+          "file": "game.spec.ts",
+          "line": 735,
+          "column": 1
+        },
+        {
+          "title": "downloaded standalone HTML runs in an offline browser without network requests",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 49524,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T03:45:35.990Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8b1bb1493a64c9fc3ab6-fa1cda931b35b2bd6029",
+          "file": "game.spec.ts",
+          "line": 761,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "intro.spec.ts",
+      "file": "intro.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "new-game cinematic fires once, pauses safely, closes gate and releases a playable checkpoint",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 59432,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T03:46:25.592Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6893568f0c1df827a42c-fadf7ce17e5ae5068ad2",
+          "file": "intro.spec.ts",
+          "line": 36,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "opening.spec.ts",
+      "file": "opening.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Cell 47 key twist, quiet bed, tool, toilet, passage, save and return",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 73087,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T03:47:25.121Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0dd38654c2908fb5f757-9bc8f055f4bda2f4077d",
+          "file": "opening.spec.ts",
+          "line": 43,
+          "column": 1
+        },
+        {
+          "title": "hard pushing alerts the examining guard, then he returns to the body without crossing bars",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 46371,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T03:48:38.228Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0dd38654c2908fb5f757-4827682a3108d36c078b",
+          "file": "opening.spec.ts",
+          "line": 177,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "reference-hud.spec.ts",
+      "file": "reference-hud.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "reference corridor, fog and gloved grips retain saved equipment through quick slots",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 46202,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T03:49:24.668Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3cc1ec809cc6db90e733-ee8b9797be91252063b4",
+          "file": "reference-hud.spec.ts",
+          "line": 4,
+          "column": 1
+        }
+      ],
+      "suites": [
+        {
+          "title": "mobile pocket HUD",
+          "file": "reference-hud.spec.ts",
+          "line": 111,
+          "column": 6,
+          "specs": [
+            {
+              "title": "mobile pocket icons remain tappable and clear of left controls on small landscape screens",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 21270,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-28T03:50:10.928Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3cc1ec809cc6db90e733-ae657efab8fadc90e07c",
+              "file": "reference-hud.spec.ts",
+              "line": 117,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "sliding-gates.spec.ts",
+      "file": "sliding-gates.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "full barred cell fronts retain collision while small doors slide, protect actors and restore",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 34848,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T03:50:32.244Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "381d5e87f9543cc14965-ead65c04ad238ac5224b",
+          "file": "sliding-gates.spec.ts",
+          "line": 4,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "stealth.spec.ts",
+      "file": "stealth.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "adaptive resolution, paused preset changes and mobile resize never present a cleared frame",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 82849,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T03:51:07.172Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "938b360e74388fb9adde-ff2acdfd64295998c433",
+          "file": "stealth.spec.ts",
+          "line": 4,
+          "column": 1
+        },
+        {
+          "title": "spatial AI sees through bars but cannot cross them, loses sight and returns to its duty",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 50444,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T03:52:30.056Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "938b360e74388fb9adde-8370b00c53a0715ece32",
+          "file": "stealth.spec.ts",
+          "line": 74,
+          "column": 1
+        },
+        {
+          "title": "noise stays at its impact source; guard reacts while a puzzle is open",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 47003,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T03:53:20.600Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "938b360e74388fb9adde-a1df3c947291792ba7d8",
+          "file": "stealth.spec.ts",
+          "line": 148,
+          "column": 1
+        },
+        {
+          "title": "two-handed weapon grip follows the active skeleton across officer LOD and returns to idle hands",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 45744,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T03:54:07.668Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "938b360e74388fb9adde-fbafc9f45b2302260f4e",
+          "file": "stealth.spec.ts",
+          "line": 190,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-28T03:34:56.123Z",
+    "duration": 1197793.263,
+    "expected": 23,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

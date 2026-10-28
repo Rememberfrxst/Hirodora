@@ -3,6 +3,7 @@ import { GameEngine, ALL_ITEMS } from "../game/engine";
 import { loadLayout, placementStyle, pocketBottom } from "../game/hud-layout";
 import { ControlIcon, HintIcon } from "./ControlIcon";
 import { ItemIcon } from "./ItemIcon";
+import { COMBAT } from "../game/combat";
 import {
   Eye,
   Volume2,
@@ -87,6 +88,30 @@ export function HUD({ engine, onPause }: Props) {
   };
   return (
     <div className="game-hud">
+      {engine.damageFeedback > 0 && (
+        <div className="damage-feedback" aria-hidden="true" />
+      )}
+      <section
+        className={"health-hud" + (stats.health <= 50 ? " low-health" : "")}
+        aria-label="Player health"
+      >
+        <div>
+          <span>HP</span>
+          <strong>
+            {stats.health}
+            <small> / {COMBAT.maxHealth}</small>
+          </strong>
+        </div>
+        <div
+          role="progressbar"
+          aria-label="Health"
+          aria-valuemin={0}
+          aria-valuemax={COMBAT.maxHealth}
+          aria-valuenow={stats.health}
+        >
+          <i style={{ width: `${(stats.health / COMBAT.maxHealth) * 100}%` }} />
+        </div>
+      </section>
       <header className="hud-top">
         <div className="objective">
           <span className="eyebrow">

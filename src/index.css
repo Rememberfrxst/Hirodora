@@ -2547,9 +2547,10 @@ input[type="range"] {
   max-width: min(64vw, 700px);
   pointer-events: auto;
 }
+.game-hud .satchel-button { display: none; }
 .health-hud {
   position: absolute;
-  top: 100px;
+  top: auto;
   left: max(30px, env(safe-area-inset-left));
   width: 170px;
   color: #ecefdf;
@@ -2719,13 +2720,14 @@ input[type="range"] {
   padding: 12px;
   border: 1px solid #c4d1c780;
   border-radius: 3px;
-  background: #1a292bd9;
+  background: rgb(9 10 11 / 50%);
   color: #fff;
   pointer-events: auto;
   display: grid;
   grid-template-columns: 55px 1fr;
   gap: 7px 10px;
-  box-shadow: 0 5px 18px #0004;
+  box-shadow: 0 5px 18px #0006;
+  backdrop-filter: blur(3px);
 }
 .weapon-hud > img {
   width: 85px;
@@ -2794,7 +2796,7 @@ input[type="range"] {
   top: auto;
   left: auto;
   right: max(30px, env(safe-area-inset-right));
-  bottom: max(90px, env(safe-area-inset-bottom));
+  bottom: max(24px, env(safe-area-inset-bottom));
 }
 .game-hud .subtitle {
   bottom: max(85px, calc(env(safe-area-inset-bottom) + 55px));
@@ -2879,7 +2881,7 @@ input[type="range"] {
     left: 50%;
     right: auto;
     transform: translateX(-50%);
-    bottom: max(10px, env(safe-area-inset-bottom));
+    bottom: max(18px, env(safe-area-inset-bottom));
     width: 120px;
   }
   .game-hud .subtitle {

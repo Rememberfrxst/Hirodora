@@ -58,7 +58,7 @@ export class FirstPersonView {
     this.leftRest = this.leftForearm?.position.clone();
     if (this.leftMesh) this.leftMesh.visible = false;
     // Orient the whole forearm, not a bent wrist. Local Z runs across the palm.
-    const y = new THREE.Vector3(-0.3, 0.28, -1).normalize();
+    const y = new THREE.Vector3(-0.24, 0.22, -1).normalize();
     const x = new THREE.Vector3()
       .crossVectors(y, new THREE.Vector3(-0.15, 1, 0.1))
       .normalize();
@@ -77,7 +77,7 @@ export class FirstPersonView {
     poseGrip(this.arm, this.rest, "power");
     this.arm.updateMatrixWorld(true);
     const wrist = this.hand.getWorldPosition(new THREE.Vector3());
-    this.arm.position.add(new THREE.Vector3(0.235, -0.265, -0.54).sub(wrist));
+    this.arm.position.add(new THREE.Vector3(0.22, -0.285, -0.56).sub(wrist));
     const driver = this.normalizeTool(screwdriver, true);
     driver.rotation.x += Math.PI / 2;
     // Handle crosses the curled fingers; the shaft exits on the thumb side.

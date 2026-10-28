@@ -28,7 +28,7 @@ test("sliding motion is bounded, remains horizontal and can snap restored checkp
   targetCellSlider(gate, true);
   positionCellSlider(gate, nextCellSlide(gate, 0.35));
   assert.equal(gate.userData.slider.fraction, 0.5);
-  assert.equal(gate.position.y, -3.2);
+  assert.equal(gate.position.y, cell.floorY);
   assert.equal(gate.position.z, cell.front);
   assert.equal(gate.rotation.y, 0);
   targetCellSlider(gate, false, true);

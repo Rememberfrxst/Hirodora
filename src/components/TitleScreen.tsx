@@ -1,3 +1,4 @@
+import { isAppleMobile } from "../game/platform";
 interface Props {
   onStart: () => void;
   hasSave?: boolean;
@@ -35,6 +36,14 @@ export function TitleScreen({
         </button>
         <button onClick={onSettings}>Settings</button>
       </nav>
+      {isAppleMobile() && (
+        <p className="ios-install-note">
+          {location.protocol === "file:"
+            ? "iPhone/iPad: use the hosted game in Safari, not the Files preview. "
+            : "iPhone/iPad: Safari → Share → Add to Home Screen. "}
+          Turn off Portrait Orientation Lock and rotate sideways.
+        </p>
+      )}
       {!ready && (
         <p className="reference-loading" role={loadError ? "alert" : "status"}>
           {loadError || "Loading the cell…"}

@@ -4,7 +4,8 @@ export const BALLISTICS = {
   headDamage: 200,
   range: 40,
   cooldown: 0.3,
-  ammo: 24,
+  ammo: 6,
+  reloadSeconds: 1.8,
 } as const;
 export function bulletDamage(health: number | undefined, head: boolean) {
   const before =

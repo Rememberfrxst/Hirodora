@@ -20,10 +20,10 @@ test.describe("mobile pistol", () => {
     await page.getByRole("button", { name: "Fire pistol", exact: true }).tap();
     expect(
       await page.evaluate(() => window.__HIRODORA__.stats.pistolAmmo),
-    ).toBe(23);
+    ).toBe(5);
     await expect(
       page.getByRole("button", { name: "Fire pistol", exact: true }),
-    ).toContainText("23");
+    ).toContainText("5");
     expect(
       await page.evaluate(() => (window.__HIRODORA__ as any).touchMove),
     ).toEqual([0, 0]);
@@ -106,8 +106,8 @@ test("Cell 46 actual gun/can models require aim and E, attach at the muzzle and 
   expect(new Set(data.signs).size).toBe(48);
   expect(data.fog).toBe(0.033);
   expect(data.health).toBe(200);
-  expect(data.ammo).toBe(24);
-  expect(data.handScale).toBe(1.18);
+  expect(data.ammo).toBe(6);
+  expect(data.handScale).toBe(1.12);
 });
 test("actual skin ray hits deal 100 twice or one headshot, corpses persist and New game resets them", async ({
   page,
@@ -123,17 +123,17 @@ test("actual skin ray hits deal 100 twice or one headshot, corpses persist and N
     });
     const place = (id: string, x: number, head = false) => {
       const g = e.worldData.guards.find((g: any) => g.id === id);
-      g.position = [x, -3.2, 4];
+      g.position = [x, -3.8, 4];
       g.rotationY = Math.PI;
       g.state = "patrol";
       g.health = 200;
       g.dead = false;
       g.attackElapsed = undefined;
-      e.playerPos = [x, -3.2, 0];
+      e.playerPos = [x, -3.8, 0];
       e.playerRotY = Math.PI;
       e.cameraPitch = 0;
       e.move(0);
-      e.camera.lookAt(x, -2.05, 4);
+      e.camera.lookAt(x, g.position[1] + 1.15, 4);
       e.camera.updateMatrixWorld();
       for (let i = 0; i < 20; i++)
         e.guardActors.get(id).update(g, 0, 0.05, e.camera, "desktop", false);
@@ -191,7 +191,7 @@ test("actual skin ray hits deal 100 twice or one headshot, corpses persist and N
   expect(result.persistent).toBe(true);
   expect(result.head).toEqual({ health: 0, dead: true, hit: "head" });
   expect(result.saved && result.reset).toBe(true);
-  expect(result.ammo).toBe(24);
+  expect(result.ammo).toBe(6);
 });
 test("bullets cannot pass closed grilles, pause or fire without ammunition", async ({
   page,
@@ -245,11 +245,11 @@ test("boxing cycles jab/cross/hook with high guard between strikes and preserves
     const g = e.worldData.guards.find(
       (g: any) => g.id === "guard_lower_center",
     );
-    g.position = [-35, -3.2, 4.9];
+    g.position = [-35, -3.8, 4.9];
     g.rotationY = Math.PI;
     g.state = "chase";
     g.suspicion = 100;
-    e.playerPos = [-35, -3.2, 4];
+    e.playerPos = [-35, -3.8, 4];
     g.lastKnownPosition = [...e.playerPos];
     e.camera.position.set(-35, -1.55, 3.5);
     e.camera.lookAt(-35, -1.8, 4.9);

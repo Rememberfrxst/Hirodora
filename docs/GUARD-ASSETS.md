@@ -1,4 +1,12 @@
-# Character asset pipeline · v0.13.0
+# Character assets and provenance
+
+## Current player hands · v0.20.0
+
+The active first-person arm now uses **Hands model rigged** by **SomeOne34321** (https://sketchfab.com/nikita887H), licensed **CC BY 4.0** (https://creativecommons.org/licenses/by/4.0/).
+Source: https://sketchfab.com/3d-models/hands-model-rigged-cbefd9fe847541dd8192e3281adf1bce .
+Changes: original textured forearms/hands retained; upper-arm triangles cropped by skin weights; left/right meshes and rigs separated; anatomical bind-space joint renaming and neutral palm frame; original PBR maps converted to 2K WebP; meshopt compression. Original animation is replaced by game-authored grips/reload presentation. The right hand is normally shown; the left appears during reload.
+
+This replaces the earlier MakeHuman-derived black-glove **player** mesh. The sections below preserve guard, Warrior and historical arm provenance; licensed guard models and motion sources are unchanged. Full hashes are in `src/assets/guards/hand-manifest.json`; standalone attribution is in `HANDS-LICENSE.txt`.
 
 ## Supplied Redeemed Warrior and first-person arm
 

@@ -1,0 +1,274 @@
+{
+  "config": {
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "/workspace/Hirodora/node_modules/.bin/playwright",
+      "test",
+      "tests/update20.spec.ts",
+      "--reporter=json"
+    ],
+    "configFile": "/workspace/Hirodora/playwright.config.ts",
+    "rootDir": "/workspace/Hirodora/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/workspace/Hirodora/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/workspace/Hirodora/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/workspace/Hirodora/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "/workspace/Hirodora/tests",
+        "snapshotDir": "/workspace/Hirodora/tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 120000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3790",
+          "viewport": {
+            "width": 1100,
+            "height": 720
+          },
+          "launchOptions": {
+            "executablePath": "/usr/bin/chromium",
+            "args": [
+              "--no-sandbox",
+              "--use-angle=swiftshader",
+              "--enable-unsafe-swiftshader"
+            ]
+          },
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "update20.spec.ts",
+      "file": "update20.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Cell 048 and 036 stairs work in both directions, lower signs are below the slab, checkpoint remains stable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 65898,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "v20 stairs: {\"flights\":[{\"cell\":48,\"down\":[-5.95,-3.8,-1.4700000000000084],\"up\":[-5.95,0,9.496000000000008],\"model\":true},{\"cell\":36,\"down\":[-66.5,-3.8,9.518000000000008],\"up\":[-66.5,0,-1.4480000000000082],\"model\":true}],\"signs\":[{\"number\":47,\"y\":3.38},{\"number\":46,\"y\":3.38},{\"number\":45,\"y\":3.38},{\"number\":44,\"y\":3.38},{\"number\":43,\"y\":3.38},{\"number\":42,\"y\":3.38},{\"number\":41,\"y\":3.38},{\"number\":40,\"y\":3.38},{\"number\":39,\"y\":3.38},{\"number\":38,\"y\":3.38},{\"number\":37,\"y\":3.38},{\"number\":36,\"y\":3.38},{\"number\":48,\"y\":3.38},{\"number\":49,\"y\":3.38},{\"number\":50,\"y\":3.38},{\"number\":51,\"y\":3.38},{\"number\":52,\"y\":3.38},{\"number\":53,\"y\":3.38},{\"number\":54,\"y\":3.38},{\"number\":55,\"y\":3.38},{\"number\":56,\"y\":3.38},{\"number\":57,\"y\":3.38},{\"number\":58,\"y\":3.38},{\"number\":59,\"y\":3.38},{\"number\":23,\"y\":-0.6799999999999997},{\"number\":24,\"y\":-0.6799999999999997},{\"number\":22,\"y\":-0.6799999999999997},{\"number\":25,\"y\":-0.6799999999999997},{\"number\":21,\"y\":-0.6799999999999997},{\"number\":26,\"y\":-0.6799999999999997},{\"number\":20,\"y\":-0.6799999999999997},{\"number\":27,\"y\":-0.6799999999999997},{\"number\":19,\"y\":-0.6799999999999997},{\"number\":28,\"y\":-0.6799999999999997},{\"number\":18,\"y\":-0.6799999999999997},{\"number\":29,\"y\":-0.6799999999999997},{\"number\":17,\"y\":-0.6799999999999997},{\"number\":30,\"y\":-0.6799999999999997},{\"number\":16,\"y\":-0.6799999999999997},{\"number\":31,\"y\":-0.6799999999999997},{\"number\":15,\"y\":-0.6799999999999997},{\"number\":32,\"y\":-0.6799999999999997},{\"number\":14,\"y\":-0.6799999999999997},{\"number\":33,\"y\":-0.6799999999999997},{\"number\":13,\"y\":-0.6799999999999997},{\"number\":34,\"y\":-0.6799999999999997},{\"number\":12,\"y\":-0.6799999999999997},{\"number\":35,\"y\":-0.6799999999999997}],\"restored\":[-39,0,4],\"version\":18}\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T09:33:21.409Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3ab8f9276e183e94154f-080d4fbc7387bf6f0e75",
+          "file": "update20.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "six shots, unlimited reloads, pause/cancel, right-hand-only idle and support hand during reload",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 73852,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T09:34:27.743Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3ab8f9276e183e94154f-dc72838409320cb7ab1d",
+          "file": "update20.spec.ts",
+          "line": 26,
+          "column": 1
+        }
+      ],
+      "suites": [
+        {
+          "title": "iPhone-sized touch compatibility (Chromium emulation, not Safari certification)",
+          "file": "update20.spec.ts",
+          "line": 49,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Safari install guidance, MP3 decode, landscape controls, touch reload and bottom dialogue",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 45120,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('region', { name: 'Movement joystick' })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('region', { name: 'Movement joystick' }) with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('region', { name: 'Movement joystick' })\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('region', { name: 'Movement joystick' })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('region', { name: 'Movement joystick' }) with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('region', { name: 'Movement joystick' })\u001b[22m\n\n    at /workspace/Hirodora/tests/update20.spec.ts:60:120",
+                        "location": {
+                          "file": "/workspace/Hirodora/tests/update20.spec.ts",
+                          "column": 120,
+                          "line": 60
+                        },
+                        "snippet": "  58 |   }\n  59 |   expect(r.signs).toHaveLength(48);\n> 60 |   expect(new Set(r.signs.map((s) => s.number)).size).toBe(48);\n     |                                                               ^\n  61 |   for (const s of r.signs.filter((s) => s.number < 36)) {\n  62 |     expect(s.y).toBeCloseTo(-0.68, 2);\n  63 |     expect(s.y).toBeLessThan(-0.5);"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/workspace/Hirodora/tests/update20.spec.ts",
+                            "column": 120,
+                            "line": 60
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('region', { name: 'Movement joystick' })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('region', { name: 'Movement joystick' }) with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('region', { name: 'Movement joystick' })\u001b[22m\n\n\n  58 |   }\n  59 |   expect(r.signs).toHaveLength(48);\n> 60 |   expect(new Set(r.signs.map((s) => s.number)).size).toBe(48);\n     |                                                               ^\n  61 |   for (const s of r.signs.filter((s) => s.number < 36)) {\n  62 |     expect(s.y).toBeCloseTo(-0.68, 2);\n  63 |     expect(s.y).toBeLessThan(-0.5);\n    at /workspace/Hirodora/tests/update20.spec.ts:60:120"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-28T09:35:41.687Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/workspace/Hirodora/test-results/update20-iPhone-sized-touc-881c1--reload-and-bottom-dialogue/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/workspace/Hirodora/test-results/update20-iPhone-sized-touc-881c1--reload-and-bottom-dialogue/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/workspace/Hirodora/test-results/update20-iPhone-sized-touc-881c1--reload-and-bottom-dialogue/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/workspace/Hirodora/tests/update20.spec.ts",
+                        "column": 120,
+                        "line": 60
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "3ab8f9276e183e94154f-64ae6e2a4461ab49e8bc",
+              "file": "update20.spec.ts",
+              "line": 51,
+              "column": 2
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-28T09:33:19.515Z",
+    "duration": 189169.538,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

@@ -1,12 +1,12 @@
 {
-  "source": "Existing MakeHuman CC0-derived prisoner.glb; licensing in docs/GUARD-ASSETS.md",
-  "sourceSHA256": "e23ca60d1e4f088377efbd080d34e8c2cf7b709ad1bc14b56f15f22ce5275a42",
-  "runtimeSHA256": "3746d6ed915fc7c857c3a1a761dc6ea3aa9524129472a1837a8c269d9ac5c2f7",
-  "radialScale": {
-    "forearm": 1.2,
-    "palm": 1.15,
-    "fingers": 1.12
-  },
-  "maxVertexDelta": 0.01089107217198857,
-  "changes": "Weighted anatomical radial expansion in bind space; joint locations, skin weights and finger lengths retained; recomputed normals; black glove/charcoal sleeve; meshopt."
+  "author": "SomeOne34321 (https://sketchfab.com/nikita887H)",
+  "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+  "source": "https://sketchfab.com/3d-models/hands-model-rigged-cbefd9fe847541dd8192e3281adf1bce",
+  "title": "Hands model rigged",
+  "sourceSHA256": "f49fdfce5d26694762595ac2d637c0546d24b44d21c38d7ceb32952e73d52002",
+  "runtimeSHA256": "087810f46767ba06e996b20ccdd26401a990e4824d82d4b0a8ab1f1bb5feebfc",
+  "bytes": 1435984,
+  "triangles": 6046,
+  "scale": 1.25,
+  "changes": "Original textured forearms/hands retained; upper-arm triangles cropped by skin weights; split left/right meshes; anatomical bind-space joint renaming and neutral palm frame; original PBR maps as 2K WebP, meshopt. Source animation replaced by game-authored grip/reload presentation."
 }

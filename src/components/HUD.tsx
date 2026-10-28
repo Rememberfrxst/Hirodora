@@ -4,6 +4,8 @@ import { loadLayout, placementStyle, pocketBottom } from "../game/hud-layout";
 import { ControlIcon, HintIcon } from "./ControlIcon";
 import { ItemIcon } from "./ItemIcon";
 import { COMBAT } from "../game/combat";
+import { BALLISTICS } from "../game/ballistics";
+import weaponIcon from "../assets/equipment/pistol-hud.webp";
 import {
   Eye,
   Volume2,
@@ -113,17 +115,6 @@ export function HUD({ engine, onPause }: Props) {
         </div>
       </section>
       <header className="hud-top">
-        <div className="objective">
-          <span className="eyebrow">
-            ACT 0{stats.act} <i />{" "}
-            {stats.act === 1
-              ? "THE QUIET BEFORE"
-              : stats.act === 2
-                ? "BELLY OF THE ROCK"
-                : "LOW TIDE"}
-          </span>
-          <p>{engine.activeObjective}</p>
-        </div>
         <nav className="hud-tools" aria-label="Game tools">
           <button
             onClick={() => engine.triggerMunshiHint()}
@@ -137,6 +128,38 @@ export function HUD({ engine, onPause }: Props) {
           </button>
         </nav>
       </header>
+      {engine.equippedItem === "pistol_10mm" && (
+        <section className="weapon-hud" aria-label="10mm pistol magazine">
+          <div className="weapon-ammo">
+            <strong>{stats.pistolAmmo}</strong>
+            <span>/ {BALLISTICS.ammo}</span>
+            <small>∞</small>
+          </div>
+          <img src={weaponIcon} alt="10mm pistol" draggable={false} />
+          <div className="magazine-rounds" aria-hidden="true">
+            {Array.from({ length: BALLISTICS.ammo }, (_, i) => (
+              <i key={i} className={i < stats.pistolAmmo ? "loaded" : ""} />
+            ))}
+          </div>
+          <button
+            onClick={() => engine.reloadPistol()}
+            disabled={
+              engine.isReloading || stats.pistolAmmo === BALLISTICS.ammo
+            }
+            aria-label="Reload pistol"
+          >
+            {engine.isReloading ? "RELOADING…" : "RELOAD"}
+            <kbd>R</kbd>
+          </button>
+          {engine.isReloading && (
+            <progress
+              aria-label="Reload progress"
+              max={BALLISTICS.reloadSeconds}
+              value={BALLISTICS.reloadSeconds - engine.reloadRemaining}
+            />
+          )}
+        </section>
+      )}
       <div className={"stealth-state " + (chasing ? "danger" : "")}>
         {stats.isInHidingSpot
           ? "◈ CONCEALED · E TO LEAVE"
@@ -171,16 +194,24 @@ export function HUD({ engine, onPause }: Props) {
         </div>
       )}
       {stats.subtitle && (
-        <div className="subtitle">
+        <div
+          className="subtitle"
+          role="log"
+          aria-live="polite"
+          aria-atomic="true"
+        >
           <span>{stats.subtitle.speaker}</span>
           <p>{stats.subtitle.text}</p>
         </div>
       )}
       {engine.activeInteractPrompt && (
         <div className="context-actions">
-          {!engine.mobile && (
+          {(!engine.mobile || actionLabel === "Take") && (
             <button
-              className="interact-prompt"
+              className={
+                "interact-prompt" +
+                (actionLabel === "Take" ? " pickup-prompt" : "")
+              }
               onPointerDown={(e) => {
                 e.currentTarget.setPointerCapture(e.pointerId);
                 engine.beginInteract();
@@ -189,14 +220,23 @@ export function HUD({ engine, onPause }: Props) {
               onPointerCancel={() => engine.endInteract()}
               onLostPointerCapture={() => engine.endInteract()}
             >
-              <kbd>{engine.mobile ? "TAP" : "E"}</kbd>
-              {engine.activeInteractPrompt === "Penetrate" ? (
+              {actionLabel === "Take" ? (
+                <>
+                  <strong>
+                    {engine.activeInteractPrompt.replace(/^Take (the )?/i, "")}
+                  </strong>
+                  <span>{engine.mobile ? "[Tap]" : "[E]"} Take</span>
+                </>
+              ) : engine.activeInteractPrompt === "Penetrate" ? (
                 <span className="passage-action">
                   <Move size={22} />
                   <small>Penetrate</small>
                 </span>
               ) : (
-                engine.activeInteractPrompt
+                <>
+                  <kbd>E</kbd>
+                  {engine.activeInteractPrompt}
+                </>
               )}
               {engine.activeHold && (
                 <progress

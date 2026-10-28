@@ -52,6 +52,7 @@ await page.route("**/*", async (route) => {
       ".webp": "image/webp",
       ".glb": "model/gltf-binary",
       ".ogg": "audio/ogg",
+      ".mp3": "audio/mpeg",
       ".json": "application/json",
       ".svg": "image/svg+xml",
       ".png": "image/png",
@@ -95,7 +96,7 @@ if (process.env.VERIFY_PISTOL === "true") {
     cp.flags.can_attached = true;
     cp.flags.intro_done = true;
     cp.flags.intro_pending = false;
-    cp.stats.pistolAmmo = 24;
+    cp.stats.pistolAmmo = 6;
     return cp;
   });
   // Install after unload handlers have saved the old live session, but before
@@ -130,9 +131,40 @@ if (process.env.VERIFY_PISTOL === "true") {
   const before = await fire.innerText();
   await fire.tap();
   await page.waitForFunction(() =>
-    document.querySelector(".touch-fire")?.textContent?.includes("23"),
+    document.querySelector(".touch-fire")?.textContent?.includes("5"),
   );
   const after = await fire.innerText();
+  await page.getByRole("button", { name: "Reload pistol", exact: true }).tap();
+  await page
+    .getByRole("progressbar", { name: "Reload progress", exact: true })
+    .waitFor();
+  await page.screenshot({ path: `${captureDir}/apk-assets-reload.png` });
+  try {
+    await page.waitForFunction(
+      () => document.querySelector(".touch-fire")?.textContent?.includes("6"),
+      null,
+      { timeout: 120000 },
+    );
+  } catch (error) {
+    await writeFile(
+      `${captureDir}/reload-failure.json`,
+      JSON.stringify(
+        await page.evaluate(() => ({
+          state: document.body.dataset.state,
+          text: document.body.innerText,
+          progress: document
+            .querySelector('[aria-label="Reload progress"]')
+            ?.getAttribute("value"),
+        })),
+        null,
+        2,
+      ),
+    );
+    await page.screenshot({ path: `${captureDir}/reload-failure.png` });
+    await browser.close();
+    throw error;
+  }
+  const reloaded = await fire.innerText();
   const icons = page.locator(".pocket-item img");
   await icons.first().waitFor();
   await icons.evaluateAll(async (list) =>
@@ -141,11 +173,17 @@ if (process.env.VERIFY_PISTOL === "true") {
   pistol = {
     before,
     after,
+    reloaded,
     iconsDecoded: await icons.evaluateAll((list) =>
       list.every((i) => i.naturalWidth > 0),
     ),
   };
-  if (!before.includes("24") || !after.includes("23") || !pistol.iconsDecoded)
+  if (
+    !before.includes("6") ||
+    !after.includes("5") ||
+    !reloaded.includes("6") ||
+    !pistol.iconsDecoded
+  )
     throw Error("APK pistol UI failed");
 }
 const workers = await page.evaluate(

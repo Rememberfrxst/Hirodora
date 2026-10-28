@@ -53,6 +53,8 @@ import { WarriorActor } from "./warrior";
 import { FirstPersonView } from "./viewmodel";
 import { COMBAT, checkpointHealth, stepMelee } from "./combat";
 import { BALLISTICS, bulletDamage } from "./ballistics";
+import { magazineAmmo, stepReload } from "./reload";
+import { isAppleMobile } from "./platform";
 import { loadBallisticsAssets } from "./ballistics-assets";
 import {
   nextCellSlide,
@@ -298,7 +300,7 @@ export class GameEngine {
   public munshiHint: string | null = null;
   public gameFlags: Record<string, boolean> = { opening_v3: true };
   public overlayOpen = false;
-  public mobile = matchMedia("(pointer: coarse)").matches;
+  public mobile = matchMedia("(pointer: coarse)").matches || isAppleMobile();
   public orientationBlocked = false;
   public sensitivity = 0.0022;
   public reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -306,6 +308,10 @@ export class GameEngine {
   public damageFeedback = 0;
   private damageGrace = 0;
   private nextPistolShot = 0;
+  public reloadRemaining = 0;
+  public get isReloading() {
+    return this.reloadRemaining > 0;
+  }
   public lastBulletHit: "head" | "body" | null = null;
 
   private freshStats(): PlayerStats {
@@ -595,8 +601,11 @@ export class GameEngine {
         )
           return;
         if (e.code === "KeyE") this.beginInteract();
-        if (e.code === "KeyR" && this.contextualAction === "bed_push")
-          this.beginInteract(true);
+        if (e.code === "KeyR") {
+          if (this.equippedItem === "pistol_10mm") this.reloadPistol();
+          else if (this.contextualAction === "bed_push")
+            this.beginInteract(true);
+        }
         if (e.code === "KeyC") this.toggleCrouch();
         if (e.code === "Space") this.jump();
         if (e.code === "KeyH") this.triggerMunshiHint();
@@ -727,6 +736,12 @@ export class GameEngine {
       { signal },
     );
     window.addEventListener("resize", this.updateViewport, { signal });
+    window.visualViewport?.addEventListener("resize", this.updateViewport, {
+      signal,
+    });
+    window.addEventListener("orientationchange", this.updateViewport, {
+      signal,
+    });
     if (typeof ResizeObserver !== "undefined") {
       this.resizeObserver = new ResizeObserver(this.updateViewport);
       this.resizeObserver.observe(this.mountEl);
@@ -1157,6 +1172,7 @@ export class GameEngine {
     return closest;
   }
   public equipItem(item: ItemId | null) {
+    this.reloadRemaining = 0;
     if (
       item &&
       (!this.inventory.includes(item) ||
@@ -1195,6 +1211,9 @@ export class GameEngine {
       near,
       this.gameState === "playing" || this.gameState === "paused",
       !!this.gameFlags.can_attached,
+      this.isReloading
+        ? 1 - this.reloadRemaining / BALLISTICS.reloadSeconds
+        : null,
     );
     this.renderer.render(this.scene, this.camera);
     const calls = this.renderer.info.render.calls,
@@ -1929,9 +1948,8 @@ export class GameEngine {
     };
     this.stats.act = cp.act;
     this.stats.health = checkpointHealth(cp.stats?.health);
-    this.stats.pistolAmmo = Number.isInteger(cp.stats?.pistolAmmo)
-      ? Math.max(0, Math.min(BALLISTICS.ammo, cp.stats!.pistolAmmo))
-      : BALLISTICS.ammo;
+    this.stats.pistolAmmo = magazineAmmo(cp.stats?.pistolAmmo);
+    this.reloadRemaining = 0;
     this.damageGrace = 0;
     this.damageFeedback = 0;
     this.nextPistolShot = 0;
@@ -2062,6 +2080,35 @@ export class GameEngine {
     if (this.equippedItem === "pistol_10mm") this.firePistol();
     else if (this.equippedItem === "dart_pistol") this.fireDart();
   }
+  public reloadPistol() {
+    if (
+      this.gameState !== "playing" ||
+      this.overlayOpen ||
+      this.activeMiniGame ||
+      this.equippedItem !== "pistol_10mm" ||
+      this.activeHold ||
+      this.isReloading ||
+      this.stats.pistolAmmo >= BALLISTICS.ammo
+    )
+      return;
+    this.reloadRemaining = BALLISTICS.reloadSeconds;
+    sound.playObject("metal", 0, 0.35);
+    this.emitChange();
+  }
+  public updateReload(dt: number) {
+    if (!this.isReloading || this.gameState !== "playing" || this.overlayOpen)
+      return;
+    if (this.equippedItem !== "pistol_10mm") {
+      this.reloadRemaining = 0;
+      return;
+    }
+    this.reloadRemaining = stepReload(this.reloadRemaining, dt);
+    if (!this.isReloading) {
+      this.stats.pistolAmmo = BALLISTICS.ammo;
+      sound.playObject("metal", 0, 0.45);
+      this.emitChange();
+    }
+  }
   public firePistol() {
     if (
       this.gameState !== "playing" ||
@@ -2070,12 +2117,13 @@ export class GameEngine {
       this.equippedItem !== "pistol_10mm" ||
       this.activeHold ||
       this.stats.isInHidingSpot ||
+      this.isReloading ||
       this.elapsed < this.nextPistolShot
     )
       return;
     if (this.stats.pistolAmmo <= 0) {
       sound.playLockClick(false);
-      this.notice("No 10mm rounds remaining.");
+      this.notice("Magazine empty. Press R or tap Reload. Reserve: unlimited.");
       return;
     }
     this.nextPistolShot = this.elapsed + BALLISTICS.cooldown;
@@ -2215,6 +2263,7 @@ export class GameEngine {
     }
     if (this.gameState === "playing" && !this.overlayOpen) {
       this.elapsed += dt;
+      this.updateReload(dt);
       this.updateCellGates(dt);
       if (!this.activeMiniGame) {
         this.updateOpening(dt);

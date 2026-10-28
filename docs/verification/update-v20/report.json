@@ -1,0 +1,468 @@
+{
+  "version": "0.20.0",
+  "unitPassed": 80,
+  "selectedBrowserCasesPassed": 21,
+  "wholeBrowserSuiteRerun": false,
+  "runs": [
+    {
+      "file": "browser-1.json",
+      "stats": {
+        "startTime": "2026-10-28T09:33:19.515Z",
+        "duration": 189169.538,
+        "expected": 2,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "browser-2.json",
+      "stats": {
+        "startTime": "2026-10-28T09:42:43.705Z",
+        "duration": 1161883.738,
+        "expected": 17,
+        "skipped": 0,
+        "unexpected": 4,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "browser-3.json",
+      "stats": {
+        "startTime": "2026-10-28T10:03:14.415Z",
+        "duration": 143504.419,
+        "expected": 2,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "browser-4.json",
+      "stats": {
+        "startTime": "2026-10-28T10:04:01.620Z",
+        "duration": 57973.320999999996,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "browser-5.json",
+      "stats": {
+        "startTime": "2026-10-28T10:07:15.036Z",
+        "duration": 36145.872,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "Cell 048 and 036 stairs work in both directions, lower signs are below the slab, checkpoint remains stable",
+      "status": "passed"
+    },
+    {
+      "name": "six shots, unlimited reloads, pause/cancel, right-hand-only idle and support hand during reload",
+      "status": "passed"
+    },
+    {
+      "name": "Safari install guidance, MP3 decode, landscape controls, touch reload and bottom dialogue",
+      "status": "passed"
+    },
+    {
+      "name": "nine officers patrol both levels and a lower cell can be opened, entered and saved",
+      "status": "passed"
+    },
+    {
+      "name": "stairs support actual player movement, gates are independent, and equipped tools persist",
+      "status": "passed"
+    },
+    {
+      "name": "guards route down stairs and cannot capture a player through the gallery floor",
+      "status": "passed"
+    },
+    {
+      "name": "Cell 46 actual gun/can models require aim and E, attach at the muzzle and persist",
+      "status": "passed"
+    },
+    {
+      "name": "actual skin ray hits deal 100 twice or one headshot, corpses persist and New game resets them",
+      "status": "passed"
+    },
+    {
+      "name": "bullets cannot pass closed grilles, pause or fire without ammunition",
+      "status": "passed"
+    },
+    {
+      "name": "boxing cycles jab/cross/hook with high guard between strikes and preserves 200 player HP rules",
+      "status": "passed"
+    },
+    {
+      "name": "touch pickups, can attachment and Fire pistol consume one round without stuck joystick",
+      "status": "passed"
+    },
+    {
+      "name": "supplied cargo matches physical bounds, leaves cell lanes clear and uses real wooden stairs",
+      "status": "passed"
+    },
+    {
+      "name": "guard strikes have windup, can miss, respect walls/floors and reduce 200 HP until defeat",
+      "status": "passed"
+    },
+    {
+      "name": "HP persists through checkpoints, old saves get 200, and searches kneel without replacing AI",
+      "status": "passed"
+    },
+    {
+      "name": "actual player and officer cross Cell 041/054 bridge; side rails, lower clearance and checkpoint work",
+      "status": "passed"
+    },
+    {
+      "name": "Cell 47 key twist, quiet bed, tool, toilet, passage, save and return",
+      "status": "passed"
+    },
+    {
+      "name": "audio recordings decode, blocked movement is silent and channels persist",
+      "status": "passed"
+    },
+    {
+      "name": "hard pushing alerts the examining guard, then he returns to the body without crossing bars",
+      "status": "passed"
+    },
+    {
+      "name": "mobile contextual holding releases on cancel and rotation without stuck input",
+      "status": "passed"
+    },
+    {
+      "name": "reference corridor, fog and gloved grips retain saved equipment through quick slots",
+      "status": "passed"
+    },
+    {
+      "name": "mobile pocket icons remain tappable and clear of left controls on small landscape screens",
+      "status": "passed"
+    }
+  ],
+  "captures": {
+    "captures": [
+      {
+        "name": "01-cell048-stairs",
+        "position": [
+          -10,
+          -2.15,
+          3
+        ],
+        "target": [
+          -5.95,
+          0.2,
+          9
+        ],
+        "item": null,
+        "reload": false,
+        "fov": 70,
+        "ammo": 6,
+        "leftVisible": false,
+        "rightVisible": true,
+        "calls": 294,
+        "triangles": 2726459
+      },
+      {
+        "name": "02-cell036-stairs",
+        "position": [
+          -62,
+          -2.15,
+          5
+        ],
+        "target": [
+          -66.5,
+          0.2,
+          -1
+        ],
+        "item": null,
+        "reload": false,
+        "fov": 70,
+        "ammo": 6,
+        "leftVisible": false,
+        "rightVisible": true,
+        "calls": 239,
+        "triangles": 1707667
+      },
+      {
+        "name": "03-lower-numbers",
+        "position": [
+          -11,
+          -2.15,
+          2
+        ],
+        "target": [
+          -11,
+          -0.6,
+          -2
+        ],
+        "item": null,
+        "reload": false,
+        "fov": 70,
+        "ammo": 6,
+        "leftVisible": false,
+        "rightVisible": true,
+        "calls": 344,
+        "triangles": 2944266
+      },
+      {
+        "name": "04-right-hand-pistol",
+        "position": [
+          -39,
+          1.65,
+          0
+        ],
+        "target": [
+          -39,
+          1.5,
+          10
+        ],
+        "item": "pistol_10mm",
+        "reload": false,
+        "fov": 70,
+        "ammo": 6,
+        "leftVisible": false,
+        "rightVisible": true,
+        "calls": 307,
+        "triangles": 2211259
+      },
+      {
+        "name": "05-pickup-dialogue",
+        "position": [
+          -6,
+          1.65,
+          -3.15
+        ],
+        "target": [
+          -5.7,
+          0.9,
+          -0.7
+        ],
+        "item": null,
+        "reload": false,
+        "fov": 70,
+        "ammo": 6,
+        "leftVisible": false,
+        "rightVisible": true,
+        "calls": 357,
+        "triangles": 3009872
+      },
+      {
+        "name": "06-reload-support-hand",
+        "position": [
+          -39,
+          1.65,
+          0
+        ],
+        "target": [
+          -39,
+          1.5,
+          10
+        ],
+        "item": "pistol_10mm",
+        "reload": true,
+        "fov": 70,
+        "ammo": 0,
+        "leftVisible": true,
+        "rightVisible": true,
+        "calls": 308,
+        "triangles": 2214282
+      }
+    ],
+    "errors": [],
+    "method": "Real game render; fixed cameras and paused simulation. Pickup/dialogue view stages UI state to compare the reference layout, not recorded voice playback."
+  },
+  "phaseComparisons": [
+    {
+      "name": "01-cell048-stairs",
+      "position": [
+        -10,
+        -2.15,
+        3
+      ],
+      "target": [
+        -5.95,
+        0.2,
+        9
+      ],
+      "fov": 70,
+      "beforeSHA256": "670aebae67dc9e89b08e469243e914391d52730ede6fe33f6eb603749944f3e8",
+      "afterSHA256": "dc935a0aa9873d5492a24025b28ac76fbd0100352453c36752a2e3a6e9c60e97",
+      "beforeLocalOnly": true,
+      "beforeStage": "v20 first implementation render before UI/reload polish, not v19 baseline"
+    },
+    {
+      "name": "02-cell036-stairs",
+      "position": [
+        -62,
+        -2.15,
+        5
+      ],
+      "target": [
+        -66.5,
+        0.2,
+        -1
+      ],
+      "fov": 70,
+      "beforeSHA256": "65091b1e1c28e7b8e4b3e70d26bb0939e44fa2240a0950a71d75c1e89901a5d4",
+      "afterSHA256": "65091b1e1c28e7b8e4b3e70d26bb0939e44fa2240a0950a71d75c1e89901a5d4",
+      "beforeLocalOnly": true,
+      "beforeStage": "v20 first implementation render before UI/reload polish, not v19 baseline"
+    },
+    {
+      "name": "03-lower-numbers",
+      "position": [
+        -11,
+        -2.15,
+        2
+      ],
+      "target": [
+        -11,
+        -0.6,
+        -2
+      ],
+      "fov": 70,
+      "beforeSHA256": "32ae4201d456f8b7e2e0fd08534f92af613b7fff35c19d3d7dd9ec2cbc648d98",
+      "afterSHA256": "88e6d809d7f2a7505876fda211b430816fa95a701153d76d87b9e484cecf0a10",
+      "beforeLocalOnly": true,
+      "beforeStage": "v20 first implementation render before UI/reload polish, not v19 baseline"
+    },
+    {
+      "name": "04-right-hand-pistol",
+      "position": [
+        -39,
+        1.65,
+        0
+      ],
+      "target": [
+        -39,
+        1.5,
+        10
+      ],
+      "fov": 70,
+      "beforeSHA256": "dd895f67298bfcd601334ef96cd4c4ce59bdb2b2af585636423d3ebd25115847",
+      "afterSHA256": "170475a729a5ef8826d4a6907cbc2e85eb22bd991bf3bc1a5a9b682745308ad3",
+      "beforeLocalOnly": true,
+      "beforeStage": "v20 first implementation render before UI/reload polish, not v19 baseline"
+    },
+    {
+      "name": "05-pickup-dialogue",
+      "position": [
+        -6,
+        1.65,
+        -3.15
+      ],
+      "target": [
+        -5.7,
+        0.9,
+        -0.7
+      ],
+      "fov": 70,
+      "beforeSHA256": "d22dad73520fce52c45837809d516b6d31671a28a46e2c6901c354c4f2a8eb30",
+      "afterSHA256": "409f55a18109f7b580442776f1cc1859206d9c493ae49729831456a517769e8d",
+      "beforeLocalOnly": true,
+      "beforeStage": "v20 first implementation render before UI/reload polish, not v19 baseline"
+    },
+    {
+      "name": "06-reload-support-hand",
+      "position": [
+        -39,
+        1.65,
+        0
+      ],
+      "target": [
+        -39,
+        1.5,
+        10
+      ],
+      "fov": 70,
+      "beforeSHA256": "759cf994051cd58e04f2014ed58f2127afaf25bbd19378c8601ba0f86052d4f9",
+      "afterSHA256": "95fe960eeb91920c0c199e5a73873468e6970278b22f514c25ca01220c4b3275",
+      "beforeLocalOnly": true,
+      "beforeStage": "v20 first implementation render before UI/reload polish, not v19 baseline"
+    }
+  ],
+  "hands": {
+    "author": "SomeOne34321 (https://sketchfab.com/nikita887H)",
+    "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+    "source": "https://sketchfab.com/3d-models/hands-model-rigged-cbefd9fe847541dd8192e3281adf1bce",
+    "title": "Hands model rigged",
+    "sourceSHA256": "f49fdfce5d26694762595ac2d637c0546d24b44d21c38d7ceb32952e73d52002",
+    "runtimeSHA256": "087810f46767ba06e996b20ccdd26401a990e4824d82d4b0a8ab1f1bb5feebfc",
+    "bytes": 1435984,
+    "triangles": 6046,
+    "scale": 1.25,
+    "changes": "Original textured forearms/hands retained; upper-arm triangles cropped by skin weights; split left/right meshes; anatomical bind-space joint renaming and neutral palm frame; original PBR maps as 2K WebP, meshopt. Source animation replaced by game-authored grip/reload presentation."
+  },
+  "audio": {
+    "format": "MP3",
+    "recordings": 70,
+    "allPackagedBytesVerified": true
+  },
+  "artifacts": {
+    "web": {
+      "version": "0.20.0",
+      "archive": "Hirodora-0.20.0-offline.zip",
+      "html": "Hirodora-0.20.0.html",
+      "sha256": "50a6b353606965a45da69cc68f2a151383b764f9a818beab1776f4c30f1aac7e",
+      "bytes": 35543658
+    },
+    "android": {
+      "version": "0.20.0",
+      "file": "Hirodora-0.20.0-android.apk",
+      "bytes": 35655695,
+      "sha256": "5e678592e77c5c6f02a8b61d0efc95f706671fbd38c4f4881c8a2bbbc4b69395",
+      "certificateSHA256": "d7175da40c348c91e8a8663635d3a130115aba916e5ce889e40b646c009f33ca",
+      "minAndroid": "8.0 (API 26)",
+      "targetApi": 35,
+      "architecture": "Universal; uses installed Android System WebView",
+      "distribution": "Signed release APK; offline assets included; no network permission"
+    }
+  },
+  "androidLint": {
+    "errors": 0,
+    "warnings": 10
+  },
+  "ios": {
+    "observedDate": "2026-10-28",
+    "policyState": "enforced",
+    "webkitInstalled": false,
+    "safariDeviceCertified": false,
+    "nativeIPAProduced": false,
+    "blocked": [
+      {
+        "hostname": "cdn.playwright.dev",
+        "status": 403,
+        "operation": "Playwright WebKit 2370 download",
+        "message": "Domain forbidden"
+      },
+      {
+        "hostname": "playwright.download.prss.microsoft.com",
+        "status": 403,
+        "operation": "Playwright WebKit mirror download",
+        "message": "Domain forbidden"
+      },
+      {
+        "hostname": "rememberfrxst.github.io",
+        "status": 403,
+        "operation": "HEAD https://rememberfrxst.github.io/Hirodora/",
+        "message": "CONNECT tunnel failed, response 403"
+      }
+    ],
+    "continuation": "Implementation, MP3 conversion, Chromium/mobile emulation, unit/build/Android checks continue locally. No proxy bypass or disabled TLS verification used.",
+    "remaining": "Allow these hostnames to perform the missing WebKit/hosted-site checks. Real iPhone/iPad QA and native Apple signing remain separate requirements."
+  },
+  "limits": [
+    "Chromium iPhone emulation is not Safari/WebKit or physical iOS certification.",
+    "Hosted GitHub Pages availability not verified through this environment's blocked hostname.",
+    "No IPA produced; macOS/Xcode and Apple signing are required.",
+    "Authored support-hand reload gesture, not a detachable-magazine or motion-captured reload.",
+    "Software Chromium/APK-payload checks are not real Android/iPhone GPU, frame-rate or thermal testing."
+  ]
+}

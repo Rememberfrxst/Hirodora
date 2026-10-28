@@ -8,62 +8,54 @@
 
 **Every sound has a consequence.**
 
-**v0.19.0 · Cell 041 ↔ 054 Metal Bridge / Anatomical Grips**
+**v0.20.0 · Cell 048 / 036 Stairs · Rigged Hands · Six-Shot Reload · Safari Audio**
 
-**[↓ DOWNLOAD ANDROID APK](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.19.0-android.apk)**
+**[↓ DOWNLOAD ANDROID APK](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.20.0-android.apk)**
 
-[↓ Offline web ZIP](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.19.0-offline.zip) · [Single-file HTML download](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.19.0.html) · [ZIP checksum](downloads/latest.json) · [APK checksums](downloads/android-latest.json) · [Android installation](docs/ANDROID.md)
+[↓ Offline web ZIP](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.20.0-offline.zip) · [Single-file HTML download](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.20.0.html) · [ZIP checksum](downloads/latest.json) · [APK checksums](downloads/android-latest.json) · [Android installation](docs/ANDROID.md)
 
 </div>
 
 ## A playable prison atrium
 
-**The uploaded textured metal bridge connects the upper galleries directly in front of Cell 041 and Cell 054.** Three original modules span the 6m opening, with open gallery entrances, continuous walkable support, collision rails and metal footsteps. Player and guard navigation share the crossing; the lower corridor stays open underneath. No cell, gate, puzzle or existing staircase is moved.
+**v0.20.0 moves the two stair tops in front of Cell 048 and Cell 036.** The uploaded wooden stair models, real floor openings, safety rails, physical movement and guard navigation are fitted together. The lower floor is **0.6m deeper**, giving **3.5m clear height** beneath the upper slab. Every lower cell now has a larger, readable number on a proper masonry band above its gate.
 
-The black-gloved forearm, palm and fingers have **real mesh thickness increases** (20%, 15%, 12% radially), not just screen scaling. The rig is also displayed 5.4% larger than v0.18. The 10mm has its own curled trigger-finger pose, the screwdriver seats across the fingers and key rings align between the thumb/index pads. Joint lengths and wrist orientation stay unchanged. [Bridge, grip and verification details](docs/BRIDGE-V19.md).
+**Your uploaded “Hands model rigged” is now the first-person mesh**, retaining its real skin textures, normal/roughness maps and finger joints. Only the right hand is visible during ordinary tool/gun use. The left support hand enters during the authored reload animation, then disappears. The screwdriver, keys and 10mm use separate anatomical grips. This replaces the previous MakeHuman-derived black-glove player arm; guards keep their existing licensed models.
 
-**Cell 46's table holds the uploaded textured 10mm pistol and soda can.** Aim at the gun and press **E / Interact**, then aim at the can with the pistol equipped and press E. The can attaches to the muzzle as a fictional game effect. The pistol starts with **24 rounds**: **100 damage per body hit, two body hits to defeat a 200 HP guard, or one headshot**. Actual skin weights distinguish the head from raised hands. Walls and closed grilles stop bullets. Dead officers stay where they fell and persist through checkpoints; New game resets them. The legacy dart pistol remains non-lethal.
+The pistol has a **six-shot magazine with unlimited reserve**. Press **R** or tap **Reload** to refill it in 1.8 seconds. Reload pauses with gameplay and cancels when changing equipment; firing is blocked during reload. The top-left weapon card shows the actual pistol silhouette, remaining rounds, six magazine segments and ∞ reserve. Old ACT/objective text is removed from that corner; HP remains available at the bottom.
 
-Officers alternate **jab, cross and hook**, with a high-guard stance between strikes. These are authored skeletal clips, not new motion capture or physics boxing. Every cell has its own `C / 047`-style sign and recessed masonry above the grille; cell and sliding-door sizes remain unchanged. Green fog remains 0.033.
+Aim at a pickup to see its name and **[E] Take** near the reticle (**[Tap] Take** on touch devices). Guard dialogue appears as readable speaker/text at the bottom centre, without a grey panel. Hint and Pause remain at top right; collected item icons remain at bottom left.
 
-**Uploaded sound pending:** the supplied MP3 was cropped to a 0.395s private audition. Its official license page at `mixkit.co` is blocked by the proxy (CONNECT HTTP 403), so that derivative is **not published/bundled** until its license is supplied or verified. This build uses the existing credited local gunshot, quieter/filtered with the can. [Current implementation and verification](docs/BALLISTICS-V18.md).
+**Cell 46's table holds the supplied textured 10mm pistol and soda can.** Aim and press E / Interact to take the pistol, then aim at the can with it equipped to attach the fictional muzzle effect. Damage is unchanged: **100 per body hit, two body hits to defeat a 200 HP officer, or one headshot**. Walls and closed grilles stop bullets. Corpses remain at their fall positions and persist through checkpoints; New game resets them. The legacy dart pistol remains non-lethal.
 
-**Cell 46's gate now stays open in the current opening chapter**, including previously closed saves. Complete the Cell 47 passage, choose **Explore Cell 46**, then walk through its open gate to inspect both floors. The gate's Close action is disabled so it stays available for testing. Guards remain active. [Exploration patch](docs/CELL46-EXPLORATION.md).
+Block C still has **48 cells: 12 left and 12 right on each floor**. Its 12m-wide corridor surrounds a 6m central opening; original cell widths, depths and individual 1.4m sliding wickets remain. The **uploaded metal bridge still connects Cell 041 ↔ 054** upstairs. Lower-floor cargo, four upper officers, five lower officers, cinematic intro, stealth AI and Cell 47's puzzle are preserved. Cell 46's opening-chapter gate remains open for exploration.
 
-Block C has **48 cells: 12 left and 12 right on each of two playable floors**. The corridor is now **12 metres wide**, down from 14m: two unchanged 3-metre upper galleries surround a **6-metre central opening**. The supplied textured **wooden stair GLB replaces both concrete flights**, with navigation following the actual eleven treads. **Five strapped pallets and eight wooden crates** form staggered lower-floor cargo bays and crouch cover, leaving cell fronts and stair landings accessible. Muted green distance fog remains. Cell interiors retain their original widths and 9.5m depths; every cell has a **full-width barred front** with its own **1.4m sliding door**. Leaves park over their own fixed panel and pause if a player or officer blocks their sweep. Four officers serve upstairs and five patrol downstairs.
+Player health is **200 HP**; guard melee has a visible wind-up and **25-damage** contact moment, with spacing and a shared grace window. Jab/cross/hook and reload presentation are authored skeletal animation, not new motion capture, ragdoll physics or a complete tactical-reload simulation.
 
-You now have **200 HP**. A confirmed guard at close range winds up and strikes for **25 damage** at the animation's contact moment, rather than instantly ending the game. Back away or break line of sight to make a punch miss. Solid walls, closed bars and different floor levels prevent hits; a short shared grace window prevents simultaneous officers deleting your health in one frame. Guards hold their spacing between swings. HP is saved at checkpoints, old saves default to 200, and New game restores 200. No passive healing is added. Walking cadence follows travelled distance, kneeling search/body-check poses transition from locomotion, and punches use clenched skeletal hands. These are authored animations, not a full physics fighting system.
+**Safari compatibility:** all 70 licensed recordings now have MP3 runtime derivatives, fixing the Ogg Vorbis compatibility gap in older iOS Safari. Touch/landscape handling also recognises desktop-mode iPads, and interrupted Safari audio can resume after a user gesture. See the [iPhone/iPad guide](docs/IOS.md) for installation and the remaining verification limits.
 
-The supplied **Redeemed Warrior** occupies Cell 46, preserving Boulder's interaction and challenge. Its USDZ is converted to a local 2.1 MB textured GLB. Equipment now uses a **black-gloved anatomical hand**, a neutral wrist and separate power, key-pinch and pistol poses. The screwdriver handle crosses the curled fingers instead of sitting along them. **Bottom-left pocket icons** show collected items using transparent renders of the actual game meshes; tap/click an icon to equip or unequip it. The selection is saved. Mobile pockets dock below the joystick when space allows, or above left-side controls for large/mirrored layouts. The satchel remains available for item descriptions and documents. Dart ammo/fire controls only appear for the dart pistol.
-
-The top-right HUD has only **Hint** and **Pause**. The bulb and up-arrow references have vector renditions: jump points up, crouch down and sprint right. The touch interaction button is hidden when no action is available; nearby actions display Push, Unbolt, Move, Open or Penetrate with hold progress. Map, story, restart and New game remain in Pause. **To main menu** opens the reference-style **Yes / No** confirmation, defaulting to No with keyboard focus management.
-
-**Police replacement remains pending:** a local 69-bone conversion of the supplied mesh has been prepared for inspection. Complete source/license details are required before publishing it; grip/deformation polishing remains open. This release ships the previously licensed officers. The Warrior is static source geometry; breathing presentation does not imply a new skeletal performance.
-
-[Current implementation and verification](docs/BRIDGE-V19.md) · [Pistol / can / boxing](docs/BALLISTICS-V18.md) · [Wooden cargo / player HP](docs/CARGO-COMBAT-V17.md) · [Character credits](docs/GUARD-ASSETS.md) · [Gun / can credits](src/assets/ballistics/LICENSES.txt)
+[Current implementation / verification](docs/UPDATE-V20.md) · [Previous bridge update](docs/BRIDGE-V19.md) · [Gun / can / boxing](docs/BALLISTICS-V18.md) · [Character credits](docs/GUARD-ASSETS.md)
 
 ## Latest screenshots — exactly six
 
-Six actual game renders, not generated artwork. [Camera positions and render statistics](docs/screenshots/bridge-v19/capture.json).
-
-Historical captures remain available. The bridge verification records identical-camera pre-change capture hashes without adding another screenshot gallery.
+Six actual game renders, not generated artwork. [Camera positions and render statistics](docs/screenshots/update-v20/capture.json). The pickup/dialogue image stages the reference UI state; it is not a recording of spoken dialogue. Historical galleries are preserved separately.
 
 <table>
-<tr><td width="50%"><img src="docs/screenshots/bridge-v19/01-bridge-overview.png" alt="Uploaded metal bridge in front of Cell 054" /></td><td width="50%"><img src="docs/screenshots/bridge-v19/02-crossing.png" alt="Walkable bridge joining both galleries" /></td></tr>
-<tr><td align="center"><sub>CELL 041 ↔ 054</sub></td><td align="center"><sub>OPEN GALLERY ENTRANCES</sub></td></tr>
-<tr><td><img src="docs/screenshots/bridge-v19/03-lower-clearance.png" alt="Lower corridor clearance below the bridge" /></td><td><img src="docs/screenshots/bridge-v19/04-pistol.png" alt="Larger glove and curled 10mm trigger grip" /></td></tr>
-<tr><td align="center"><sub>LOWER CORRIDOR CLEARANCE</sub></td><td align="center"><sub>10MM TRIGGER GRIP</sub></td></tr>
-<tr><td><img src="docs/screenshots/bridge-v19/05-screwdriver.png" alt="Thicker hand holding screwdriver handle" /></td><td><img src="docs/screenshots/bridge-v19/06-key.png" alt="Key ring aligned between thumb and index pads" /></td></tr>
-<tr><td align="center"><sub>SCREWDRIVER POWER GRIP</sub></td><td align="center"><sub>KEY-RING PINCH GRIP</sub></td></tr>
+<tr><td width="50%"><img src="docs/screenshots/update-v20/01-cell048-stairs.png" alt="Stairs rising in front of Cell 048" /></td><td width="50%"><img src="docs/screenshots/update-v20/02-cell036-stairs.png" alt="Opposite staircase in front of Cell 036" /></td></tr>
+<tr><td align="center"><sub>CELL 048 · EAST STAIR</sub></td><td align="center"><sub>CELL 036 · WEST STAIR</sub></td></tr>
+<tr><td><img src="docs/screenshots/update-v20/03-lower-numbers.png" alt="Readable lower-floor cell number and taller wall band" /></td><td><img src="docs/screenshots/update-v20/04-right-hand-pistol.png" alt="Uploaded right hand holding the pistol and six-shot HUD" /></td></tr>
+<tr><td align="center"><sub>LOWER CELLS · VISIBLE NUMBERS</sub></td><td align="center"><sub>RIGGED RIGHT HAND · 6 / ∞</sub></td></tr>
+<tr><td><img src="docs/screenshots/update-v20/05-pickup-dialogue.png" alt="Key pickup cue and bottom-centre guard dialogue" /></td><td><img src="docs/screenshots/update-v20/06-reload-support-hand.png" alt="Support hand enters during reload" /></td></tr>
+<tr><td align="center"><sub>[E] TAKE · BOTTOM DIALOGUE</sub></td><td align="center"><sub>RELOAD · LEFT SUPPORT HAND</sub></td></tr>
 </table>
 
 ## Play on mobile
 
-Download the APK above, open it in Android Files and allow installation from that source when prompted. Requires **Android 8.0+**, an updated Android System WebView and WebGL 2. The app opens horizontally and includes all models, textures and audio offline, with **no Internet, storage, microphone or tracking permission**.
+**Android:** download the APK above, open it in Files and allow installation from that source. Requires Android 8.0+, an updated Android System WebView and WebGL 2. All models, textures and audio are included, with no Internet, storage, microphone or tracking permission. v0.20.0 / versionCode **2000** reuses the existing release certificate. Install over the previous release to preserve app-local saves/settings; uninstalling clears them. Old lower-floor/stair checkpoints migrate to the new layout.
 
-Version 0.19.0 uses the existing release certificate and versionCode **1900**. Existing saves retain their positions, inventory and puzzles. Install over an earlier release to retain app-local saves and settings; uninstalling clears them.
+**iPhone/iPad:** use an HTTPS-hosted game in **Safari → Share → Add to Home Screen**, then turn off Portrait Orientation Lock and rotate horizontally. An APK cannot install on iOS; the Files HTML preview is not a supported runtime. [Installation, intended hosted URL and testing blockers](docs/IOS.md). A native IPA/TestFlight release still requires macOS/Xcode and Apple signing; none is claimed here.
 
-For the web edition, download through the direct ZIP link above, extract it and open `Hirodora-0.19.0.html` in a full WebGL 2 browser. The links bypass GitHub's large-file preview. File handling depends on your device. On iPhone/iPad, use the hosted PWA; a local HTML viewer may block scripts. Portrait play pauses behind a rotate notice.
+For desktop/offline web play, extract the ZIP and open `Hirodora-0.20.0.html` in a full WebGL 2 browser. Download links bypass GitHub's large-file preview. Exact sizes and SHA-256 checksums are in the download manifests.
 
 ## How to finish the current chapter
 
@@ -112,16 +104,17 @@ node scripts/prepare-uploaded-assets.mjs rock_wall_16_2k.zip basic_table.glb dir
 node scripts/prepare-cargo-assets.mjs wooden_stairs_5_mb.glb wood_box.glb wood__boxes_strapped_on_palet.glb
 node scripts/prepare-ballistics-assets.mjs gun_10mm.glb coca-cola_can_4k_texture.glb
 node scripts/prepare-bridge-asset.mjs bridge__metal_10_mb.glb
-node scripts/build-viewmodel.mjs
+node scripts/prepare-hands-asset.mjs hands_model_rigged.glb
+node scripts/prepare-audio-compat.mjs
 ```
 
 The offline pipeline needs ffmpeg and preserves attribution. Original source uploads are not required at runtime. Textures are shared across rooms; superseded bunk/toilet meshes are excluded from the loaded fixture library. The build enforces a 100 MiB offline budget; exact download sizes and hashes are in [the manifests](downloads/android-latest.json).
 
 ## Quality and release status
 
-Asset/logic tests, selected browser regressions and packaging validation are documented in [BRIDGE-V19.md](docs/BRIDGE-V19.md). The current suite has 77 unit/asset checks. The [release verification report](docs/verification/bridge-v19/report.json) records exact selected browser outcomes and reruns; physical-phone testing is separate.
+Asset/logic tests, selected browser regressions and packaging validation are documented in [UPDATE-V20.md](docs/UPDATE-V20.md). The current suite has **80 unit/asset checks**. The [release verification report](docs/verification/update-v20/report.json) records exact selected browser outcomes and focused reruns; it does not claim the whole browser suite was rerun.
 
-Physical-phone frame rate, thermal behavior and device-specific WebView/GPU compatibility still need hardware testing. Software-rendered browser checks are not Android-device certification or a promise of glitch-free gameplay. Existing licensed guard models are preserved; the supplied police replacement still needs its source/license details and grip polish. The supplied Warrior is integrated.
+**iOS/Safari certification is still pending.** This cloud environment blocked WebKit downloads at `cdn.playwright.dev` / `playwright.download.prss.microsoft.com` and hosted-site inspection at `rememberfrxst.github.io` with HTTP 403. Chromium iPhone emulation is not real Safari or physical-phone testing. GPU compatibility, frame rate, thermals and extended Android/iPhone playtesting remain open. The supplied police replacement still needs source/license details and grip polish; the supplied Warrior remains integrated.
 
 ## Sources and credits
 
@@ -135,6 +128,7 @@ New sidearm/can: [Christian S / Gun 10mm](https://sketchfab.com/3d-models/gun-10
 | [Free Screwdriver](https://sketchfab.com/3d-models/free-screwdriver-daa1a4a4013b479097633f75a33bb543)            | Filip                   | CC BY 4.0 |
 | [Wooden Stairs](https://sketchfab.com/3d-models/wooden-stairs-5-mb-56271a83e8ff487b84289e39a159d3c5)             | Mehdi Shahsavan         | CC BY 4.0 |
 | [Metal Bridge](https://sketchfab.com/3d-models/bridge--metal-10-mb-5933ffc71ca5427da825715660fa16d8)             | Mehdi Shahsavan         | CC BY 4.0 |
+| [Hands model rigged](https://sketchfab.com/3d-models/hands-model-rigged-cbefd9fe847541dd8192e3281adf1bce) | SomeOne34321 | CC BY 4.0 |
 | [Wood Box](https://sketchfab.com/3d-models/wood-box-ed74acd9b510481eb43a7753754d7ac8)                            | kakou3991               | CC BY 4.0 |
 | [Strapped Pallet](https://sketchfab.com/3d-models/wood-boxes-strapped-on-palet-42652beb14e34e0a94d5f980ebb1869e) | Claudiu                 | CC BY 4.0 |
 | [Wood furniture movement](https://freesound.org/people/ralph.whitehead/sounds/565727/)                           | ralph.whitehead         | CC0 1.0   |

@@ -1,0 +1,5 @@
+Hands model rigged
+Author: SomeOne34321 (https://sketchfab.com/nikita887H)
+Source: https://sketchfab.com/3d-models/hands-model-rigged-cbefd9fe847541dd8192e3281adf1bce
+License: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+Changes: Original textured forearms/hands retained; upper-arm triangles cropped by skin weights; split left/right meshes; anatomical bind-space joint renaming and neutral palm frame; original PBR maps as 2K WebP, meshopt. Source animation replaced by game-authored grip/reload presentation.

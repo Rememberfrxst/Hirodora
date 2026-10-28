@@ -14,6 +14,10 @@ export class FirstPersonView {
   readonly root = new THREE.Group();
   private arm?: THREE.Group;
   private hand?: THREE.Object3D;
+  private leftHand?: THREE.Object3D;
+  private leftForearm?: THREE.Object3D;
+  private leftMesh?: THREE.Object3D;
+  private leftRest?: THREE.Vector3;
   private items = new Map<ItemId, THREE.Object3D>();
   private selected: ItemId | null = null;
   private rest = new Map<string, THREE.Quaternion>();
@@ -43,11 +47,16 @@ export class FirstPersonView {
       .setMeshoptDecoder(MeshoptDecoder)
       .loadAsync(armURL);
     this.arm = gltf.scene;
-    this.arm.scale.setScalar(1.18);
+    this.arm.scale.setScalar(1.12);
     this.root.add(this.arm);
     const forearm = this.arm.getObjectByName("RightForeArm")!;
     this.arm.updateMatrixWorld(true);
     this.hand = this.arm.getObjectByName("RightHand")!;
+    this.leftHand = this.arm.getObjectByName("LeftHand");
+    this.leftForearm = this.arm.getObjectByName("LeftForeArm");
+    this.leftMesh = this.arm.getObjectByName("LeftArmMesh");
+    this.leftRest = this.leftForearm?.position.clone();
+    if (this.leftMesh) this.leftMesh.visible = false;
     // Orient the whole forearm, not a bent wrist. Local Z runs across the palm.
     const y = new THREE.Vector3(-0.3, 0.28, -1).normalize();
     const x = new THREE.Vector3()
@@ -62,7 +71,7 @@ export class FirstPersonView {
       .multiply(desired)
       .multiply(this.hand.quaternion.clone().invert());
     this.arm.traverse((bone) => {
-      if (/^RightHand/.test(bone.name))
+      if (/^(Right|Left)Hand/.test(bone.name))
         this.rest.set(bone.name, bone.quaternion.clone());
     });
     poseGrip(this.arm, this.rest, "power");
@@ -269,6 +278,7 @@ export class FirstPersonView {
     nearWall: boolean,
     visible: boolean,
     canAttached = false,
+    reloadProgress: number | null = null,
   ) {
     if (item !== this.selected) {
       this.selected = item;
@@ -321,6 +331,44 @@ export class FirstPersonView {
       0,
       sway * 0.5,
     );
+    const reload = item === "pistol_10mm" && reloadProgress !== null;
+    if (this.leftMesh) this.leftMesh.visible = reload;
+    if (
+      reload &&
+      this.arm &&
+      this.leftHand &&
+      this.leftForearm &&
+      this.leftRest
+    ) {
+      const p = Math.max(0, Math.min(1, reloadProgress)),
+        envelope = Math.sin(Math.PI * p);
+      this.root.rotation.z -= envelope * 0.18;
+      this.root.rotation.x += envelope * 0.08;
+      this.root.position.y -= envelope * 0.015;
+      this.leftForearm.position.copy(this.leftRest);
+      const leftY = new THREE.Vector3(0.7, 0.5, -0.5).normalize(),
+        leftX = new THREE.Vector3()
+          .crossVectors(leftY, new THREE.Vector3(0, 1, 0.1))
+          .normalize(),
+        leftZ = new THREE.Vector3().crossVectors(leftX, leftY).normalize();
+      this.leftForearm.quaternion.setFromRotationMatrix(
+        new THREE.Matrix4().makeBasis(leftX, leftY, leftZ),
+      );
+      poseGrip(this.arm, this.rest, "power", "Left");
+      this.root.updateMatrixWorld(true);
+      const wrist = this.leftHand.getWorldPosition(new THREE.Vector3());
+      const target = this.root.localToWorld(
+        new THREE.Vector3(
+          0.06 - (1 - envelope) * 0.42,
+          -0.38 - (1 - envelope) * 0.4,
+          -0.61,
+        ),
+      );
+      const delta = this.arm
+        .worldToLocal(target)
+        .sub(this.arm.worldToLocal(wrist));
+      this.leftForearm.position.add(delta);
+    }
   }
   shoot() {
     this.recoil = 0.18;

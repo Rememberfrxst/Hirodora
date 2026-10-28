@@ -60,7 +60,7 @@ test("supplied cargo matches physical bounds, leaves cell lanes clear and uses r
   for (const s of data.stairs) {
     expect(s.min[1]).toBeLessThan(-3.1);
     expect(s.max[1]).toBeGreaterThan(1);
-    expect(s.max[0] - s.min[0]).toBeGreaterThan(7);
+    expect(s.max[2] - s.min[2]).toBeGreaterThan(8.1);
   }
 });
 
@@ -84,8 +84,8 @@ test("guard strikes have windup, can miss, respect walls/floors and reduce 200 H
       ),
       actor = e.guardActors.get(g.id);
     const place = () => {
-      e.playerPos = [-35, -3.2, 4];
-      g.position = [-35, -3.2, 4.9];
+      e.playerPos = [-35, -3.8, 4];
+      g.position = [-35, -3.8, 4.9];
       g.rotationY = Math.PI;
       g.state = "chase";
       g.suspicion = 100;
@@ -110,7 +110,7 @@ test("guard strikes have windup, can miss, respect walls/floors and reduce 200 H
     place();
     e.damageGrace = 0;
     e.updateGuards(0.05);
-    e.playerPos = [-35, -3.2, 2.8];
+    e.playerPos = [-35, -3.8, 2.8];
     for (let i = 0; i < 10; i++) e.updateGuards(0.05);
     const miss = e.stats.health;
     // A closed barred gate and a whole storey both prevent a strike.
@@ -122,7 +122,7 @@ test("guard strikes have windup, can miss, respect walls/floors and reduce 200 H
     for (let i = 0; i < 60; i++) e.updateGuards(0.05);
     const bars = e.stats.health;
     g.position = [-35, 0, 4];
-    e.playerPos = [-35, -3.2, 4];
+    e.playerPos = [-35, -3.8, 4];
     g.attackElapsed = undefined;
     for (let i = 0; i < 20; i++) e.updateGuards(0.05);
     const floor = e.stats.health;
@@ -179,7 +179,7 @@ test("HP persists through checkpoints, old saves get 200, and searches kneel wit
     );
     const inside = [...cargo.position.toArray()];
     cp.layoutVersion = 16;
-    cp.playerPosition = [inside[0], inside[1], 1 + (inside[2] - 1) / 0.75];
+    cp.playerPosition = [inside[0], -3.2, 1 + (inside[2] - 1) / 0.75];
     e.restoreCheckpoint(cp);
     const escapedCargo = Math.hypot(
       e.playerPos[0] - inside[0],
@@ -204,7 +204,7 @@ test("HP persists through checkpoints, old saves get 200, and searches kneel wit
       (g: any) => g.id === "guard_lower_center",
     );
     e.stats.isInHidingSpot = true;
-    g.position = [-35, -3.2, 4];
+    g.position = [-35, -3.8, 4];
     g.rotationY = Math.PI;
     g.state = "searching";
     g.suspicion = 40;
@@ -213,8 +213,8 @@ test("HP persists through checkpoints, old saves get 200, and searches kneel wit
     g.lastKnownPosition = [...g.position];
     // Pose checks must look at the actor: offscreen animation sampling is
     // intentionally throttled while authoritative search timers still advance.
-    e.camera.position.set(-35, -1.55, 1.4);
-    e.camera.lookAt(-35, -2.1, 4);
+    e.camera.position.set(-35, -2.15, 1.4);
+    e.camera.lookAt(-35, -2.7, 4);
     e.camera.updateMatrixWorld();
     for (let i = 0; i < 35; i++) e.updateGuards(0.05);
     const actor = e.guardActors.get(g.id),

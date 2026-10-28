@@ -10,7 +10,7 @@ import {
   CELL_GATE_WIDTH,
   type CellRoom,
 } from "./cell-block";
-import { ATRIUM } from "./atrium";
+import { ATRIUM, STAIR_OPENINGS, stairPoint, upperFloorAt } from "./atrium";
 import { configureCellSlider } from "./cell-gates";
 import { CARGO } from "./cargo-layout";
 import cargoAssets from "../assets/environment/cargo-manifest.json";
@@ -244,17 +244,20 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     blockCenter = (CELL_BLOCK.east + CELL_BLOCK.west) / 2,
     blockWidth = CELL_BLOCK.south - CELL_BLOCK.north,
     centerZ = ATRIUM.centerZ;
-  wall([0.5, 8.5, blockWidth], [CELL_BLOCK.west, 1, centerZ]);
-  wall([blockLength, 3.2, 0.5], [blockCenter, -1.6, CELL_BLOCK.north]);
-  wall([blockLength, 8.5, 0.5], [blockCenter, 1, CELL_BLOCK.south]);
-  wall([0.35, 8.5, 12.5], [CELL_BLOCK.east, 1, ATRIUM.south + 6.25]);
+  wall([0.5, 9.1, blockWidth], [CELL_BLOCK.west, 0.7, centerZ]);
+  wall(
+    [blockLength, -ATRIUM.depth, 0.5],
+    [blockCenter, ATRIUM.depth / 2, CELL_BLOCK.north],
+  );
+  wall([blockLength, 9.1, 0.5], [blockCenter, 0.7, CELL_BLOCK.south]);
+  wall([0.35, 9.1, 12.5], [CELL_BLOCK.east, 0.7, ATRIUM.south + 6.25]);
   wall(
     [0.35, 5.2, ATRIUM.south - 2],
     [CELL_BLOCK.east, 2.6, (ATRIUM.south + 2) / 2],
   );
   wall(
-    [0.35, 3.2, ATRIUM.south - CELL_BLOCK.north],
-    [CELL_BLOCK.east, -1.6, (ATRIUM.south + CELL_BLOCK.north) / 2],
+    [0.35, -ATRIUM.depth, ATRIUM.south - CELL_BLOCK.north],
+    [CELL_BLOCK.east, ATRIUM.depth / 2, (ATRIUM.south + CELL_BLOCK.north) / 2],
   );
   wall(
     [-16 - CELL_BLOCK.west, 4.3, 0.5],
@@ -279,44 +282,66 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     ),
     2,
   );
-  for (const z of [-5.25, ATRIUM.south + 6.25])
-    projectUV(
-      box(
-        staticWorld,
-        [blockLength, 0.3, 12.5],
-        [blockCenter, -0.15, z],
-        floor,
-      ),
-      2,
-    );
-  for (const x of [CELL_BLOCK.west + 1.5, CELL_BLOCK.east - 1.5])
-    projectUV(
-      box(
-        staticWorld,
-        [3, 0.3, ATRIUM.south - ATRIUM.north],
-        [x, -0.15, centerZ],
-        floor,
-      ),
-      2,
-    );
-  // A continuous underside blocks sight/hearing through the upper galleries.
-  const floorOccluders = [
-    new THREE.Box3(
-      new THREE.Vector3(CELL_BLOCK.west, -0.3, -11.5),
-      new THREE.Vector3(CELL_BLOCK.east, 0, 1),
-    ),
-    new THREE.Box3(
-      new THREE.Vector3(CELL_BLOCK.west, -0.3, ATRIUM.south),
-      new THREE.Vector3(CELL_BLOCK.east, 0, CELL_BLOCK.south),
-    ),
+  type FloorRect = { minX: number; maxX: number; minZ: number; maxZ: number };
+  let upperFloors: FloorRect[] = [
+    {
+      minX: CELL_BLOCK.west,
+      maxX: CELL_BLOCK.east,
+      minZ: CELL_BLOCK.north,
+      maxZ: ATRIUM.north,
+    },
+    {
+      minX: CELL_BLOCK.west,
+      maxX: CELL_BLOCK.east,
+      minZ: ATRIUM.south,
+      maxZ: CELL_BLOCK.south,
+    },
+    {
+      minX: CELL_BLOCK.west,
+      maxX: CELL_BLOCK.west + 3,
+      minZ: ATRIUM.north,
+      maxZ: ATRIUM.south,
+    },
+    {
+      minX: CELL_BLOCK.east - 3,
+      maxX: CELL_BLOCK.east,
+      minZ: ATRIUM.north,
+      maxZ: ATRIUM.south,
+    },
   ];
-  for (const x of [CELL_BLOCK.west, CELL_BLOCK.east - 3])
+  // Cut real openings in both the visual slabs and cross-floor occlusion.
+  for (const h of STAIR_OPENINGS)
+    upperFloors = upperFloors.flatMap((r) => {
+      const a = Math.max(r.minX, h.minX),
+        b = Math.min(r.maxX, h.maxX),
+        c = Math.max(r.minZ, h.minZ),
+        d = Math.min(r.maxZ, h.maxZ);
+      if (a >= b || c >= d) return [r];
+      return [
+        { ...r, maxX: a },
+        { ...r, minX: b },
+        { minX: a, maxX: b, minZ: r.minZ, maxZ: c },
+        { minX: a, maxX: b, minZ: d, maxZ: r.maxZ },
+      ].filter((p) => p.maxX - p.minX > 0.001 && p.maxZ - p.minZ > 0.001);
+    });
+  const floorOccluders: THREE.Box3[] = [];
+  for (const r of upperFloors) {
+    projectUV(
+      box(
+        staticWorld,
+        [r.maxX - r.minX, 0.3, r.maxZ - r.minZ],
+        [(r.minX + r.maxX) / 2, -0.15, (r.minZ + r.maxZ) / 2],
+        floor,
+      ),
+      2,
+    );
     floorOccluders.push(
       new THREE.Box3(
-        new THREE.Vector3(x, -0.3, 1),
-        new THREE.Vector3(x + 3, 0, ATRIUM.south),
+        new THREE.Vector3(r.minX, -0.3, r.minZ),
+        new THREE.Vector3(r.maxX, 0, r.maxZ),
       ),
     );
+  }
   const rail = (x1: number, z1: number, x2: number, z2: number, y = 0) => {
     const length = Math.hypot(x2 - x1, z2 - z1),
       root = new THREE.Group();
@@ -332,8 +357,20 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     barredFaces.add(bounds);
   };
   for (const z of [ATRIUM.north, ATRIUM.south]) {
-    rail(CELL_BLOCK.west + 3, z, CROSS_BRIDGE.x - CROSS_BRIDGE.width / 2, z);
-    rail(CROSS_BRIDGE.x + CROSS_BRIDGE.width / 2, z, CELL_BLOCK.east - 3, z);
+    const gaps = [
+      {
+        minX: CROSS_BRIDGE.x - CROSS_BRIDGE.width / 2,
+        maxX: CROSS_BRIDGE.x + CROSS_BRIDGE.width / 2,
+      },
+      ...STAIR_OPENINGS.filter((h) => z >= h.minZ && z <= h.maxZ),
+    ].sort((a, b) => a.minX - b.minX);
+    let start = CELL_BLOCK.west + 3;
+    for (const gap of gaps) {
+      if (gap.minX > start)
+        rail(start, z, Math.min(gap.minX, CELL_BLOCK.east - 3), z);
+      start = Math.max(start, gap.maxX);
+    }
+    if (start < CELL_BLOCK.east - 3) rail(start, z, CELL_BLOCK.east - 3, z);
   }
   const crossBridge = environment.add(
     "MetalBridge",
@@ -360,32 +397,88 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     barredFaces.add(b);
   }
   for (const x of [CELL_BLOCK.west + 3, CELL_BLOCK.east - 3]) {
-    rail(x, 1, x, centerZ - 1);
-    rail(x, centerZ + 1, x, ATRIUM.south);
+    const hole = STAIR_OPENINGS.find((h) => x > h.minX && x < h.maxX);
+    if (!hole) rail(x, ATRIUM.north, x, ATRIUM.south);
+    else {
+      if (hole.minZ > ATRIUM.north) rail(x, ATRIUM.north, x, hole.minZ);
+      if (hole.maxZ < ATRIUM.south) rail(x, hole.maxZ, x, ATRIUM.south);
+    }
+  }
+  // Horizontal safety rails around the cutouts, leaving each top landing open.
+  for (const [index, h] of STAIR_OPENINGS.entries()) {
+    const stair = ATRIUM.stairs[index],
+      topEdge =
+        Math.abs(h.minZ - stair.topZ) < Math.abs(h.maxZ - stair.topZ)
+          ? h.minZ
+          : h.maxZ;
+    for (const [x1, z1, x2, z2, nx, nz] of [
+      [h.minX, h.minZ, h.minX, h.maxZ, -1, 0],
+      [h.maxX, h.minZ, h.maxX, h.maxZ, 1, 0],
+      ...[h.minZ, h.maxZ]
+        .filter((z) => z !== topEdge)
+        .map((z) => [h.minX, z, h.maxX, z, 0, Math.sign(z - stair.topZ)]),
+    ]) {
+      const length = Math.hypot(x2 - x1, z2 - z1),
+        count = Math.ceil(length / 0.15);
+      let begin: number | undefined;
+      for (let i = 0; i <= count; i++) {
+        const t = (i + 0.5) / count,
+          hasFloor =
+            i < count &&
+            upperFloorAt(
+              x1 + (x2 - x1) * t + nx * 0.05,
+              z1 + (z2 - z1) * t + nz * 0.05,
+            );
+        if (hasFloor && begin === undefined) begin = i / count;
+        if (!hasFloor && begin !== undefined) {
+          const end = i / count;
+          rail(
+            x1 + (x2 - x1) * begin,
+            z1 + (z2 - z1) * begin,
+            x1 + (x2 - x1) * end,
+            z1 + (z2 - z1) * end,
+          );
+          begin = undefined;
+        }
+      }
+    }
   }
   for (const stair of ATRIUM.stairs) {
     // The imported staircase includes its own wooden treads/posts/handrails.
     // Its real tread heights are also the authoritative navigation surface.
-    environment.add(
+    const stairsRoot = environment.add(
       "WoodStairs",
-      stair.bottom,
+      stair.x,
       ATRIUM.depth,
-      centerZ,
-      stair.top > stair.bottom ? 0 : Math.PI,
+      stair.bottomZ,
+      stair.topZ > stair.bottomZ ? -Math.PI / 2 : Math.PI / 2,
+    );
+    stairsRoot.name = `Stairs_Cell${stair.cell}`;
+    stairsRoot.scale.set(
+      Math.abs(stair.topZ - stair.bottomZ) / 7.2,
+      -ATRIUM.depth / 3.2,
+      1,
     );
     // Physical rail proxies transmit sight/hearing, matching the open wood rails.
-    for (const z of [centerZ - 0.86, centerZ + 0.86]) {
-      const railBounds = new THREE.Box3(
-        new THREE.Vector3(
-          Math.min(stair.top, stair.bottom),
-          ATRIUM.depth,
-          z - 0.035,
-        ),
-        new THREE.Vector3(Math.max(stair.top, stair.bottom), 1.13, z + 0.035),
-      );
-      colliders.push(railBounds);
-      barredFaces.add(railBounds);
-    }
+    for (const x of [stair.x - 0.86, stair.x + 0.86])
+      for (let i = 0; i < 16; i++) {
+        const a = stairPoint(stair, i / 16),
+          b = stairPoint(stair, (i + 1) / 16);
+        const railBounds = new THREE.Box3(
+          new THREE.Vector3(
+            x - 0.035,
+            Math.min(a[1], b[1]),
+            Math.min(a[2], b[2]) - 0.01,
+          ),
+          new THREE.Vector3(
+            x + 0.035,
+            Math.max(a[1], b[1]) + 1.31,
+            Math.max(a[2], b[2]) + 0.01,
+          ),
+        );
+        colliders.push(railBounds);
+        barredFaces.add(railBounds);
+      }
   }
   const cargo = CARGO.map(({ asset, x, y, z, yaw }) => {
     const root = environment.add(asset, x, y, z, yaw);
@@ -550,10 +643,10 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     const { left, right, doorX: x, front: z, number, floorY: y, level } = cell;
     const width = CELL_GATE_WIDTH,
       height = level === "upper" ? 2.8 : 2.6,
-      wallHeight = level === "upper" ? 4.62 : 2.64;
+      wallHeight = level === "upper" ? 4.62 : 2.72;
     // Recessed masonry above each independent steel frontage; its small
     // clerestory reveal leaves the exterior roller track unobstructed.
-    const ceiling = level === "upper" ? 5.06 : 2.9;
+    const ceiling = level === "upper" ? 5.06 : 3.5;
     const inward = cell.side === "north" ? -0.13 : 0.13;
     wall(
       [right - left, ceiling - wallHeight, 0.16],
@@ -564,10 +657,10 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
       `C / ${String(number).padStart(3, "0")}`,
       [
         (left + right) / 2,
-        y + (level === "upper" ? 3.38 : (ceiling + wallHeight) / 2),
+        y + (level === "upper" ? 3.38 : 3.12),
         z + (cell.side === "north" ? 0.025 : -0.025),
       ],
-      level === "upper" ? 1.65 : 1.15,
+      1.65,
     );
     sign.name = `CellNumber_${number}`;
     sign.userData.cellNumber = number;
@@ -655,7 +748,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   for (const cell of CELL_ROOMS.filter((c) => c.level === "lower")) {
     const { centerX: cx, left, front, rear, floorY: y, side, number } = cell;
     const roomZ = (front + rear) / 2;
-    wall([0.35, 2.9, 9.5], [left, y + 1.45, roomZ]);
+    wall([0.35, 3.5, 9.5], [left, y + 1.75, roomZ]);
     cellEntrance(cell);
     const tableZ = rear + (side === "north" ? 3.1 : -3.1),
       toiletZ = rear + (side === "north" ? 1.65 : -1.2);
@@ -674,7 +767,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
       side === "north" ? Math.PI : 0,
     );
     environment.add("Sink", left + 0.53, y, roomZ, -Math.PI / 2);
-    environment.add("Luminaire", cx, y + 2.62, roomZ);
+    environment.add("Luminaire", cx, y + 3.22, roomZ);
     prop(buildTableBounds(), cx + 1.4, tableZ, 0, y);
     prop(buildLegacyToiletBounds(), cx - 1.4, toiletZ, 0, y);
     const light = new THREE.PointLight(0xd8cbb1, 12, 9, 2);

@@ -60,6 +60,7 @@ button:active {
 }
 .app-shell {
   position: relative;
+  height: 100vh;
   height: 100dvh;
   width: 100%;
   overflow: hidden;
@@ -2693,5 +2694,202 @@ input[type="range"] {
   }
   .reference-menu nav {
     gap: 2px;
+  }
+}
+/* v20: reference-style weapon card, clear pickup cue and bottom dialogue. */
+.ios-install-note {
+  position: absolute;
+  bottom: max(24px, env(safe-area-inset-bottom));
+  left: max(24px, env(safe-area-inset-left));
+  max-width: 70%;
+  color: #d8dfd3;
+  font:
+    12px/1.5 Georgia,
+    serif;
+  text-shadow: 0 1px 3px #000;
+}
+.game-hud .hud-top {
+  justify-content: flex-end;
+}
+.weapon-hud {
+  position: absolute;
+  top: max(20px, env(safe-area-inset-top));
+  left: max(22px, env(safe-area-inset-left));
+  width: 170px;
+  padding: 12px;
+  border: 1px solid #c4d1c780;
+  border-radius: 3px;
+  background: #1a292bd9;
+  color: #fff;
+  pointer-events: auto;
+  display: grid;
+  grid-template-columns: 55px 1fr;
+  gap: 7px 10px;
+  box-shadow: 0 5px 18px #0004;
+}
+.weapon-hud > img {
+  width: 85px;
+  height: 42px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  transform: none;
+}
+.weapon-ammo {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px;
+  font:
+    12px Georgia,
+    serif;
+}
+.weapon-ammo strong {
+  font-size: 30px;
+  font-weight: 400;
+}
+.weapon-ammo small {
+  width: 100%;
+  font-size: 18px;
+  line-height: 12px;
+  color: #becdc3;
+}
+.magazine-rounds {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.magazine-rounds i {
+  width: 12px;
+  height: 4px;
+  background: #ffffff26;
+}
+.magazine-rounds i.loaded {
+  background: #d4e0d8;
+}
+.weapon-hud button {
+  min-height: 36px;
+  font: 10px monospace;
+  color: #fff;
+  border: 0;
+  background: #ffffff10;
+  border-radius: 2px;
+  cursor: pointer;
+}
+.weapon-hud button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.weapon-hud kbd {
+  margin-left: 5px;
+  padding: 1px 3px;
+  border-radius: 0;
+}
+.weapon-hud progress {
+  width: 100%;
+  height: 3px;
+  grid-column: 1/-1;
+  accent-color: #c7d6bf;
+}
+.game-hud .health-hud {
+  top: auto;
+  left: auto;
+  right: max(30px, env(safe-area-inset-right));
+  bottom: max(90px, env(safe-area-inset-bottom));
+}
+.game-hud .subtitle {
+  bottom: max(85px, calc(env(safe-area-inset-bottom) + 55px));
+  padding: 0;
+  width: 60%;
+  max-width: 620px;
+  background: none;
+  text-shadow:
+    0 2px 3px #000,
+    0 0 8px #000;
+  pointer-events: none;
+}
+.game-hud .subtitle span {
+  display: block;
+  color: #f0f0e8;
+  font:
+    600 17px/1.4 Georgia,
+    serif;
+  letter-spacing: 0;
+}
+.game-hud .subtitle p {
+  color: #c8cbc3;
+  font:
+    19px/1.4 Georgia,
+    serif;
+  margin: 4px 0 0;
+}
+.game-hud .context-actions {
+  top: 53%;
+  bottom: auto;
+  flex-direction: column;
+  gap: 4px;
+  width: max-content;
+  max-width: 60%;
+}
+.game-hud .pickup-prompt {
+  min-width: 120px;
+  max-width: none;
+  white-space: nowrap;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  gap: 5px;
+  padding: 4px 10px;
+  min-height: 50px;
+  font:
+    14px Georgia,
+    serif;
+  color: #f5f3e8;
+  text-align: center;
+  text-shadow:
+    0 1px 3px #000,
+    0 0 6px #000;
+}
+.game-hud .pickup-prompt strong {
+  text-transform: capitalize;
+  font-weight: 600;
+  font-size: 16px;
+}
+.game-hud .pickup-prompt span {
+  font-size: 13px;
+}
+@media (pointer: coarse) {
+  .weapon-hud {
+    width: 145px;
+    padding: 7px;
+    top: max(10px, env(safe-area-inset-top));
+    left: max(12px, env(safe-area-inset-left));
+    gap: 3px 5px;
+  }
+  .weapon-hud > img {
+    width: 68px;
+    height: 32px;
+  }
+  .weapon-ammo strong {
+    font-size: 24px;
+  }
+  .weapon-hud button {
+    min-height: 40px;
+  }
+  .game-hud .health-hud {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    bottom: max(10px, env(safe-area-inset-bottom));
+    width: 120px;
+  }
+  .game-hud .subtitle {
+    bottom: max(80px, calc(env(safe-area-inset-bottom) + 50px));
+    width: 53%;
+  }
+  .game-hud .subtitle span {
+    font-size: 14px;
+  }
+  .game-hud .subtitle p {
+    font-size: 16px;
   }
 }

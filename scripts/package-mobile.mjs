@@ -15,7 +15,11 @@ const basename = `Hirodora-${version}`;
 const environmentCredits =
   (await readFile("docs/GUARD-ASSETS.md", "utf8")) +
   "\n" +
+  (await readFile("src/assets/guards/HANDS-LICENSE.txt", "utf8")) +
+  "\n" +
   (await readFile("src/assets/audio/manifest.json", "utf8")) +
+  "\n" +
+  (await readFile("src/assets/audio/compat-manifest.json", "utf8")) +
   "\n" +
   (await readFile("src/assets/environment/GODOT-MIT-LICENSE.txt", "utf8")) +
   "\n" +
@@ -43,7 +47,12 @@ const result = await build({
   jsx: "automatic",
   minify: true,
   write: false,
-  loader: { ".glb": "dataurl", ".webp": "dataurl", ".ogg": "dataurl" },
+  loader: {
+    ".glb": "dataurl",
+    ".webp": "dataurl",
+    ".ogg": "dataurl",
+    ".mp3": "dataurl",
+  },
   define: {
     "import.meta.env.PROD": "true",
     "import.meta.env.DEV": "false",

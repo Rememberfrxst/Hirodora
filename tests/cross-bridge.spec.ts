@@ -29,8 +29,8 @@ test("actual player and officer cross Cell 041/054 bridge; side rails, lower cle
     e.restoreCheckpoint(e.checkpoint);
     const restored = [...e.playerPos];
     // Pass beneath the span along the lower hall. The pre-existing pallet at
-    // [-39, -3.2, 2.25] intentionally blocks a straight north-to-south walk.
-    e.playerPos = [-37, -3.2, 4];
+    // [-39, -3.8, 2.25] intentionally blocks a straight north-to-south walk.
+    e.playerPos = [-37, -3.8, 4];
     e.playerRotY = Math.PI / 2;
     e.keys.KeyW = true;
     for (let i = 0; i < 70; i++) e.move(0.016);
@@ -100,7 +100,7 @@ test("actual player and officer cross Cell 041/054 bridge; side rails, lower cle
   expect(r.restored).toEqual(r.stopped);
   expect(r.below[0]).toBeLessThan(-39.5);
   expect(r.below[2]).toBeCloseTo(4);
-  expect(r.below[1]).toBeCloseTo(-3.2);
+  expect(r.below[1]).toBeCloseTo(-3.8);
   expect(r.officer[2]).toBeGreaterThan(7.5);
   expect(r.officer[1]).toBe(0);
   expect(r.officerCrossing.length).toBeGreaterThan(20);

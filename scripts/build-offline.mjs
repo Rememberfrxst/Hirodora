@@ -7,6 +7,7 @@ const publicFiles = [
   "manifest.webmanifest",
   "icon.svg",
   "icon-192.png",
+  "icon-180.png",
   "icon-512.png",
 ];
 for (const name of publicFiles)
@@ -18,7 +19,7 @@ const files = [
   "AUDIO-LICENSES.json",
   ...publicFiles,
   ...(await readdir("dist/assets"))
-    .filter((name) => /\.(js|css|glb|webp|ogg)$/.test(name))
+    .filter((name) => /\.(js|css|glb|webp|ogg|mp3)$/.test(name))
     .map((name) => "assets/" + name),
 ];
 await writeFile(
@@ -41,8 +42,30 @@ await writeFile(
     (await readFile("src/assets/environment/BRIDGE-LICENSE.txt", "utf8")),
 );
 const hash = createHash("sha256");
-await copyFile("docs/GUARD-ASSETS.md", "dist/CHARACTER-LICENSES.txt");
-await copyFile("src/assets/audio/manifest.json", "dist/AUDIO-LICENSES.json");
+await writeFile(
+  "dist/CHARACTER-LICENSES.txt",
+  (await readFile("docs/GUARD-ASSETS.md", "utf8")) +
+    "\n\n" +
+    (await readFile("src/assets/guards/HANDS-LICENSE.txt", "utf8")),
+);
+const originalAudio = JSON.parse(
+    await readFile("src/assets/audio/manifest.json", "utf8"),
+  ),
+  compatAudio = JSON.parse(
+    await readFile("src/assets/audio/compat-manifest.json", "utf8"),
+  );
+await writeFile(
+  "dist/AUDIO-LICENSES.json",
+  JSON.stringify(
+    originalAudio.map((a) => ({
+      ...a,
+      runtime: compatAudio.records.find((r) => r.source === a.file),
+      conversion: compatAudio.reason,
+    })),
+    null,
+    2,
+  ) + "\n",
+);
 let bytes = 0;
 for (const name of files) {
   const content = await readFile(join("dist", name));

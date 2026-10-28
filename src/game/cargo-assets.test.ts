@@ -90,14 +90,14 @@ test("three supplied wood assets retain embedded licensed materials, valid geome
     );
   });
   const guard = {
-    position: [-21, -3.2, 6],
+    position: [-21, -3.8, 6],
     rotationY: Math.PI,
     visionRange: 10,
     visionAngle: 76,
   } as GuardData;
-  assert.ok(sightEvidence(guard, [-21, -3.2, 3], true, false, false, []) > 0);
+  assert.ok(sightEvidence(guard, [-21, -3.8, 3], true, false, false, []) > 0);
   assert.equal(
-    sightEvidence(guard, [-21, -3.2, 3], true, false, false, cover),
+    sightEvidence(guard, [-21, -3.8, 3], true, false, false, cover),
     0,
     "the imported crate stack is real crouch cover, not just decoration",
   );

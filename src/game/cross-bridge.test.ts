@@ -15,14 +15,14 @@ test("Cell 041/054 crossing has continuous support on top and clear passage belo
   assert.equal(x, CELL_ROOMS.find((c) => c.number === 54)!.centerX);
   for (let z = 0; z <= 8; z += 0.1) {
     assert.equal(supportHeight(x, z, 0), 0);
-    assert.equal(supportHeight(x, z, -3.2), -3.2);
+    assert.equal(supportHeight(x, z, -3.8), -3.8);
   }
-  assert.deepEqual(surfaceHeights(x + 2, 4), [-3.2]);
+  assert.deepEqual(surfaceHeights(x + 2, 4), [-3.8]);
   const route = findSurfacePath([x, 0, 0], [x, 0, 8], []);
   assert.ok(route.length > 10);
   assert.ok(route.every((p) => Math.abs(p[0] - x) < 0.1 && p[1] === 0));
   assert.equal(crossBridgeFootstep([x, 0, 4]), true);
-  assert.equal(crossBridgeFootstep([x, -3.2, 4]), false);
+  assert.equal(crossBridgeFootstep([x, -3.8, 4]), false);
   assert.equal(crossBridgeFootstep([x + 2, 0, 4]), false);
 });
 

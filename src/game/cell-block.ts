@@ -22,6 +22,7 @@ export interface CellRoom {
   level: "upper" | "lower";
 }
 export const CELL_GATE_WIDTH = 1.4;
+export const LOWER_FLOOR_Y = -3.8;
 const spans = [
   [-8.8, -3.1],
   [-14, -8.8],
@@ -59,7 +60,7 @@ export const CELL_ROOMS: CellRoom[] = [
     ...c,
     number: c.number - 24,
     medical: false,
-    floorY: -3.2,
+    floorY: LOWER_FLOOR_Y,
     level: "lower" as const,
   })),
 ];

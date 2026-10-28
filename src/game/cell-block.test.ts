@@ -27,8 +27,8 @@ test("guard approach uses the expanded corridor and respects open gates on eithe
     point,
   );
   assert.deepEqual(
-    cellApproachTarget([-22, -3.2, -8], [-22, 0, -6], () => false),
-    [-22, -3.2, -1.1],
+    cellApproachTarget([-22, -3.8, -8], [-22, 0, -6], () => false),
+    [-22, -3.8, -1.1],
     "being inside the upper room does not put a guard inside the lower cell",
   );
 });

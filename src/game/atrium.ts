@@ -1,4 +1,9 @@
-import { CELL_BLOCK, NAV_BOUNDS } from "./cell-block";
+import {
+  CELL_BLOCK,
+  CELL_ROOMS,
+  NAV_BOUNDS,
+  LOWER_FLOOR_Y,
+} from "./cell-block";
 import type { Bounds, Vec3 } from "./perception";
 import cargoAssets from "../assets/environment/cargo-manifest.json";
 import { onCrossBridge } from "./cross-bridge";
@@ -7,31 +12,65 @@ export const ATRIUM = {
   north: 1,
   south: CELL_BLOCK.southFront - 3,
   centerZ: (CELL_BLOCK.northFront + CELL_BLOCK.southFront) / 2,
-  depth: -3.2,
+  depth: LOWER_FLOOR_Y,
   bridge: 3,
   stairWidth: 1.8,
   stairs: [
-    { top: CELL_BLOCK.east - 3, bottom: CELL_BLOCK.east - 10.2 },
-    { top: CELL_BLOCK.west + 3, bottom: CELL_BLOCK.west + 10.2 },
+    {
+      cell: 48,
+      x: CELL_ROOMS.find((c) => c.number === 48)!.centerX,
+      topZ: 8.4,
+      bottomZ: 0.2,
+    },
+    {
+      cell: 36,
+      x: CELL_ROOMS.find((c) => c.number === 36)!.centerX,
+      topZ: -0.4,
+      bottomZ: 7.8,
+    },
   ],
 } as const;
-export const LAYOUT_VERSION = 17;
+export const LAYOUT_VERSION = 18;
+export const MAX_STEP = 0.42; // the 3.8m fitted source has a maximum 0.395m riser
+export type AtriumStair = (typeof ATRIUM.stairs)[number];
+export function stairParameter(s: AtriumStair, x: number, z: number) {
+  return Math.abs(x - s.x) <= ATRIUM.stairWidth / 2
+    ? (z - s.topZ) / (s.bottomZ - s.topZ)
+    : -1;
+}
+export function stairPoint(s: AtriumStair, t: number): Vec3 {
+  return [s.x, stairHeight(t), s.topZ + (s.bottomZ - s.topZ) * t];
+}
+export const STAIR_OPENINGS = ATRIUM.stairs.map((s) => ({
+  minX: s.x - ATRIUM.stairWidth / 2 - 0.07,
+  maxX: s.x + ATRIUM.stairWidth / 2 + 0.07,
+  minZ: Math.min(s.topZ, s.topZ + (s.bottomZ - s.topZ) * 0.6),
+  maxZ: Math.max(s.topZ, s.topZ + (s.bottomZ - s.topZ) * 0.6),
+}));
+export function upperFloorAt(x: number, z: number) {
+  const base =
+    !inAtrium(x, z) || x >= CELL_BLOCK.east - 3 || x <= CELL_BLOCK.west + 3;
+  return (
+    base &&
+    !STAIR_OPENINGS.some(
+      (h) => x > h.minX && x < h.maxX && z > h.minZ && z < h.maxZ,
+    )
+  );
+}
 /** Canonical asset runs from the lower end (u=0) to the top (u=1). */
 export function stairHeight(t: number) {
   const u = Math.max(0, Math.min(1, 1 - t));
   return (
     ATRIUM.depth +
-    (cargoAssets.treads.find((step) => u <= step.end)?.height ?? 3.2)
+    (cargoAssets.treads.find((step) => u <= step.end)?.height ?? 3.2) *
+      (-ATRIUM.depth / 3.2)
   );
 }
 export function onWoodStairs([x, y, z]: Vec3) {
-  return (
-    Math.abs(z - ATRIUM.centerZ) < ATRIUM.stairWidth / 2 &&
-    ATRIUM.stairs.some((s) => {
-      const t = (x - s.top) / (s.bottom - s.top);
-      return t >= 0 && t <= 1 && Math.abs(y - stairHeight(t)) < 0.15;
-    })
-  );
+  return ATRIUM.stairs.some((s) => {
+    const t = stairParameter(s, x, z);
+    return t >= 0 && t <= 1 && Math.abs(y - stairHeight(t)) < 0.15;
+  });
 }
 export function inAtrium(x: number, z: number) {
   return (
@@ -50,27 +89,25 @@ export function surfaceHeights(x: number, z: number): number[] {
   )
     return [];
   const inBlock = x > CELL_BLOCK.west && x < CELL_BLOCK.east;
-  if (!inAtrium(x, z)) return inBlock ? [0, ATRIUM.depth] : [0];
-  const heights: number[] = [ATRIUM.depth];
+  const heights: number[] = inBlock ? [ATRIUM.depth] : [];
+  if (upperFloorAt(x, z)) heights.push(0);
   if (onCrossBridge(x, z)) heights.push(0);
-  if (x >= CELL_BLOCK.east - 3 || x <= CELL_BLOCK.west + 3) heights.push(0);
   for (const stair of ATRIUM.stairs) {
-    const t = (x - stair.top) / (stair.bottom - stair.top);
-    if (
-      Math.abs(z - ATRIUM.centerZ) <= ATRIUM.stairWidth / 2 &&
-      t >= 0 &&
-      t <= 1
-    ) {
+    const t = stairParameter(stair, x, z);
+    if (t >= 0 && t <= 1) {
       const y = stairHeight(t);
       // Do not let a character walk into the solid underside of a staircase.
-      if (y - ATRIUM.depth < 1.9) heights.length = 0;
-      heights.push(y);
+      if (y - ATRIUM.depth < 1.9) {
+        const bottom = heights.indexOf(ATRIUM.depth);
+        if (bottom >= 0) heights.splice(bottom, 1);
+      }
+      if (!heights.some((h) => Math.abs(h - y) < 0.001)) heights.push(y);
     }
   }
   return heights;
 }
 export function supportHeight(x: number, z: number, previousY: number) {
-  return surfaceHeights(x, z).find((y) => Math.abs(y - previousY) <= 0.35);
+  return surfaceHeights(x, z).find((y) => Math.abs(y - previousY) <= MAX_STEP);
 }
 /** Door/tool sounds originate above the floor; navigation targets their support. */
 export function evidenceTarget(point: Vec3): Vec3 {
@@ -96,13 +133,58 @@ export function bodyBlocked(
       z - radius < b.max.z,
   );
 }
+const OLD_STAIRS = [
+  { top: CELL_BLOCK.east - 3, bottom: CELL_BLOCK.east - 10.2 },
+  { top: CELL_BLOCK.west + 3, bottom: CELL_BLOCK.west + 10.2 },
+];
 export function migratePosition(position: Vec3, version?: number): Vec3 {
+  if ((version ?? 0) >= LAYOUT_VERSION) return [...position];
+  const p = legacyPosition(position, version),
+    [x, y, z] = p;
+  if (y < -3.0) return [x, Math.abs(y + 3.2) < 0.1 ? ATRIUM.depth : y - 0.6, z];
+  if (y < -0.1 && Math.abs(z - 4) <= 0.95) {
+    const i = OLD_STAIRS.findIndex(
+      (s) =>
+        x >= Math.min(s.top, s.bottom) - 0.2 &&
+        x <= Math.max(s.top, s.bottom) + 0.2,
+    );
+    if (i >= 0)
+      return stairPoint(
+        ATRIUM.stairs[i],
+        Math.max(
+          0,
+          Math.min(
+            1,
+            (x - OLD_STAIRS[i].top) /
+              (OLD_STAIRS[i].bottom - OLD_STAIRS[i].top),
+          ),
+        ),
+      );
+  }
+  const hole = STAIR_OPENINGS.findIndex(
+    (h) =>
+      x > h.minX - 0.3 &&
+      x < h.maxX + 0.3 &&
+      z > h.minZ - 0.3 &&
+      z < h.maxZ + 0.3,
+  );
+  if (hole >= 0) {
+    const s = ATRIUM.stairs[hole];
+    return [s.x, 0, s.topZ - Math.sign(s.bottomZ - s.topZ) * 0.45];
+  }
+  return p;
+}
+function legacyPosition(position: Vec3, version?: number): Vec3 {
+  const ATRIUM = {
+    depth: -3.2,
+    centerZ: 4,
+    stairWidth: 1.8,
+    stairs: OLD_STAIRS,
+  };
+  const stairHeight = (t: number) =>
+    -3.2 + (cargoAssets.treads.find((s) => 1 - t <= s.end)?.height ?? 3.2);
   const [x, y, z] = position;
-  if (
-    (version ?? 0) >= LAYOUT_VERSION ||
-    x >= CELL_BLOCK.east ||
-    x <= CELL_BLOCK.west
-  )
+  if ((version ?? 0) >= 17 || x >= CELL_BLOCK.east || x <= CELL_BLOCK.west)
     return [...position];
   let migratedZ = z;
   const onStairs = y < -0.1 && y > ATRIUM.depth + 0.1;
@@ -162,7 +244,7 @@ export function migratePosition(position: Vec3, version?: number): Vec3 {
   return [x, y, migratedZ];
 }
 
-/** Two floor grids joined by stair portals. Heights stay attached to every waypoint. */
+/** Three layers preserve an upper gallery above the lower end of a staircase. */
 export function findSurfacePath(
   start: Vec3,
   goal: Vec3,
@@ -174,15 +256,15 @@ export function findSurfacePath(
   const columns = Math.round((NAV_BOUNDS.maxX - minX) / step) + 1;
   const rows = Math.round((NAV_BOUNDS.maxZ - minZ) / step) + 1,
     size = columns * rows;
-  const heights = new Float32Array(size * 2).fill(NaN);
-  const blocked = new Uint8Array(size * 2);
+  const heights = new Float32Array(size * 3).fill(NaN);
+  const blocked = new Uint8Array(size * 3);
   for (let z = 0; z < rows; z++)
     for (let x = 0; x < columns; x++) {
       const wx = minX + x * step,
         wz = minZ + z * step,
         hs = surfaceHeights(wx, wz);
       for (const y of hs) {
-        const layer = y === ATRIUM.depth ? 1 : 0,
+        const layer = y === ATRIUM.depth ? 1 : y === 0 ? 0 : 2,
           id = layer * size + z * columns + x;
         heights[id] = y;
       }
@@ -193,7 +275,7 @@ export function findSurfacePath(
       x1 = Math.min(columns - 1, Math.floor((b.max.x + 0.27 - minX) / step));
     const z0 = Math.max(0, Math.ceil((b.min.z - 0.27 - minZ) / step)),
       z1 = Math.min(rows - 1, Math.floor((b.max.z + 0.27 - minZ) / step));
-    for (let layer = 0; layer < 2; layer++)
+    for (let layer = 0; layer < 3; layer++)
       for (let z = z0; z <= z1; z++)
         for (let x = x0; x <= x1; x++) {
           const id = layer * size + z * columns + x,
@@ -206,7 +288,7 @@ export function findSurfacePath(
       z = Math.round((p[2] - minZ) / step);
     let best = -1,
       d = Infinity;
-    for (let l = 0; l < 2; l++) {
+    for (let l = 0; l < 3; l++) {
       const id = l * size + z * columns + x;
       const delta = Math.abs(heights[id] - p[1]);
       if (delta < d && !blocked[id]) {
@@ -219,7 +301,7 @@ export function findSurfacePath(
   const from = locate(start),
     to = locate(goal);
   if (from < 0 || to < 0) return [];
-  const parents = new Int32Array(size * 2).fill(-2),
+  const parents = new Int32Array(size * 3).fill(-2),
     queue = [from];
   parents[from] = -1;
   for (let i = 0; i < queue.length; i++) {
@@ -229,32 +311,29 @@ export function findSurfacePath(
       x = base % columns,
       z = Math.floor(base / columns),
       layer = Math.floor(id / size);
-    for (const [dx, dz, dl] of [
-      [1, 0, 0],
-      [-1, 0, 0],
-      [0, 1, 0],
-      [0, -1, 0],
-      [0, 0, 1 - layer * 2],
-      [1, 0, 1 - layer * 2],
-      [-1, 0, 1 - layer * 2],
-      [0, 1, 1 - layer * 2],
-      [0, -1, 1 - layer * 2],
-    ]) {
-      const nx = x + dx,
-        nz = z + dz,
-        nl = layer + dl;
-      if (nx < 0 || nx >= columns || nz < 0 || nz >= rows) continue;
-      const next = nl * size + nz * columns + nx;
-      if (
-        parents[next] !== -2 ||
-        blocked[next] ||
-        !Number.isFinite(heights[next]) ||
-        Math.abs(heights[next] - heights[id]) > 0.35
-      )
-        continue;
-      parents[next] = id;
-      queue.push(next);
-    }
+    for (const nl of [0, 1, 2])
+      for (const [dx, dz] of [
+        [1, 0],
+        [-1, 0],
+        [0, 1],
+        [0, -1],
+        [0, 0],
+      ]) {
+        if (nl === layer && dx === 0 && dz === 0) continue;
+        const nx = x + dx,
+          nz = z + dz;
+        if (nx < 0 || nx >= columns || nz < 0 || nz >= rows) continue;
+        const next = nl * size + nz * columns + nx;
+        if (
+          parents[next] !== -2 ||
+          blocked[next] ||
+          !Number.isFinite(heights[next]) ||
+          Math.abs(heights[next] - heights[id]) > MAX_STEP
+        )
+          continue;
+        parents[next] = id;
+        queue.push(next);
+      }
   }
   if (parents[to] === -2) return [];
   const path: Vec3[] = [];

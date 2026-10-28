@@ -1,0 +1,1061 @@
+{
+  "config": {
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "/workspace/Hirodora/node_modules/.bin/playwright",
+      "test",
+      "tests/update20.spec.ts",
+      "tests/atrium.spec.ts",
+      "tests/ballistics.spec.ts",
+      "tests/cross-bridge.spec.ts",
+      "tests/reference-hud.spec.ts",
+      "tests/opening.spec.ts",
+      "tests/cargo-combat.spec.ts",
+      "--reporter=json"
+    ],
+    "configFile": "/workspace/Hirodora/playwright.config.ts",
+    "rootDir": "/workspace/Hirodora/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/workspace/Hirodora/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/workspace/Hirodora/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/workspace/Hirodora/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "/workspace/Hirodora/tests",
+        "snapshotDir": "/workspace/Hirodora/tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 120000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3794",
+          "viewport": {
+            "width": 1100,
+            "height": 720
+          },
+          "launchOptions": {
+            "executablePath": "/usr/bin/chromium",
+            "args": [
+              "--no-sandbox",
+              "--use-angle=swiftshader",
+              "--enable-unsafe-swiftshader"
+            ]
+          },
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "atrium.spec.ts",
+      "file": "atrium.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "nine officers patrol both levels and a lower cell can be opened, entered and saved",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 44148,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T09:42:45.516Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "14fad864cf1ee8491372-81ccfce8b06534208ab1",
+          "file": "atrium.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "stairs support actual player movement, gates are independent, and equipped tools persist",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 42968,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T09:43:30.068Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "14fad864cf1ee8491372-386c01ac83cc1bcee92a",
+          "file": "atrium.spec.ts",
+          "line": 76,
+          "column": 1
+        },
+        {
+          "title": "guards route down stairs and cannot capture a player through the gallery floor",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 45381,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T09:44:13.068Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "14fad864cf1ee8491372-130c74b5e9602ebebc5c",
+          "file": "atrium.spec.ts",
+          "line": 149,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "ballistics.spec.ts",
+      "file": "ballistics.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Cell 46 actual gun/can models require aim and E, attach at the muzzle and persist",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 60122,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T09:45:34.899Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "318c54d6ab8f2090ffbb-c3a219cdf8d24576c627",
+          "file": "ballistics.spec.ts",
+          "line": 64,
+          "column": 1
+        },
+        {
+          "title": "actual skin ray hits deal 100 twice or one headshot, corpses persist and New game resets them",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 64230,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m100\u001b[39m\nReceived: \u001b[31m0\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m100\u001b[39m\nReceived: \u001b[31m0\u001b[39m\n    at /workspace/Hirodora/tests/ballistics.spec.ts:187:24",
+                    "location": {
+                      "file": "/workspace/Hirodora/tests/ballistics.spec.ts",
+                      "column": 24,
+                      "line": 187
+                    },
+                    "snippet": "  185 |     };\n  186 |   });\n> 187 |   expect(result.first).toBe(100);\n      |                        ^\n  188 |   expect(result.firstHit).toBe(\"body\");\n  189 |   expect(result.rateLimited).toBe(true);\n  190 |   expect(result.second).toBe(0);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/workspace/Hirodora/tests/ballistics.spec.ts",
+                        "column": 24,
+                        "line": 187
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m100\u001b[39m\nReceived: \u001b[31m0\u001b[39m\n\n  185 |     };\n  186 |   });\n> 187 |   expect(result.first).toBe(100);\n      |                        ^\n  188 |   expect(result.firstHit).toBe(\"body\");\n  189 |   expect(result.rateLimited).toBe(true);\n  190 |   expect(result.second).toBe(0);\n    at /workspace/Hirodora/tests/ballistics.spec.ts:187:24"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T09:46:35.123Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/workspace/Hirodora/test-results/ballistics-actual-skin-ray-a2d7b-st-and-New-game-resets-them/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/workspace/Hirodora/test-results/ballistics-actual-skin-ray-a2d7b-st-and-New-game-resets-them/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/workspace/Hirodora/tests/ballistics.spec.ts",
+                    "column": 24,
+                    "line": 187
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "318c54d6ab8f2090ffbb-96b5ca5f1d5d8881ee02",
+          "file": "ballistics.spec.ts",
+          "line": 112,
+          "column": 1
+        },
+        {
+          "title": "bullets cannot pass closed grilles, pause or fire without ammunition",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 36808,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T09:47:42.042Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "318c54d6ab8f2090ffbb-b504f74031c6dcbe7baa",
+          "file": "ballistics.spec.ts",
+          "line": 196,
+          "column": 1
+        },
+        {
+          "title": "boxing cycles jab/cross/hook with high guard between strikes and preserves 200 player HP rules",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 44995,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T09:48:19.460Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "318c54d6ab8f2090ffbb-9d91b75904cfc7081a08",
+          "file": "ballistics.spec.ts",
+          "line": 235,
+          "column": 1
+        }
+      ],
+      "suites": [
+        {
+          "title": "mobile pistol",
+          "file": "ballistics.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "touch pickups, can attachment and Fire pistol consume one round without stuck joystick",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 36337,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-28T09:44:58.518Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "318c54d6ab8f2090ffbb-566176b5f859ba326307",
+              "file": "ballistics.spec.ts",
+              "line": 9,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "cargo-combat.spec.ts",
+      "file": "cargo-combat.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "supplied cargo matches physical bounds, leaves cell lanes clear and uses real wooden stairs",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 53744,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m7\u001b[39m\nReceived:   \u001b[31m1.7997194667572955\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m7\u001b[39m\nReceived:   \u001b[31m1.7997194667572955\u001b[39m\n    at /workspace/Hirodora/tests/cargo-combat.spec.ts:63:33",
+                    "location": {
+                      "file": "/workspace/Hirodora/tests/cargo-combat.spec.ts",
+                      "column": 33,
+                      "line": 63
+                    },
+                    "snippet": "  61 |     expect(s.min[1]).toBeLessThan(-3.1);\n  62 |     expect(s.max[1]).toBeGreaterThan(1);\n> 63 |     expect(s.max[0] - s.min[0]).toBeGreaterThan(7);\n     |                                 ^\n  64 |   }\n  65 | });\n  66 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/workspace/Hirodora/tests/cargo-combat.spec.ts",
+                        "column": 33,
+                        "line": 63
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m7\u001b[39m\nReceived:   \u001b[31m1.7997194667572955\u001b[39m\n\n  61 |     expect(s.min[1]).toBeLessThan(-3.1);\n  62 |     expect(s.max[1]).toBeGreaterThan(1);\n> 63 |     expect(s.max[0] - s.min[0]).toBeGreaterThan(7);\n     |                                 ^\n  64 |   }\n  65 | });\n  66 |\n    at /workspace/Hirodora/tests/cargo-combat.spec.ts:63:33"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T09:49:04.560Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/workspace/Hirodora/test-results/cargo-combat-supplied-carg-56c50-and-uses-real-wooden-stairs/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/workspace/Hirodora/test-results/cargo-combat-supplied-carg-56c50-and-uses-real-wooden-stairs/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/workspace/Hirodora/tests/cargo-combat.spec.ts",
+                    "column": 33,
+                    "line": 63
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "cff0609a8b2d8aa5f254-8acd5423bd90e5dd2e23",
+          "file": "cargo-combat.spec.ts",
+          "line": 4,
+          "column": 1
+        },
+        {
+          "title": "guard strikes have windup, can miss, respect walls/floors and reduce 200 HP until defeat",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 37989,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T09:50:02.365Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "cff0609a8b2d8aa5f254-9ebdf77d6d6d2fe475df",
+          "file": "cargo-combat.spec.ts",
+          "line": 67,
+          "column": 1
+        },
+        {
+          "title": "HP persists through checkpoints, old saves get 200, and searches kneel without replacing AI",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 38708,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0.6\u001b[39m\nReceived:   \u001b[31m0\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0.6\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n    at /workspace/Hirodora/tests/cargo-combat.spec.ts:240:31",
+                    "location": {
+                      "file": "/workspace/Hirodora/tests/cargo-combat.spec.ts",
+                      "column": 31,
+                      "line": 240
+                    },
+                    "snippet": "  238 |   expect(result.restored).toBe(125);\n  239 |   expect(result.legacy).toBe(200);\n> 240 |   expect(result.escapedCargo).toBeGreaterThan(0.6);\n      |                               ^\n  241 |   expect(result.clearOfCargo).toBe(true);\n  242 |   expect(result.newHealth).toBe(200);\n  243 |   expect(result.animation).toBe(\"Kneel\");"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/workspace/Hirodora/tests/cargo-combat.spec.ts",
+                        "column": 31,
+                        "line": 240
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0.6\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n\n  238 |   expect(result.restored).toBe(125);\n  239 |   expect(result.legacy).toBe(200);\n> 240 |   expect(result.escapedCargo).toBeGreaterThan(0.6);\n      |                               ^\n  241 |   expect(result.clearOfCargo).toBe(true);\n  242 |   expect(result.newHealth).toBe(200);\n  243 |   expect(result.animation).toBe(\"Kneel\");\n    at /workspace/Hirodora/tests/cargo-combat.spec.ts:240:31"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T09:50:40.974Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/workspace/Hirodora/test-results/cargo-combat-HP-persists-t-04193--kneel-without-replacing-AI/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/workspace/Hirodora/test-results/cargo-combat-HP-persists-t-04193--kneel-without-replacing-AI/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/workspace/Hirodora/tests/cargo-combat.spec.ts",
+                    "column": 31,
+                    "line": 240
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "cff0609a8b2d8aa5f254-324ccf2bb1a478326372",
+          "file": "cargo-combat.spec.ts",
+          "line": 158,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "cross-bridge.spec.ts",
+      "file": "cross-bridge.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "actual player and officer cross Cell 041/054 bridge; side rails, lower clearance and checkpoint work",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 66740,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "Bridge mechanics: {\"keyError\":0,\"crossed\":[-39,0,9.504000000000007],\"stopped\":[-38.51999999999998,0,4],\"restored\":[-38.51999999999998,0,4],\"below\":[-40.072000000000116,-3.8,4],\"officer\":[-38.973890561882854,0,7.628665769000686],\"officerCrossing\":[[-38.52219324661303,0,1.2045261740527407],[-38.52622625835651,0,1.2618845632933473],[-38.53025927009999,0,1.319242952533954],[-38.53429228184347,0,1.3766013417745606],[-38.53832529358695,0,1.4339597310151673],[-38.54235830533043,0,1.491318120255774],[-38.54639131707391,0,1.5486765094963806],[-38.55042432881739,0,1.6060348987369872],[-38.55445734056087,0,1.663393287977594],[-38.558490352304354,0,1.7207516772182005],[-38.562523364047834,0,1.7781100664588072],[-38.566556375791315,0,1.8354684556994139],[-38.570589387534795,0,1.8928268449400205],[-38.574622399278276,0,1.9501852341806272],[-38.57865541102176,0,2.007543623421234],[-38.58268842276524,0,2.0649020126618405],[-38.58672143450872,0,2.122260401902447],[-38.5907544462522,0,2.179618791143054],[-38.59478745799568,0,2.2369771803836604],[-38.59882046973916,0,2.294335569624267],[-38.60285348148264,0,2.3516939588648738],[-38.60688649322612,0,2.4090523481054804],[-38.6109195049696,0,2.466410737346087],[-38.61495251671308,0,2.5237691265866937],[-38.61898552845656,0,2.5811275158273004],[-38.62301854020004,0,2.638485905067907],[-38.627051551943524,0,2.6958442943085137],[-38.631084563687004,0,2.7532026835491203],[-38.635117575430485,0,2.810561072789727],[-38.639150587173965,0,2.8679194620303337],[-38.643183598917446,0,2.9252778512709403],[-38.64721661066093,0,2.982636240511547],[-38.65124962240441,0,3.0399946297521536],[-38.65528263414789,0,3.0973530189927603],[-38.65931564589137,0,3.154711408233367],[-38.66334865763485,0,3.2120697974739736],[-38.66738166937833,0,3.2694281867145802],[-38.67141468112181,0,3.326786575955187],[-38.67544769286529,0,3.3841449651957936],[-38.67948070460877,0,3.4415033544364],[-38.68351371635225,0,3.498861743677007],[-38.68754672809573,0,3.5562201329176135],[-38.69157973983921,0,3.61357852215822],[-38.69561275158269,0,3.670936911398827],[-38.699645763326174,0,3.7282953006394335],[-38.703678775069655,0,3.78565368988004],[-38.707711786813135,0,3.843012079120647],[-38.711744798556616,0,3.9003704683612535],[-38.7157778103001,0,3.95772885760186],[-38.71981082204358,0,4.015087246842467],[-38.72384383378706,0,4.072445636083073],[-38.72787684553054,0,4.12980402532368],[-38.73190985727402,0,4.187162414564287],[-38.7359428690175,0,4.244520803804893],[-38.73997588076098,0,4.3018791930455],[-38.74400889250446,0,4.359237582286107],[-38.74804190424794,0,4.416595971526713],[-38.75207491599142,0,4.47395436076732],[-38.7561079277349,0,4.531312750007927],[-38.76014093947838,0,4.588671139248533],[-38.76417395122186,0,4.64602952848914],[-38.768206962965344,0,4.703387917729747],[-38.772239974708825,0,4.760746306970353],[-38.776272986452305,0,4.81810469621096],[-38.780305998195786,0,4.875463085451567],[-38.784339009939266,0,4.932821474692173],[-38.78837202168275,0,4.99017986393278],[-38.79240503342623,0,5.047538253173387],[-38.79643804516971,0,5.104896642413993],[-38.80047105691319,0,5.1622550316546],[-38.80450406865667,0,5.2196134208952065],[-38.80853708040015,0,5.276971810135813],[-38.81257009214363,0,5.33433019937642],[-38.81660310388711,0,5.3916885886170265],[-38.82063611563059,0,5.449046977857633],[-38.82466912737407,0,5.50640536709824],[-38.82870213911755,0,5.5637637563388465],[-38.83273515086103,0,5.621122145579453],[-38.836768162604514,0,5.67848053482006],[-38.840801174347995,0,5.735838924060666],[-38.844834186091475,0,5.793197313301273],[-38.848867197834956,0,5.85055570254188],[-38.852900209578436,0,5.907914091782486],[-38.85693322132192,0,5.965272481023093],[-38.8609662330654,0,6.0226308702637],[-38.86499924480888,0,6.079989259504306],[-38.86903225655236,0,6.137347648744913],[-38.87306526829584,0,6.19470603798552],[-38.87709828003932,0,6.252064427226126],[-38.8811312917828,0,6.309422816466733],[-38.88516430352628,0,6.36678120570734],[-38.88919731526976,0,6.424139594947946],[-38.89323032701324,0,6.481497984188553],[-38.89726333875672,0,6.53885637342916],[-38.9012963505002,0,6.596214762669766],[-38.905329362243684,0,6.653573151910373],[-38.909362373987165,0,6.71093154115098],[-38.913395385730645,0,6.768289930391586]],\"bridge\":true}\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T09:51:22.877Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "2d777129643261e9c532-c0be08b8e87bdffbbcc1",
+          "file": "cross-bridge.spec.ts",
+          "line": 4,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "opening.spec.ts",
+      "file": "opening.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Cell 47 key twist, quiet bed, tool, toilet, passage, save and return",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 117186,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T09:52:30.199Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0dd38654c2908fb5f757-9bc8f055f4bda2f4077d",
+          "file": "opening.spec.ts",
+          "line": 43,
+          "column": 1
+        },
+        {
+          "title": "audio recordings decode, blocked movement is silent and channels persist",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 48190,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T09:54:27.455Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0dd38654c2908fb5f757-d830321fe51560f7ce9e",
+          "file": "opening.spec.ts",
+          "line": 149,
+          "column": 1
+        },
+        {
+          "title": "hard pushing alerts the examining guard, then he returns to the body without crossing bars",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 65099,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T09:55:15.716Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0dd38654c2908fb5f757-4827682a3108d36c078b",
+          "file": "opening.spec.ts",
+          "line": 180,
+          "column": 1
+        },
+        {
+          "title": "mobile contextual holding releases on cancel and rotation without stuck input",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 42606,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T09:56:20.854Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0dd38654c2908fb5f757-e79ab054109e860b337c",
+          "file": "opening.spec.ts",
+          "line": 229,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "reference-hud.spec.ts",
+      "file": "reference-hud.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "reference corridor, fog and gloved grips retain saved equipment through quick slots",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 56748,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T09:57:03.557Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3cc1ec809cc6db90e733-ee8b9797be91252063b4",
+          "file": "reference-hud.spec.ts",
+          "line": 4,
+          "column": 1
+        }
+      ],
+      "suites": [
+        {
+          "title": "mobile pocket HUD",
+          "file": "reference-hud.spec.ts",
+          "line": 111,
+          "column": 6,
+          "specs": [
+            {
+              "title": "mobile pocket icons remain tappable and clear of left controls on small landscape screens",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 21520,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-28T09:58:00.349Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3cc1ec809cc6db90e733-ae657efab8fadc90e07c",
+              "file": "reference-hud.spec.ts",
+              "line": 117,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "update20.spec.ts",
+      "file": "update20.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Cell 048 and 036 stairs work in both directions, lower signs are below the slab, checkpoint remains stable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 46762,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "v20 stairs: {\"flights\":[{\"cell\":48,\"down\":[-5.95,-3.8,-1.4700000000000084],\"up\":[-5.95,0,9.496000000000008],\"model\":true},{\"cell\":36,\"down\":[-66.5,-3.8,9.518000000000008],\"up\":[-66.5,0,-1.4480000000000082],\"model\":true}],\"signs\":[{\"number\":47,\"y\":3.38},{\"number\":46,\"y\":3.38},{\"number\":45,\"y\":3.38},{\"number\":44,\"y\":3.38},{\"number\":43,\"y\":3.38},{\"number\":42,\"y\":3.38},{\"number\":41,\"y\":3.38},{\"number\":40,\"y\":3.38},{\"number\":39,\"y\":3.38},{\"number\":38,\"y\":3.38},{\"number\":37,\"y\":3.38},{\"number\":36,\"y\":3.38},{\"number\":48,\"y\":3.38},{\"number\":49,\"y\":3.38},{\"number\":50,\"y\":3.38},{\"number\":51,\"y\":3.38},{\"number\":52,\"y\":3.38},{\"number\":53,\"y\":3.38},{\"number\":54,\"y\":3.38},{\"number\":55,\"y\":3.38},{\"number\":56,\"y\":3.38},{\"number\":57,\"y\":3.38},{\"number\":58,\"y\":3.38},{\"number\":59,\"y\":3.38},{\"number\":23,\"y\":-0.6799999999999997},{\"number\":24,\"y\":-0.6799999999999997},{\"number\":22,\"y\":-0.6799999999999997},{\"number\":25,\"y\":-0.6799999999999997},{\"number\":21,\"y\":-0.6799999999999997},{\"number\":26,\"y\":-0.6799999999999997},{\"number\":20,\"y\":-0.6799999999999997},{\"number\":27,\"y\":-0.6799999999999997},{\"number\":19,\"y\":-0.6799999999999997},{\"number\":28,\"y\":-0.6799999999999997},{\"number\":18,\"y\":-0.6799999999999997},{\"number\":29,\"y\":-0.6799999999999997},{\"number\":17,\"y\":-0.6799999999999997},{\"number\":30,\"y\":-0.6799999999999997},{\"number\":16,\"y\":-0.6799999999999997},{\"number\":31,\"y\":-0.6799999999999997},{\"number\":15,\"y\":-0.6799999999999997},{\"number\":32,\"y\":-0.6799999999999997},{\"number\":14,\"y\":-0.6799999999999997},{\"number\":33,\"y\":-0.6799999999999997},{\"number\":13,\"y\":-0.6799999999999997},{\"number\":34,\"y\":-0.6799999999999997},{\"number\":12,\"y\":-0.6799999999999997},{\"number\":35,\"y\":-0.6799999999999997}],\"restored\":[-39,0,4],\"version\":18}\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T09:58:21.937Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3ab8f9276e183e94154f-080d4fbc7387bf6f0e75",
+          "file": "update20.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "six shots, unlimited reloads, pause/cancel, right-hand-only idle and support hand during reload",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 50879,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T09:59:08.724Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3ab8f9276e183e94154f-dc72838409320cb7ab1d",
+          "file": "update20.spec.ts",
+          "line": 68,
+          "column": 1
+        }
+      ],
+      "suites": [
+        {
+          "title": "iPhone-sized touch compatibility (Chromium emulation, not Safari certification)",
+          "file": "update20.spec.ts",
+          "line": 152,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Safari install guidance, MP3 decode, landscape controls, touch reload and bottom dialogue",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 123095,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 120000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 120000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 120000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "/workspace/Hirodora/tests/update20.spec.ts",
+                            "column": 69,
+                            "line": 204
+                          },
+                          "message": "Error: locator.click: Test timeout of 120000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Resume', exact: true })\u001b[22m\n\n\n  202 |     ).toBeVisible();\n  203 |     await page.setViewportSize({ width: 844, height: 390 });\n> 204 |     await page.getByRole(\"button\", { name: \"Resume\", exact: true }).click();\n      |                                                                     ^\n  205 |     await expect(\n  206 |       page.getByRole(\"region\", { name: \"Movement joystick\" }),\n  207 |     ).toBeVisible();\n    at /workspace/Hirodora/tests/update20.spec.ts:204:69"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-28T09:59:59.631Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/workspace/Hirodora/test-results/update20-iPhone-sized-touc-881c1--reload-and-bottom-dialogue/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/workspace/Hirodora/test-results/update20-iPhone-sized-touc-881c1--reload-and-bottom-dialogue/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/workspace/Hirodora/test-results/update20-iPhone-sized-touc-881c1--reload-and-bottom-dialogue/trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "3ab8f9276e183e94154f-64ae6e2a4461ab49e8bc",
+              "file": "update20.spec.ts",
+              "line": 160,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-28T09:42:43.705Z",
+    "duration": 1161883.738,
+    "expected": 17,
+    "skipped": 0,
+    "unexpected": 4,
+    "flaky": 0
+  }
+}

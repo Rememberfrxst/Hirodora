@@ -40,6 +40,11 @@ try {
     e.gameFlags.can_attached = true;
   });
   for (const [name, position, target, item] of views) {
+    if (
+      process.env.CAPTURE_VIEWS &&
+      !process.env.CAPTURE_VIEWS.split(",").includes(name)
+    )
+      continue;
     const state = await page.evaluate(
       ({ position, target, item }) => {
         const e = window.__HIRODORA__;

@@ -90,4 +90,65 @@ export function poseGrip(
     side + "HandThumb3",
     style === "pinch" ? [0, 0.99, 0.1] : [0.65, 0.56, -0.51],
   );
+  if (arm.getObjectByName(side + "ArmMesh")) {
+    const point = (name: string) =>
+      hand.worldToLocal(
+        arm.getObjectByName(name)!.getWorldPosition(new THREE.Vector3()),
+      );
+    const reach = (finger: string, target: THREE.Vector3) => {
+      const names = Array.from(
+          { length: 4 },
+          (_, i) => `${side}Hand${finger}${i + 1}`,
+        ),
+        points = names.map(point),
+        base = points[0].clone();
+      const lengths = points.slice(1).map((p, i) => p.distanceTo(points[i]));
+      for (let iteration = 0; iteration < 18; iteration++) {
+        points[3].copy(target);
+        for (let i = 2; i >= 0; i--)
+          points[i]
+            .sub(points[i + 1])
+            .normalize()
+            .multiplyScalar(lengths[i])
+            .add(points[i + 1]);
+        points[0].copy(base);
+        for (let i = 1; i < 4; i++)
+          points[i]
+            .sub(points[i - 1])
+            .normalize()
+            .multiplyScalar(lengths[i - 1])
+            .add(points[i - 1]);
+      }
+      for (let i = 0; i < 3; i++)
+        aim(names[i], points[i + 1].clone().sub(points[i]).toArray());
+    };
+    if (style === "pinch" && side === "Right") {
+      reach("Index", new THREE.Vector3(-0.045, 0.145, 0.045));
+      reach("Thumb", new THREE.Vector3(-0.035, 0.123, 0.045));
+    }
+    if ((style === "power" || style === "pistol10") && side === "Right")
+      reach("Thumb", new THREE.Vector3(-0.005, 0.12, 0.03));
+    if (style === "pistol10") {
+      // Solve the two proximal segments to the actual 10mm trigger socket.
+      const a = point(side + "HandIndex1"),
+        target = new THREE.Vector3(-0.028, 0.14, 0.048),
+        direction = target.clone().sub(a),
+        distance = direction.length(),
+        unit = direction.normalize();
+      const l1 = arm.getObjectByName(side + "HandIndex2")!.position.length(),
+        l2 = arm.getObjectByName(side + "HandIndex3")!.position.length();
+      const along = (l1 * l1 - l2 * l2 + distance * distance) / (2 * distance),
+        height = Math.sqrt(Math.max(0, l1 * l1 - along * along));
+      const pole = new THREE.Vector3(0, 1, 0)
+        .addScaledVector(unit, -unit.y)
+        .normalize();
+      const middle = a
+        .clone()
+        .addScaledVector(unit, along)
+        .addScaledVector(pole, height);
+      aim(side + "HandIndex1", middle.clone().sub(a).toArray());
+      aim(side + "HandIndex2", target.sub(middle).toArray());
+      aim(side + "HandIndex3", [0.35, -0.8, 0]);
+    }
+  }
 }

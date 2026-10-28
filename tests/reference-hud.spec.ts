@@ -73,7 +73,7 @@ test("reference corridor, fog and gloved grips retain saved equipment through qu
   expect(data.depth).toBe(9.5);
   expect(data.fog).toBe(0.033);
   expect(data.stable).toBe(true);
-  expect(data.materials).toContain("Black leather glove");
+  expect(data.materials).toContain("Scene_-_Root");
   expect(data.heldScales).toEqual([0.5, 0.25, 0.5, 0.5, 0.3]);
   expect(data.forward[0]).toBeCloseTo(0);
   expect(data.forward[1]).toBeCloseTo(1);

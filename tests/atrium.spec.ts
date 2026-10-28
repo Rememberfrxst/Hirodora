@@ -29,7 +29,7 @@ test("nine officers patrol both levels and a lower cell can be opened, entered a
     const gate = e.worldData.interactables.find(
       (o: any) => o.id === "cell_latch_22",
     );
-    e.playerPos = [gate.position[0], -3.2, -0.9];
+    e.playerPos = [gate.position[0], -3.8, -0.9];
     e.playerRotY = 0;
     e.move(0);
     e.overlayOpen = false;
@@ -93,9 +93,9 @@ test("stairs support actual player movement, gates are independent, and equipped
     e.syncWorld();
     const neighborSame = g48.rotation.y === before;
     // Walk the east staircase in real move() calls, then onto the lower hall.
-    e.playerPos = [-5.5, 0, 4];
+    e.playerPos = [-5.95, 0, 8.9];
     e.playerRotY = 0;
-    e.keys.KeyA = true;
+    e.keys.KeyW = true;
     for (let i = 0; i < 300; i++) e.move(0.016);
     e.clearInput();
     const lower = [...e.playerPos],
@@ -133,7 +133,7 @@ test("stairs support actual player movement, gates are independent, and equipped
   });
   expect(r.independent).toBeGreaterThanOrEqual(48);
   expect(r.neighborSame).toBe(true);
-  expect(r.lower[1]).toBeCloseTo(-3.2, 2);
+  expect(r.lower[1]).toBeCloseTo(-3.8, 2);
   expect(r.eye).toBeLessThan(-1.3);
   expect(r.held).toBe(true);
   expect(r.equipped).toBe("screwdriver");
@@ -156,22 +156,22 @@ test("guards route down stairs and cannot capture a player through the gallery f
     const e = window.__HIRODORA__ as any;
     cancelAnimationFrame(e.frameId);
     e.overlayOpen = true;
-    e.playerPos = [-35, -3.2, 4];
+    e.playerPos = [-35, -3.8, 4];
     e.worldData.guards.forEach((other: any) => {
       other.state = "knocked_out";
       other.stateTimer = 100;
     });
     const g = e.worldData.guards[1];
-    g.position = [-6, 0, 4];
+    g.position = [-5.95, 0, 8.8];
     g.state = "searching";
     g.suspicion = 55;
     g.stateTimer = 12;
-    g.investigationTarget = [-15, -3.2, 4];
-    g.lastKnownPosition = [-15, -3.2, 4];
-    g.lastHeardPosition = [-15, -3.2, 4];
+    g.investigationTarget = [-5.95, -3.8, -0.4];
+    g.lastKnownPosition = [-5.95, -3.8, -0.4];
+    g.lastHeardPosition = [-5.95, -3.8, -0.4];
     for (let i = 0; i < 250 && g.position[1] > -3; i++) e.updateGuards(0.05);
     const y = g.position[1];
-    e.playerPos = [-5, -3.2, 4];
+    e.playerPos = [-5, -3.8, 4];
     g.position = [-5, 0, 4];
     g.state = "chase";
     g.suspicion = 100;

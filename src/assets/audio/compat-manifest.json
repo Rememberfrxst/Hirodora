@@ -1,0 +1,425 @@
+{
+  "reason": "MP3 derivatives allow Web Audio decode on iOS Safari versions without Ogg Vorbis support. Same licensed source recordings and attribution as manifest.json; transcoding only, no voice generation.",
+  "records": [
+    {
+      "source": "footstep_concrete_000.ogg",
+      "file": "compat/footstep_concrete_000.mp3",
+      "bytes": 2182,
+      "sha256": "3d516d8f5ec14ec2ed1c317c3af453e2f17c0a7c548e4919c2b5166fa1967b94"
+    },
+    {
+      "source": "footstep_concrete_001.ogg",
+      "file": "compat/footstep_concrete_001.mp3",
+      "bytes": 2286,
+      "sha256": "49e09f01271a2ce5cf123461696e7c133595dabc70f18eacc0196c5c27a56499"
+    },
+    {
+      "source": "footstep_concrete_002.ogg",
+      "file": "compat/footstep_concrete_002.mp3",
+      "bytes": 2338,
+      "sha256": "627d77de4132c64e21f7baa6a814920f4ff7939b965c7ce55829b8be26c2b8e1"
+    },
+    {
+      "source": "footstep_concrete_003.ogg",
+      "file": "compat/footstep_concrete_003.mp3",
+      "bytes": 2260,
+      "sha256": "ef0e441faf7897e86a8fb6b1d685d5d499321d35012a3bea2939b51831c39b25"
+    },
+    {
+      "source": "footstep_wood_000.ogg",
+      "file": "compat/footstep_wood_000.mp3",
+      "bytes": 2257,
+      "sha256": "59eafc4e3db5cf3cd3431707cfb94e01e533838e8503eca31d6b275234cb2d08"
+    },
+    {
+      "source": "footstep_wood_001.ogg",
+      "file": "compat/footstep_wood_001.mp3",
+      "bytes": 2283,
+      "sha256": "9136ab9abf2a00c6882669f637606e245606a33ce8983c4c6d0d974448b703de"
+    },
+    {
+      "source": "footstep_wood_002.ogg",
+      "file": "compat/footstep_wood_002.mp3",
+      "bytes": 2283,
+      "sha256": "f83d31c08c0e57a31417f065a03d7f4702a3207d6c477557abb66af1954d5684"
+    },
+    {
+      "source": "footstep_wood_003.ogg",
+      "file": "compat/footstep_wood_003.mp3",
+      "bytes": 2439,
+      "sha256": "71a19377859c05670a74859f4c8d59c50f076dfb2cfd2dbf2b7b5c6c119da63d"
+    },
+    {
+      "source": "impactGeneric_light_000.ogg",
+      "file": "compat/impactGeneric_light_000.mp3",
+      "bytes": 1997,
+      "sha256": "8dfa335afaef25aaedc4a7f15b08bf3d5b8cee6e45f3db40518724ca6cd8af8e"
+    },
+    {
+      "source": "impactGeneric_light_001.ogg",
+      "file": "compat/impactGeneric_light_001.mp3",
+      "bytes": 1998,
+      "sha256": "406e024ac0cbfc23f5cc51fdaee7f6f502546238702d22bbf51d025453d7e210"
+    },
+    {
+      "source": "impactGlass_heavy_000.ogg",
+      "file": "compat/impactGlass_heavy_000.mp3",
+      "bytes": 3955,
+      "sha256": "8b770f2c9dd678e2a8d77fd3d34b49640a049e014b4d75535a6912ae3fa65e17"
+    },
+    {
+      "source": "impactGlass_heavy_001.ogg",
+      "file": "compat/impactGlass_heavy_001.mp3",
+      "bytes": 4369,
+      "sha256": "e85f8816274eeeacbe4c3bf140ad0368d3a4617af8cbfcab103543f485bc8271"
+    },
+    {
+      "source": "impactGlass_light_000.ogg",
+      "file": "compat/impactGlass_light_000.mp3",
+      "bytes": 2258,
+      "sha256": "0b57ed02407765b73a454b35b5ca3b13a3829a3ba41d3b6349eeb804f04b81ce"
+    },
+    {
+      "source": "impactGlass_light_001.ogg",
+      "file": "compat/impactGlass_light_001.mp3",
+      "bytes": 2231,
+      "sha256": "eae10e6ac69570db0700a17c86249276a1c0ef2f4913bc6ba9bea8e460ef0ff6"
+    },
+    {
+      "source": "impactMetal_heavy_000.ogg",
+      "file": "compat/impactMetal_heavy_000.mp3",
+      "bytes": 2285,
+      "sha256": "da6fe8dc5ce7bd31528edee396fe7d08b6854667721a6311c102ca4d8b55128a"
+    },
+    {
+      "source": "impactMetal_heavy_001.ogg",
+      "file": "compat/impactMetal_heavy_001.mp3",
+      "bytes": 3141,
+      "sha256": "400081525bc4fd88afe1ab9441946b9f52c9c2ccbbf913a96c75c1fe48904a12"
+    },
+    {
+      "source": "impactMetal_light_000.ogg",
+      "file": "compat/impactMetal_light_000.mp3",
+      "bytes": 3142,
+      "sha256": "30053c8d0cee70aab4b118bff0c80f497d9aea7628225a1ce8702c100db3334b"
+    },
+    {
+      "source": "impactMetal_light_001.ogg",
+      "file": "compat/impactMetal_light_001.mp3",
+      "bytes": 2596,
+      "sha256": "ffa5cdbb74cba8d0d81f2ce52d366dd1390674eaf88eb9ccc476a685ee2a5414"
+    },
+    {
+      "source": "impactPlate_heavy_000.ogg",
+      "file": "compat/impactPlate_heavy_000.mp3",
+      "bytes": 5885,
+      "sha256": "46c89510ca80c25d9381076e42b793c8de4d56ae9f92a434bd578d2fd95cad9d"
+    },
+    {
+      "source": "impactPlate_heavy_001.ogg",
+      "file": "compat/impactPlate_heavy_001.mp3",
+      "bytes": 4920,
+      "sha256": "ddac578336a76ac37960a637290f3ad778604ca651eaa6a60dfc9a27b774477e"
+    },
+    {
+      "source": "impactPlate_light_000.ogg",
+      "file": "compat/impactPlate_light_000.mp3",
+      "bytes": 6197,
+      "sha256": "a769db9d46f635b8df06b760eb673a93458b49ea2478f986e886d5d55785d480"
+    },
+    {
+      "source": "impactPlate_light_001.ogg",
+      "file": "compat/impactPlate_light_001.mp3",
+      "bytes": 7266,
+      "sha256": "68ca9326bbfa783a0269491762368bac63eafa1088939844ed4426ffa7b10d92"
+    },
+    {
+      "source": "impactSoft_heavy_000.ogg",
+      "file": "compat/impactSoft_heavy_000.mp3",
+      "bytes": 3324,
+      "sha256": "7c9403f9dc2dd4b003d6ae0cf82203ce6ebdc36877ddfa2822383312c19f87c6"
+    },
+    {
+      "source": "impactSoft_heavy_001.ogg",
+      "file": "compat/impactSoft_heavy_001.mp3",
+      "bytes": 3611,
+      "sha256": "de9988b5497efba1ece5e6a04a0cef53f33677a6231b9c0d1365d185d0b4a0da"
+    },
+    {
+      "source": "impactWood_heavy_000.ogg",
+      "file": "compat/impactWood_heavy_000.mp3",
+      "bytes": 2518,
+      "sha256": "cb2874b2584686113b37ae7ffbdfa6e6e0134a6af09c26cc11f37a86f0add22e"
+    },
+    {
+      "source": "impactWood_heavy_001.ogg",
+      "file": "compat/impactWood_heavy_001.mp3",
+      "bytes": 2545,
+      "sha256": "06b229048f2224cb35d18e7bb96147843997d497c2bd8a9902b721a7ed516074"
+    },
+    {
+      "source": "impactWood_light_000.ogg",
+      "file": "compat/impactWood_light_000.mp3",
+      "bytes": 2335,
+      "sha256": "c3c98233772bb7fe87df9d64bfe991450e803cb1b8ec9c3494b78fceab9054e3"
+    },
+    {
+      "source": "impactWood_light_001.ogg",
+      "file": "compat/impactWood_light_001.mp3",
+      "bytes": 2441,
+      "sha256": "bfaf4e2567ab2f0a793c846a48bc9c80f15c0cee1c15964bb21d1079e0d1d164"
+    },
+    {
+      "source": "tile-0.ogg",
+      "file": "compat/tile-0.mp3",
+      "bytes": 6539,
+      "sha256": "e0fb8e9e66af61d12dc5b7a739deb1561df1a888649a9409bd7e6459b2258003"
+    },
+    {
+      "source": "tile-1.ogg",
+      "file": "compat/tile-1.mp3",
+      "bytes": 6331,
+      "sha256": "1a64db243e98f97ee21b5a240c750e992b6587153c1f68b92f48cc99b92a1fb0"
+    },
+    {
+      "source": "tile-2.ogg",
+      "file": "compat/tile-2.mp3",
+      "bytes": 6227,
+      "sha256": "d850997b284b1e6952218f4016a4e64677eba430e771b9eb545537c6e6c2d4e3"
+    },
+    {
+      "source": "tile-3.ogg",
+      "file": "compat/tile-3.mp3",
+      "bytes": 6331,
+      "sha256": "0557981f7a53439a44660ea65e6325d596994cc04322a30003b8242c43985b18"
+    },
+    {
+      "source": "metal-0.ogg",
+      "file": "compat/metal-0.mp3",
+      "bytes": 6746,
+      "sha256": "17688202b9146ea6e70bf2a5845752e58c59db6648b860083ba4d6913bb75580"
+    },
+    {
+      "source": "metal-1.ogg",
+      "file": "compat/metal-1.mp3",
+      "bytes": 6642,
+      "sha256": "5f869a3aff2ddb43775c3ab6d284db8c2940004d094d335dc063d0aaada08a0c"
+    },
+    {
+      "source": "metal-2.ogg",
+      "file": "compat/metal-2.mp3",
+      "bytes": 6591,
+      "sha256": "c04851b77185b6b4100b743e879a04afdeb4412f8953a831518d6267d169485c"
+    },
+    {
+      "source": "metal-3.ogg",
+      "file": "compat/metal-3.mp3",
+      "bytes": 7268,
+      "sha256": "c4bccb44a0fe7f8ce253a0dd60e081f791642efc3fcfd79c37da29f4cabb6df3"
+    },
+    {
+      "source": "gravel-0.ogg",
+      "file": "compat/gravel-0.mp3",
+      "bytes": 7634,
+      "sha256": "3d608410c75d06823bcb0d610f589f99ce31153681698ca718941119b8f2151d"
+    },
+    {
+      "source": "gravel-1.ogg",
+      "file": "compat/gravel-1.mp3",
+      "bytes": 6383,
+      "sha256": "af5111c86ad1d9421ab8efb5a3b62f44ef3dd9a1700667ec8046d5181d9a7e15"
+    },
+    {
+      "source": "gravel-2.ogg",
+      "file": "compat/gravel-2.mp3",
+      "bytes": 5651,
+      "sha256": "491d880551cb97fb42929470471c2f5e82e21e5e79c27a6b192b076098cd4188"
+    },
+    {
+      "source": "dirt-0.ogg",
+      "file": "compat/dirt-0.mp3",
+      "bytes": 6383,
+      "sha256": "820dd70e609a685cc92abf79062a9d0704d85e36df098e14a3b1e67e258a6e1f"
+    },
+    {
+      "source": "dirt-1.ogg",
+      "file": "compat/dirt-1.mp3",
+      "bytes": 6224,
+      "sha256": "435af6ce6a4cd1bc5436f9daa1ded82aa217ffe84efa2b0f4a8ca246c6a0fd27"
+    },
+    {
+      "source": "dirt-2.ogg",
+      "file": "compat/dirt-2.mp3",
+      "bytes": 5964,
+      "sha256": "8da1b77209a8bf97c5905d67de4cd1c9a92b515d84e2ba894c8fae9ed59850d8"
+    },
+    {
+      "source": "dirt-3.ogg",
+      "file": "compat/dirt-3.mp3",
+      "bytes": 6277,
+      "sha256": "fc5fa7d30954c657ba01e1dedfe407ddd18b53c716ac1dfe0bbf313f6688265d"
+    },
+    {
+      "source": "water-0.ogg",
+      "file": "compat/water-0.mp3",
+      "bytes": 6852,
+      "sha256": "e0b2fcca8ec01fa206ccf6093285ba08087972d970ddc03de2645c78a5c3e1af"
+    },
+    {
+      "source": "water-1.ogg",
+      "file": "compat/water-1.mp3",
+      "bytes": 6905,
+      "sha256": "957807b34dd2bd7175ae4cbfb0982034c21b397c83ef2edf1ed186f5cbd5b83c"
+    },
+    {
+      "source": "water-2.ogg",
+      "file": "compat/water-2.mp3",
+      "bytes": 6852,
+      "sha256": "532855ca6646675a0f2798e048620e7e2acb34259e4bf9b3051b62ae711c7901"
+    },
+    {
+      "source": "water-3.ogg",
+      "file": "compat/water-3.mp3",
+      "bytes": 7217,
+      "sha256": "b8dd84d794c0ce97e01a66e99485a78fda36011d5d38296865cb1902b547b546"
+    },
+    {
+      "source": "ventilation.ogg",
+      "file": "compat/ventilation.mp3",
+      "bytes": 119681,
+      "sha256": "1df639b003efefe7100ea4b8db1f36b78aa31ddaecf562800703722fd14c5c0a"
+    },
+    {
+      "source": "drips.ogg",
+      "file": "compat/drips.mp3",
+      "bytes": 124678,
+      "sha256": "37572206ecc8109ad9f162a7e7c56e091b5d0865d40740fd93ad12fb9eb8e4df"
+    },
+    {
+      "source": "guard-stop.ogg",
+      "file": "compat/guard-stop.mp3",
+      "bytes": 77720,
+      "sha256": "2889000b7c8bf6f0f37b3f19329b59705dd41e8edea0ec530b5a78c39d69a186"
+    },
+    {
+      "source": "guard-hey.ogg",
+      "file": "compat/guard-hey.mp3",
+      "bytes": 12120,
+      "sha256": "979d836bb5177035163c356dc703f6cbf55bda0c83880bda801d0fbb8519366b"
+    },
+    {
+      "source": "bed-drag.ogg",
+      "file": "compat/bed-drag.mp3",
+      "bytes": 23775,
+      "sha256": "9da8918b14e92a1bd13180243fe815cd74d54fcf50998df13a25303ce1b5055f"
+    },
+    {
+      "source": "screwdriver.ogg",
+      "file": "compat/screwdriver.mp3",
+      "bytes": 30064,
+      "sha256": "08e8453c5f47e5c89637cb32a99d989304573453dd63faa0befff8fafdcc1bda"
+    },
+    {
+      "source": "ceramic-drag.ogg",
+      "file": "compat/ceramic-drag.mp3",
+      "bytes": 32059,
+      "sha256": "fe1e90454b3c42a5de01366f6f59d51b26077dafc8147a8d7ef10a5c9015f8d9"
+    },
+    {
+      "source": "plastic.ogg",
+      "file": "compat/plastic.mp3",
+      "bytes": 5336,
+      "sha256": "fd6712059fab9069db5f8fc0bfaaf8e122eca91e6ce01a555081568edf8ac8a6"
+    },
+    {
+      "source": "keys.ogg",
+      "file": "compat/keys.mp3",
+      "bytes": 54224,
+      "sha256": "f2d1c0e47a808663f0e1c87b450e95872188f737619018b2aadd6b9b809990d3"
+    },
+    {
+      "source": "paper.ogg",
+      "file": "compat/paper.mp3",
+      "bytes": 41598,
+      "sha256": "eda2d8c2168339cdd4a6aad921af06728fac5778d8b19e13f3c81918563e614c"
+    },
+    {
+      "source": "fabric.ogg",
+      "file": "compat/fabric.mp3",
+      "bytes": 38423,
+      "sha256": "0caf9cf02f715bba302636bf49250b1233ddbb1b1136f659ad73edeef4d5864e"
+    },
+    {
+      "source": "hinge.ogg",
+      "file": "compat/hinge.mp3",
+      "bytes": 32792,
+      "sha256": "ed4635938af737ef571e6931497b0dc4858115cf6de6d08f1aacff043d0b3b99"
+    },
+    {
+      "source": "guard-gunshot.ogg",
+      "file": "compat/guard-gunshot.mp3",
+      "bytes": 14048,
+      "sha256": "f6531b4c993f0caabe4ab6623068a5edf0fdd76dfa45c50f726649cf64027738"
+    },
+    {
+      "source": "bed-creak-0.ogg",
+      "file": "compat/bed-creak-0.mp3",
+      "bytes": 23351,
+      "sha256": "42678cb0bc49d10a306f1128508f767cdaa393d5aca7604841cf403ae6b2b7d2"
+    },
+    {
+      "source": "bed-creak-1.ogg",
+      "file": "compat/bed-creak-1.mp3",
+      "bytes": 23451,
+      "sha256": "69658c4927b8a002b225915c7f597b66b3da9e93042e1bdae40026b1a9f1793a"
+    },
+    {
+      "source": "toilet-scrape.ogg",
+      "file": "compat/toilet-scrape.mp3",
+      "bytes": 36869,
+      "sha256": "5ee5eefd84a483ddf1153a5c0136aa06fd9e9a7f606025b987bbca5c044eb8cd"
+    },
+    {
+      "source": "gate-close.ogg",
+      "file": "compat/gate-close.mp3",
+      "bytes": 39136,
+      "sha256": "1df3c3804695553c9e7cab01e3aa52b63923d8693d304c265e18d4325f59aa45"
+    },
+    {
+      "source": "cell-lock.ogg",
+      "file": "compat/cell-lock.mp3",
+      "bytes": 33953,
+      "sha256": "31c0c2a18acee182b20cb76ff4cf4fa577823874c46f7fdb9187ebbe879abb40"
+    },
+    {
+      "source": "lock-turn.ogg",
+      "file": "compat/lock-turn.mp3",
+      "bytes": 43002,
+      "sha256": "ad455a8c7a705b966f79de5d1fcf9882e60dd18af52b9971e763dbc8a6f20a04"
+    },
+    {
+      "source": "bolt-ratchet.ogg",
+      "file": "compat/bolt-ratchet.mp3",
+      "bytes": 23462,
+      "sha256": "4355a99d17ab3279cc87292a8105540b09c8b241d3b2d9cb5963b47be6c99db7"
+    },
+    {
+      "source": "heavy-bolt.ogg",
+      "file": "compat/heavy-bolt.mp3",
+      "bytes": 30343,
+      "sha256": "42ba439e2f10d46775c060df09400ed6e28f917d23688c66bdbe133356ceb315"
+    },
+    {
+      "source": "bed-slide.ogg",
+      "file": "compat/bed-slide.mp3",
+      "bytes": 21110,
+      "sha256": "cfd99ff7c6be4e7282b8fa165d3f9c2ab9a49f61f853d051c6936c63988a112b"
+    },
+    {
+      "source": "table-slide.ogg",
+      "file": "compat/table-slide.mp3",
+      "bytes": 32806,
+      "sha256": "e0eb96ca75950135e2c4b3b9b543ad98475a2e725cb864fe1f6e53f8bc04594f"
+    }
+  ]
+}

@@ -22,7 +22,7 @@ for (const [density, pixels] of Object.entries({
     .png()
     .toFile(`${dir}/ic_launcher.png`);
 }
-for (const size of [192, 512])
+for (const size of [180, 192, 512])
   await sharp(source)
     .resize(size, size)
     .png()

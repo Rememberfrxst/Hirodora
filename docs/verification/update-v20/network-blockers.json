@@ -1,0 +1,14 @@
+{
+  "observedDate": "2026-10-28",
+  "policyState": "enforced",
+  "webkitInstalled": false,
+  "safariDeviceCertified": false,
+  "nativeIPAProduced": false,
+  "blocked": [
+    {"hostname":"cdn.playwright.dev","status":403,"operation":"Playwright WebKit 2370 download","message":"Domain forbidden"},
+    {"hostname":"playwright.download.prss.microsoft.com","status":403,"operation":"Playwright WebKit mirror download","message":"Domain forbidden"},
+    {"hostname":"rememberfrxst.github.io","status":403,"operation":"HEAD https://rememberfrxst.github.io/Hirodora/","message":"CONNECT tunnel failed, response 403"}
+  ],
+  "continuation": "Implementation, MP3 conversion, Chromium/mobile emulation, unit/build/Android checks continue locally. No proxy bypass or disabled TLS verification used.",
+  "remaining": "Allow these hostnames to perform the missing WebKit/hosted-site checks. Real iPhone/iPad QA and native Apple signing remain separate requirements."
+}

@@ -1,6 +1,7 @@
 import { audioURLs } from "../assets/audio/urls";
 import { onWoodStairs } from "./atrium";
 import { crossBridgeFootstep } from "./cross-bridge";
+import { audioNeedsResume } from "./platform";
 import {
   actionFoley,
   clampAudioIntensity,
@@ -239,7 +240,8 @@ class SoundManager {
     this.play("guard-gunshot", "sfx", 0.8, position);
   }
   public resume() {
-    if (this.ctx?.state === "suspended") void this.ctx.resume().catch(() => {});
+    if (this.ctx && audioNeedsResume(this.ctx.state))
+      void this.ctx.resume().catch(() => {});
   }
   public suspend() {
     this.stopObjectActions();

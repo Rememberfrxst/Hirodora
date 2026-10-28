@@ -1,0 +1,132 @@
+{
+  "captures": [
+    {
+      "name": "01-cell048-stairs",
+      "position": [
+        -10,
+        -2.15,
+        3
+      ],
+      "target": [
+        -5.95,
+        0.2,
+        9
+      ],
+      "item": null,
+      "reload": false,
+      "fov": 70,
+      "ammo": 6,
+      "leftVisible": false,
+      "rightVisible": true,
+      "calls": 294,
+      "triangles": 2726459
+    },
+    {
+      "name": "02-cell036-stairs",
+      "position": [
+        -62,
+        -2.15,
+        5
+      ],
+      "target": [
+        -66.5,
+        0.2,
+        -1
+      ],
+      "item": null,
+      "reload": false,
+      "fov": 70,
+      "ammo": 6,
+      "leftVisible": false,
+      "rightVisible": true,
+      "calls": 239,
+      "triangles": 1707667
+    },
+    {
+      "name": "03-lower-numbers",
+      "position": [
+        -11,
+        -2.15,
+        2
+      ],
+      "target": [
+        -11,
+        -0.6,
+        -2
+      ],
+      "item": null,
+      "reload": false,
+      "fov": 70,
+      "ammo": 6,
+      "leftVisible": false,
+      "rightVisible": true,
+      "calls": 344,
+      "triangles": 2944266
+    },
+    {
+      "name": "04-right-hand-pistol",
+      "position": [
+        -39,
+        1.65,
+        0
+      ],
+      "target": [
+        -39,
+        1.5,
+        10
+      ],
+      "item": "pistol_10mm",
+      "reload": false,
+      "fov": 70,
+      "ammo": 6,
+      "leftVisible": false,
+      "rightVisible": true,
+      "calls": 307,
+      "triangles": 2211259
+    },
+    {
+      "name": "05-pickup-dialogue",
+      "position": [
+        -6,
+        1.65,
+        -3.15
+      ],
+      "target": [
+        -5.7,
+        0.9,
+        -0.7
+      ],
+      "item": null,
+      "reload": false,
+      "fov": 70,
+      "ammo": 6,
+      "leftVisible": false,
+      "rightVisible": true,
+      "calls": 357,
+      "triangles": 3009872
+    },
+    {
+      "name": "06-reload-support-hand",
+      "position": [
+        -39,
+        1.65,
+        0
+      ],
+      "target": [
+        -39,
+        1.5,
+        10
+      ],
+      "item": "pistol_10mm",
+      "reload": true,
+      "fov": 70,
+      "ammo": 0,
+      "leftVisible": true,
+      "rightVisible": true,
+      "calls": 308,
+      "triangles": 2214282
+    }
+  ],
+  "errors": [],
+  "method": "Real game render; fixed cameras and paused simulation. Pickup/dialogue view stages UI state to compare the reference layout, not recorded voice playback."
+}

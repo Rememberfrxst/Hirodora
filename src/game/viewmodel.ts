@@ -43,7 +43,7 @@ export class FirstPersonView {
       .setMeshoptDecoder(MeshoptDecoder)
       .loadAsync(armURL);
     this.arm = gltf.scene;
-    this.arm.scale.setScalar(1.12);
+    this.arm.scale.setScalar(1.18);
     this.root.add(this.arm);
     const forearm = this.arm.getObjectByName("RightForeArm")!;
     this.arm.updateMatrixWorld(true);
@@ -68,15 +68,15 @@ export class FirstPersonView {
     poseGrip(this.arm, this.rest, "power");
     this.arm.updateMatrixWorld(true);
     const wrist = this.hand.getWorldPosition(new THREE.Vector3());
-    this.arm.position.add(new THREE.Vector3(0.24, -0.29, -0.57).sub(wrist));
+    this.arm.position.add(new THREE.Vector3(0.235, -0.265, -0.54).sub(wrist));
     const driver = this.normalizeTool(screwdriver, true);
     driver.rotation.x += Math.PI / 2;
     // Handle crosses the curled fingers; the shaft exits on the thumb side.
-    driver.position.set(-0.028, 0.11, 0.09);
+    driver.position.set(-0.026, 0.105, 0.087);
     this.hand.add(driver);
     this.items.set("screwdriver", driver);
     const key = this.normalizeTool(keyTemplate, false);
-    key.scale.setScalar(0.55);
+    key.scale.setScalar(0.45);
     key.rotation.z = -Math.PI / 2;
     key.position.set(-0.054, 0.15, 0.033);
     this.hand.add(key);
@@ -103,7 +103,7 @@ export class FirstPersonView {
       gun.quaternion.copy(pistol.quaternion);
       gun.position.copy(pistol.position);
       this.can = this.normalizeTool(ballisticsModels.can, false);
-      this.can.name="CanAttachment";
+      this.can.name = "CanAttachment";
       this.can.children[0].position.set(0, 0, 0);
       this.can.rotation.x = Math.PI / 2;
       this.can.position.set(...(ballistics.muzzle as [number, number, number]));
@@ -117,7 +117,7 @@ export class FirstPersonView {
           opacity: 0.8,
         }),
       );
-      this.muzzleFlash.name="MuzzleFlash";
+      this.muzzleFlash.name = "MuzzleFlash";
       this.muzzleFlash.position.set(
         ...(ballistics.muzzle as [number, number, number]),
       );
@@ -274,6 +274,30 @@ export class FirstPersonView {
       this.selected = item;
       this.transition = 0.22;
       if (this.arm) poseGrip(this.arm, this.rest, gripStyle(item));
+      if (
+        this.arm &&
+        this.hand &&
+        item &&
+        ["cell_key", "small_key", "master_key_c"].includes(item)
+      ) {
+        this.arm.updateMatrixWorld(true);
+        const point = (name: string) =>
+          this.hand!.worldToLocal(
+            this.arm!.getObjectByName(name)!.getWorldPosition(
+              new THREE.Vector3(),
+            ),
+          );
+        const pinch = point("RightHandIndex4")
+          .add(point("RightHandThumb4"))
+          .multiplyScalar(0.5);
+        const key = this.items.get(item)!;
+        const ringContact = new THREE.Vector3(0.06, 0, 0)
+          .add(key.children[0].position)
+          .multiply(key.scale)
+          .applyQuaternion(key.quaternion);
+        key.position.copy(pinch.sub(ringContact));
+        key.userData.graspPoint = ringContact.toArray();
+      }
     }
     this.transition = Math.max(0, this.transition - dt);
     this.recoil = Math.max(0, this.recoil - dt);

@@ -78,7 +78,7 @@ test("reference corridor, fog and gloved grips retain saved equipment through qu
   expect(data.forward[0]).toBeCloseTo(0);
   expect(data.forward[1]).toBeCloseTo(1);
   expect(data.forward[2]).toBeCloseTo(0);
-  expect(data.local).toEqual([-0.028, 0.11, 0.09]);
+  expect(data.local).toEqual([-0.026, 0.105, 0.087]);
   expect(data.cells).toBe(48);
   expect(data.guards).toBe(9);
   const pockets = page.getByRole("navigation", { name: "Carried items" });

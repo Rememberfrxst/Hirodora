@@ -1,6 +1,7 @@
 import { CELL_BLOCK, NAV_BOUNDS } from "./cell-block";
 import type { Bounds, Vec3 } from "./perception";
 import cargoAssets from "../assets/environment/cargo-manifest.json";
+import { onCrossBridge } from "./cross-bridge";
 
 export const ATRIUM = {
   north: 1,
@@ -51,6 +52,7 @@ export function surfaceHeights(x: number, z: number): number[] {
   const inBlock = x > CELL_BLOCK.west && x < CELL_BLOCK.east;
   if (!inAtrium(x, z)) return inBlock ? [0, ATRIUM.depth] : [0];
   const heights: number[] = [ATRIUM.depth];
+  if (onCrossBridge(x, z)) heights.push(0);
   if (x >= CELL_BLOCK.east - 3 || x <= CELL_BLOCK.west + 3) heights.push(0);
   for (const stair of ATRIUM.stairs) {
     const t = (x - stair.top) / (stair.bottom - stair.top);

@@ -1,0 +1,27 @@
+{
+  "author": "Mehdi Shahsavan (https://sketchfab.com/ahmagh2e)",
+  "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+  "source": "https://sketchfab.com/3d-models/bridge--metal-10-mb-5933ffc71ca5427da825715660fa16d8",
+  "title": "Bridge_ Metal_10_MB",
+  "file": "metal-bridge.glb",
+  "sourceSHA256": "416c3fdb6f6580bca2c7f7d19cadf99deb212b903d41185e3e894a172fd01c16",
+  "runtimeSHA256": "ebb5900645f4eca35ad1d3f4f4a48b30dcfcd3dfca8b345fb001fd9c644a4b50",
+  "bytes": 1992008,
+  "triangles": 2580,
+  "bounds": {
+    "min": [
+      -0.8201513465761202,
+      -0.029934973178362245,
+      -3.0999999046325684
+    ],
+    "max": [
+      0.8201513465761202,
+      1.1000555313210243,
+      3.0999999046325684
+    ]
+  },
+  "deckY": 0,
+  "width": 1.6399300780907993,
+  "length": 6.2,
+  "changes": "Three copies of the original standalone module joined; spare preview row excluded; transforms baked, deck aligned to zero, rail top fitted to 1.1m, long axis +Z; original UV/PBR retained; 2K WebP and meshopt."
+}

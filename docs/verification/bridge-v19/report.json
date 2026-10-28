@@ -1,0 +1,271 @@
+{
+  "version": "0.19.0",
+  "unitPassed": 77,
+  "selectedBrowserCasesPassed": 11,
+  "wholeBrowserSuiteRerun": false,
+  "runs": [
+    {
+      "file": "browser-1.json",
+      "stats": {
+        "startTime": "2026-10-28T07:58:46.415Z",
+        "duration": 590015.85,
+        "expected": 10,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "browser-2.json",
+      "stats": {
+        "startTime": "2026-10-28T08:09:58.218Z",
+        "duration": 53788.236,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "browser-3.json",
+      "stats": {
+        "startTime": "2026-10-28T08:12:36.865Z",
+        "duration": 43000.726,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "nine officers patrol both levels and a lower cell can be opened, entered and saved",
+      "status": "passed"
+    },
+    {
+      "name": "stairs support actual player movement, gates are independent, and equipped tools persist",
+      "status": "passed"
+    },
+    {
+      "name": "guards route down stairs and cannot capture a player through the gallery floor",
+      "status": "passed"
+    },
+    {
+      "name": "Cell 46 actual gun/can models require aim and E, attach at the muzzle and persist",
+      "status": "passed"
+    },
+    {
+      "name": "actual skin ray hits deal 100 twice or one headshot, corpses persist and New game resets them",
+      "status": "passed"
+    },
+    {
+      "name": "bullets cannot pass closed grilles, pause or fire without ammunition",
+      "status": "passed"
+    },
+    {
+      "name": "boxing cycles jab/cross/hook with high guard between strikes and preserves 200 player HP rules",
+      "status": "passed"
+    },
+    {
+      "name": "touch pickups, can attachment and Fire pistol consume one round without stuck joystick",
+      "status": "passed"
+    },
+    {
+      "name": "actual player and officer cross Cell 041/054 bridge; side rails, lower clearance and checkpoint work",
+      "status": "passed"
+    },
+    {
+      "name": "reference corridor, fog and gloved grips retain saved equipment through quick slots",
+      "status": "passed"
+    },
+    {
+      "name": "mobile pocket icons remain tappable and clear of left controls on small landscape screens",
+      "status": "passed"
+    }
+  ],
+  "comparisons": [
+    {
+      "name": "01-bridge-overview",
+      "position": [
+        -33,
+        1.65,
+        0
+      ],
+      "target": [
+        -39,
+        0.75,
+        5
+      ],
+      "fov": 70,
+      "item": null,
+      "beforeSHA256": "ce90272d904f25f8fb37337d4757f72435002d1c71c5032c57505464ca8b9cc8",
+      "afterSHA256": "ea10d969fcc83d05252ccbbcca3891c76570f31b6a54390310beea893f9896a3",
+      "beforeLocalOnly": true,
+      "after": "docs/screenshots/bridge-v19/01-bridge-overview.png"
+    },
+    {
+      "name": "02-crossing",
+      "position": [
+        -39,
+        1.65,
+        1.4
+      ],
+      "target": [
+        -39,
+        1.4,
+        10
+      ],
+      "fov": 70,
+      "item": null,
+      "beforeSHA256": "7078762ef11a31fd6c1f2a13c8dd957333b9389601855da484b94653247e40df",
+      "afterSHA256": "7703002b3a705ee16ed97c051a5e6567747efdba216d2a8971c5c3760b1f9749",
+      "beforeLocalOnly": true,
+      "after": "docs/screenshots/bridge-v19/02-crossing.png"
+    },
+    {
+      "name": "03-lower-clearance",
+      "position": [
+        -34,
+        -1.55,
+        5
+      ],
+      "target": [
+        -39,
+        0.2,
+        4
+      ],
+      "fov": 70,
+      "item": null,
+      "beforeSHA256": "27d50a2e07547aeda5af161a422efbf2446ecc15fbd447d98485576ffd8304bb",
+      "afterSHA256": "59292cc330697f8b1deb1f2128019bcfa6177fc19a1eb53d681c9066b54eead6",
+      "beforeLocalOnly": true,
+      "after": "docs/screenshots/bridge-v19/03-lower-clearance.png"
+    },
+    {
+      "name": "04-pistol",
+      "position": [
+        -39,
+        1.65,
+        0
+      ],
+      "target": [
+        -39,
+        1.5,
+        10
+      ],
+      "fov": 70,
+      "item": "pistol_10mm",
+      "beforeSHA256": "f996c29a97fb4a085abea4dcd5e891d9103a9046ee6acd46c925411da1eb965f",
+      "afterSHA256": "5d6190c1ee35dcadc62cfe14dd6986abd3457fb13a0bcb8b3db159f0ce88b4cf",
+      "beforeLocalOnly": true,
+      "after": "docs/screenshots/bridge-v19/04-pistol.png"
+    },
+    {
+      "name": "05-screwdriver",
+      "position": [
+        -39,
+        1.65,
+        0
+      ],
+      "target": [
+        -39,
+        1.5,
+        10
+      ],
+      "fov": 70,
+      "item": "screwdriver",
+      "beforeSHA256": "96a99585be179a864763bd1515f1346b075c130fd34e648d68c93ea6caf8fbb4",
+      "afterSHA256": "82b141c41881c941886ff9b44e7bd8c4381e953a6a72b85eb96ae585fc7cff03",
+      "beforeLocalOnly": true,
+      "after": "docs/screenshots/bridge-v19/05-screwdriver.png"
+    },
+    {
+      "name": "06-key",
+      "position": [
+        -39,
+        1.65,
+        0
+      ],
+      "target": [
+        -39,
+        1.5,
+        10
+      ],
+      "fov": 70,
+      "item": "cell_key",
+      "beforeSHA256": "0ccfb64e318560c1fdb763a17765c996967be9849cf45c07f3a5007822c5459e",
+      "afterSHA256": "7b4245736be4bec8733dc10d4baad63ce2c5caed3eac07a8a5af0a9b16fc1f06",
+      "beforeLocalOnly": true,
+      "after": "docs/screenshots/bridge-v19/06-key.png"
+    }
+  ],
+  "bridge": {
+    "author": "Mehdi Shahsavan (https://sketchfab.com/ahmagh2e)",
+    "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+    "source": "https://sketchfab.com/3d-models/bridge--metal-10-mb-5933ffc71ca5427da825715660fa16d8",
+    "title": "Bridge_ Metal_10_MB",
+    "file": "metal-bridge.glb",
+    "sourceSHA256": "416c3fdb6f6580bca2c7f7d19cadf99deb212b903d41185e3e894a172fd01c16",
+    "runtimeSHA256": "ebb5900645f4eca35ad1d3f4f4a48b30dcfcd3dfca8b345fb001fd9c644a4b50",
+    "bytes": 1992008,
+    "triangles": 2580,
+    "bounds": {
+      "min": [
+        -0.8201513465761202,
+        -0.029934973178362245,
+        -3.0999999046325684
+      ],
+      "max": [
+        0.8201513465761202,
+        1.1000555313210243,
+        3.0999999046325684
+      ]
+    },
+    "deckY": 0,
+    "width": 1.6399300780907993,
+    "length": 6.2,
+    "changes": "Three copies of the original standalone module joined; spare preview row excluded; transforms baked, deck aligned to zero, rail top fitted to 1.1m, long axis +Z; original UV/PBR retained; 2K WebP and meshopt."
+  },
+  "hand": {
+    "source": "Existing MakeHuman CC0-derived prisoner.glb; licensing in docs/GUARD-ASSETS.md",
+    "sourceSHA256": "e23ca60d1e4f088377efbd080d34e8c2cf7b709ad1bc14b56f15f22ce5275a42",
+    "runtimeSHA256": "3746d6ed915fc7c857c3a1a761dc6ea3aa9524129472a1837a8c269d9ac5c2f7",
+    "radialScale": {
+      "forearm": 1.2,
+      "palm": 1.15,
+      "fingers": 1.12
+    },
+    "maxVertexDelta": 0.01089107217198857,
+    "changes": "Weighted anatomical radial expansion in bind space; joint locations, skin weights and finger lengths retained; recomputed normals; black glove/charcoal sleeve; meshopt."
+  },
+  "artifacts": {
+    "web": {
+      "version": "0.19.0",
+      "archive": "Hirodora-0.19.0-offline.zip",
+      "html": "Hirodora-0.19.0.html",
+      "sha256": "6cb54fa2fe59ab9380953d1cd470d7023892505698e21a08155d9fe51513c2bf",
+      "bytes": 33980118
+    },
+    "android": {
+      "version": "0.19.0",
+      "file": "Hirodora-0.19.0-android.apk",
+      "bytes": 34207692,
+      "sha256": "463850ccb56579f2ab5ff7780db522a897d006655d172d5f6aab22e3c598ebd6",
+      "certificateSHA256": "d7175da40c348c91e8a8663635d3a130115aba916e5ce889e40b646c009f33ca",
+      "minAndroid": "8.0 (API 26)",
+      "targetApi": 35,
+      "architecture": "Universal; uses installed Android System WebView",
+      "distribution": "Signed release APK; offline assets included; no network permission"
+    }
+  },
+  "androidLint": {
+    "errors": 0,
+    "warnings": 10
+  },
+  "limits": [
+    "Software-rendered Chromium, not physical-phone FPS/thermal or Android WebView certification.",
+    "Before screenshots retained locally to publish only six latest PNGs; exact-camera hashes recorded.",
+    "Existing guard models, AI, cells, puzzles, gun damage and checkpoints retained; not a new guard redesign."
+  ]
+}

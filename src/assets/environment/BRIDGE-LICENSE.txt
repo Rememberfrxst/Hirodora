@@ -1,0 +1,5 @@
+Bridge_ Metal_10_MB
+Author: Mehdi Shahsavan (https://sketchfab.com/ahmagh2e)
+Source: https://sketchfab.com/3d-models/bridge--metal-10-mb-5933ffc71ca5427da825715660fa16d8
+License: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+Changes: Three copies of the original standalone module joined; spare preview row excluded; transforms baked, deck aligned to zero, rail top fitted to 1.1m, long axis +Z; original UV/PBR retained; 2K WebP and meshopt.

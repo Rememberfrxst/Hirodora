@@ -36,7 +36,9 @@ await writeFile(
     "\n" +
     (await readFile("src/assets/environment/CARGO-LICENSES.txt", "utf8")) +
     "\n" +
-    (await readFile("src/assets/ballistics/LICENSES.txt", "utf8")),
+    (await readFile("src/assets/ballistics/LICENSES.txt", "utf8")) +
+    "\n\n" +
+    (await readFile("src/assets/environment/BRIDGE-LICENSE.txt", "utf8")),
 );
 const hash = createHash("sha256");
 await copyFile("docs/GUARD-ASSETS.md", "dist/CHARACTER-LICENSES.txt");

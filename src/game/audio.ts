@@ -1,5 +1,6 @@
 import { audioURLs } from "../assets/audio/urls";
 import { onWoodStairs } from "./atrium";
+import { crossBridgeFootstep } from "./cross-bridge";
 import {
   actionFoley,
   clampAudioIntensity,
@@ -314,6 +315,7 @@ class SoundManager {
     if (now >= this.occlusionTime) this.occlusionTime = now + 0.2;
   }
   public surfaceAt([x, y, z]: Position): Surface {
+    if (crossBridgeFootstep([x, y, z])) return "metal";
     if (onWoodStairs([x, y, z])) return "wood";
     if (x > 15) return "water";
     if (z > 3 && x < -4) return "tile";

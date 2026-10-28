@@ -9,6 +9,7 @@ import { HudEditor } from "./components/HudEditor";
 import environmentAssets from "./assets/environment/manifest.json";
 import cargoAssets from "./assets/environment/cargo-manifest.json";
 import ballisticAssets from "./assets/ballistics/manifest.json";
+import bridgeAsset from "./assets/environment/bridge-manifest.json";
 import { MiniGames } from "./components/MiniGames";
 import {
   GameOverModal,
@@ -301,6 +302,7 @@ export default function App() {
                           ...s,
                           name: s.title,
                         })),
+                        { ...bridgeAsset, name: "metal-bridge" },
                       ].map((asset) => (
                         <p
                           key={asset.name}

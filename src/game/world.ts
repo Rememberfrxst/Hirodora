@@ -14,6 +14,7 @@ import { ATRIUM } from "./atrium";
 import { configureCellSlider } from "./cell-gates";
 import { CARGO } from "./cargo-layout";
 import cargoAssets from "../assets/environment/cargo-manifest.json";
+import { CROSS_BRIDGE } from "./cross-bridge";
 
 export interface PrisonWorldData {
   cells: readonly CellRoom[];
@@ -330,8 +331,34 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     colliders.push(bounds);
     barredFaces.add(bounds);
   };
-  for (const z of [ATRIUM.north, ATRIUM.south])
-    rail(CELL_BLOCK.west + 3, z, CELL_BLOCK.east - 3, z);
+  for (const z of [ATRIUM.north, ATRIUM.south]) {
+    rail(CELL_BLOCK.west + 3, z, CROSS_BRIDGE.x - CROSS_BRIDGE.width / 2, z);
+    rail(CROSS_BRIDGE.x + CROSS_BRIDGE.width / 2, z, CELL_BLOCK.east - 3, z);
+  }
+  const crossBridge = environment.add(
+    "MetalBridge",
+    CROSS_BRIDGE.x,
+    0,
+    CROSS_BRIDGE.centerZ,
+  );
+  crossBridge.name = "Cell041_054_MetalBridge";
+  colliders.push(
+    new THREE.Box3(
+      new THREE.Vector3(CROSS_BRIDGE.x - 0.82, -0.06, CROSS_BRIDGE.north - 0.1),
+      new THREE.Vector3(CROSS_BRIDGE.x + 0.82, 0, CROSS_BRIDGE.south + 0.1),
+    ),
+  );
+  for (const x of [
+    CROSS_BRIDGE.x - CROSS_BRIDGE.railOffset,
+    CROSS_BRIDGE.x + CROSS_BRIDGE.railOffset,
+  ]) {
+    const b = new THREE.Box3(
+      new THREE.Vector3(x - 0.025, 0, CROSS_BRIDGE.north - 0.1),
+      new THREE.Vector3(x + 0.025, 1.1, CROSS_BRIDGE.south + 0.1),
+    );
+    colliders.push(b);
+    barredFaces.add(b);
+  }
   for (const x of [CELL_BLOCK.west + 3, CELL_BLOCK.east - 3]) {
     rail(x, 1, x, centerZ - 1);
     rail(x, centerZ + 1, x, ATRIUM.south);

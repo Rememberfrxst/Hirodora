@@ -1,0 +1,201 @@
+
+> hirodora@0.19.0 package:android
+> npm run build && node scripts/prepare-android-assets.mjs && node scripts/build-android.mjs
+
+
+> hirodora@0.19.0 build
+> vite build && node scripts/build-offline.mjs
+
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 1820 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                       1.52 kB │ gzip:   0.65 kB
+dist/assets/impactGeneric_light_001-CkjqykPV.ogg      5.63 kB
+dist/assets/footstep_concrete_003-CCNeENvW.ogg        5.80 kB
+dist/assets/footstep_concrete_000-b5HMHre2.ogg        5.80 kB
+dist/assets/impactGeneric_light_000-kg9mubFP.ogg      5.82 kB
+dist/assets/footstep_wood_002-oB81aY65.ogg            5.89 kB
+dist/assets/footstep_wood_001-Cs-Ix9gX.ogg            5.92 kB
+dist/assets/footstep_wood_000-DbNtf2jp.ogg            5.94 kB
+dist/assets/impactMetal_heavy_000-DhG_DGvq.ogg        6.11 kB
+dist/assets/footstep_wood_003-B3zfC4yf.ogg            6.20 kB
+dist/assets/impactWood_heavy_000-CfGJVBHW.ogg         6.23 kB
+dist/assets/impactWood_heavy_001-HWnzlZYZ.ogg         6.23 kB
+dist/assets/footstep_concrete_002-oZo3qVNu.ogg        6.25 kB
+dist/assets/footstep_concrete_001-D9YPogBI.ogg        6.30 kB
+dist/assets/impactWood_light_000-CbUoxcPY.ogg         6.34 kB
+dist/assets/impactWood_light_001-B7vRDrIO.ogg         6.37 kB
+dist/assets/impactGlass_light_000-Cn6Zpt18.ogg        6.52 kB
+dist/assets/impactGlass_light_001-DIjxtfDh.ogg        6.54 kB
+dist/assets/impactSoft_heavy_000-htJ9izFb.ogg         6.57 kB
+dist/assets/impactSoft_heavy_001-BJR_OUWc.ogg         6.68 kB
+dist/assets/plastic-BmJwLW76.ogg                      6.86 kB
+dist/assets/dirt-1-Cix30cIA.ogg                       6.86 kB
+dist/assets/dirt-2-CJWvWTW1.ogg                       6.90 kB
+dist/assets/impactMetal_light_001-BvYTn7gW.ogg        6.96 kB
+dist/assets/dirt-0-BXavIwwc.ogg                       7.01 kB
+dist/assets/tile-1-CaSR0FBL.ogg                       7.27 kB
+dist/assets/impactMetal_heavy_001-Dcwp7H8R.ogg        7.27 kB
+dist/assets/gravel-2-BogMiOPI.ogg                     7.30 kB
+dist/assets/dirt-3-Bg-tENTV.ogg                       7.38 kB
+dist/assets/impactGlass_heavy_000-BLsnZmBK.ogg        7.40 kB
+dist/assets/tile-2-fZ48MebQ.ogg                       7.53 kB
+dist/assets/impactMetal_light_000-CiyT-Gb-.ogg        7.65 kB
+dist/assets/metal-2-Cdmymu13.ogg                      7.69 kB
+dist/assets/metal-1-od3Q4xKh.ogg                      7.70 kB
+dist/assets/metal-albedo-CszdpBJu.webp                7.75 kB
+dist/assets/tile-0-C5XMWPCa.ogg                       7.75 kB
+dist/assets/water-2-DnYkTkyN.ogg                      7.92 kB
+dist/assets/water-3-BNPjDk2h.ogg                      7.92 kB
+dist/assets/tile-3-C-K9Y7E5.ogg                       7.99 kB
+dist/assets/gravel-1-CPnv9kRv.ogg                     8.03 kB
+dist/assets/water-0-B2pYLe7o.ogg                      8.12 kB
+dist/assets/water-1-DEwiy7NS.ogg                      8.14 kB
+dist/assets/metal-3--xPf_AHw.ogg                      8.25 kB
+dist/assets/metal-0-QxiGgfdR.ogg                      8.32 kB
+dist/assets/gravel-0-ojE6wux3.ogg                     8.32 kB
+dist/assets/impactPlate_heavy_001-gwyWlILI.ogg        8.71 kB
+dist/assets/impactGlass_heavy_001-BPbIQYoL.ogg        8.94 kB
+dist/assets/impactPlate_heavy_000-BK2AuLeZ.ogg       10.03 kB
+dist/assets/impactPlate_light_000-TjuzBlrs.ogg       10.47 kB
+dist/assets/impactPlate_light_001-DPqoBP1A.ogg       11.73 kB
+dist/assets/guard-hey-BXxGtzxY.ogg                   14.94 kB
+dist/assets/bed-slide-B7kunpma.ogg                   19.65 kB
+dist/assets/guard-gunshot-BLPipmLo.ogg               19.81 kB
+dist/assets/bolt-ratchet-D_78Q69K.ogg                19.84 kB
+dist/assets/bed-creak-1-gU1oyL9x.ogg                 21.54 kB
+dist/assets/bed-creak-0-CrmxZcCq.ogg                 21.75 kB
+dist/assets/metal-orm-DQUxUFBX.webp                  21.81 kB
+dist/assets/bed-drag-BQ30sM1c.ogg                    23.43 kB
+dist/assets/screwdriver-DSGLHCpl.ogg                 25.22 kB
+dist/assets/ceramic-drag-D7kO9w61.ogg                25.27 kB
+dist/assets/hinge-BvqT025w.ogg                       26.81 kB
+dist/assets/table-slide-D90ZD_34.ogg                 27.70 kB
+dist/assets/heavy-bolt-4NIqz0cE.ogg                  27.85 kB
+dist/assets/cell-lock-DhFmr-uX.ogg                   28.81 kB
+dist/assets/fabric-BDEvhq4K.ogg                      29.24 kB
+dist/assets/paper-C6Ev2jVA.ogg                       31.34 kB
+dist/assets/toilet-scrape-DYHubdSn.ogg               32.13 kB
+dist/assets/water-stain-DUHp1d0w.webp                32.87 kB
+dist/assets/gate-close-Cfs8n0V-.ogg                  33.70 kB
+dist/assets/lock-turn-BBG7OkIO.ogg                   35.88 kB
+dist/assets/keys-Dn21h7Hw.ogg                        36.51 kB
+dist/assets/retained-fixtures-CQccvzXg.glb           69.76 kB
+dist/assets/ventilation-BB6nXThr.ogg                 83.79 kB
+dist/assets/guard-stop-KMsMs60s.ogg                  85.32 kB
+dist/assets/first-person-arm-Dh-kUp-s.glb            89.57 kB
+dist/assets/drips-CR5D5FsB.ogg                       90.93 kB
+dist/assets/officer-distant-BBqOH_oD.glb            548.16 kB
+dist/assets/wood-stairs-fw5uitPJ.glb                841.86 kB
+dist/assets/rock16-albedo-Cvfapvaz.webp             866.27 kB
+dist/assets/soda-can-0dqcXEPX.glb                   953.08 kB
+dist/assets/wood-box-DC_fs7Fo.glb                 1,023.73 kB
+dist/assets/uploaded-props-5StF4VCL.glb           1,375.42 kB
+dist/assets/officer-mobile-BtZnGQm9.glb           1,586.74 kB
+dist/assets/pistol-10mm-DYe95WjR.glb              1,974.39 kB
+dist/assets/metal-bridge-BOBUNQo7.glb             1,992.00 kB
+dist/assets/redeemed-warrior-B1dIc_Kd.glb         2,097.88 kB
+dist/assets/prisoner-6R7bQE-Y.glb                 2,277.71 kB
+dist/assets/officer-hero-cbtjAVa0.glb             3,289.34 kB
+dist/assets/rock16-orm-CJNpW2s2.webp              3,467.17 kB
+dist/assets/cargo-pallet-CY8iq8O2.glb             4,855.77 kB
+dist/assets/rock16-normal-JvNLE8yn.webp           7,020.57 kB
+dist/assets/index-BY2jcGtZ.css                       48.16 kB │ gzip:  11.85 kB
+dist/assets/index-BPtb5mFb.js                     1,456.45 kB │ gzip: 456.85 kB
+
+✓ built in 5.28s
+[plugin builtin:vite-reporter]
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[33m[PLUGIN_TIMINGS] [0mJavaScript callbacks ran for 4.5s of this 5.2s build (87%).
+The slowest callbacks, timed inside each callback (the wait before a callback starts is excluded, the time it awaits is included):
+  - plugin @tailwindcss/vite:generate:build transform (78%, 4.1s, 1 call)
+Additional callback time came from the callbacks below and from callbacks under 1s.
+1 callback is listed without a time. Its calls overlapped, so the time inside one call includes work from other calls. To find its cost, profile the build with `node --cpu-prof`:
+  - plugin vite:asset load (104 calls)
+See https://rolldown.rs/reference/InputOptions.checks#bundlertimings for more details.
+
+Offline bundle ready: 36842 KiB; 100 verified local assets.
+Android launcher icons and offline game assets prepared.
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.13/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preReleaseBuild UP-TO-DATE
+> Task :app:mergeReleaseJniLibFolders UP-TO-DATE
+> Task :app:mergeReleaseNativeLibs NO-SOURCE
+> Task :app:stripReleaseDebugSymbols NO-SOURCE
+> Task :app:extractReleaseNativeSymbolTables NO-SOURCE
+> Task :app:mergeReleaseNativeDebugMetadata NO-SOURCE
+> Task :app:checkReleaseDuplicateClasses UP-TO-DATE
+> Task :app:javaPreCompileRelease UP-TO-DATE
+> Task :app:checkReleaseAarMetadata UP-TO-DATE
+> Task :app:generateReleaseResValues UP-TO-DATE
+> Task :app:mapReleaseSourceSetPaths UP-TO-DATE
+> Task :app:generateReleaseResources UP-TO-DATE
+> Task :app:mergeReleaseResources UP-TO-DATE
+> Task :app:packageReleaseResources UP-TO-DATE
+> Task :app:parseReleaseLocalResources UP-TO-DATE
+> Task :app:createReleaseCompatibleScreenManifests
+> Task :app:extractDeepLinksRelease UP-TO-DATE
+> Task :app:processReleaseMainManifest
+> Task :app:processReleaseManifest
+> Task :app:desugarReleaseFileDependencies UP-TO-DATE
+> Task :app:mergeReleaseStartupProfile UP-TO-DATE
+> Task :app:mergeExtDexRelease UP-TO-DATE
+> Task :app:mergeReleaseArtProfile UP-TO-DATE
+> Task :app:processReleaseManifestForPackage
+> Task :app:mergeReleaseShaders UP-TO-DATE
+> Task :app:compileReleaseShaders NO-SOURCE
+> Task :app:generateReleaseAssets UP-TO-DATE
+> Task :app:mergeReleaseAssets
+> Task :app:extractReleaseVersionControlInfo UP-TO-DATE
+> Task :app:extractProguardFiles UP-TO-DATE
+> Task :app:processReleaseJavaRes NO-SOURCE
+> Task :app:mergeReleaseJavaResource UP-TO-DATE
+> Task :app:collectReleaseDependencies UP-TO-DATE
+> Task :app:sdkReleaseDependencyData UP-TO-DATE
+> Task :app:validateSigningRelease UP-TO-DATE
+> Task :app:writeReleaseAppMetadata UP-TO-DATE
+> Task :app:writeReleaseSigningConfigVersions UP-TO-DATE
+> Task :app:preReleaseUnitTestBuild UP-TO-DATE
+> Task :app:processReleaseResources
+> Task :app:compileReleaseJavaWithJavac UP-TO-DATE
+> Task :app:compressReleaseAssets
+> Task :app:dexBuilderRelease UP-TO-DATE
+> Task :app:mergeDexRelease UP-TO-DATE
+> Task :app:mergeReleaseGlobalSynthetics UP-TO-DATE
+> Task :app:compileReleaseArtProfile UP-TO-DATE
+> Task :app:generateReleaseLintVitalReportModel
+> Task :app:generateReleaseLintReportModel
+> Task :app:bundleReleaseClassesToCompileJar UP-TO-DATE
+> Task :app:generateReleaseUnitTestLintModel
+> Task :app:optimizeReleaseResources
+> Task :app:lintAnalyzeReleaseUnitTest
+> Task :app:lintVitalAnalyzeRelease
+> Task :app:lintVitalReportRelease SKIPPED
+> Task :app:lintVitalRelease SKIPPED
+> Task :app:lintAnalyzeRelease
+
+> Task :app:lintReportRelease
+Wrote HTML report to file:///workspace/Hirodora/android/app/build/reports/lint-results-release.html
+
+> Task :app:lintRelease
+> Task :app:packageRelease
+> Task :app:createReleaseApkListingFileRedirect
+> Task :app:assembleRelease
+
+[Incubating] Problems report is available at: file:///workspace/Hirodora/android/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.13/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 41s
+48 actionable tasks: 18 executed, 30 up-to-date
+Verified signed APK: downloads/Hirodora-0.19.0-android.apk (32.6 MiB)

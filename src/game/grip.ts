@@ -1,9 +1,10 @@
 import * as THREE from "three";
 import type { ItemId } from "./types";
 
-export type GripStyle = "power" | "pinch" | "pistol" | "fist";
+export type GripStyle = "power" | "pinch" | "pistol" | "pistol10" | "fist";
 export function gripStyle(item: ItemId | null): GripStyle {
-  if (item === "dart_pistol" || item === "pistol_10mm") return "pistol";
+  if (item === "dart_pistol") return "pistol";
+  if (item === "pistol_10mm") return "pistol10";
   return item === "cell_key" ||
     item === "small_key" ||
     item === "master_key_c" ||
@@ -50,6 +51,7 @@ export function poseGrip(
   for (const finger of ["Index", "Middle", "Ring", "Pinky"]) {
     const pinch = style === "pinch" && finger === "Index";
     const trigger = style === "pistol" && finger === "Index";
+    const trigger10 = style === "pistol10" && finger === "Index";
     const directions =
       style === "fist"
         ? [
@@ -57,29 +59,35 @@ export function poseGrip(
             [-0.18, -0.98, 0],
             [0.78, -0.63, 0],
           ]
-        : trigger
+        : trigger10
           ? [
-              [-0.35, 0.94, 0.04],
-              [-0.5, 0.86, 0],
-              [-0.7, 0.71, 0],
+              [0, 0.9, 0.33],
+              [-0.92, 0.05, 0.39],
+              [0.35, -0.8, 0],
             ]
-          : pinch
+          : trigger
             ? [
-                [-0.45, 0.89, 0],
-                [-0.95, 0.3, 0],
-                [-0.6, -0.8, 0],
+                [-0.35, 0.94, 0.04],
+                [-0.5, 0.86, 0],
+                [-0.7, 0.71, 0],
               ]
-            : [
-                [-0.72, 0.69, 0],
-                [-0.92, -0.39, 0],
-                [0.08, -1, 0],
-              ];
+            : pinch
+              ? [
+                  [-0.45, 0.89, 0],
+                  [-0.95, 0.3, 0],
+                  [-0.6, -0.8, 0],
+                ]
+              : [
+                  [-0.72, 0.69, 0],
+                  [-0.92, -0.39, 0],
+                  [0.08, -1, 0],
+                ];
     directions.forEach((d, i) => aim(`${side}Hand${finger}${i + 1}`, d));
   }
   aim(side + "HandThumb1", [-0.7, 0.65, 0.3]);
   aim(side + "HandThumb2", [-0.15, 0.93, -0.34]);
   aim(
     side + "HandThumb3",
-    style === "pinch" ? [-0.5, 0.85, 0.14] : [0.65, 0.56, -0.51],
+    style === "pinch" ? [0, 0.99, 0.1] : [0.65, 0.56, -0.51],
   );
 }

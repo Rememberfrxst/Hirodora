@@ -8,19 +8,23 @@
 
 **Every sound has a consequence.**
 
-**v0.18.0 · Cell 46 Sidearm / Can Attachment / Boxing**
+**v0.19.0 · Cell 041 ↔ 054 Metal Bridge / Anatomical Grips**
 
-**[↓ DOWNLOAD ANDROID APK](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.18.0-android.apk)**
+**[↓ DOWNLOAD ANDROID APK](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.19.0-android.apk)**
 
-[↓ Offline web ZIP](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.18.0-offline.zip) · [Single-file HTML download](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.18.0.html) · [ZIP checksum](downloads/latest.json) · [APK checksums](downloads/android-latest.json) · [Android installation](docs/ANDROID.md)
+[↓ Offline web ZIP](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.19.0-offline.zip) · [Single-file HTML download](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.19.0.html) · [ZIP checksum](downloads/latest.json) · [APK checksums](downloads/android-latest.json) · [Android installation](docs/ANDROID.md)
 
 </div>
 
 ## A playable prison atrium
 
+**The uploaded textured metal bridge connects the upper galleries directly in front of Cell 041 and Cell 054.** Three original modules span the 6m opening, with open gallery entrances, continuous walkable support, collision rails and metal footsteps. Player and guard navigation share the crossing; the lower corridor stays open underneath. No cell, gate, puzzle or existing staircase is moved.
+
+The black-gloved forearm, palm and fingers have **real mesh thickness increases** (20%, 15%, 12% radially), not just screen scaling. The rig is also displayed 5.4% larger than v0.18. The 10mm has its own curled trigger-finger pose, the screwdriver seats across the fingers and key rings align between the thumb/index pads. Joint lengths and wrist orientation stay unchanged. [Bridge, grip and verification details](docs/BRIDGE-V19.md).
+
 **Cell 46's table holds the uploaded textured 10mm pistol and soda can.** Aim at the gun and press **E / Interact**, then aim at the can with the pistol equipped and press E. The can attaches to the muzzle as a fictional game effect. The pistol starts with **24 rounds**: **100 damage per body hit, two body hits to defeat a 200 HP guard, or one headshot**. Actual skin weights distinguish the head from raised hands. Walls and closed grilles stop bullets. Dead officers stay where they fell and persist through checkpoints; New game resets them. The legacy dart pistol remains non-lethal.
 
-Officers alternate **jab, cross and hook**, with a high-guard stance between strikes. These are authored skeletal clips, not new motion capture or physics boxing. The black-gloved hand/forearm is 12% larger. Every cell has its own `C / 047`-style sign and recessed masonry above the grille; cell and sliding-door sizes remain unchanged. Green fog is modestly denser (0.028 → 0.033).
+Officers alternate **jab, cross and hook**, with a high-guard stance between strikes. These are authored skeletal clips, not new motion capture or physics boxing. Every cell has its own `C / 047`-style sign and recessed masonry above the grille; cell and sliding-door sizes remain unchanged. Green fog remains 0.033.
 
 **Uploaded sound pending:** the supplied MP3 was cropped to a 0.395s private audition. Its official license page at `mixkit.co` is blocked by the proxy (CONNECT HTTP 403), so that derivative is **not published/bundled** until its license is supplied or verified. This build uses the existing credited local gunshot, quieter/filtered with the can. [Current implementation and verification](docs/BALLISTICS-V18.md).
 
@@ -36,30 +40,30 @@ The top-right HUD has only **Hint** and **Pause**. The bulb and up-arrow referen
 
 **Police replacement remains pending:** a local 69-bone conversion of the supplied mesh has been prepared for inspection. Complete source/license details are required before publishing it; grip/deformation polishing remains open. This release ships the previously licensed officers. The Warrior is static source geometry; breathing presentation does not imply a new skeletal performance.
 
-[Current implementation and verification](docs/BALLISTICS-V18.md) · [Wooden cargo / player HP](docs/CARGO-COMBAT-V17.md) · [Character credits](docs/GUARD-ASSETS.md) · [Gun / can credits](src/assets/ballistics/LICENSES.txt)
+[Current implementation and verification](docs/BRIDGE-V19.md) · [Pistol / can / boxing](docs/BALLISTICS-V18.md) · [Wooden cargo / player HP](docs/CARGO-COMBAT-V17.md) · [Character credits](docs/GUARD-ASSETS.md) · [Gun / can credits](src/assets/ballistics/LICENSES.txt)
 
 ## Latest screenshots — exactly six
 
-Six actual game renders, not generated artwork. [Camera positions and render statistics](docs/screenshots/ballistics-v18/capture.json).
+Six actual game renders, not generated artwork. [Camera positions and render statistics](docs/screenshots/bridge-v19/capture.json).
 
-Identical-camera comparison: [v0.17 corridor](docs/screenshots/cargo-v17/01-corridor.png) → [v0.18 signage / fog](docs/screenshots/ballistics-v18/01-corridor.png). Historical captures remain available.
+Historical captures remain available. The bridge verification records identical-camera pre-change capture hashes without adding another screenshot gallery.
 
 <table>
-<tr><td width="50%"><img src="docs/screenshots/ballistics-v18/01-corridor.png" alt="Cell signs and denser fog" /></td><td width="50%"><img src="docs/screenshots/ballistics-v18/02-cell46-table.png" alt="Uploaded pistol and can on Cell 46 table" /></td></tr>
-<tr><td align="center"><sub>48 CELL SIGNS · MASONRY REVEALS</sub></td><td align="center"><sub>CELL 46 · PISTOL + CAN</sub></td></tr>
-<tr><td><img src="docs/screenshots/ballistics-v18/03-can-equipped.png" alt="Muzzle-mounted can and larger gloved hand" /></td><td><img src="docs/screenshots/ballistics-v18/04-boxing-cross.png" alt="Officer cross with support hand raised" /></td></tr>
-<tr><td align="center"><sub>REAL GLB EQUIPMENT · GLOVED GRIP</sub></td><td align="center"><sub>JAB · CROSS · HOOK · HIGH GUARD</sub></td></tr>
-<tr><td><img src="docs/screenshots/ballistics-v18/05-persistent-body.png" alt="Defeated officer remains in the corridor" /></td><td><img src="docs/screenshots/ballistics-v18/06-mobile-pistol.png" alt="Mobile pistol and touch fire control" /></td></tr>
-<tr><td align="center"><sub>200 GUARD HP · PERSISTENT BODY</sub></td><td align="center"><sub>MOBILE · FIRE · 24 ROUNDS</sub></td></tr>
+<tr><td width="50%"><img src="docs/screenshots/bridge-v19/01-bridge-overview.png" alt="Uploaded metal bridge in front of Cell 054" /></td><td width="50%"><img src="docs/screenshots/bridge-v19/02-crossing.png" alt="Walkable bridge joining both galleries" /></td></tr>
+<tr><td align="center"><sub>CELL 041 ↔ 054</sub></td><td align="center"><sub>OPEN GALLERY ENTRANCES</sub></td></tr>
+<tr><td><img src="docs/screenshots/bridge-v19/03-lower-clearance.png" alt="Lower corridor clearance below the bridge" /></td><td><img src="docs/screenshots/bridge-v19/04-pistol.png" alt="Larger glove and curled 10mm trigger grip" /></td></tr>
+<tr><td align="center"><sub>LOWER CORRIDOR CLEARANCE</sub></td><td align="center"><sub>10MM TRIGGER GRIP</sub></td></tr>
+<tr><td><img src="docs/screenshots/bridge-v19/05-screwdriver.png" alt="Thicker hand holding screwdriver handle" /></td><td><img src="docs/screenshots/bridge-v19/06-key.png" alt="Key ring aligned between thumb and index pads" /></td></tr>
+<tr><td align="center"><sub>SCREWDRIVER POWER GRIP</sub></td><td align="center"><sub>KEY-RING PINCH GRIP</sub></td></tr>
 </table>
 
 ## Play on mobile
 
 Download the APK above, open it in Android Files and allow installation from that source when prompted. Requires **Android 8.0+**, an updated Android System WebView and WebGL 2. The app opens horizontally and includes all models, textures and audio offline, with **no Internet, storage, microphone or tracking permission**.
 
-Version 0.18.0 uses the existing release certificate and versionCode **1800**. Older saves migrate to safe walkways and fitted stair treads, retaining inventory and puzzles. Install over an earlier release to retain app-local saves and settings; uninstalling clears them.
+Version 0.19.0 uses the existing release certificate and versionCode **1900**. Existing saves retain their positions, inventory and puzzles. Install over an earlier release to retain app-local saves and settings; uninstalling clears them.
 
-For the web edition, download through the direct ZIP link above, extract it and open `Hirodora-0.18.0.html` in a full WebGL 2 browser. The links bypass GitHub's large-file preview. File handling depends on your device. On iPhone/iPad, use the hosted PWA; a local HTML viewer may block scripts. Portrait play pauses behind a rotate notice.
+For the web edition, download through the direct ZIP link above, extract it and open `Hirodora-0.19.0.html` in a full WebGL 2 browser. The links bypass GitHub's large-file preview. File handling depends on your device. On iPhone/iPad, use the hosted PWA; a local HTML viewer may block scripts. Portrait play pauses behind a rotate notice.
 
 ## How to finish the current chapter
 
@@ -107,13 +111,15 @@ To regenerate the supplied-asset derivatives:
 node scripts/prepare-uploaded-assets.mjs rock_wall_16_2k.zip basic_table.glb dirty_toilet.glb free_screwdriver.glb
 node scripts/prepare-cargo-assets.mjs wooden_stairs_5_mb.glb wood_box.glb wood__boxes_strapped_on_palet.glb
 node scripts/prepare-ballistics-assets.mjs gun_10mm.glb coca-cola_can_4k_texture.glb
+node scripts/prepare-bridge-asset.mjs bridge__metal_10_mb.glb
+node scripts/build-viewmodel.mjs
 ```
 
 The offline pipeline needs ffmpeg and preserves attribution. Original source uploads are not required at runtime. Textures are shared across rooms; superseded bunk/toilet meshes are excluded from the loaded fixture library. The build enforces a 100 MiB offline budget; exact download sizes and hashes are in [the manifests](downloads/android-latest.json).
 
 ## Quality and release status
 
-Asset/logic tests, selected browser regressions and packaging validation are documented in [BALLISTICS-V18.md](docs/BALLISTICS-V18.md). The current suite has 74 unit/asset checks. The [release verification report](docs/verification/ballistics-v18/report.json) records exact selected browser outcomes and reruns; physical-phone testing is separate.
+Asset/logic tests, selected browser regressions and packaging validation are documented in [BRIDGE-V19.md](docs/BRIDGE-V19.md). The current suite has 77 unit/asset checks. The [release verification report](docs/verification/bridge-v19/report.json) records exact selected browser outcomes and reruns; physical-phone testing is separate.
 
 Physical-phone frame rate, thermal behavior and device-specific WebView/GPU compatibility still need hardware testing. Software-rendered browser checks are not Android-device certification or a promise of glitch-free gameplay. Existing licensed guard models are preserved; the supplied police replacement still needs its source/license details and grip polish. The supplied Warrior is integrated.
 
@@ -128,6 +134,7 @@ New sidearm/can: [Christian S / Gun 10mm](https://sketchfab.com/3d-models/gun-10
 | [Dirty Toilet](https://sketchfab.com/3d-models/dirty-toilet-389d5427a1f344c4aa4883ec5a6aaf05)                    | shedmon                 | CC BY 4.0 |
 | [Free Screwdriver](https://sketchfab.com/3d-models/free-screwdriver-daa1a4a4013b479097633f75a33bb543)            | Filip                   | CC BY 4.0 |
 | [Wooden Stairs](https://sketchfab.com/3d-models/wooden-stairs-5-mb-56271a83e8ff487b84289e39a159d3c5)             | Mehdi Shahsavan         | CC BY 4.0 |
+| [Metal Bridge](https://sketchfab.com/3d-models/bridge--metal-10-mb-5933ffc71ca5427da825715660fa16d8)             | Mehdi Shahsavan         | CC BY 4.0 |
 | [Wood Box](https://sketchfab.com/3d-models/wood-box-ed74acd9b510481eb43a7753754d7ac8)                            | kakou3991               | CC BY 4.0 |
 | [Strapped Pallet](https://sketchfab.com/3d-models/wood-boxes-strapped-on-palet-42652beb14e34e0a94d5f980ebb1869e) | Claudiu                 | CC BY 4.0 |
 | [Wood furniture movement](https://freesound.org/people/ralph.whitehead/sounds/565727/)                           | ralph.whitehead         | CC0 1.0   |

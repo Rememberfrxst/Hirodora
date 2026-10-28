@@ -107,7 +107,7 @@ test("Cell 46 actual gun/can models require aim and E, attach at the muzzle and 
   expect(data.fog).toBe(0.033);
   expect(data.health).toBe(200);
   expect(data.ammo).toBe(24);
-  expect(data.handScale).toBe(1.12);
+  expect(data.handScale).toBe(1.18);
 });
 test("actual skin ray hits deal 100 twice or one headshot, corpses persist and New game resets them", async ({
   page,

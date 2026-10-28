@@ -1,0 +1,207 @@
+
+> hirodora@0.19.0 check
+> npm run lint && npm test && npm run build
+
+
+> hirodora@0.19.0 lint
+> tsc --noEmit
+
+
+> hirodora@0.19.0 test
+> tsx --test src/game/*.test.ts
+
+✔ supplied Warrior is a credited textured mesh and held arm retains real finger anatomy (84.16402ms)
+✔ atrium upper galleries, lower hall, end bridge and continuous stairs have explicit support (1.701957ms)
+✔ 3D route descends the stairs and does not cut through the central opening (41.935147ms)
+✔ collision respects height and old checkpoints migrate without losing northern puzzle positions (2.233051ms)
+✔ all imported treads remain climbable and wood footsteps exclude the floor underneath (0.485163ms)
+✔ 10mm body hits deal 100 and exactly two defeat a 200 HP officer (7.656221ms)
+✔ one head hit is lethal, dead bodies cannot take negative HP (0.350287ms)
+✔ dead guards do not recover, chase or attack even with fresh sight/noise (0.616762ms)
+✔ uploaded gun and can are credited real PBR GLBs with stable metre bounds (160.646394ms)
+✔ three supplied wood assets retain embedded licensed materials, valid geometry and actual stair surfaces (116.396142ms)
+✔ guard approach uses the expanded corridor and respects open gates on either row (30.222136ms)
+✔ 48 distinct large cells have 12 per side per floor around a 12m atrium (6.936446ms)
+✔ opening cell boundaries, original gates and story locks stay compatible (0.280481ms)
+✔ navigation covers the far west and opposite row without wall shortcuts (10.691879ms)
+✔ all 48 small sliding leaves park within their own full-width cell frontage (4.312207ms)
+✔ sliding motion is bounded, remains horizontal and can snap restored checkpoints (4.545107ms)
+✔ melee has a visible windup, a single contact instant and cooldown (1.498143ms)
+✔ escaping, solid cover and knock-out can cancel damage without delayed phantom hits (0.188303ms)
+✔ 200 HP takes eight 25-damage hits; checkpoints migrate safely and never heal during play (0.190753ms)
+✔ Cell 041/054 crossing has continuous support on top and clear passage below (37.14533ms)
+✔ uploaded CC BY bridge retains real UV/PBR geometry, fitted deck and documented hashes (53.093595ms)
+✔ landscape request enters fullscreen before locking orientation (2.134818ms)
+✔ unsupported and denied display APIs fall back without throwing (0.449232ms)
+✔ installed fullscreen apps do not re-enter fullscreen before locking (0.248925ms)
+✔ cell GLB includes the five authored fixtures with valid normals, UVs and finite geometry (306.80362ms)
+✔ matched scene captures preserve original colliders, doors and interactions (12.225122ms)
+✔ authored glove has physically thicker skin around unchanged anatomical joints (261.231845ms)
+✔ black glove retains real joints; anatomical grips preserve wrist and do not accumulate deformation (93.923173ms)
+✔ sight builds at 35/sec: suspicion at 35, confirmation at 65; pure decisions (9.008884ms)
+✔ confirmation time is independent of simulation frame rate (14.431146ms)
+✔ chase pursues only last seen point, loses sight at five seconds, reacquires immediately (0.434276ms)
+✔ search scans a fixed origin, times out and returns to patrol without hidden tracking (0.554342ms)
+✔ local hearing investigates the source, not the player; sound alone cannot confirm a chase (3.991243ms)
+✔ hearing retains a source while suspicion builds over multiple real-sized frames (0.481661ms)
+✔ one event cannot replay its onset boost; new evidence resets an active search (0.321546ms)
+✔ capture requires confirmed sight and an unblocked physical route; knock-out recovery searches (1.870075ms)
+✔ 3D sight respects solid walls, low cover, FOV, crouch and hiding (0.907003ms)
+✔ hearing attenuates distance and walls, expires, preserves source and ignores far events (0.65361ms)
+✔ hero GLB has complete embedded PBR, valid skin weights and matching skeleton (693.393398ms)
+✔ mobile GLB has complete embedded PBR, valid skin weights and matching skeleton (199.6951ms)
+✔ distant GLB has complete embedded PBR, valid skin weights and matching skeleton (53.961528ms)
+✔ officer visual states cover locomotion, perception, turns and non-lethal collapse (0.889682ms)
+✔ visual turning takes the short path across the +/- pi seam (0.27999ms)
+✔ mobile pockets dock below compact joystick and lift above large or mirrored controls (1.226729ms)
+✔ damaged or unavailable stored HUD restores a valid default (1.152153ms)
+✔ left handed preset mirrors the action cluster and movement zone (0.166524ms)
+✔ intro orders open, escape, shot, approach, lock and inspection before release (1.042833ms)
+✔ settings validate saved ranges and recover from corrupted storage (1.509497ms)
+✔ prisoner is a complete clothed skinned GLB with local textures and skeletal death motion (159.925702ms)
+✔ practical lights keep four stable slots, hysteresis and zero-intensity rebinding (28.582433ms)
+✔ sidearm has an open trigger guard, separate hardware, muzzle flash and bounded human scale (26.396901ms)
+✔ diagonal movement is no faster than forward movement (1.215065ms)
+✔ body radius stops both players and guards at solid walls (0.228467ms)
+✔ path search routes around a wall without cutting corners (22.998214ms)
+✔ a sealed destination has no manufactured route through walls (30.862614ms)
+✔ navigation avoids furniture at any height and reserves body-radius clearance (0.415997ms)
+✔ jump has a bounded arc and lands once without sinking below the floor (0.27515ms)
+✔ held-action foley uses distinct licensed material recordings, without replacing guard speech (54.965289ms)
+✔ voice priority protects intelligibility and intensity cannot become invalid gain (0.33834ms)
+✔ new close-up captures preserve all gameplay dimensions and interaction prerequisites (3.688169ms)
+✔ opening reveals the key identity only after trying the door and keeps the tool sequence (1.525383ms)
+✔ hold progress is bounded, incremental and frame-rate independent at supported timesteps (0.678285ms)
+✔ all audio recordings have verified local bytes, redistribution licenses and attribution (97.300346ms)
+✔ safe first-run preset protects mobile, low-memory and software devices (1.882496ms)
+✔ adaptive scale falls quickly under pressure and recovers carefully (0.428847ms)
+✔ Noise decay reduces noise over time toward zero (0.945817ms)
+✔ Sound masking halves player noise when within machine radius (0.365136ms)
+✔ Guard heard noise attenuates with distance and wall obstruction (0.240241ms)
+✔ Guard vision cone detects player standing vs hidden/crouching (0.200364ms)
+✔ Guard state transitions from patrol to suspicious and chase on sight (0.659286ms)
+✔ Silencer crafting combines pipe, steel wool, and rubber washer (0.212201ms)
+✔ Arm wrestling step updates progress based on player taps and surge cycles (0.191981ms)
+✔ Lockpicking detects sweet spot within tolerance (0.136746ms)
+✔ Safe cracking detects aligned tumbler number (1.388935ms)
+✔ Ending evaluation rewards ghost stealth and optional brotherhood rescue (0.482982ms)
+✔ supplied GLBs retain real textured geometry, attribution and metre/floor normalization (111.968761ms)
+✔ Rock Wall 16 is a complete 2K dielectric PBR set with correct hashes and valid normal data (854.423003ms)
+ℹ tests 77
+ℹ suites 0
+ℹ pass 77
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6426.601073
+
+> hirodora@0.19.0 build
+> vite build && node scripts/build-offline.mjs
+
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 1820 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                       1.52 kB │ gzip:   0.65 kB
+dist/assets/impactGeneric_light_001-CkjqykPV.ogg      5.63 kB
+dist/assets/footstep_concrete_003-CCNeENvW.ogg        5.80 kB
+dist/assets/footstep_concrete_000-b5HMHre2.ogg        5.80 kB
+dist/assets/impactGeneric_light_000-kg9mubFP.ogg      5.82 kB
+dist/assets/footstep_wood_002-oB81aY65.ogg            5.89 kB
+dist/assets/footstep_wood_001-Cs-Ix9gX.ogg            5.92 kB
+dist/assets/footstep_wood_000-DbNtf2jp.ogg            5.94 kB
+dist/assets/impactMetal_heavy_000-DhG_DGvq.ogg        6.11 kB
+dist/assets/footstep_wood_003-B3zfC4yf.ogg            6.20 kB
+dist/assets/impactWood_heavy_000-CfGJVBHW.ogg         6.23 kB
+dist/assets/impactWood_heavy_001-HWnzlZYZ.ogg         6.23 kB
+dist/assets/footstep_concrete_002-oZo3qVNu.ogg        6.25 kB
+dist/assets/footstep_concrete_001-D9YPogBI.ogg        6.30 kB
+dist/assets/impactWood_light_000-CbUoxcPY.ogg         6.34 kB
+dist/assets/impactWood_light_001-B7vRDrIO.ogg         6.37 kB
+dist/assets/impactGlass_light_000-Cn6Zpt18.ogg        6.52 kB
+dist/assets/impactGlass_light_001-DIjxtfDh.ogg        6.54 kB
+dist/assets/impactSoft_heavy_000-htJ9izFb.ogg         6.57 kB
+dist/assets/impactSoft_heavy_001-BJR_OUWc.ogg         6.68 kB
+dist/assets/plastic-BmJwLW76.ogg                      6.86 kB
+dist/assets/dirt-1-Cix30cIA.ogg                       6.86 kB
+dist/assets/dirt-2-CJWvWTW1.ogg                       6.90 kB
+dist/assets/impactMetal_light_001-BvYTn7gW.ogg        6.96 kB
+dist/assets/dirt-0-BXavIwwc.ogg                       7.01 kB
+dist/assets/tile-1-CaSR0FBL.ogg                       7.27 kB
+dist/assets/impactMetal_heavy_001-Dcwp7H8R.ogg        7.27 kB
+dist/assets/gravel-2-BogMiOPI.ogg                     7.30 kB
+dist/assets/dirt-3-Bg-tENTV.ogg                       7.38 kB
+dist/assets/impactGlass_heavy_000-BLsnZmBK.ogg        7.40 kB
+dist/assets/tile-2-fZ48MebQ.ogg                       7.53 kB
+dist/assets/impactMetal_light_000-CiyT-Gb-.ogg        7.65 kB
+dist/assets/metal-2-Cdmymu13.ogg                      7.69 kB
+dist/assets/metal-1-od3Q4xKh.ogg                      7.70 kB
+dist/assets/metal-albedo-CszdpBJu.webp                7.75 kB
+dist/assets/tile-0-C5XMWPCa.ogg                       7.75 kB
+dist/assets/water-2-DnYkTkyN.ogg                      7.92 kB
+dist/assets/water-3-BNPjDk2h.ogg                      7.92 kB
+dist/assets/tile-3-C-K9Y7E5.ogg                       7.99 kB
+dist/assets/gravel-1-CPnv9kRv.ogg                     8.03 kB
+dist/assets/water-0-B2pYLe7o.ogg                      8.12 kB
+dist/assets/water-1-DEwiy7NS.ogg                      8.14 kB
+dist/assets/metal-3--xPf_AHw.ogg                      8.25 kB
+dist/assets/metal-0-QxiGgfdR.ogg                      8.32 kB
+dist/assets/gravel-0-ojE6wux3.ogg                     8.32 kB
+dist/assets/impactPlate_heavy_001-gwyWlILI.ogg        8.71 kB
+dist/assets/impactGlass_heavy_001-BPbIQYoL.ogg        8.94 kB
+dist/assets/impactPlate_heavy_000-BK2AuLeZ.ogg       10.03 kB
+dist/assets/impactPlate_light_000-TjuzBlrs.ogg       10.47 kB
+dist/assets/impactPlate_light_001-DPqoBP1A.ogg       11.73 kB
+dist/assets/guard-hey-BXxGtzxY.ogg                   14.94 kB
+dist/assets/bed-slide-B7kunpma.ogg                   19.65 kB
+dist/assets/guard-gunshot-BLPipmLo.ogg               19.81 kB
+dist/assets/bolt-ratchet-D_78Q69K.ogg                19.84 kB
+dist/assets/bed-creak-1-gU1oyL9x.ogg                 21.54 kB
+dist/assets/bed-creak-0-CrmxZcCq.ogg                 21.75 kB
+dist/assets/metal-orm-DQUxUFBX.webp                  21.81 kB
+dist/assets/bed-drag-BQ30sM1c.ogg                    23.43 kB
+dist/assets/screwdriver-DSGLHCpl.ogg                 25.22 kB
+dist/assets/ceramic-drag-D7kO9w61.ogg                25.27 kB
+dist/assets/hinge-BvqT025w.ogg                       26.81 kB
+dist/assets/table-slide-D90ZD_34.ogg                 27.70 kB
+dist/assets/heavy-bolt-4NIqz0cE.ogg                  27.85 kB
+dist/assets/cell-lock-DhFmr-uX.ogg                   28.81 kB
+dist/assets/fabric-BDEvhq4K.ogg                      29.24 kB
+dist/assets/paper-C6Ev2jVA.ogg                       31.34 kB
+dist/assets/toilet-scrape-DYHubdSn.ogg               32.13 kB
+dist/assets/water-stain-DUHp1d0w.webp                32.87 kB
+dist/assets/gate-close-Cfs8n0V-.ogg                  33.70 kB
+dist/assets/lock-turn-BBG7OkIO.ogg                   35.88 kB
+dist/assets/keys-Dn21h7Hw.ogg                        36.51 kB
+dist/assets/retained-fixtures-CQccvzXg.glb           69.76 kB
+dist/assets/ventilation-BB6nXThr.ogg                 83.79 kB
+dist/assets/guard-stop-KMsMs60s.ogg                  85.32 kB
+dist/assets/first-person-arm-Dh-kUp-s.glb            89.57 kB
+dist/assets/drips-CR5D5FsB.ogg                       90.93 kB
+dist/assets/officer-distant-BBqOH_oD.glb            548.16 kB
+dist/assets/wood-stairs-fw5uitPJ.glb                841.86 kB
+dist/assets/rock16-albedo-Cvfapvaz.webp             866.27 kB
+dist/assets/soda-can-0dqcXEPX.glb                   953.08 kB
+dist/assets/wood-box-DC_fs7Fo.glb                 1,023.73 kB
+dist/assets/uploaded-props-5StF4VCL.glb           1,375.42 kB
+dist/assets/officer-mobile-BtZnGQm9.glb           1,586.74 kB
+dist/assets/pistol-10mm-DYe95WjR.glb              1,974.39 kB
+dist/assets/metal-bridge-BOBUNQo7.glb             1,992.00 kB
+dist/assets/redeemed-warrior-B1dIc_Kd.glb         2,097.88 kB
+dist/assets/prisoner-6R7bQE-Y.glb                 2,277.71 kB
+dist/assets/officer-hero-cbtjAVa0.glb             3,289.34 kB
+dist/assets/rock16-orm-CJNpW2s2.webp              3,467.17 kB
+dist/assets/cargo-pallet-CY8iq8O2.glb             4,855.77 kB
+dist/assets/rock16-normal-JvNLE8yn.webp           7,020.57 kB
+dist/assets/index-BY2jcGtZ.css                       48.16 kB │ gzip:  11.85 kB
+dist/assets/index-BPtb5mFb.js                     1,456.45 kB │ gzip: 456.85 kB
+
+[plugin builtin:vite-reporter]
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 4.01s
+Offline bundle ready: 36842 KiB; 100 verified local assets.

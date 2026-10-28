@@ -6,6 +6,7 @@ import uploadedURL from "../assets/environment/uploaded-props.glb";
 import stairsURL from "../assets/environment/wood-stairs.glb";
 import boxURL from "../assets/environment/wood-box.glb";
 import palletURL from "../assets/environment/cargo-pallet.glb";
+import bridgeURL from "../assets/environment/metal-bridge.glb";
 import rockColor from "../assets/environment/rock16-albedo.webp";
 import rockNormal from "../assets/environment/rock16-normal.webp";
 import rockORM from "../assets/environment/rock16-orm.webp";
@@ -123,8 +124,9 @@ export function createEnvironment(scene: THREE.Scene) {
       new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(stairsURL),
       new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(boxURL),
       new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(palletURL),
+      new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(bridgeURL),
     ])
-      .then(([, gltf, uploaded, stairs, box, pallet]) => {
+      .then(([, gltf, uploaded, stairs, box, pallet, bridge]) => {
         if (disposed) {
           gltf.scene.traverse((o) => {
             if (o instanceof THREE.Mesh) o.geometry.dispose();
@@ -142,7 +144,7 @@ export function createEnvironment(scene: THREE.Scene) {
         for (const anchor of anchors) {
           const suppliedName = anchor.name === "Bunk" ? "Table" : anchor.name;
           const template =
-            [stairs, box, pallet]
+            [stairs, box, pallet, bridge]
               .map((g) => g.scene.getObjectByName(anchor.name))
               .find(Boolean) ||
             uploaded.scene.getObjectByName(suppliedName) ||
@@ -160,6 +162,7 @@ export function createEnvironment(scene: THREE.Scene) {
               "WoodStairs",
               "WoodBox",
               "CargoPallet",
+              "MetalBridge",
             ].includes(anchor.name)
           )
             clone.position.set(0, 0, 0);

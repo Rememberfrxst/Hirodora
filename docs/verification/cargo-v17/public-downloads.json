@@ -1,0 +1,20 @@
+{
+  "version": "0.17.0",
+  "mainCommit": "d23a3ac6ed9c5a563aa24b47825afd9f71ac1a3b",
+  "downloads": [
+    {
+      "url": "https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.17.0-offline.zip",
+      "status": 200,
+      "bytes": 29077825,
+      "sha256": "00de5484d78c69aee0c712e560636e6b5db5be53248e26b9ff38ad57e18ab134",
+      "integrity": "passed"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.17.0-android.apk",
+      "status": 200,
+      "bytes": 29375299,
+      "sha256": "68fa53fd3a7e40e2aec0e3620e930307d9b77f63d94cc0fe731cfbd46a03c9eb",
+      "integrity": "passed"
+    }
+  ]
+}

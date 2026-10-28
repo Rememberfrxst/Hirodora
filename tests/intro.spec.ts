@@ -56,7 +56,7 @@ test("new-game cinematic fires once, pauses safely, closes gate and releases a p
       .set(-5.25, 1.3, -4.4)
       .project(e.camera);
     const startsVisible = Math.abs(screen.x) < 1 && Math.abs(screen.y) < 1;
-    e.updateIntro(4.5);
+    e.updateIntro(12.05);
     e.updateIntro(0.2);
     e.pauseGame();
     const stopped = e.cinematic.time;

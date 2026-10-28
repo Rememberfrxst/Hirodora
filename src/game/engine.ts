@@ -37,7 +37,7 @@ import { pathObstructed } from "./navigation";
 import { angleDelta } from "./guard-motion";
 import { PrisonerActor } from "./prisoner";
 import { OpeningCinematic } from "./cinematic";
-import { INTRO_DURATION } from "./intro";
+import { INTRO_DURATION, introFrame } from "./intro";
 import { loadSettings, type GameSettings } from "./settings";
 import { movementVector, stepJump } from "./navigation";
 import {
@@ -77,6 +77,7 @@ import {
 } from "./performance";
 import {
   advanceHold,
+  stepCaughtMeter,
   openingObjective,
   openingStart,
   wrongKeyNotice,
@@ -260,6 +261,8 @@ export class GameEngine {
   private saveKey = "hirodora-checkpoint-v3";
   public openingProgress: OpeningProgress = { bed: 0, bolts: 0, toilet: 0 };
   public activeHold: HoldAction | null = null;
+  public caughtMeter = 0;
+  private caughtClatterLatched = false;
   private hardPush = false;
   public contextualAction: string | null = null;
   private transit: {
@@ -283,6 +286,11 @@ export class GameEngine {
   public firstPerson = new FirstPersonView();
   public cinematic?: OpeningCinematic;
   public introCaption = "";
+  public get introWakeAmount() {
+    return this.reducedMotion
+      ? 0
+      : introFrame(this.cinematic?.time ?? 0).wakeAmount;
+  }
   private introPaused = false;
   private userRenderScale = 1;
   private disposed = false;
@@ -1592,6 +1600,21 @@ export class GameEngine {
       return;
     }
     const action = this.activeHold;
+    this.caughtMeter = stepCaughtMeter(
+      this.caughtMeter,
+      dt,
+      action,
+      this.hardPush,
+    );
+    if (this.caughtMeter < 55) this.caughtClatterLatched = false;
+    if (action && this.caughtMeter >= 100 && !this.caughtClatterLatched) {
+      this.caughtClatterLatched = true;
+      const position = this.holdAudioPosition(action);
+      this.stats.noiseLevel = Math.max(this.stats.noiseLevel, 100);
+      this.emitNoise(100, "object-clatter", position);
+      sound.contact("rushed-object", "metal", "concrete", 5, position);
+      this.notice("Too loud! The guard heard that. Stop and listen.");
+    }
     if (!action) return;
     if (this.findClosestInteractable()?.id !== action) {
       this.endInteract();
@@ -1616,10 +1639,10 @@ export class GameEngine {
     );
     this.stats.noiseLevel = Math.max(
       this.stats.noiseLevel,
-      this.hardPush ? 85 : action === "toilet_move" ? 13 : 5,
+      this.caughtClatterLatched ? 100 : action === "toilet_move" ? 13 : 5,
     );
     this.emitNoise(
-      this.hardPush ? 85 : action === "toilet_move" ? 13 : 5,
+      this.caughtClatterLatched ? 100 : action === "toilet_move" ? 13 : 5,
       action,
       this.worldData.interactables.find((o) => o.id === action)?.position ??
         this.playerPos,
@@ -1958,6 +1981,8 @@ export class GameEngine {
     } catch {}
   }
   public restoreCheckpoint(cp: GameCheckpoint) {
+    this.caughtMeter = 0;
+    this.caughtClatterLatched = false;
     this.jumpHeight = 0;
     this.jumpVelocity = 0;
     this.noiseEvents = [];

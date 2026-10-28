@@ -159,7 +159,14 @@ export default function App() {
           <LoadingScreen />
         ) : (
           <>
-            {!engine.guardsReady && <LoadingScreen completed={engine.loadingCompleted} label={engine.loadingLabel} error={engine.guardLoadError} onRetry={() => void engine.loadGuardAssets()} />}
+            {!engine.guardsReady && (
+              <LoadingScreen
+                completed={engine.loadingCompleted}
+                label={engine.loadingLabel}
+                error={engine.guardLoadError}
+                onRetry={() => void engine.loadGuardAssets()}
+              />
+            )}
             {engine.gameState === "title" && !settingsOpen && !hudEditor && (
               <TitleScreen
                 hasSave={engine.hasSave}
@@ -218,6 +225,11 @@ export default function App() {
             )}
             {engine.gameState === "intro" && (
               <section className="intro-overlay" aria-label="Opening cinematic">
+                <div
+                  className="waking-eyelids"
+                  aria-hidden="true"
+                  style={{ opacity: engine.introWakeAmount }}
+                />
                 <div className="intro-caption" role="status">
                   {engine.introCaption}
                 </div>

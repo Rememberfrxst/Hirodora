@@ -11,6 +11,7 @@ import { ItemIcon } from "./ItemIcon";
 import { COMBAT } from "../game/combat";
 import { BALLISTICS } from "../game/ballistics";
 import weaponIcon from "../assets/equipment/pistol-hud.webp";
+import type { HoldAction } from "../game/opening";
 import { Pause, Crosshair, Hand, Move } from "lucide-react";
 
 interface Props {
@@ -41,6 +42,16 @@ export function HUD({ engine, onPause }: Props) {
     radius: number;
   } | null>(null);
   const [stick, setStick] = useState([0, 0]);
+  const work = (
+    ["bed_push", "toilet_bolts", "toilet_move"].includes(
+      engine.contextualAction || "",
+    )
+      ? engine.contextualAction
+      : engine.activeHold
+  ) as HoldAction | null;
+  const workName =
+    work === "bed_push" ? "Table" : work === "toilet_bolts" ? "Bolt" : "Toilet";
+  const workVerb = work === "toilet_bolts" ? "Unscrew" : "Move";
   const actionLabel = stats.isInHidingSpot
     ? "Leave"
     : engine.activeInteractPrompt === "Penetrate"
@@ -174,6 +185,40 @@ export function HUD({ engine, onPause }: Props) {
       <div className="reticle">
         <span />
       </div>
+      {work && (
+        <>
+          <div
+            className={
+              "caught-meter" + (engine.caughtMeter >= 90 ? " at-risk" : "")
+            }
+          >
+            <span>Caught-meter</span>
+            <div
+              role="progressbar"
+              aria-label="Noise risk"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={Math.round(engine.caughtMeter)}
+            >
+              <i style={{ width: `${engine.caughtMeter}%` }} />
+            </div>
+          </div>
+          <progress
+            className="object-work-progress"
+            aria-label="Action progress"
+            max={1}
+            value={
+              engine.openingProgress[
+                work === "bed_push"
+                  ? "bed"
+                  : work === "toilet_bolts"
+                    ? "bolts"
+                    : "toilet"
+              ]
+            }
+          />
+        </>
+      )}
       {stats.act === 3 && (
         <div className="tide-clock">
           <span>TIDAL WINDOW</span>
@@ -204,11 +249,11 @@ export function HUD({ engine, onPause }: Props) {
       )}
       {engine.activeInteractPrompt && (
         <div className="context-actions">
-          {(!engine.mobile || actionLabel === "Take") && (
+          {(!engine.mobile || actionLabel === "Take" || work) && (
             <button
               className={
                 "interact-prompt" +
-                (actionLabel === "Take" ? " pickup-prompt" : "")
+                (actionLabel === "Take" || work ? " pickup-prompt" : "")
               }
               onPointerDown={(e) => {
                 e.currentTarget.setPointerCapture(e.pointerId);
@@ -218,7 +263,14 @@ export function HUD({ engine, onPause }: Props) {
               onPointerCancel={() => engine.endInteract()}
               onLostPointerCapture={() => engine.endInteract()}
             >
-              {actionLabel === "Take" ? (
+              {work ? (
+                <>
+                  <strong>{workName}</strong>
+                  <span>
+                    {engine.mobile ? "[Hold]" : "[E]"} {workVerb}
+                  </span>
+                </>
+              ) : actionLabel === "Take" ? (
                 <>
                   <strong>
                     {engine.activeInteractPrompt.replace(/^Take (the )?/i, "")}
@@ -236,7 +288,7 @@ export function HUD({ engine, onPause }: Props) {
                   {engine.activeInteractPrompt}
                 </>
               )}
-              {engine.activeHold && (
+              {engine.activeHold && !work && (
                 <progress
                   aria-label="Action progress"
                   max="1"
@@ -392,7 +444,7 @@ export function HUD({ engine, onPause }: Props) {
                   <Hand size={25} />
                 )}
                 <small>{actionLabel}</small>
-                {engine.activeHold && (
+                {engine.activeHold && !work && (
                   <progress
                     aria-label="Action progress"
                     max="1"

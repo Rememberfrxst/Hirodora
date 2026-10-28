@@ -86,6 +86,9 @@ export function decideGuard(
       suspicion + GUARD_AI.hearingRate * s.noise!.strength * dt,
     );
     if (freshNoise) {
+      // A clearly audible mounting/furniture crash warrants investigation,
+      // while hearing alone still cannot confirm sight or start a chase.
+      if (s.noise!.urgent) suspicion = Math.max(suspicion, GUARD_AI.suspicious);
       lastNoise = s.noise!.id;
       lastHeard = copy(s.noise!.position);
       if (s.noise!.strength >= 0.7)

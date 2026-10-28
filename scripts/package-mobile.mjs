@@ -21,6 +21,8 @@ const environmentCredits =
   "\n" +
   (await readFile("src/assets/audio/compat-manifest.json", "utf8")) +
   "\n" +
+  (await readFile("src/assets/audio/intro-voice-manifest.json", "utf8")) +
+  "\n" +
   (await readFile("src/assets/environment/GODOT-MIT-LICENSE.txt", "utf8")) +
   "\n" +
   (await readFile("src/assets/environment/TPS-ASSET-LICENSE.txt", "utf8")) +

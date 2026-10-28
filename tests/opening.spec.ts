@@ -30,15 +30,31 @@ async function finishHold(page: Page, id: string) {
     .toBe(id);
   // Advance the real simulation at a fixed contact timestep. SwiftShader is far
   // slower than real-time, so wall-clock holding would test CI's GPU speed.
-  await page.evaluate(() => {
+  await page.evaluate((id) => {
     const e = window.__HIRODORA__ as any;
-    for (let i = 0; i < 330 && e.activeHold; i++) {
+    const hard = e.hardPush;
+    for (let i = 0; i < 420 && e.activeHold; i++) {
+      if (!hard && e.caughtMeter >= 65) {
+        e.endInteract();
+        for (let cool = 0; cool < 65; cool++) {
+          e.updateOpening(1 / 30);
+          e.move(1 / 30);
+          e.updateGuards(1 / 30);
+        }
+        const target = e.worldData.interactables.find((o: any) => o.id === id);
+        e.playerRotY = Math.atan2(
+          -(target.position[0] - e.playerPos[0]),
+          -(target.position[2] - e.playerPos[2]),
+        );
+        e.move(0);
+        e.beginInteract();
+      }
       e.updateOpening(1 / 30);
       e.move(1 / 30);
       e.updateGuards(1 / 30);
     }
     e.emitChange();
-  });
+  }, id);
 }
 test("Cell 47 key twist, quiet bed, tool, toilet, passage, save and return", async ({
   page,

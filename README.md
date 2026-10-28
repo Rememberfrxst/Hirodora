@@ -8,15 +8,19 @@
 
 **Every sound has a consequence.**
 
-**v0.21.0 · Real Loading Progress · Mobile Optimization · Custom Ammo HUD · WebKit Verified**
+**v0.22.0 · Caught Meter · Stop/Start Stealth · Supplied Intro Voices**
 
-**[↓ DOWNLOAD ANDROID APK](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.21.0-android.apk)**
+**[↓ DOWNLOAD ANDROID APK](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.22.0-android.apk)**
 
-[↓ Offline web ZIP](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.21.0-offline.zip) · [Single-file HTML download](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.21.0.html) · [ZIP checksum](downloads/latest.json) · [APK checksums](downloads/android-latest.json) · [Android installation](docs/ANDROID.md)
+[↓ Offline web ZIP](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.22.0-offline.zip) · [Single-file HTML download](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.22.0.html) · [ZIP checksum](downloads/latest.json) · [APK checksums](downloads/android-latest.json) · [Android installation](docs/ANDROID.md)
 
 </div>
 
 ## A playable prison atrium
+
+**v0.22.0 adds reference-style object work and a voiced wake-up intro.** Holding E / Interact on the table, toilet bolts or toilet raises a red **Caught-meter**. Release to cool it; the white action-progress bar keeps completed work. Letting red reach full produces a real spatial clatter and sends a nearby hearing guard to investigate, rather than instantly ending the game. Work in short bursts and keep aiming at the moving object.
+
+Select **New game** to see the new 24.6-second intro: the cellmate wakes you, notices the open door, tries to escape and is shot. All five supplied ElevenLabs recordings are matched to their scene events and subtitles, including “Hey, bro, wake up!”, “Stay down!” and “Oh, he's dead!”. Continue preserves an existing save without replay. [Implementation, voice provenance and verification](docs/UPDATE-V22.md).
 
 **v0.21.0 adds a black loading screen with real asset-preparation progress**, waiting for models, textures, recordings and shaders. Mobile uses a shared 1K version of the same PBR materials; desktop retains 2K. The ammo card has the settings panel's colour at 50% background alpha and can be dragged/resized in Custom HUD. HP remains at the bottom; backpack/noise/awareness/standing blocks are removed. A new original architectural H logo is included in Android and iPhone/Home Screen icons.
 
@@ -38,36 +42,36 @@ Player health is **200 HP**; guard melee has a visible wind-up and **25-damage**
 
 **Safari compatibility:** all 70 licensed recordings now have MP3 runtime derivatives, fixing the Ogg Vorbis compatibility gap in older iOS Safari. Touch/landscape handling also recognises desktop-mode iPads, and interrupted Safari audio can resume after a user gesture. See the [iPhone/iPad guide](docs/IOS.md) for installation and the remaining verification limits.
 
-[Current implementation / verification](docs/UPDATE-V21.md) · [Previous stairs/hands update](docs/UPDATE-V20.md) · [Previous bridge update](docs/BRIDGE-V19.md) · [Gun / can / boxing](docs/BALLISTICS-V18.md) · [Character credits](docs/GUARD-ASSETS.md)
+[Current implementation / verification](docs/UPDATE-V22.md) · [Loading/HUD update](docs/UPDATE-V21.md) · [Previous stairs/hands update](docs/UPDATE-V20.md) · [Previous bridge update](docs/BRIDGE-V19.md) · [Gun / can / boxing](docs/BALLISTICS-V18.md) · [Character credits](docs/GUARD-ASSETS.md)
 
 ## Latest screenshots — exactly six
 
-Six actual rendered captures, including the real loading interface. [Camera positions and render statistics](docs/screenshots/update-v21/capture.json). Shot/reload views freeze the presentation at the shown moment; loading capture holds an actual file request. Historical galleries remain separate.
+Six actual game renders: three fixed intro moments and three real object holds. [Capture cameras and states](docs/screenshots/update-v22/capture.json). These images are not audio-playback or physical-phone performance proof; separate browser tests verify voice cues. Historical galleries remain separate.
 
 <table>
-<tr><td width="50%"><img src="docs/screenshots/update-v21/01-real-loading.png" alt="Actual loading task progress" /></td><td width="50%"><img src="docs/screenshots/update-v21/02-toilet-bolts.png" alt="Larger supplied toilet and mounting anchors" /></td></tr>
-<tr><td align="center"><sub>REAL LOADING PROGRESS</sub></td><td align="center"><sub>TOILET · MOUNTING HARDWARE</sub></td></tr>
-<tr><td><img src="docs/screenshots/update-v21/03-pistol-grip.png" alt="Recalibrated pistol grip and clean HUD" /></td><td><img src="docs/screenshots/update-v21/04-shot-effect.png" alt="Muzzle flash and recoil" /></td></tr>
-<tr><td align="center"><sub>PISTOL GRIP · CLEAN HUD</sub></td><td align="center"><sub>SHOT · FLASH AND RECOIL</sub></td></tr>
-<tr><td><img src="docs/screenshots/update-v21/05-reload.png" alt="Left support hand during reload" /></td><td><img src="docs/screenshots/update-v21/06-mobile-custom-hud.png" alt="Mobile controls and repositioned gun card" /></td></tr>
-<tr><td align="center"><sub>RELOAD · SUPPORT HAND</sub></td><td align="center"><sub>MOBILE · CUSTOM AMMO POSITION</sub></td></tr>
+<tr><td width="50%"><img src="docs/screenshots/update-v22/01-wake-up.png" alt="Cellmate wakes the player" /></td><td width="50%"><img src="docs/screenshots/update-v22/02-stay-down.png" alt="Officer warns the escaping prisoner" /></td></tr>
+<tr><td align="center"><sub>HEY BRO · WAKE UP</sub></td><td align="center"><sub>STAY DOWN</sub></td></tr>
+<tr><td><img src="docs/screenshots/update-v22/03-body-inspection.png" alt="Officer checks the fallen prisoner" /></td><td><img src="docs/screenshots/update-v22/04-table-meter.png" alt="Table pushing with red noise risk and white progress" /></td></tr>
+<tr><td align="center"><sub>BODY INSPECTION</sub></td><td align="center"><sub>TABLE · CAUGHT METER</sub></td></tr>
+<tr><td><img src="docs/screenshots/update-v22/05-bolt-progress.png" alt="Unscrewing toilet anchors" /></td><td><img src="docs/screenshots/update-v22/06-toilet-meter.png" alt="Moving the toilet carefully" /></td></tr>
+<tr><td align="center"><sub>BOLT · UNSCREW</sub></td><td align="center"><sub>TOILET · MOVE</sub></td></tr>
 </table>
 
 ## Play on mobile
 
-**Android:** download the APK above, open it in Files and allow installation from that source. Requires Android 8.0+, an updated Android System WebView and WebGL 2. All models, textures and audio are included, with no Internet, storage, microphone or tracking permission. v0.21.0 / versionCode **2100** reuses the existing release certificate. Install over the previous release to preserve app-local saves/settings; uninstalling clears them. Old lower-floor/stair checkpoints migrate to the new layout.
+**Android:** download the APK above, open it in Files and allow installation from that source. Requires Android 8.0+, an updated Android System WebView and WebGL 2. All models, textures and audio are included, with no Internet, storage, microphone or tracking permission. v0.22.0 / versionCode **2200** reuses the existing release certificate. Install over the previous release to preserve app-local saves/settings; uninstalling clears them. Old lower-floor/stair checkpoints migrate to the new layout.
 
 **iPhone/iPad:** WebKit gameplay and production offline-cache checks pass. The public link still returns 404 because Pages is not configured: the repository owner must select **Settings → Pages → Source: GitHub Actions**, then rerun the Pages workflow. Once published, open the HTTPS game in **Safari → Share → Add to Home Screen**, turn off Portrait Orientation Lock and rotate horizontally. [iOS guide and exact hosting blocker](docs/IOS.md). Physical iPhone testing and a native signed IPA are still pending.
 
-For desktop/offline web play, extract the ZIP and open `Hirodora-0.21.0.html` in a full WebGL 2 browser. Download links bypass GitHub's large-file preview. Exact sizes and SHA-256 checksums are in the download manifests.
+For desktop/offline web play, extract the ZIP and open `Hirodora-0.22.0.html` in a full WebGL 2 browser. Download links bypass GitHub's large-file preview. Exact sizes and SHA-256 checksums are in the download manifests.
 
 ## How to finish the current chapter
 
 1. Start in Cell 47 after the intro. While the officer examines the prisoner outside, aim at the key behind him and press **E / Interact**.
 2. Try it on your cell lock. The notice reveals that it belongs to **Cell 42**, not Cell 47.
-3. Aim at the **table**. Hold **E / Push table** to move it quietly. **R / Push hard** is faster but attracts the officer.
+3. Aim at the **table**. Hold **E / Interact** in short bursts, release to cool red risk and track the moving table. White progress is retained. **R / Push hard** is faster but fills risk much faster.
 4. Collect the screwdriver revealed beneath the table.
-5. Hold the action on the toilet bolts, then hold **Move toilet**.
+5. Hold the action on the toilet bolts, then hold **Move toilet**. Both have the same stop/start risk mechanic.
 6. Aim at the exposed opening and select **Penetrate** to enter Cell 46. The chapter checkpoint is saved; **Explore Cell 46** lets you continue exploring or return through the passage.
 
 Cells 45–42 are present but their story progression remains unfinished. Older v2 campaign saves remain supported.
@@ -84,7 +88,7 @@ Cells 45–42 are present but their story progression remains unfinished. Older 
 
 Settings has Game, Audio, Graphics and Controls tabs. **Controls → Custom HUD** supports drag, resize, presets and saved layouts. Graphics has Low, Medium, High and Ultra presets, render scale and FOV. Pause → Retry checkpoint restarts a checkpoint; **New game** resets progress after confirmation.
 
-Guards use wall-aware vision, suspicion, spatial hearing, last-known-position searches and sight-loss/reacquisition. Skeletal animation follows authoritative AI decisions. The intro, gun-grip fix and stable-frame rendering remain intact. Cell 47 is quiet at rest; **70 local recordings** provide material footsteps, object movement, doors, tools and spatial English guard speech.
+Guards use wall-aware vision, suspicion, spatial hearing, last-known-position searches and sight-loss/reacquisition. Skeletal animation follows authoritative AI decisions. Cell 47 is quiet at rest; **75 local recordings** include the original 70 licensed effects/dialogue plus five owner-supplied intro recordings with separately documented ElevenLabs provenance.
 
 ## Development
 

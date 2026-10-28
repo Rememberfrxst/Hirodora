@@ -15,6 +15,7 @@ export interface HeardEvidence {
   id: number;
   position: Vec3;
   strength: number;
+  urgent?: boolean;
 }
 
 /** Slab test shared by sight/hearing, independent of Three.js or animation. */
@@ -114,7 +115,16 @@ export function strongestNoise(
       Math.max(0, 1 - event.age / 1.6);
     const strength = Math.max(0, Math.min(1, (heard - 2) / 25));
     if (strength > 0.04 && (!best || strength > best.strength))
-      best = { id: event.id, position: [...event.position], strength };
+      best = {
+        id: event.id,
+        position: [...event.position],
+        strength,
+        ...(event.kind === "object-clatter" &&
+        event.loudness >= 85 &&
+        strength >= 0.25
+          ? { urgent: true }
+          : {}),
+      };
   }
   return best;
 }

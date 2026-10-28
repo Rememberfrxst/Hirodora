@@ -1,0 +1,239 @@
+{
+  "config": {
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "/workspace/Hirodora/node_modules/.bin/playwright",
+      "test",
+      "--config",
+      "playwright.webkit.config.ts",
+      "tests/update22.spec.ts",
+      "--grep",
+      "white bolt|five original",
+      "--reporter=json",
+      "--output=/workspace/hirodora-v22-webkit-final-results"
+    ],
+    "configFile": "/workspace/Hirodora/playwright.webkit.config.ts",
+    "rootDir": "/workspace/Hirodora/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/workspace/hirodora-v22-webkit-final-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/workspace/Hirodora/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 180000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/workspace/hirodora-v22-webkit-final-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "/workspace/Hirodora/tests",
+        "snapshotDir": "/workspace/Hirodora/tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 180000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3940",
+          "viewport": {
+            "width": 1100,
+            "height": 720
+          },
+          "launchOptions": {},
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "browserName": "webkit"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "update22.spec.ts",
+      "file": "update22.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "five original voice recordings decode, play once across pause/resume and match the new intro",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 12602,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [
+                    {
+                      "text": "Skipping host requirements validation logic because `PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS` env variable is set.\n"
+                    }
+                  ],
+                  "retry": 0,
+                  "startTime": "2026-10-28T19:48:31.639Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9c988d04dedd91ff297f-2e105515ba19add6c4c9",
+          "file": "update22.spec.ts",
+          "line": 4,
+          "column": 1
+        }
+      ],
+      "suites": [
+        {
+          "title": "touch object meters",
+          "file": "update22.spec.ts",
+          "line": 120,
+          "column": 6,
+          "specs": [
+            {
+              "title": "white bolt progress and red risk stay visible on touch; releasing retains progress",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 13246,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('progressbar', { name: 'Action progress', exact: true })\nExpected: visible\nError: strict mode violation: getByRole('progressbar', { name: 'Action progress', exact: true }) resolved to 2 elements:\n    1) <progress max=\"1\" value=\"0.21428571428571444\" class=\"object-work-progress\" aria-label=\"Action progress\"></progress> aka getByRole('progressbar', { name: 'Action progress' }).first()\n    2) <progress max=\"1\" value=\"0.21428571428571444\" aria-label=\"Action progress\"></progress> aka getByRole('button', { name: 'Interact' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('progressbar', { name: 'Action progress', exact: true }) with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('progressbar', { name: 'Action progress', exact: true })\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('progressbar', { name: 'Action progress', exact: true })\nExpected: visible\nError: strict mode violation: getByRole('progressbar', { name: 'Action progress', exact: true }) resolved to 2 elements:\n    1) <progress max=\"1\" value=\"0.21428571428571444\" class=\"object-work-progress\" aria-label=\"Action progress\"></progress> aka getByRole('progressbar', { name: 'Action progress' }).first()\n    2) <progress max=\"1\" value=\"0.21428571428571444\" aria-label=\"Action progress\"></progress> aka getByRole('button', { name: 'Interact' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('progressbar', { name: 'Action progress', exact: true }) with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('progressbar', { name: 'Action progress', exact: true })\u001b[22m\n\n    at /workspace/Hirodora/tests/update22.spec.ts:172:25",
+                        "location": {
+                          "file": "/workspace/Hirodora/tests/update22.spec.ts",
+                          "column": 25,
+                          "line": 172
+                        },
+                        "snippet": "  170 |       });\n  171 |     await expect(red).toBeVisible();\n> 172 |     await expect(white).toBeVisible();\n      |                         ^\n  173 |     expect(Number(await red.getAttribute(\"aria-valuenow\"))).toBeGreaterThan(0);\n  174 |     expect(Number(await white.getAttribute(\"value\"))).toBeGreaterThan(0);\n  175 |     const box = (await red.boundingBox())!;"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/workspace/Hirodora/tests/update22.spec.ts",
+                            "column": 25,
+                            "line": 172
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('progressbar', { name: 'Action progress', exact: true })\nExpected: visible\nError: strict mode violation: getByRole('progressbar', { name: 'Action progress', exact: true }) resolved to 2 elements:\n    1) <progress max=\"1\" value=\"0.21428571428571444\" class=\"object-work-progress\" aria-label=\"Action progress\"></progress> aka getByRole('progressbar', { name: 'Action progress' }).first()\n    2) <progress max=\"1\" value=\"0.21428571428571444\" aria-label=\"Action progress\"></progress> aka getByRole('button', { name: 'Interact' })\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('progressbar', { name: 'Action progress', exact: true }) with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('progressbar', { name: 'Action progress', exact: true })\u001b[22m\n\n\n  170 |       });\n  171 |     await expect(red).toBeVisible();\n> 172 |     await expect(white).toBeVisible();\n      |                         ^\n  173 |     expect(Number(await red.getAttribute(\"aria-valuenow\"))).toBeGreaterThan(0);\n  174 |     expect(Number(await white.getAttribute(\"value\"))).toBeGreaterThan(0);\n  175 |     const box = (await red.boundingBox())!;\n    at /workspace/Hirodora/tests/update22.spec.ts:172:25"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-28T19:48:44.353Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/workspace/hirodora-v22-webkit-final-results/update22-touch-object-mete-abb8b--releasing-retains-progress/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/workspace/hirodora-v22-webkit-final-results/update22-touch-object-mete-abb8b--releasing-retains-progress/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/workspace/hirodora-v22-webkit-final-results/update22-touch-object-mete-abb8b--releasing-retains-progress/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/workspace/Hirodora/tests/update22.spec.ts",
+                        "column": 25,
+                        "line": 172
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "9c988d04dedd91ff297f-0ae4f8ec2b4f9b4d970e",
+              "file": "update22.spec.ts",
+              "line": 126,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-28T19:48:29.835Z",
+    "duration": 30132.83,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

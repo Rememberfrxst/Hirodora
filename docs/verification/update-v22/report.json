@@ -1,0 +1,363 @@
+{
+  "version": "0.22.0",
+  "unitPassed": 83,
+  "chromiumSelectedPassed": 10,
+  "webkitSelectedPassed": 3,
+  "wholeBrowserSuiteRerun": false,
+  "runs": [
+    {
+      "file": "chromium-initial.json",
+      "engine": "chromium",
+      "stats": {
+        "startTime": "2026-10-28T19:42:07.978Z",
+        "duration": 486455.342,
+        "expected": 7,
+        "skipped": 0,
+        "unexpected": 3,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "chromium-focused.json",
+      "engine": "chromium",
+      "stats": {
+        "startTime": "2026-10-28T19:52:23.988Z",
+        "duration": 188676.10299999997,
+        "expected": 3,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "chromium-meter-final.json",
+      "engine": "chromium",
+      "stats": {
+        "startTime": "2026-10-28T19:56:26.071Z",
+        "duration": 30589.717,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "chromium-intro-release.json",
+      "engine": "chromium",
+      "stats": {
+        "startTime": "2026-10-28T20:03:25.403Z",
+        "duration": 164644.044,
+        "expected": 4,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "webkit-initial.json",
+      "engine": "webkit",
+      "stats": {
+        "startTime": "2026-10-28T19:42:10.394Z",
+        "duration": 217966.054,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "webkit-focused.json",
+      "engine": "webkit",
+      "stats": {
+        "startTime": "2026-10-28T19:48:29.835Z",
+        "duration": 30132.83,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "webkit-touch-final.json",
+      "engine": "webkit",
+      "stats": {
+        "startTime": "2026-10-28T19:52:25.880Z",
+        "duration": 19074.061999999998,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "webkit-production-offline.json",
+      "engine": "webkit",
+      "stats": {
+        "startTime": "2026-10-28T19:55:21.241Z",
+        "duration": 34468.072,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "chromium: reference menu has three choices and settings tabs change real persisted values",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: new-game cinematic fires once, pauses safely, closes gate and releases a playable checkpoint",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: skipping intro reaches the same corpse/key/closed-gate state on mobile",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: Cell 47 key twist, quiet bed, tool, toilet, passage, save and return",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: audio recordings decode, blocked movement is silent and channels persist",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: hard pushing alerts the examining guard, then he returns to the body without crossing bars",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: mobile contextual holding releases on cancel and rotation without stuck input",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: five original voice recordings decode, play once across pause/resume and match the new intro",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: object meter fills, release cools without losing work, threshold sends real noise to the guard",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: white bolt progress and red risk stay visible on touch; releasing retains progress",
+      "status": "passed"
+    },
+    {
+      "name": "webkit: five original voice recordings decode, play once across pause/resume and match the new intro",
+      "status": "passed"
+    },
+    {
+      "name": "webkit: white bolt progress and red risk stay visible on touch; releasing retains progress",
+      "status": "passed"
+    },
+    {
+      "name": "webkit: production Safari web app starts under repository path and reopens from its offline cache",
+      "status": "passed"
+    }
+  ],
+  "captures": [
+    {
+      "name": "01-wake-up",
+      "time": 1.75,
+      "caption": "Cellmate: Hey, bro, wake up!",
+      "position": [
+        -6.3,
+        1.089159375,
+        -6.255000000000001
+      ],
+      "fov": 70
+    },
+    {
+      "name": "02-stay-down",
+      "time": 10.9,
+      "caption": "Prison Guard: Stay down!",
+      "position": [
+        -6.3,
+        1.65,
+        -4.8336
+      ],
+      "fov": 70
+    },
+    {
+      "name": "03-body-inspection",
+      "time": 19,
+      "caption": "Prison Guard: Oh, he's dead!",
+      "position": [
+        -6.3,
+        1.65,
+        -4.8
+      ],
+      "fov": 70
+    },
+    {
+      "name": "04-table-meter",
+      "action": "bed_push",
+      "seconds": 2.8,
+      "risk": 61.60000000000005,
+      "progress": {
+        "bed": 0.31111111111111145,
+        "bolts": 0,
+        "toilet": 0
+      },
+      "position": [
+        -5.6,
+        1.6,
+        -6.9
+      ],
+      "target": [
+        -4.7,
+        0.7,
+        -8.2
+      ],
+      "fov": 70
+    },
+    {
+      "name": "05-bolt-progress",
+      "action": "toilet_bolts",
+      "seconds": 2,
+      "risk": 36.00000000000004,
+      "progress": {
+        "bed": 1,
+        "bolts": 0.2857142857142858,
+        "toilet": 0
+      },
+      "position": [
+        -6.55,
+        1.45,
+        -8.8
+      ],
+      "target": [
+        -7.83,
+        0.045,
+        -9.52
+      ],
+      "fov": 70
+    },
+    {
+      "name": "06-toilet-meter",
+      "action": "toilet_move",
+      "seconds": 2.3,
+      "risk": 69,
+      "progress": {
+        "bed": 1,
+        "bolts": 1,
+        "toilet": 0.5750000000000004
+      },
+      "position": [
+        -6.55,
+        1.45,
+        -8.8
+      ],
+      "target": [
+        -8,
+        0.55,
+        -9.6
+      ],
+      "fov": 70
+    }
+  ],
+  "voices": {
+    "provenance": "Five ElevenLabs MP3 recordings supplied by the project owner in this chat; transcribed locally with Whisper tiny.en to map dialogue to scene events.",
+    "license": "User-supplied ElevenLabs output. No CC0 or public-domain status is asserted. Redistribution and commercial use depend on the originating account permissions and ElevenLabs terms.",
+    "changes": "High-pass at 65 Hz, -17 LUFS normalization, mono 44.1 kHz MP3. Original voices and wording retained; no voice cloning, pitch shift or new synthesis.",
+    "sources": [
+      {
+        "id": "cellmate-wakeup",
+        "file": "intro/cellmate-wakeup.mp3",
+        "originalFile": "ElevenLabs_2026-10-28T19_07_05_Hank Harvey - Gruff, Rugged and Wise_pvc_sp100_s50_sb75_v4.mp3",
+        "speaker": "Cellmate",
+        "text": "Hey, bro, wake up!",
+        "start": 0.35,
+        "duration": 1.985306,
+        "voice": "Hank Harvey",
+        "bytes": 18886,
+        "sha256": "8a75be05a1ec7a91c5d38b706a278c63f900d2d7c71517fc99af51fdbe64cc78",
+        "sourceSHA256": "d03a7d1a30c3127993e89b7eec966b25abf2b44b55ce6e700a956e102dee4a3c"
+      },
+      {
+        "id": "cellmate-door",
+        "file": "intro/cellmate-door.mp3",
+        "originalFile": "ElevenLabs_2026-10-28T19_08_48_Hank Harvey - Gruff, Rugged and Wise_pvc_sp100_s50_sb75_v4.mp3",
+        "speaker": "Cellmate",
+        "text": "The door is open.",
+        "start": 2.8,
+        "duration": 1.593469,
+        "voice": "Hank Harvey",
+        "bytes": 17173,
+        "sha256": "e61f4a0d6937584e0d9e28382a66c434ddfdddd9185e4c9aaa70017088e0e69c",
+        "sourceSHA256": "2d3ce1d618cbb17d50906df4bb4c7cdab9f2967a59c4b0bd96395c8d24322025"
+      },
+      {
+        "id": "player-escape",
+        "file": "intro/player-escape.mp3",
+        "originalFile": "ElevenLabs_2026-10-28T19_11_50_Mark - Natural Conversations_pvc_sp100_s44_sb75_v4.mp3",
+        "speaker": "Kabir Rao",
+        "text": "We gotta take this chance and escape!",
+        "start": 4.8,
+        "duration": 2.142041,
+        "voice": "Mark — Natural Conversations",
+        "bytes": 27838,
+        "sha256": "9af0d44959ef53193c6e86deb0cccf36926efffc02d36a4a742a8ae54b11166d",
+        "sourceSHA256": "6618a03ec88c2df75c43ca16566aa33b3b5dac7f262383c48cabd8420f39295c"
+      },
+      {
+        "id": "guard-stay-down",
+        "file": "intro/guard-stay-down.mp3",
+        "originalFile": "ElevenLabs_2026-10-28T19_24_08_Moe Mathews _pvc_sp100_s50_sb75_v4.mp3",
+        "speaker": "Prison Guard",
+        "text": "Stay down!",
+        "start": 10.4,
+        "duration": 1.515102,
+        "voice": "Moe Mathews",
+        "bytes": 18580,
+        "sha256": "0372c5b990bbaf749e906fb48e882574ba86934222b1022266bb7f5b13ff5914",
+        "sourceSHA256": "72db1e813111eba8670dae86e089a33a37afad0105af1c28024dba66c2ba6fbf"
+      },
+      {
+        "id": "guard-dead",
+        "file": "intro/guard-dead.mp3",
+        "originalFile": "ElevenLabs_2026-10-28T19_24_57_Moe Mathews _pvc_sp100_s50_sb75_v4.mp3",
+        "speaker": "Prison Guard",
+        "text": "Oh, he's dead!",
+        "start": 18.2,
+        "duration": 2.298776,
+        "voice": "Moe Mathews",
+        "bytes": 25362,
+        "sha256": "b21bc55f3c1fb388694ad1cf78c8c273be807d31e79228c54733c15348c155b4",
+        "sourceSHA256": "d82dbd5f6200b1f40df03d7a43e885b1402fa9fb49a26e7b14d08515654be1e2"
+      }
+    ]
+  },
+  "web": {
+    "version": "0.22.0",
+    "archive": "Hirodora-0.22.0-offline.zip",
+    "html": "Hirodora-0.22.0.html",
+    "sha256": "870914d5048e319ad4ffd115b1058a81ec8ebde0d0313f7c849f3daf2bcfbc27",
+    "bytes": 38688927
+  },
+  "apk": {
+    "version": "0.22.0",
+    "file": "Hirodora-0.22.0-android.apk",
+    "bytes": 38686567,
+    "sha256": "9f5b8aaa39cdb137692660ffa6dc58f149146a122ab4108ff0f85c80b95f3e84",
+    "certificateSHA256": "d7175da40c348c91e8a8663635d3a130115aba916e5ce889e40b646c009f33ca",
+    "minAndroid": "8.0 (API 26)",
+    "targetApi": 35,
+    "architecture": "Universal; uses installed Android System WebView",
+    "distribution": "Signed release APK; offline assets included; no network permission"
+  },
+  "knownLimits": [
+    "No physical iPhone or Android performance/thermal certification.",
+    "Public iOS Pages hosting requires repository-owner configuration; prior URL returned 404. No native signed IPA.",
+    "Supplied ElevenLabs output rights depend on originating account permissions and terms; no CC0 claim."
+  ],
+  "testNotes": [
+    "Initial quiet-chapter fixture did not re-aim when the table moved between held bursts; focused rerun tracks the object and passes.",
+    "Initial meter fixture did not sync key prerequisite state or retarget the moved table; final full-risk/investigation/cooling/progress checks pass.",
+    "Mobile fixture originally selected a non-existent Unbolt accessible label, then synthetic pointer capture; actual Interact pointer hold is now tested.",
+    "WebKit revealed duplicate white progress bars on touch; the product now shows a single shared bar. Final touch checks pass in both engines.",
+    "Intro run trajectory was checked against actual gate bounds and corrected before final build and screenshots.",
+    "Official browser libraries run locally; WebKit execution uses the bundle dependencies, not a physical Apple device."
+  ]
+}

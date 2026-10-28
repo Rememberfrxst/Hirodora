@@ -1,3 +1,4 @@
+import { introVoiceURLs } from '../../game/intro-voices';
 import a0 from './compat/footstep_concrete_000.mp3';
 import a1 from './compat/footstep_concrete_001.mp3';
 import a2 from './compat/footstep_concrete_002.mp3';
@@ -69,6 +70,7 @@ import a67 from './compat/heavy-bolt.mp3';
 import a68 from './compat/bed-slide.mp3';
 import a69 from './compat/table-slide.mp3';
 export const audioURLs: Record<string,string> = {
+  ...introVoiceURLs,
   'footstep_concrete_000': a0,
   'footstep_concrete_001': a1,
   'footstep_concrete_002': a2,

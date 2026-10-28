@@ -239,6 +239,11 @@ class SoundManager {
   public playGunshot(position: Position) {
     this.play("guard-gunshot", "sfx", 0.8, position);
   }
+  public playedIntroCues: string[] = [];
+  public playIntroVoice(id: string, offset = 0, position?: Position) {
+    this.playedIntroCues.push(id);
+    return !!this.play(id, 'dialogue', 1, position, 0, 1, false, false, offset);
+  }
   public resume() {
     if (this.ctx && audioNeedsResume(this.ctx.state))
       void this.ctx.resume().catch(() => {});
@@ -346,6 +351,7 @@ class SoundManager {
     rate = 1,
     follow = false,
     loop = false,
+    offset = 0,
   ): AudioHandle | undefined {
     if (!this.ctx || this.muted || !this.buffers.has(key)) return;
     const priority = soundPriority(bus);
@@ -425,7 +431,7 @@ class SoundManager {
       gain.disconnect();
       panner?.disconnect();
     };
-    source.start();
+    source.start(0, Math.max(0, offset));
     return { source, gain, spatial };
   }
   /** Stable per-object lifecycle: movement recordings follow actual geometry. */

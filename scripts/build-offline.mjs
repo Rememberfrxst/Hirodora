@@ -53,14 +53,25 @@ const originalAudio = JSON.parse(
   compatAudio = JSON.parse(
     await readFile("src/assets/audio/compat-manifest.json", "utf8"),
   );
+const introAudio = JSON.parse(
+  await readFile("src/assets/audio/intro-voice-manifest.json", "utf8"),
+);
 await writeFile(
   "dist/AUDIO-LICENSES.json",
   JSON.stringify(
-    originalAudio.map((a) => ({
-      ...a,
-      runtime: compatAudio.records.find((r) => r.source === a.file),
-      conversion: compatAudio.reason,
-    })),
+    [
+      ...originalAudio.map((a) => ({
+        ...a,
+        runtime: compatAudio.records.find((r) => r.source === a.file),
+        conversion: compatAudio.reason,
+      })),
+      ...introAudio.sources.map((a) => ({
+        ...a,
+        license: introAudio.license,
+        provenance: introAudio.provenance,
+        changes: introAudio.changes,
+      })),
+    ],
     null,
     2,
   ) + "\n",

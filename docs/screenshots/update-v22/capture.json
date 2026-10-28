@@ -1,0 +1,105 @@
+{
+  "captures": [
+    {
+      "name": "01-wake-up",
+      "time": 1.75,
+      "caption": "Cellmate: Hey, bro, wake up!",
+      "position": [
+        -6.3,
+        1.089159375,
+        -6.255000000000001
+      ],
+      "fov": 70
+    },
+    {
+      "name": "02-stay-down",
+      "time": 10.9,
+      "caption": "Prison Guard: Stay down!",
+      "position": [
+        -6.3,
+        1.65,
+        -4.8336
+      ],
+      "fov": 70
+    },
+    {
+      "name": "03-body-inspection",
+      "time": 19,
+      "caption": "Prison Guard: Oh, he's dead!",
+      "position": [
+        -6.3,
+        1.65,
+        -4.8
+      ],
+      "fov": 70
+    },
+    {
+      "name": "04-table-meter",
+      "action": "bed_push",
+      "seconds": 2.8,
+      "risk": 61.60000000000005,
+      "progress": {
+        "bed": 0.31111111111111145,
+        "bolts": 0,
+        "toilet": 0
+      },
+      "position": [
+        -5.6,
+        1.6,
+        -6.9
+      ],
+      "target": [
+        -4.7,
+        0.7,
+        -8.2
+      ],
+      "fov": 70
+    },
+    {
+      "name": "05-bolt-progress",
+      "action": "toilet_bolts",
+      "seconds": 2,
+      "risk": 36.00000000000004,
+      "progress": {
+        "bed": 1,
+        "bolts": 0.2857142857142858,
+        "toilet": 0
+      },
+      "position": [
+        -6.55,
+        1.45,
+        -8.8
+      ],
+      "target": [
+        -7.83,
+        0.045,
+        -9.52
+      ],
+      "fov": 70
+    },
+    {
+      "name": "06-toilet-meter",
+      "action": "toilet_move",
+      "seconds": 2.3,
+      "risk": 69,
+      "progress": {
+        "bed": 1,
+        "bolts": 1,
+        "toilet": 0.5750000000000004
+      },
+      "position": [
+        -6.55,
+        1.45,
+        -8.8
+      ],
+      "target": [
+        -8,
+        0.55,
+        -9.6
+      ],
+      "fov": 70
+    }
+  ],
+  "errors": [],
+  "method": "Actual rendered game. Intro snapshots use deterministic scene seek; object captures advance real hold actions without guard simulation, then use fixed inspection cameras. These snapshots do not claim recorded voice playback; browser audio tests separately check all five clips."
+}

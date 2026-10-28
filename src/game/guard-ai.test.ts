@@ -37,6 +37,27 @@ const senses = (more: Partial<GuardSenses> = {}): GuardSenses => ({
 const step = (g: GuardData, s: GuardSenses, dt: number) =>
   Object.assign(g, decideGuard(g, s, dt).next);
 const wall = { min: { x: -2, y: 0, z: 1.8 }, max: { x: 2, y: 3, z: 2.2 } };
+test("audible furniture crash starts investigation at the object, never a blind chase", () => {
+  const g = guard();
+  const event: NoiseEvent = {
+    id: 1,
+    position: [0, 0, 4],
+    loudness: 100,
+    age: 0,
+    kind: "object-clatter",
+  };
+  const heard = strongestNoise(g, [event], [wall]);
+  assert.ok(heard?.urgent);
+  const d = decideGuard(g, senses({ noise: heard }), 1 / 30);
+  assert.equal(d.next.state, "suspicious");
+  assert.deepEqual(d.next.investigationTarget, event.position);
+  assert.equal(d.caughtPlayer, false);
+  assert.equal(
+    strongestNoise(g, [{ ...event, position: [0, 0, 40] }], []),
+    undefined,
+  );
+  assert.ok(!strongestNoise(g, [{ ...event, loudness: 5 }], [wall])?.urgent);
+});
 
 test("sight builds at 35/sec: suspicion at 35, confirmation at 65; pure decisions", () => {
   const g = guard(),

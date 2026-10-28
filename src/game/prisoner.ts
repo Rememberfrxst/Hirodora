@@ -56,6 +56,33 @@ export class PrisonerActor {
     this.mixer.update(0);
     this.root.updateMatrixWorld(true);
   }
+  wakeGesture(amount: number) {
+    if (!this.model || amount <= 0) return;
+    this.root.updateMatrixWorld(true);
+    for (const [name, direction] of [
+      ["RightArm", [-0.08, -0.25, 0.9]],
+      ["RightForeArm", [0.1, -0.05, 1]],
+    ] as [string, number[]][]) {
+      const bone = this.model.getObjectByName(name);
+      if (!bone) continue;
+      const target = new THREE.Vector3(
+        ...(direction as [number, number, number]),
+      )
+        .normalize()
+        .applyQuaternion(this.root.getWorldQuaternion(new THREE.Quaternion()))
+        .applyQuaternion(
+          bone.parent!.getWorldQuaternion(new THREE.Quaternion()).invert(),
+        );
+      const q = new THREE.Quaternion()
+        .setFromUnitVectors(
+          new THREE.Vector3(0, 1, 0).applyQuaternion(bone.quaternion),
+          target,
+        )
+        .multiply(bone.quaternion);
+      bone.quaternion.slerp(q, amount);
+      this.root.updateMatrixWorld(true);
+    }
+  }
   dispose() {
     if (!this.model) return;
     this.mixer.stopAllAction();

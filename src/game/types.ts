@@ -51,6 +51,10 @@ export interface GuardData {
   deathElapsed?: number;
   attackIndex?: number;
   attackKind?: 0 | 1 | 2;
+  region?: "secret" | "military";
+  armed?: boolean;
+  shotWindup?: number;
+  shotCooldown?: number;
 }
 
 export type ItemId =
@@ -142,6 +146,7 @@ export interface InteractiveObject {
 }
 
 export interface GameCheckpoint {
+  region?: "secret" | "military";
   guardCombat?: {
     id: string;
     health: number;

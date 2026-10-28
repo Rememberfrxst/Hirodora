@@ -308,6 +308,20 @@ export class FirstPersonView {
       this.selected = item;
       this.transition = 0.22;
       if (this.arm) poseGrip(this.arm, this.rest, gripStyle(item));
+      if (this.arm && this.hand && item === "pistol_10mm") {
+        this.arm.updateMatrixWorld(true);
+        const pad = this.hand.worldToLocal(
+          this.arm
+            .getObjectByName("RightHandIndex3")!
+            .getWorldPosition(new THREE.Vector3()),
+        );
+        const gun = this.items.get(item)!;
+        // Fit the gun's trigger to a relaxed finger; never force the joint to it.
+        const trigger = new THREE.Vector3(0, 0.021, 0.02).applyQuaternion(
+          gun.quaternion,
+        );
+        gun.position.copy(pad.sub(trigger));
+      }
       if (
         this.arm &&
         this.hand &&
@@ -432,14 +446,14 @@ export class FirstPersonView {
   }
   async prepare(renderer: THREE.WebGLRenderer) {
     const models = [...new Set(this.items.values())];
-    const visibility = models.map(m => m.visible);
+    const visibility = models.map((m) => m.visible);
     const visible = this.root.visible;
     this.root.visible = true;
-    models.forEach(m => m.visible = true);
+    models.forEach((m) => (m.visible = true));
     try {
       await renderer.compileAsync(this.scene, this.camera);
     } finally {
-      models.forEach((m,i) => m.visible = visibility[i]);
+      models.forEach((m, i) => (m.visible = visibility[i]));
       this.root.visible = visible;
     }
   }

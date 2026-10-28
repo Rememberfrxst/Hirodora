@@ -63,7 +63,7 @@ test("supplied CC BY hands retain real skin/PBR, two independent rigs and docume
       assert.ok(p.getAttribute("JOINTS_0"));
     }
 });
-test("uploaded right hand reaches key pads/10mm trigger without wrist twisting or cumulative deformation", async () => {
+test("uploaded hand preserves key contacts and uses bounded pistol finger bends without wrist twisting", async () => {
   const d = await readArm(),
     arm = new THREE.Group();
   const build = (n: Node) => {
@@ -103,17 +103,20 @@ test("uploaded right hand reaches key pads/10mm trigger without wrist twisting o
     ) < 0.003,
   );
   poseGrip(arm, rest, "pistol10");
-  assert.ok(
-    point("RightHandIndex3").distanceTo(
-      new THREE.Vector3(-0.028, 0.17, 0.048),
-    ) < 0.006,
-    JSON.stringify({
-      point: point("RightHandIndex3").toArray(),
-      base: point("RightHandIndex1").toArray(),
-      l1: arm.getObjectByName("RightHandIndex2")!.position.length(),
-      l2: arm.getObjectByName("RightHandIndex3")!.position.length(),
-    }),
-  );
+  // The gun socket now follows the relaxed finger, not the other way round.
+  // Assert anatomical bends instead of rewarding an impossible fixed IK target.
+  for (const finger of ["Index", "Middle", "Ring", "Pinky"]) {
+    const points = [1, 2, 3, 4].map((i) => point(`RightHand${finger}${i}`));
+    const directions = points
+      .slice(1)
+      .map((p, i) => p.clone().sub(points[i]).normalize());
+    for (let i = 0; i < 2; i++)
+      assert.ok(
+        directions[i].angleTo(directions[i + 1]) < Math.PI / 2,
+        `${finger}: joint ${i}, angle ${(directions[i].angleTo(directions[i + 1]) * 180) / Math.PI}: ${JSON.stringify(points.map((p) => p.toArray()))}`,
+      );
+  }
+  assert.ok(point("RightHandIndex3").y > 0.16);
   for (let i = 0; i < 30; i++) {
     poseGrip(arm, rest, "pistol10");
     poseGrip(arm, rest, "pinch");

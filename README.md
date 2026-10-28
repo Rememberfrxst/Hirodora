@@ -8,15 +8,19 @@
 
 **Every sound has a consequence.**
 
-**v0.22.0 · Caught Meter · Stop/Start Stealth · Supplied Intro Voices**
+**v0.23.0 · Cell 015 Security Wing · Armed Island Patrols · Boat Escape**
 
-**[↓ DOWNLOAD ANDROID APK](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.22.0-android.apk)**
+**[↓ DOWNLOAD ANDROID APK](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.23.0-android.apk)**
 
-[↓ Offline web ZIP](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.22.0-offline.zip) · [Single-file HTML download](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.22.0.html) · [ZIP checksum](downloads/latest.json) · [APK checksums](downloads/android-latest.json) · [Android installation](docs/ANDROID.md)
+[↓ Offline web ZIP](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.23.0-offline.zip) · [Single-file HTML download](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.23.0.html) · [ZIP checksum](downloads/latest.json) · [APK checksums](downloads/android-latest.json) · [Android installation](docs/ANDROID.md)
 
 </div>
 
 ## A playable prison atrium
+
+**v0.23.0 adds a playable Cell 015 → security wing → underground tunnel → island defence compound → escape boat route.** Take the pistol from Cell 46, use the existing stairs to the lower floor and open Cell 015. Its rear service door leads to three locked security rooms with six armed officers. Clear each pair to release the next bulkhead; the command hatch leads down to a real service tunnel. Climb out into a 110 × 70m compound with ten armed sentries, barracks, towers and cargo cover. Secure the compound, release the eastern dock gate and board the boat.
+
+Enemy bullets deal **50 HP**: four confirmed hits defeat the 200-HP player. Aim is telegraphed and solid cover/lost visibility cancels firing. Death returns to the last safe checkpoint after two seconds; safe milestones refill health and the six-round magazine. New combat areas do not overwrite checkpoints on every shot or pause. Player damage remains two body hits / one headshot. All officers are taller (1.95m; captains 1.99m). The first-person pistol now follows a bounded finger pose instead of pulling the index into a fixed IK target. [Route, controls and verification](docs/UPDATE-V23.md).
 
 **v0.22.0 adds reference-style object work and a voiced wake-up intro.** Holding E / Interact on the table, toilet bolts or toilet raises a red **Caught-meter**. Release to cool it; the white action-progress bar keeps completed work. Letting red reach full produces a real spatial clatter and sends a nearby hearing guard to investigate, rather than instantly ending the game. Work in short bursts and keep aiming at the moving object.
 
@@ -42,28 +46,28 @@ Player health is **200 HP**; guard melee has a visible wind-up and **25-damage**
 
 **Safari compatibility:** all 70 licensed recordings now have MP3 runtime derivatives, fixing the Ogg Vorbis compatibility gap in older iOS Safari. Touch/landscape handling also recognises desktop-mode iPads, and interrupted Safari audio can resume after a user gesture. See the [iPhone/iPad guide](docs/IOS.md) for installation and the remaining verification limits.
 
-[Current implementation / verification](docs/UPDATE-V22.md) · [Loading/HUD update](docs/UPDATE-V21.md) · [Previous stairs/hands update](docs/UPDATE-V20.md) · [Previous bridge update](docs/BRIDGE-V19.md) · [Gun / can / boxing](docs/BALLISTICS-V18.md) · [Character credits](docs/GUARD-ASSETS.md)
+[Current implementation / verification](docs/UPDATE-V23.md) · [Voiced intro / caught meter](docs/UPDATE-V22.md) · [Loading/HUD update](docs/UPDATE-V21.md) · [Previous stairs/hands update](docs/UPDATE-V20.md) · [Previous bridge update](docs/BRIDGE-V19.md) · [Character credits](docs/GUARD-ASSETS.md)
 
 ## Latest screenshots — exactly six
 
-Six actual game renders: three fixed intro moments and three real object holds. [Capture cameras and states](docs/screenshots/update-v22/capture.json). These images are not audio-playback or physical-phone performance proof; separate browser tests verify voice cues. Historical galleries remain separate.
+Six actual game renders with fixed inspection cameras and frozen patrol poses. [Capture cameras and states](docs/screenshots/update-v23/capture.json). These are not recorded playthroughs or physical-phone benchmarks; separate browser tests verify the route and combat. Historical galleries remain separate.
 
 <table>
-<tr><td width="50%"><img src="docs/screenshots/update-v22/01-wake-up.png" alt="Cellmate wakes the player" /></td><td width="50%"><img src="docs/screenshots/update-v22/02-stay-down.png" alt="Officer warns the escaping prisoner" /></td></tr>
-<tr><td align="center"><sub>HEY BRO · WAKE UP</sub></td><td align="center"><sub>STAY DOWN</sub></td></tr>
-<tr><td><img src="docs/screenshots/update-v22/03-body-inspection.png" alt="Officer checks the fallen prisoner" /></td><td><img src="docs/screenshots/update-v22/04-table-meter.png" alt="Table pushing with red noise risk and white progress" /></td></tr>
-<tr><td align="center"><sub>BODY INSPECTION</sub></td><td align="center"><sub>TABLE · CAUGHT METER</sub></td></tr>
-<tr><td><img src="docs/screenshots/update-v22/05-bolt-progress.png" alt="Unscrewing toilet anchors" /></td><td><img src="docs/screenshots/update-v22/06-toilet-meter.png" alt="Moving the toilet carefully" /></td></tr>
-<tr><td align="center"><sub>BOLT · UNSCREW</sub></td><td align="center"><sub>TOILET · MOVE</sub></td></tr>
+<tr><td width="50%"><img src="docs/screenshots/update-v23/01-pistol-and-taller-officer.png" alt="Revised pistol fingers and taller officer" /></td><td width="50%"><img src="docs/screenshots/update-v23/02-cell015-hidden-door.png" alt="Cell 015 concealed rear door" /></td></tr>
+<tr><td align="center"><sub>PISTOL GRIP · TALLER OFFICERS</sub></td><td align="center"><sub>CELL 015 · HIDDEN DOOR</sub></td></tr>
+<tr><td><img src="docs/screenshots/update-v23/03-security-wing.png" alt="Armed officers in the hidden security rooms" /></td><td><img src="docs/screenshots/update-v23/04-underground-passage.png" alt="Below-floor escape tunnel" /></td></tr>
+<tr><td align="center"><sub>SECURITY WING</sub></td><td align="center"><sub>UNDERGROUND PASSAGE</sub></td></tr>
+<tr><td><img src="docs/screenshots/update-v23/05-island-military.png" alt="Island defence compound and sentries" /></td><td><img src="docs/screenshots/update-v23/06-escape-boat.png" alt="Island evacuation dock and escape boat" /></td></tr>
+<tr><td align="center"><sub>ISLAND DEFENCE</sub></td><td align="center"><sub>ESCAPE BOAT</sub></td></tr>
 </table>
 
 ## Play on mobile
 
-**Android:** download the APK above, open it in Files and allow installation from that source. Requires Android 8.0+, an updated Android System WebView and WebGL 2. All models, textures and audio are included, with no Internet, storage, microphone or tracking permission. v0.22.0 / versionCode **2200** reuses the existing release certificate. Install over the previous release to preserve app-local saves/settings; uninstalling clears them. Old lower-floor/stair checkpoints migrate to the new layout.
+**Android:** download the APK above, open it in Files and allow installation from that source. Requires Android 8.0+, an updated Android System WebView and WebGL 2. All models, textures and audio are included, with no Internet, storage, microphone or tracking permission. v0.23.0 / versionCode **2300** reuses the existing release certificate. Install over the previous release to preserve app-local saves/settings; uninstalling clears them. Existing prison saves can explore the new Cell 015 route without starting over.
 
 **iPhone/iPad:** WebKit gameplay and production offline-cache checks pass. The public link still returns 404 because Pages is not configured: the repository owner must select **Settings → Pages → Source: GitHub Actions**, then rerun the Pages workflow. Once published, open the HTTPS game in **Safari → Share → Add to Home Screen**, turn off Portrait Orientation Lock and rotate horizontally. [iOS guide and exact hosting blocker](docs/IOS.md). Physical iPhone testing and a native signed IPA are still pending.
 
-For desktop/offline web play, extract the ZIP and open `Hirodora-0.22.0.html` in a full WebGL 2 browser. Download links bypass GitHub's large-file preview. Exact sizes and SHA-256 checksums are in the download manifests.
+For desktop/offline web play, extract the ZIP and open `Hirodora-0.23.0.html` in a full WebGL 2 browser. Download links bypass GitHub's large-file preview. Exact sizes and SHA-256 checksums are in the download manifests.
 
 ## How to finish the current chapter
 

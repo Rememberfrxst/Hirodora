@@ -1,0 +1,307 @@
+{
+  "config": {
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "/workspace/Hirodora/node_modules/.bin/playwright",
+      "test",
+      "tests/escape-route.spec.ts",
+      "tests/ballistics.spec.ts",
+      "tests/update22.spec.ts",
+      "--grep",
+      "Cell 015 route|route checkpoint|actual skin ray|white bolt",
+      "--reporter=json"
+    ],
+    "configFile": "/workspace/Hirodora/playwright.config.ts",
+    "rootDir": "/workspace/Hirodora/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/workspace/Hirodora/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/workspace/Hirodora/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/workspace/Hirodora/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "/workspace/Hirodora/tests",
+        "snapshotDir": "/workspace/Hirodora/tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 120000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4104",
+          "viewport": {
+            "width": 1100,
+            "height": 720
+          },
+          "launchOptions": {
+            "executablePath": "/usr/bin/chromium",
+            "args": [
+              "--no-sandbox",
+              "--use-angle=swiftshader",
+              "--enable-unsafe-swiftshader"
+            ]
+          },
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "ballistics.spec.ts",
+      "file": "ballistics.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "actual skin ray hits deal 100 twice or one headshot, corpses persist and New game resets them",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 39669,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T20:54:36.601Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "318c54d6ab8f2090ffbb-96b5ca5f1d5d8881ee02",
+          "file": "ballistics.spec.ts",
+          "line": 112,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "escape-route.spec.ts",
+      "file": "escape-route.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Cell 015 route: real entry, gated rooms, 50-damage gunfire, checkpoint respawn, tunnel and boat",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 35928,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T20:55:16.717Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4a0d7af69c69685de3da-27f7223fa31ab206e878",
+          "file": "escape-route.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "route checkpoint survives reload and New game restores the original prison",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 45582,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T20:55:52.688Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4a0d7af69c69685de3da-41cb89ddbb6726b1a466",
+          "file": "escape-route.spec.ts",
+          "line": 199,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "update22.spec.ts",
+      "file": "update22.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "touch object meters",
+          "file": "update22.spec.ts",
+          "line": 124,
+          "column": 6,
+          "specs": [
+            {
+              "title": "white bolt progress and red risk stay visible on touch; releasing retains progress",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 47310,
+                      "error": {
+                        "message": "Error: browserContext.close: ENOENT: no such file or directory, open '/workspace/Hirodora/test-results/.playwright-artifacts-0/traces/9c988d04dedd91ff297f-0ae4f8ec2b4f9b4d970e-recording6.network'",
+                        "stack": "Error: browserContext.close: ENOENT: no such file or directory, open '/workspace/Hirodora/test-results/.playwright-artifacts-0/traces/9c988d04dedd91ff297f-0ae4f8ec2b4f9b4d970e-recording6.network'"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserContext.close: ENOENT: no such file or directory, open '/workspace/Hirodora/test-results/.playwright-artifacts-0/traces/9c988d04dedd91ff297f-0ae4f8ec2b4f9b4d970e-recording6.network'"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-28T20:56:38.305Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/workspace/Hirodora/test-results/update22-touch-object-mete-abb8b--releasing-retains-progress/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/workspace/Hirodora/test-results/update22-touch-object-mete-abb8b--releasing-retains-progress/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/workspace/Hirodora/test-results/update22-touch-object-mete-abb8b--releasing-retains-progress/trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "9c988d04dedd91ff297f-0ae4f8ec2b4f9b4d970e",
+              "file": "update22.spec.ts",
+              "line": 130,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-28T20:54:34.817Z",
+    "duration": 171163.411,
+    "expected": 3,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

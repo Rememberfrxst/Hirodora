@@ -186,6 +186,46 @@ if (process.env.VERIFY_PISTOL === "true") {
   )
     throw Error("APK pistol UI failed");
 }
+let escape;
+if (process.env.VERIFY_ESCAPE === "true") {
+  const cp = await page.evaluate(() =>
+    JSON.parse(localStorage.getItem("hirodora-checkpoint-v3") || "null"),
+  );
+  if (!cp) throw Error("No packaged checkpoint for route restore check");
+  cp.region = "military";
+  cp.playerPosition = [182, 0, 0];
+  cp.playerRotationY = -Math.PI / 2;
+  cp.name =
+    "Cross the military compound. Clear island sentries and open the dock gate.";
+  cp.flags.route_command_clear = true;
+  cp.flags.intro_pending = false;
+  cp.flags.intro_done = true;
+  cp.stats.health = 200;
+  cp.stats.pistolAmmo = 6;
+  cp.stats.act = 1;
+  cp.inventory = ["pistol_10mm"];
+  cp.equippedItem = "pistol_10mm";
+  await page.addInitScript(
+    (cp) => localStorage.setItem("hirodora-checkpoint-v3", JSON.stringify(cp)),
+    cp,
+  );
+  await page.reload();
+  await page.locator("[data-start]").tap({ timeout: 120000 });
+  await page
+    .getByRole("button", { name: "Ask Munshi for a hint", exact: true })
+    .tap();
+  await page.waitForFunction(
+    () => document.body.innerText.includes("10 armed guards remain"),
+    null,
+    { timeout: 120000 },
+  );
+  escape = {
+    region: "military",
+    restoredFromCheckpoint: true,
+    hint: await page.locator(".hint-toast p").innerText(),
+  };
+  await page.screenshot({ path: `${captureDir}/apk-island-compound.png` });
+}
 const workers = await page.evaluate(
   async () => (await navigator.serviceWorker.getRegistrations()).length,
 );
@@ -202,6 +242,7 @@ const report = {
   pageErrors: errors,
   serviceWorkers: workers,
   pistol,
+  escape,
 };
 await writeFile(
   `${captureDir}/apk-assets-smoke.json`,

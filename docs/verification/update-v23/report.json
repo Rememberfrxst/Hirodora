@@ -1,0 +1,265 @@
+{
+  "version": "0.23.0",
+  "unitPassed": 85,
+  "chromiumSelectedPassed": 4,
+  "webkitSelectedPassed": 2,
+  "wholeBrowserSuiteRerun": false,
+  "runs": [
+    {
+      "file": "chromium-route-initial.json",
+      "engine": "chromium",
+      "stats": {
+        "startTime": "2026-10-28T20:46:41.855Z",
+        "duration": 70509.917,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "chromium-route-focused.json",
+      "engine": "chromium",
+      "stats": {
+        "startTime": "2026-10-28T20:49:11.631Z",
+        "duration": 96620.78,
+        "expected": 2,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "chromium-trace-collision.json",
+      "engine": "chromium",
+      "stats": {
+        "startTime": "2026-10-28T20:54:34.817Z",
+        "duration": 171163.411,
+        "expected": 3,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "webkit-trace-collision.json",
+      "engine": "webkit",
+      "stats": {
+        "startTime": "2026-10-28T20:56:45.767Z",
+        "duration": 65054.05,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "chromium-release.json",
+      "engine": "chromium",
+      "stats": {
+        "startTime": "2026-10-28T20:58:31.011Z",
+        "duration": 184126.319,
+        "expected": 4,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "webkit-release.json",
+      "engine": "webkit",
+      "stats": {
+        "startTime": "2026-10-28T20:58:33.695Z",
+        "duration": 55391.772000000004,
+        "expected": 2,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "chromium: Cell 015 route: real entry, gated rooms, 50-damage gunfire, checkpoint respawn, tunnel and boat",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: route checkpoint survives reload and New game restores the original prison",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: actual skin ray hits deal 100 twice or one headshot, corpses persist and New game resets them",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: white bolt progress and red risk stay visible on touch; releasing retains progress",
+      "status": "passed"
+    },
+    {
+      "name": "webkit: Cell 015 route: real entry, gated rooms, 50-damage gunfire, checkpoint respawn, tunnel and boat",
+      "status": "passed"
+    },
+    {
+      "name": "webkit: white bolt progress and red risk stay visible on touch; releasing retains progress",
+      "status": "passed"
+    }
+  ],
+  "captures": [
+    {
+      "name": "01-pistol-and-taller-officer",
+      "position": [
+        -39,
+        1.68,
+        0
+      ],
+      "target": [
+        -39,
+        1.4,
+        6
+      ],
+      "region": "prison",
+      "activeOfficers": 9,
+      "drawCalls": 290,
+      "triangles": 2358680,
+      "sha256": "d7401e84724bd8918cba81a26a74bf1fc6692c0501d1c271917d075c385939d2"
+    },
+    {
+      "name": "02-cell015-hidden-door",
+      "position": [
+        -50,
+        -2.12,
+        -8.2
+      ],
+      "target": [
+        -50,
+        -2.4499999999999997,
+        -11.2
+      ],
+      "region": "prison",
+      "activeOfficers": 9,
+      "drawCalls": 189,
+      "triangles": 1573086,
+      "sha256": "48fd88ef6fa306391fe093a7ef92f682504bceeb5bc3c57353335b09867c06d6"
+    },
+    {
+      "name": "03-security-wing",
+      "position": [
+        102.7,
+        1.68,
+        6
+      ],
+      "target": [
+        111,
+        1.4,
+        5.8
+      ],
+      "region": "secret",
+      "activeOfficers": 6,
+      "drawCalls": 389,
+      "triangles": 441481,
+      "sha256": "3372fc006f1b13a889efc0e2ad5d25b7fae6bc1d1681af9ab967422f8cbf9033"
+    },
+    {
+      "name": "04-underground-passage",
+      "position": [
+        132,
+        -2.32,
+        13
+      ],
+      "target": [
+        132,
+        -2.4,
+        32
+      ],
+      "region": "secret",
+      "activeOfficers": 6,
+      "drawCalls": 30,
+      "triangles": 18545,
+      "sha256": "91b31e721fb820ce74708d4072a4cb5fc999ccfb2e10148e42bde2f321b485d4"
+    },
+    {
+      "name": "05-island-military",
+      "position": [
+        184,
+        1.68,
+        0
+      ],
+      "target": [
+        248,
+        1.8,
+        0
+      ],
+      "region": "military",
+      "activeOfficers": 10,
+      "drawCalls": 481,
+      "triangles": 142183,
+      "sha256": "c80e38c85d1a32e5055c08663626c4a31c4e681e7334ea9bdeb8cf5e1cf5a599"
+    },
+    {
+      "name": "06-escape-boat",
+      "position": [
+        281,
+        1.68,
+        1.7
+      ],
+      "target": [
+        287,
+        0.7,
+        0
+      ],
+      "region": "military",
+      "activeOfficers": 10,
+      "drawCalls": 44,
+      "triangles": 18811,
+      "sha256": "576ea08054ee9a474967d97d5e7b20e668316befdaff86a52f43930d69758100"
+    }
+  ],
+  "chapters": {
+    "securityRooms": 3,
+    "securityGuards": 6,
+    "tunnelFloorY": -4,
+    "militaryMetres": [
+      110,
+      70
+    ],
+    "militaryGuards": 10
+  },
+  "combat": {
+    "playerHP": 200,
+    "enemyBulletDamage": 50,
+    "playerBodyDamage": 100,
+    "playerHeadDamage": 200,
+    "automaticRespawnSeconds": 2,
+    "safeMilestonesOnly": true
+  },
+  "web": {
+    "version": "0.23.0",
+    "archive": "Hirodora-0.23.0-offline.zip",
+    "html": "Hirodora-0.23.0.html",
+    "sha256": "18d7a824c2f2b71865bb5b6a196d72430132fc8692f001a7ebd5ec50635fa13f",
+    "bytes": 38695188
+  },
+  "apk": {
+    "version": "0.23.0",
+    "file": "Hirodora-0.23.0-android.apk",
+    "bytes": 38692907,
+    "sha256": "6038c7a59348f3066a0ae99be0d84e82c3d0763410367daded1f08a8831cb296",
+    "certificateSHA256": "d7175da40c348c91e8a8663635d3a130115aba916e5ce889e40b646c009f33ca",
+    "minAndroid": "8.0 (API 26)",
+    "targetApi": 35,
+    "architecture": "Universal; uses installed Android System WebView",
+    "distribution": "Signed release APK; offline assets included; no network permission"
+  },
+  "knownLimits": [
+    "Modular first-playable route; not final AAA art or a fully continuous open world. Door/ladder interactions transition between isolated chapters.",
+    "Selected browser tests seed later enemy-death states for gate/victory assertions; this is not a full human combat playthrough.",
+    "No physical iPhone or Android performance/thermal certification, native signed IPA or completed public Pages configuration."
+  ],
+  "testNotes": [
+    "Initial skin-ray fixture sampled the newly reset officer before animation crossfade settled. It now settles the real rig and verifies two actual body hits.",
+    "Concurrent Chromium/WebKit runners originally shared test-results and collided during trace cleanup. Release reruns use independent output directories; all six selected cases pass.",
+    "The anatomical unit check rejected a 100.97-degree finger bend during tuning. The final grip preserves segment lengths and keeps adjacent finger bends below 90 degrees.",
+    "Final post-test visual corrections preserve sign UVs, keep dock water unsupported and hollow the boat hull. Package build/check and APK smoke use those final files.",
+    "APK payload smoke runs the actual signed archive locally in mobile Chromium, including a restored military checkpoint with the ten-guard hint. It is not a physical Android run."
+  ]
+}

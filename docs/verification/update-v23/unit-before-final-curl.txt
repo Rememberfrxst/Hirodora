@@ -1,0 +1,113 @@
+
+> hirodora@0.22.0 test
+> tsx --test src/game/*.test.ts
+
+✔ supplied Warrior is a credited textured mesh and held arm retains real finger anatomy (51.020945ms)
+✔ stairs begin opposite Cell 048 and 036 with actual upper-floor openings and taller lower cells (1.427235ms)
+✔ three-layer navigation preserves the upper gallery above stair bottoms and descends either flight (24.910111ms)
+✔ checkpoints migrate lower height and old stairs without changing original puzzle cells (1.679756ms)
+✔ every fitted tread remains climbable, and footsteps distinguish stairs from their underpass (0.671724ms)
+✔ every licensed recording has a valid hashed MP3 derivative for Safari without Ogg support (62.846154ms)
+✔ 10mm body hits deal 100 and exactly two defeat a 200 HP officer (1.88055ms)
+✔ one head hit is lethal, dead bodies cannot take negative HP (0.256928ms)
+✔ dead guards do not recover, chase or attack even with fresh sight/noise (0.381245ms)
+✔ uploaded gun and can are credited real PBR GLBs with stable metre bounds (62.902885ms)
+✔ three supplied wood assets retain embedded licensed materials, valid geometry and actual stair surfaces (62.397236ms)
+✔ guard approach uses the expanded corridor and respects open gates on either row (1.826147ms)
+✔ 48 distinct large cells have 12 per side per floor around a 12m atrium (0.600056ms)
+✔ opening cell boundaries, original gates and story locks stay compatible (0.259311ms)
+✔ navigation covers the far west and opposite row without wall shortcuts (3.443309ms)
+✔ all 48 small sliding leaves park within their own full-width cell frontage (0.995753ms)
+✔ sliding motion is bounded, remains horizontal and can snap restored checkpoints (0.612735ms)
+✔ melee has a visible windup, a single contact instant and cooldown (1.364821ms)
+✔ escaping, solid cover and knock-out can cancel damage without delayed phantom hits (0.232972ms)
+✔ 200 HP takes eight 25-damage hits; checkpoints migrate safely and never heal during play (0.213913ms)
+✔ Cell 041/054 crossing has continuous support on top and clear passage below (13.698934ms)
+✔ uploaded CC BY bridge retains real UV/PBR geometry, fitted deck and documented hashes (34.771906ms)
+✔ landscape request enters fullscreen before locking orientation (2.191699ms)
+✔ unsupported and denied display APIs fall back without throwing (0.66887ms)
+✔ installed fullscreen apps do not re-enter fullscreen before locking (0.265981ms)
+✔ cell GLB includes the five authored fixtures with valid normals, UVs and finite geometry (61.633764ms)
+✔ matched scene captures preserve original colliders, doors and interactions (2.818055ms)
+✔ enemy bullets deal 50: four confirmed hits defeat 200 HP; lost sight cancels aim (1.290488ms)
+✔ hidden rooms, underground tunnel and military dock have bounded support and patrol routes (30.402784ms)
+✔ supplied CC BY hands retain real skin/PBR, two independent rigs and documented source hashes (22.218046ms)
+✖ uploaded hand preserves key contacts and uses bounded pistol finger bends without wrist twisting (15.771893ms)
+✔ audible furniture crash starts investigation at the object, never a blind chase (2.675149ms)
+✔ sight builds at 35/sec: suspicion at 35, confirmation at 65; pure decisions (0.5829ms)
+✔ confirmation time is independent of simulation frame rate (2.43732ms)
+✔ chase pursues only last seen point, loses sight at five seconds, reacquires immediately (0.335497ms)
+✔ search scans a fixed origin, times out and returns to patrol without hidden tracking (0.374365ms)
+✔ local hearing investigates the source, not the player; sound alone cannot confirm a chase (0.42377ms)
+✔ hearing retains a source while suspicion builds over multiple real-sized frames (0.371551ms)
+✔ one event cannot replay its onset boost; new evidence resets an active search (0.187393ms)
+✔ capture requires confirmed sight and an unblocked physical route; knock-out recovery searches (0.648279ms)
+✔ 3D sight respects solid walls, low cover, FOV, crouch and hiding (0.697814ms)
+✔ hearing attenuates distance and walls, expires, preserves source and ignores far events (0.316337ms)
+✔ hero GLB has complete embedded PBR, valid skin weights and matching skeleton (188.420411ms)
+✔ mobile GLB has complete embedded PBR, valid skin weights and matching skeleton (69.327116ms)
+✔ distant GLB has complete embedded PBR, valid skin weights and matching skeleton (26.082421ms)
+✔ officer visual states cover locomotion, perception, turns and non-lethal collapse (0.780138ms)
+✔ visual turning takes the short path across the +/- pi seam (0.209546ms)
+✔ mobile pockets dock below compact joystick and lift above large or mirrored controls (1.098769ms)
+✔ damaged or unavailable stored HUD restores a valid default (1.614397ms)
+✔ left handed preset mirrors the action cluster and movement zone (0.163898ms)
+✔ intro orders open, escape, shot, approach, lock and inspection before release (3.724624ms)
+✔ five supplied dialogue clips have stable bytes, ordered non-overlapping cues and matching captions (15.753461ms)
+✔ settings validate saved ranges and recover from corrupted storage (1.254084ms)
+✔ prisoner is a complete clothed skinned GLB with local textures and skeletal death motion (71.324311ms)
+✔ practical lights keep four stable slots, hysteresis and zero-intensity rebinding (4.09336ms)
+✔ sidearm has an open trigger guard, separate hardware, muzzle flash and bounded human scale (20.231126ms)
+✔ diagonal movement is no faster than forward movement (0.759487ms)
+✔ body radius stops both players and guards at solid walls (0.179931ms)
+✔ path search routes around a wall without cutting corners (1.820719ms)
+✔ a sealed destination has no manufactured route through walls (11.728609ms)
+✔ navigation avoids furniture at any height and reserves body-radius clearance (0.349427ms)
+✔ jump has a bounded arc and lands once without sinking below the floor (0.316198ms)
+✔ held-action foley uses distinct licensed material recordings, without replacing guard speech (12.017104ms)
+✔ voice priority protects intelligibility and intensity cannot become invalid gain (0.267244ms)
+✔ new close-up captures preserve all gameplay dimensions and interaction prerequisites (2.991668ms)
+✔ opening reveals the key identity only after trying the door and keeps the tool sequence (0.77492ms)
+✔ hold progress is bounded, incremental and frame-rate independent at supported timesteps (0.367716ms)
+✔ caught meter rises with contact, cools when released, and is independent of saved work (0.848561ms)
+✔ all audio recordings have verified local bytes, redistribution licenses and attribution (33.160027ms)
+✔ safe first-run preset protects mobile, low-memory and software devices (0.711204ms)
+✔ adaptive scale falls quickly under pressure and recovers carefully (0.203448ms)
+✔ six-shot magazines migrate old saves safely; reload timing is bounded and reserve is unlimited (0.954581ms)
+✔ iPhone and desktop-mode iPad get mobile controls; interrupted Safari audio can resume (0.219622ms)
+✔ Noise decay reduces noise over time toward zero (1.2917ms)
+✔ Sound masking halves player noise when within machine radius (0.219331ms)
+✔ Guard heard noise attenuates with distance and wall obstruction (0.332392ms)
+✔ Guard vision cone detects player standing vs hidden/crouching (0.234524ms)
+✔ Guard state transitions from patrol to suspicious and chase on sight (0.63608ms)
+✔ Silencer crafting combines pipe, steel wool, and rubber washer (0.201745ms)
+✔ Arm wrestling step updates progress based on player taps and surge cycles (0.262296ms)
+✔ Lockpicking detects sweet spot within tolerance (0.276437ms)
+✔ Safe cracking detects aligned tumbler number (0.325982ms)
+✔ Ending evaluation rewards ghost stealth and optional brotherhood rescue (0.309928ms)
+✔ supplied GLBs retain real textured geometry, attribution and metre/floor normalization (40.252181ms)
+✔ Rock Wall 16 is a complete 2K dielectric PBR set with correct hashes and valid normal data (338.271607ms)
+ℹ tests 85
+ℹ suites 0
+ℹ pass 84
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2653.957264
+
+✖ failing tests:
+
+test at src/game/grip.test.ts:66:1
+✖ uploaded hand preserves key contacts and uses bounded pistol finger bends without wrist twisting (15.771893ms)
+  AssertionError [ERR_ASSERTION]: Middle: joint must not fold backwards
+      at TestContext.<anonymous> (/workspace/Hirodora/src/game/grip.test.ts:114:14)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

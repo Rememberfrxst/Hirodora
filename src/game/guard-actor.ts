@@ -315,7 +315,7 @@ export class GuardActor {
       // Actual unposed bounds normalize feet-to-scalp to the gameplay height.
       const bounds = new THREE.Box3().setFromObject(model);
       model.scale.setScalar(
-        (captain ? 1.84 : 1.8) / (bounds.max.y - bounds.min.y),
+        (captain ? 1.99 : 1.95) / (bounds.max.y - bounds.min.y),
       );
       model.position.y = -bounds.min.y * model.scale.y;
       model.name = "Officer_" + tier;

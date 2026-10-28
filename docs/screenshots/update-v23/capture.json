@@ -1,0 +1,108 @@
+{
+  "method": "Actual high-quality game renders. Fixed inspection cameras and frozen patrol poses; not recorded combat or a physical-device FPS benchmark.",
+  "captures": [
+    {
+      "name": "01-pistol-and-taller-officer",
+      "position": [
+        -39,
+        1.68,
+        0
+      ],
+      "target": [
+        -39,
+        1.4,
+        6
+      ],
+      "region": "prison",
+      "activeOfficers": 9,
+      "drawCalls": 290,
+      "triangles": 2358680
+    },
+    {
+      "name": "02-cell015-hidden-door",
+      "position": [
+        -50,
+        -2.12,
+        -8.2
+      ],
+      "target": [
+        -50,
+        -2.4499999999999997,
+        -11.2
+      ],
+      "region": "prison",
+      "activeOfficers": 9,
+      "drawCalls": 189,
+      "triangles": 1573086
+    },
+    {
+      "name": "03-security-wing",
+      "position": [
+        102.7,
+        1.68,
+        6
+      ],
+      "target": [
+        111,
+        1.4,
+        5.8
+      ],
+      "region": "secret",
+      "activeOfficers": 6,
+      "drawCalls": 389,
+      "triangles": 441481
+    },
+    {
+      "name": "04-underground-passage",
+      "position": [
+        132,
+        -2.32,
+        13
+      ],
+      "target": [
+        132,
+        -2.4,
+        32
+      ],
+      "region": "secret",
+      "activeOfficers": 6,
+      "drawCalls": 30,
+      "triangles": 18545
+    },
+    {
+      "name": "05-island-military",
+      "position": [
+        184,
+        1.68,
+        0
+      ],
+      "target": [
+        248,
+        1.8,
+        0
+      ],
+      "region": "military",
+      "activeOfficers": 10,
+      "drawCalls": 481,
+      "triangles": 142183
+    },
+    {
+      "name": "06-escape-boat",
+      "position": [
+        281,
+        1.68,
+        1.7
+      ],
+      "target": [
+        287,
+        0.7,
+        0
+      ],
+      "region": "military",
+      "activeOfficers": 10,
+      "drawCalls": 44,
+      "triangles": 18811
+    }
+  ],
+  "errors": []
+}

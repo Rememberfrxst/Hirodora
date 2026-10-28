@@ -457,6 +457,7 @@ export default function App() {
                 ending={engine.endingType}
                 stats={engine.stats}
                 onPlayAgain={() => engine.newGame()}
+                island={!!engine.gameFlags.island_escaped}
               />
             )}
           </>

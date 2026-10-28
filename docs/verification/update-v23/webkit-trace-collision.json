@@ -1,0 +1,234 @@
+{
+  "config": {
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "/workspace/Hirodora/node_modules/.bin/playwright",
+      "test",
+      "--config",
+      "playwright.webkit.config.ts",
+      "tests/escape-route.spec.ts",
+      "tests/update22.spec.ts",
+      "--grep",
+      "Cell 015 route|white bolt",
+      "--reporter=json"
+    ],
+    "configFile": "/workspace/Hirodora/playwright.webkit.config.ts",
+    "rootDir": "/workspace/Hirodora/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/workspace/Hirodora/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/workspace/Hirodora/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 180000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/workspace/Hirodora/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "/workspace/Hirodora/tests",
+        "snapshotDir": "/workspace/Hirodora/tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 180000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4110",
+          "viewport": {
+            "width": 1100,
+            "height": 720
+          },
+          "launchOptions": {},
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "browserName": "webkit"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "escape-route.spec.ts",
+      "file": "escape-route.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Cell 015 route: real entry, gated rooms, 50-damage gunfire, checkpoint respawn, tunnel and boat",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 42978,
+                  "error": {
+                    "message": "Error: browserContext.close: ENOENT: no such file or directory, open '/workspace/Hirodora/test-results/.playwright-artifacts-0/traces/4a0d7af69c69685de3da-27f7223fa31ab206e878.trace'",
+                    "stack": "Error: browserContext.close: ENOENT: no such file or directory, open '/workspace/Hirodora/test-results/.playwright-artifacts-0/traces/4a0d7af69c69685de3da-27f7223fa31ab206e878.trace'"
+                  },
+                  "errors": [
+                    {
+                      "message": "Error: browserContext.close: ENOENT: no such file or directory, open '/workspace/Hirodora/test-results/.playwright-artifacts-0/traces/4a0d7af69c69685de3da-27f7223fa31ab206e878.trace'"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [
+                    {
+                      "text": "Skipping host requirements validation logic because `PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS` env variable is set.\n"
+                    }
+                  ],
+                  "retry": 0,
+                  "startTime": "2026-10-28T20:56:51.463Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/workspace/Hirodora/test-results/escape-route-Cell-015-rout-eab02-int-respawn-tunnel-and-boat/test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/workspace/Hirodora/test-results/escape-route-Cell-015-rout-eab02-int-respawn-tunnel-and-boat/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/workspace/Hirodora/test-results/escape-route-Cell-015-rout-eab02-int-respawn-tunnel-and-boat/trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "4a0d7af69c69685de3da-27f7223fa31ab206e878",
+          "file": "escape-route.spec.ts",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "update22.spec.ts",
+      "file": "update22.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "touch object meters",
+          "file": "update22.spec.ts",
+          "line": 124,
+          "column": 6,
+          "specs": [
+            {
+              "title": "white bolt progress and red risk stay visible on touch; releasing retains progress",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 14482,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [
+                        {
+                          "text": "Skipping host requirements validation logic because `PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS` env variable is set.\n"
+                        }
+                      ],
+                      "retry": 0,
+                      "startTime": "2026-10-28T20:57:35.907Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9c988d04dedd91ff297f-0ae4f8ec2b4f9b4d970e",
+              "file": "update22.spec.ts",
+              "line": 130,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-28T20:56:45.767Z",
+    "duration": 65054.05,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

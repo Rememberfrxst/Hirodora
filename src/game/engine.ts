@@ -33,7 +33,16 @@ import {
   type NoiseEvent,
 } from "./perception";
 import { PracticalLightPool } from "./lighting";
-import { pathObstructed } from "./navigation";
+import { pathObstructed, findPath } from "./navigation";
+import { EscapeWorld } from "./escape-world";
+import {
+  ROUTE,
+  ENEMY_GUN,
+  routeSupport,
+  stepEnemyGun,
+  type EscapeRegion,
+} from "./escape-route";
+import { createSidearm } from "./sidearm";
 import { angleDelta } from "./guard-motion";
 import { PrisonerActor } from "./prisoner";
 import { OpeningCinematic } from "./cinematic";
@@ -280,6 +289,11 @@ export class GameEngine {
   public guardQuality: GuardQuality = "auto";
   public graphicsPreset: GraphicsPreset = "high";
   public guardActors = new Map<string, GuardActor>();
+  public region?: EscapeRegion;
+  public escapeWorld: EscapeWorld;
+  public respawnRemaining = 0;
+  private mainVisibility = new Map<THREE.Object3D, boolean>();
+  private enemyWeapons = new Map<string, ReturnType<typeof createSidearm>>();
   private guardAssets = new GuardAssetPool();
   private bodyActor?: PrisonerActor;
   private warriorActor?: WarriorActor;
@@ -368,6 +382,7 @@ export class GameEngine {
     );
     mountEl.appendChild(this.renderer.domElement);
     this.worldData = buildPrisonWorld(this.scene);
+    this.escapeWorld = new EscapeWorld(this.worldData);
     sound.occlusion = (position) => {
       const origin: [number, number, number] = [
         this.playerPos[0],
@@ -953,6 +968,8 @@ export class GameEngine {
   public returnToTitle() {
     this.cinematic?.hide();
     this.introPaused = false;
+    this.setRegion(undefined);
+    this.respawnRemaining = 0;
     this.gameState = "title";
     this.activeMiniGame = null;
     this.overlayOpen = false;
@@ -1029,6 +1046,13 @@ export class GameEngine {
     this.emitChange();
   }
   public triggerMunshiHint() {
+    if (this.region) {
+      this.notice(
+        this.activeObjective +
+          ` · ${this.activeGuards.filter((g) => !g.dead).length} armed guards remain. Enemy bullets: 50 HP. Use solid cover.`,
+      );
+      return;
+    }
     if (this.elapsed - this.hintTime < 20) {
       this.notice(
         "Munshi needs a moment. Another hint will be available in 20 seconds.",
@@ -1060,6 +1084,8 @@ export class GameEngine {
   }
 
   private blockers() {
+    if (this.region)
+      return this.escapeWorld.blockers(this.region, this.gameFlags);
     let signature =
       (this.gameFlags.locker_open ? 1 : 0) |
       (this.gameFlags.master_door_unlocked ? 2 : 0) |
@@ -1131,7 +1157,9 @@ export class GameEngine {
     if (this.stats.isInHidingSpot) return null;
     let closest: (typeof this.worldData.interactables)[number] | null = null,
       best = Infinity;
-    for (const obj of this.worldData.interactables) {
+    for (const obj of this.region
+      ? this.escapeWorld.actions.get(this.region) || []
+      : this.worldData.interactables) {
       if (obj.disabled) continue;
       if (obj.id === "pistol_10mm_pickup" || obj.id === "can_attach") {
         const root = this.worldData.pickupMeshes.get(obj.id)!;
@@ -1218,6 +1246,8 @@ export class GameEngine {
     this.emitChange();
   }
   public renderFrame(dt = 0.016) {
+    // Weapon IK follows the displayed frame, not every AI tick (mobile is 30 fps).
+    for (const g of this.activeGuards) if (g.armed) this.updateEnemyWeapon(g);
     const item =
       this.activeHold === "toilet_bolts" ? "screwdriver" : this.equippedItem;
     const direction = new THREE.Vector3(0, 0, -1).applyQuaternion(
@@ -1272,6 +1302,10 @@ export class GameEngine {
     }
     const obj = this.findClosestInteractable();
     if (!obj) return;
+    if (obj.id.startsWith("route_")) {
+      this.routeAction(obj.id);
+      return;
+    }
     if (obj.id === "pistol_10mm_pickup") {
       if (!this.inventory.includes("pistol_10mm"))
         this.inventory.push("pistol_10mm");
@@ -1779,6 +1813,7 @@ export class GameEngine {
   }
 
   private syncWorld(snapGates = false) {
+    this.escapeWorld.sync(this.gameFlags);
     const opening = !!this.gameFlags.opening_v3;
     // Keep Cell 46 available for exploration, including previously closed saves.
     if (opening) this.gameFlags.cell_46_open = true;
@@ -1928,8 +1963,298 @@ export class GameEngine {
     );
     boulder.rotation.z = this.gameFlags.boulder_rescued ? 0 : Math.PI / 2;
   }
-  private saveCheckpoint() {
+  public get activeGuards() {
+    return this.worldData.guards.filter((g) => g.region === this.region);
+  }
+  private supportAt(x: number, z: number, fromY: number) {
+    return this.region
+      ? routeSupport(this.region, x, z, fromY)
+      : supportHeight(x, z, fromY);
+  }
+  private setRegion(region?: EscapeRegion) {
+    if (region && this.mainVisibility.size === 0) {
+      for (const child of this.scene.children)
+        if (
+          ![...this.escapeWorld.roots.values()].includes(child as THREE.Group)
+        )
+          this.mainVisibility.set(child, child.visible);
+    }
+    if (region) {
+      this.escapeWorld.ensure(region);
+      for (const g of this.worldData.guards.filter((g) => g.region === region))
+        if (!this.guardActors.has(g.id)) {
+          const actor = this.guardAssets.create(
+            this.worldData.guardMeshes.get(g.id)!,
+            g.type === "night_captain",
+          );
+          this.guardActors.set(g.id, actor);
+          const weapon = createSidearm();
+          weapon.light.visible = false;
+          const tracer = new THREE.Line(
+            new THREE.BufferGeometry().setFromPoints([
+              new THREE.Vector3(),
+              new THREE.Vector3(),
+            ]),
+            new THREE.LineBasicMaterial({
+              color: 0xffdc9b,
+              transparent: true,
+              opacity: 0.5,
+            }),
+          );
+          tracer.visible = false;
+          weapon.root.userData.tracer = tracer;
+          this.escapeWorld.roots.get(region)!.add(tracer);
+          this.escapeWorld.roots.get(region)!.add(weapon.root);
+          this.enemyWeapons.set(g.id, weapon);
+          actor.update(g, 0, 0.05, this.camera, this.guardQuality, this.mobile);
+        }
+    }
+    this.region = region;
+    this.camera.far = region ? 150 : 90;
+    this.camera.updateProjectionMatrix();
+    for (const [child, visible] of this.mainVisibility)
+      child.visible = region ? false : visible;
+    for (const [key, root] of this.escapeWorld.roots)
+      root.visible = key === region;
+    this.escapeWorld.sync(this.gameFlags);
+    this.scene.background = new THREE.Color(
+      region === "military" ? 0x354b51 : 0x18252b,
+    );
+    this.scene.fog = new THREE.FogExp2(
+      region === "military" ? 0x354b51 : 0x344039,
+      region === "military" ? 0.012 : 0.033,
+    );
+    this.paths.clear();
+    this.pathGoals.clear();
+    this.noiseEvents = [];
+    this.collisionSignature = -1;
+  }
+  private routeCheckpoint(name: string) {
+    this.activeObjective = name;
+    this.stats.health = COMBAT.maxHealth;
+    this.stats.pistolAmmo = BALLISTICS.ammo;
+    this.damageGrace = 1.6;
+    this.saveCheckpoint(true);
+    this.notice("Checkpoint saved · " + name + " · HP 200 · magazine refilled");
+  }
+  private routeTravel(
+    region: EscapeRegion | undefined,
+    position: [number, number, number],
+    yaw: number,
+    name: string,
+  ) {
+    this.clearInput();
+    this.endInteract();
+    sound.resetSceneAudio();
+    this.setRegion(region);
+    this.playerPos = [...position];
+    this.playerRotY = yaw;
+    this.cameraPitch = 0;
+    this.reloadRemaining = 0;
+    this.nextPistolShot = 0;
+    this.stats.isInHidingSpot = false;
+    this.stats.isCrouching = false;
+    this.syncWorld(true);
+    this.move(0);
+    this.routeCheckpoint(name);
+    this.emitChange();
+  }
+  private routeAction(id: string) {
+    if (id === "route_enter") {
+      if (!this.inventory.includes("pistol_10mm")) {
+        this.notice(
+          "Armed security beyond this door. Find the pistol on Cell 46's table first.",
+        );
+        return;
+      }
+      this.equippedItem = "pistol_10mm";
+      this.routeTravel(
+        "secret",
+        [102, 0, 6],
+        -Math.PI / 2,
+        "Clear the three hidden security rooms beneath Cell 015.",
+      );
+      this.triggerSubtitle(
+        "KABIR RAO",
+        "A security wing behind Cell 015. Three rooms. There must be a way to the surface.",
+        "monologue",
+        7,
+      );
+    } else if (id === "route_return") {
+      const c = CELL_ROOMS.find((c) => c.number === 15)!;
+      this.routeTravel(
+        undefined,
+        [c.centerX, c.floorY, c.rear + 1.4],
+        Math.PI,
+        "Hidden security wing found in Cell 015.",
+      );
+    } else if (id === "route_gate_1" || id === "route_gate_2") {
+      const index = id === "route_gate_1" ? 1 : 2;
+      const alive = this.activeGuards.filter(
+        (g) => !g.dead && Number(g.id.split("_").at(-1)) < index * 2,
+      );
+      if (alive.length) {
+        this.notice(
+          `Security lockdown · defeat ${alive.length} remaining officer(s) in the cleared sectors.`,
+        );
+        return;
+      }
+      this.gameFlags[id] = true;
+      this.escapeWorld.sync(this.gameFlags);
+      this.routeTravel(
+        "secret",
+        [100 + index * 12 + 1, 0, 6],
+        -Math.PI / 2,
+        `Security sector ${index + 1} · find the maintenance hatch.`,
+      );
+    } else if (id === "route_hatch") {
+      const alive = this.activeGuards.filter((g) => !g.dead);
+      if (alive.length) {
+        this.notice(
+          `Command lockdown · ${alive.length} armed officer(s) remaining.`,
+        );
+        return;
+      }
+      this.gameFlags.route_command_clear = true;
+      this.routeTravel(
+        "secret",
+        [132, -4, 11.5],
+        Math.PI,
+        "Follow the underground service tunnel to the island compound.",
+      );
+    } else if (id === "route_climb_back")
+      this.routeTravel(
+        "secret",
+        [132, 0, 9.3],
+        0,
+        "Command room · maintenance hatch secured.",
+      );
+    else if (id === "route_military") {
+      if (!this.gameFlags.route_command_clear) {
+        this.notice("Secure the command wing first.");
+        return;
+      }
+      this.routeTravel(
+        "military",
+        [182, 0, 0],
+        -Math.PI / 2,
+        "Cross the military compound. Clear island sentries and open the dock gate.",
+      );
+      this.triggerSubtitle(
+        "KABIR RAO",
+        "The sea is beyond the eastern gate. Armed patrols everywhere. Use the barracks and cargo for cover.",
+        "monologue",
+        8,
+      );
+    } else if (id === "route_tunnel_return")
+      this.routeTravel(
+        "secret",
+        [132, -4, 32],
+        0,
+        "Return through the service tunnel.",
+      );
+    else if (id.startsWith("route_rally_")) {
+      const limit = id.endsWith("1") ? 4 : 8;
+      if (
+        this.activeGuards.some(
+          (g) => !g.dead && Number(g.id.split("_").at(-1)) < limit,
+        )
+      ) {
+        this.notice(
+          "Secure the earlier patrol sectors before activating this rally point.",
+        );
+        return;
+      }
+      this.routeCheckpoint("Island rally point · reach the evacuation dock.");
+      this.emitChange();
+    } else if (id === "route_sea_gate") {
+      const alive = this.activeGuards.filter((g) => !g.dead);
+      if (alive.length) {
+        this.notice(
+          `Dock lockdown · ${alive.length} island sentries still on duty.`,
+        );
+        return;
+      }
+      this.gameFlags.route_sea_gate = true;
+      this.escapeWorld.sync(this.gameFlags);
+      this.routeTravel(
+        "military",
+        [279, 0, 0],
+        -Math.PI / 2,
+        "The island is clear. Board the escape boat.",
+      );
+    } else if (id === "route_boat") {
+      if (!this.gameFlags.route_sea_gate) {
+        this.notice("Release dock security first.");
+        return;
+      }
+      this.gameFlags.island_escaped = true;
+      this.triggerVictory();
+    }
+  }
+  private updateEnemyWeapon(g: GuardData) {
+    const weapon = this.enemyWeapons.get(g.id),
+      actor = this.guardActors.get(g.id);
+    if (!weapon || !actor) return;
+    weapon.root.visible = !g.dead;
+    if (g.dead) return;
+    const screen = new THREE.Vector3(
+      g.position[0],
+      g.position[1] + 1.1,
+      g.position[2],
+    ).project(this.camera);
+    if (
+      Math.abs(screen.x) > 1.3 ||
+      Math.abs(screen.y) > 1.3 ||
+      screen.z > 1 ||
+      this.camera.position.distanceTo(actor.root.position) > 50
+    ) {
+      weapon.root.visible = false;
+      (weapon.root.userData.tracer as THREE.Line).visible = false;
+      return;
+    }
+    const aim = g.cinematicAim
+      ? [this.playerPos[0], this.playerPos[1] + 1.3, this.playerPos[2]]
+      : [
+          g.position[0] + Math.sin(g.rotationY) * 6,
+          g.position[1] + 1.1,
+          g.position[2] + Math.cos(g.rotationY) * 6,
+        ];
+    const grip = actor.weaponGrip(new THREE.Vector3(...aim));
+    weapon.root.position.copy(grip.position);
+    weapon.root.quaternion.copy(grip.quaternion);
+    weapon.flash.visible =
+      this.elapsed < (weapon.root.userData.flashUntil ?? 0);
+    const tracer = weapon.root.userData.tracer as THREE.Line;
+    tracer.visible = weapon.flash.visible;
+    if (tracer.visible) {
+      weapon.root.updateMatrixWorld(true);
+      tracer.geometry.setFromPoints([
+        weapon.root.localToWorld(new THREE.Vector3(0, 0.061, 0.17)),
+        new THREE.Vector3(
+          this.playerPos[0],
+          this.playerPos[1] + 1.25,
+          this.playerPos[2],
+        ),
+      ]);
+    }
+  }
+  public updateRespawn(dt: number) {
+    if (this.gameState !== "gameover" || this.respawnRemaining <= 0) return;
+    this.respawnRemaining = Math.max(0, this.respawnRemaining - dt);
+    if (this.respawnRemaining === 0) {
+      this.restartGame();
+      this.damageGrace = 1.6;
+      this.move(0);
+      this.notice("Restored last safe checkpoint.");
+    }
+  }
+  private saveCheckpoint(force = false) {
+    // Combat chapters save only at explicit safe milestones, not every shot,
+    // equipment change or pause with 50 HP and a bullet already on its way.
+    if (this.region && !force) return;
     this.checkpoint = {
+      region: this.region,
       id: "checkpoint",
       layoutVersion: LAYOUT_VERSION,
       guardCombat: this.worldData.guards.map((g) => ({
@@ -1981,6 +2306,12 @@ export class GameEngine {
     } catch {}
   }
   public restoreCheckpoint(cp: GameCheckpoint) {
+    this.setRegion(
+      cp.region === "secret" || cp.region === "military"
+        ? cp.region
+        : undefined,
+    );
+    this.respawnRemaining = 0;
     this.caughtMeter = 0;
     this.caughtClatterLatched = false;
     this.jumpHeight = 0;
@@ -2059,6 +2390,8 @@ export class GameEngine {
       g.lastNoiseId = undefined;
       g.attackElapsed = undefined;
       g.attackCooldown = 0;
+      g.shotWindup = undefined;
+      g.shotCooldown = 1.6;
       g.crouchInspect = false;
       const combat = cp.guardCombat?.find((saved) => saved.id === g.id);
       g.health =
@@ -2193,7 +2526,7 @@ export class GameEngine {
       const p = ray.ray.intersectBox(b, new THREE.Vector3());
       if (p) stop = Math.min(stop, p.distanceTo(this.camera.position));
     }
-    const hits = this.worldData.guards
+    const hits = this.activeGuards
       .map((g) => ({
         g,
         hit: ray.intersectObject(
@@ -2299,6 +2632,7 @@ export class GameEngine {
     this.gameOverReason = reason;
     this.stats.timesCaught++;
     this.gameState = "gameover";
+    if (this.region) this.respawnRemaining = 2;
     this.clearInput();
     sound.playDefeatSting();
     document.exitPointerLock?.();
@@ -2318,6 +2652,7 @@ export class GameEngine {
       this.frameId = requestAnimationFrame(this.tick);
       return;
     }
+    this.updateRespawn(dt);
     if (this.gameState === "playing" && !this.overlayOpen) {
       this.elapsed += dt;
       this.updateReload(dt);
@@ -2461,7 +2796,7 @@ export class GameEngine {
       ]) {
         const x = this.playerPos[0] + ax,
           z = this.playerPos[2] + az;
-        const y = supportHeight(x, z, this.playerPos[1]);
+        const y = this.supportAt(x, z, this.playerPos[1]);
         if (y !== undefined && !bodyBlocked(x, y, z, blocks))
           this.playerPos = [x, y, z];
       }
@@ -2559,15 +2894,22 @@ export class GameEngine {
     const replan = this.pathTime <= 0;
     if (replan) this.pathTime = 0.65;
     const blocks = this.blockers();
-    const opaque = this.gameFlags.passage_open
-      ? this.worldData.visionColliders
-      : [
-          ...this.worldData.visionColliders,
-          this.worldData.opening.passageBounds,
-        ];
-    for (const guard of this.worldData.guards) {
+    const opaque = this.region
+      ? blocks
+      : this.gameFlags.passage_open
+        ? this.worldData.visionColliders
+        : [
+            ...this.worldData.visionColliders,
+            this.worldData.opening.passageBounds,
+          ];
+    for (const guard of this.activeGuards) {
       const mesh = this.worldData.guardMeshes.get(guard.id)!;
       if (guard.dead) {
+        const weapon = this.enemyWeapons.get(guard.id);
+        if (weapon) {
+          weapon.root.visible = false;
+          (weapon.root.userData.tracer as THREE.Line).visible = false;
+        }
         guard.deathElapsed = Math.min(10, (guard.deathElapsed ?? 0) + dt);
         this.guardActors
           .get(guard.id)
@@ -2577,11 +2919,18 @@ export class GameEngine {
       const examiner =
         !!this.gameFlags.opening_v3 && guard.id === "guard_dunne";
       const approach = (point: [number, number, number] | undefined) =>
-        cellApproachTarget(
-          point && evidenceTarget(point),
-          guard.position,
-          (number) => this.doorIsOpen(`cell_${number}_door`),
-        );
+        this.region
+          ? point &&
+            ([point[0], guard.position[1], point[2]] as [
+              number,
+              number,
+              number,
+            ])
+          : cellApproachTarget(
+              point && evidenceTarget(point),
+              guard.position,
+              (number) => this.doorIsOpen(`cell_${number}_door`),
+            );
       const oldTarget = approach(guard.investigationTarget);
       const vision = sightEvidence(
         guard,
@@ -2616,6 +2965,51 @@ export class GameEngine {
         dt,
       );
       Object.assign(guard, decision.next);
+      if (guard.armed) {
+        const clear =
+          guard.state === "chase" &&
+          vision > 0 &&
+          !wall &&
+          !this.stats.isInHidingSpot &&
+          Math.abs(guard.position[1] - this.playerPos[1]) < 0.65 &&
+          Math.hypot(
+            guard.position[0] - this.playerPos[0],
+            guard.position[2] - this.playerPos[2],
+          ) < ENEMY_GUN.range;
+        const shot = stepEnemyGun(
+          guard.shotWindup,
+          guard.shotCooldown ?? 1.6,
+          clear,
+          dt,
+        );
+        guard.shotWindup = shot.windup;
+        guard.shotCooldown = shot.cooldown;
+        guard.cinematicAim = clear;
+        if (clear)
+          guard.rotationY = Math.atan2(
+            this.playerPos[0] - guard.position[0],
+            this.playerPos[2] - guard.position[2],
+          );
+        if (shot.fire) {
+          sound.playGunshot(guard.position);
+          this.emitNoise(100, "enemy-shot-" + guard.id, guard.position);
+          const weapon = this.enemyWeapons.get(guard.id);
+          if (weapon) weapon.root.userData.flashUntil = this.elapsed + 0.08;
+          this.stats.health = Math.max(0, this.stats.health - ENEMY_GUN.damage);
+          this.damageFeedback = 0.4;
+          this.endInteract();
+          sound.playPlayerHit(guard.position);
+          this.emitChange();
+          if (this.stats.health === 0) {
+            this.triggerGameOver(
+              "Shot by " +
+                guard.name +
+                ". Returning to your last safe checkpoint…",
+            );
+            break;
+          }
+        }
+      }
       if (guard.state === "chase" && prev !== "chase") {
         this.stats.alarmsTriggered++;
         this.triggerSubtitle(
@@ -2646,7 +3040,7 @@ export class GameEngine {
             guard.position[2] - this.playerPos[2],
           ) <= 1.25,
         dt,
-        guard.state === "chase",
+        guard.state === "chase" && !guard.armed,
       );
       if (guard.attackElapsed === undefined && strike.elapsed !== undefined) {
         guard.attackKind = ((guard.attackIndex ?? 0) % 3) as 0 | 1 | 2;
@@ -2681,6 +3075,7 @@ export class GameEngine {
       if (
         guard.state !== "knocked_out" &&
         guard.attackElapsed === undefined &&
+        guard.shotWindup === undefined &&
         target &&
         Math.hypot(
           target[0] - beforeX,
@@ -2697,7 +3092,7 @@ export class GameEngine {
         if (
           pathObstructed([beforeX, beforeZ], destination, localBlocks) ||
           Math.abs(guard.position[1] - target[1]) > 0.3 ||
-          supportHeight(
+          this.supportAt(
             (beforeX + target[0]) / 2,
             (beforeZ + target[2]) / 2,
             guard.position[1],
@@ -2713,7 +3108,17 @@ export class GameEngine {
             this.pathGoals.set(guard.id, [...destination]);
             this.paths.set(
               guard.id,
-              findSurfacePath(guard.position, target, blocks),
+              this.region
+                ? findPath(
+                    [guard.position[0], guard.position[2]],
+                    [target[0], target[2]],
+                    localBlocks,
+                    ROUTE[this.region],
+                  ).map(
+                    ([x, z]) =>
+                      [x, guard.position[1], z] as [number, number, number],
+                  )
+                : findSurfacePath(guard.position, target, blocks),
             );
           }
           const path = this.paths.get(guard.id) ?? [];
@@ -2747,7 +3152,7 @@ export class GameEngine {
                   Math.hypot(
                     beforeX - this.playerPos[0],
                     beforeZ - this.playerPos[2],
-                  ) - COMBAT.standOff,
+                  ) - (guard.armed ? 7 : COMBAT.standOff),
                 )
               : Infinity;
           const step = Math.min(length, decision.speed * dt, clearance),
@@ -2759,7 +3164,7 @@ export class GameEngine {
           ]) {
             const x = guard.position[0] + ax,
               z = guard.position[2] + az;
-            const y = supportHeight(x, z, guard.position[1]);
+            const y = this.supportAt(x, z, guard.position[1]);
             if (y !== undefined && !bodyBlocked(x, y, z, blocks, 0.22))
               guard.position = [x, y, z];
           }
@@ -2812,7 +3217,7 @@ export class GameEngine {
   private updateEnvironment(dt: number) {
     if (this.stats.subtitle && (this.stats.subtitle.timeRemaining -= dt) <= 0)
       this.stats.subtitle = null;
-    if (this.stats.act === 3) {
+    if (this.stats.act === 3 && !this.region) {
       this.stats.tideTimeRemaining = Math.max(
         0,
         this.stats.tideTimeRemaining - dt,
@@ -2846,6 +3251,18 @@ export class GameEngine {
   }
   public dispose() {
     this.disposed = true;
+    for (const weapon of this.enemyWeapons.values()) {
+      weapon.root.traverse((o) => {
+        if (o instanceof THREE.Mesh) {
+          for (const m of Array.isArray(o.material) ? o.material : [o.material])
+            m.dispose();
+        }
+      });
+      const line = weapon.root.userData.tracer as THREE.Line;
+      line.geometry.dispose();
+      (line.material as THREE.Material).dispose();
+    }
+    this.escapeWorld.dispose();
     this.resizeObserver?.disconnect();
     this.events.abort();
     cancelAnimationFrame(this.frameId);

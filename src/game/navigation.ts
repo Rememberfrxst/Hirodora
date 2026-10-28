@@ -66,11 +66,12 @@ export function findPath(
   start: Point,
   goal: Point,
   obstacles: Obstacle[],
+  bounds: { minX: number; maxX: number; minZ: number; maxZ: number } = NAV_BOUNDS,
 ): Point[] {
   const step = 0.5,
-    origin: Point = [NAV_BOUNDS.minX, NAV_BOUNDS.minZ],
-    columns = Math.ceil((NAV_BOUNDS.maxX - NAV_BOUNDS.minX) / step) + 1,
-    rows = Math.ceil((NAV_BOUNDS.maxZ - NAV_BOUNDS.minZ) / step) + 1;
+    origin: Point = [bounds.minX, bounds.minZ],
+    columns = Math.ceil((bounds.maxX - bounds.minX) / step) + 1,
+    rows = Math.ceil((bounds.maxZ - bounds.minZ) / step) + 1;
   const cell = ([x, z]: Point): Point => [
     Math.round((x - origin[0]) / step),
     Math.round((z - origin[1]) / step),

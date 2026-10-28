@@ -61,15 +61,15 @@ export function poseGrip(
           ]
         : style === "pistol10" && !trigger10
           ? [
-              [-0.82, 0.4, 0],
-              [-0.2, -0.98, 0],
-              [0.9, -0.35, 0],
+              [-0.94, 0.342, 0],
+              [-0.38, -0.925, 0],
+              [0.55, -0.835, 0],
             ]
           : trigger10
             ? [
-                [0, 0.9, 0.33],
-                [-0.92, 0.05, 0.39],
-                [0.35, -0.8, 0],
+                [-0.12, 0.98, 0.14],
+                [-0.68, 0.72, 0.14],
+                [-0.88, 0.46, 0.12],
               ]
             : trigger
               ? [
@@ -134,29 +134,7 @@ export function poseGrip(
     }
     if (style === "power" && side === "Right")
       reach("Thumb", new THREE.Vector3(-0.005, 0.12, 0.03));
-    if (style === "pistol10" && side === "Right")
-      reach("Thumb", new THREE.Vector3(-0.012, 0.142, 0.033));
-    if (style === "pistol10") {
-      // Solve the two proximal segments to the actual 10mm trigger socket.
-      const a = point(side + "HandIndex1"),
-        target = new THREE.Vector3(-0.028, 0.17, 0.048),
-        direction = target.clone().sub(a),
-        distance = direction.length(),
-        unit = direction.normalize();
-      const l1 = arm.getObjectByName(side + "HandIndex2")!.position.length(),
-        l2 = arm.getObjectByName(side + "HandIndex3")!.position.length();
-      const along = (l1 * l1 - l2 * l2 + distance * distance) / (2 * distance),
-        height = Math.sqrt(Math.max(0, l1 * l1 - along * along));
-      const pole = new THREE.Vector3(0, 1, 0)
-        .addScaledVector(unit, -unit.y)
-        .normalize();
-      const middle = a
-        .clone()
-        .addScaledVector(unit, along)
-        .addScaledVector(pole, height);
-      aim(side + "HandIndex1", middle.clone().sub(a).toArray());
-      aim(side + "HandIndex2", target.sub(middle).toArray());
-      aim(side + "HandIndex3", [0.35, -0.8, 0]);
-    }
+    // Pistol contacts follow the anatomical pose, never an unreachable IK target.
+    // Keep the index's PIP/DIP flexion shallow and the other fingers below 90°.
   }
 }

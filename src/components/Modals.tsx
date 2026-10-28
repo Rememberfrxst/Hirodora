@@ -192,10 +192,12 @@ export function VictoryModal({
   ending,
   stats,
   onPlayAgain,
+  island = false,
 }: {
   ending: EndingType;
   stats: PlayerStats;
   onPlayAgain: () => void;
+  island?: boolean;
 }) {
   const copy = {
     ghost: [
@@ -217,8 +219,12 @@ export function VictoryModal({
         <span className="eyebrow">
           ESCAPE COMPLETE / {ending.toUpperCase()} ENDING
         </span>
-        <h2>{copy[ending][0]}</h2>
-        <p>{copy[ending][1]}</p>
+        <h2>{island ? "Beyond the island." : copy[ending][0]}</h2>
+        <p>
+          {island
+            ? "You broke through the hidden security wing, crossed the island defence compound and reached the escape boat. The prison lights disappear behind you."
+            : copy[ending][1]}
+        </p>
         <div className="ending-stats">
           <div>
             <strong>{stats.alarmsTriggered}</strong>

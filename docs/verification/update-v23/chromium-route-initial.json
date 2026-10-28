@@ -1,0 +1,226 @@
+{
+  "config": {
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "/workspace/Hirodora/node_modules/.bin/playwright",
+      "test",
+      "tests/escape-route.spec.ts",
+      "--reporter=json"
+    ],
+    "configFile": "/workspace/Hirodora/playwright.config.ts",
+    "rootDir": "/workspace/Hirodora/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/workspace/Hirodora/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/workspace/Hirodora/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/workspace/Hirodora/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "/workspace/Hirodora/tests",
+        "snapshotDir": "/workspace/Hirodora/tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 120000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4100",
+          "viewport": {
+            "width": 1100,
+            "height": 720
+          },
+          "launchOptions": {
+            "executablePath": "/usr/bin/chromium",
+            "args": [
+              "--no-sandbox",
+              "--use-angle=swiftshader",
+              "--enable-unsafe-swiftshader"
+            ]
+          },
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "escape-route.spec.ts",
+      "file": "escape-route.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Cell 015 route: real entry, gated rooms, 50-damage gunfire, checkpoint respawn, tunnel and boat",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 25076,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m100\u001b[39m\nReceived: \u001b[31m200\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m100\u001b[39m\nReceived: \u001b[31m200\u001b[39m\n    at /workspace/Hirodora/tests/escape-route.spec.ts:59:24",
+                    "location": {
+                      "file": "/workspace/Hirodora/tests/escape-route.spec.ts",
+                      "column": 24,
+                      "line": 59
+                    },
+                    "snippet": "  57 |   expect(result.covered).toBe(200);expect(result.health).toEqual([150,100,50,0]);expect(result.dead).toBe(\"gameover\");\n  58 |   expect(result.respawn).toEqual({region:\"secret\",health:200,pos:[102,0,6],state:\"playing\"});\n> 59 |   expect(result.first).toBe(100);expect(result.second).toBe(0);expect(result.stoppedX).toBeLessThan(111.8);\n     |                        ^\n  60 |   expect(result.underground[1]).toBe(-4);expect(result.walkedTunnel).toBeGreaterThan(30);\n  61 |   expect(result.military).toEqual({region:\"military\",count:10});expect(result.dockLocked).toBe(true);\n  62 |   expect(result.ending).toBe(\"victory\");expect(result.escaped).toBe(true);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/workspace/Hirodora/tests/escape-route.spec.ts",
+                        "column": 24,
+                        "line": 59
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m100\u001b[39m\nReceived: \u001b[31m200\u001b[39m\n\n  57 |   expect(result.covered).toBe(200);expect(result.health).toEqual([150,100,50,0]);expect(result.dead).toBe(\"gameover\");\n  58 |   expect(result.respawn).toEqual({region:\"secret\",health:200,pos:[102,0,6],state:\"playing\"});\n> 59 |   expect(result.first).toBe(100);expect(result.second).toBe(0);expect(result.stoppedX).toBeLessThan(111.8);\n     |                        ^\n  60 |   expect(result.underground[1]).toBe(-4);expect(result.walkedTunnel).toBeGreaterThan(30);\n  61 |   expect(result.military).toEqual({region:\"military\",count:10});expect(result.dockLocked).toBe(true);\n  62 |   expect(result.ending).toBe(\"victory\");expect(result.escaped).toBe(true);\n    at /workspace/Hirodora/tests/escape-route.spec.ts:59:24"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T20:46:43.407Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/workspace/Hirodora/test-results/escape-route-Cell-015-rout-eab02-int-respawn-tunnel-and-boat/test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/workspace/Hirodora/test-results/escape-route-Cell-015-rout-eab02-int-respawn-tunnel-and-boat/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/workspace/Hirodora/test-results/escape-route-Cell-015-rout-eab02-int-respawn-tunnel-and-boat/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/workspace/Hirodora/tests/escape-route.spec.ts",
+                    "column": 24,
+                    "line": 59
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "4a0d7af69c69685de3da-27f7223fa31ab206e878",
+          "file": "escape-route.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "route checkpoint survives reload and New game restores the original prison",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 40437,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T20:47:10.496Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "4a0d7af69c69685de3da-41cb89ddbb6726b1a466",
+          "file": "escape-route.spec.ts",
+          "line": 65,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-28T20:46:41.855Z",
+    "duration": 70509.917,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

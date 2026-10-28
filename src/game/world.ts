@@ -157,7 +157,7 @@ const buildSupportingNPC = buildHumanOfficer;
 
 export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   scene.background = new THREE.Color(0x18252b);
-  scene.fog = new THREE.FogExp2(0x344039, 0.028);
+  scene.fog = new THREE.FogExp2(0x344039, 0.033);
   const staticWorld = new THREE.Group();
   scene.add(staticWorld);
   const colliders: THREE.Box3[] = [];
@@ -440,6 +440,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     const width = right - left,
       count = Math.ceil(width / 0.19),
       height = top - bottom;
+    if (height <= 0.01 || width <= 0.01) return;
     for (let i = 0; i <= count; i++)
       cylinder(staticWorld, 0.022, height, [
         left + (width * i) / count,
@@ -522,7 +523,28 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     const { left, right, doorX: x, front: z, number, floorY: y, level } = cell;
     const width = CELL_GATE_WIDTH,
       height = level === "upper" ? 2.8 : 2.6,
-      wallHeight = level === "upper" ? 5.2 : 2.9;
+      wallHeight = level === "upper" ? 4.62 : 2.64;
+    // Recessed masonry above each independent steel frontage; its small
+    // clerestory reveal leaves the exterior roller track unobstructed.
+    const ceiling = level === "upper" ? 5.06 : 2.9;
+    const inward = cell.side === "north" ? -0.13 : 0.13;
+    wall(
+      [right - left, ceiling - wallHeight, 0.16],
+      [(left + right) / 2, y + (ceiling + wallHeight) / 2, z + inward],
+    );
+    const sign = label(
+      scene,
+      `C / ${String(number).padStart(3, "0")}`,
+      [
+        (left + right) / 2,
+        y + (level === "upper" ? 3.38 : (ceiling + wallHeight) / 2),
+        z + (cell.side === "north" ? 0.025 : -0.025),
+      ],
+      level === "upper" ? 1.65 : 1.15,
+    );
+    sign.name = `CellNumber_${number}`;
+    sign.userData.cellNumber = number;
+    if (cell.side === "south") sign.rotation.y = Math.PI;
     // Full-room steel frontage with a human-sized sliding wicket in its own track.
     bars(left + 0.12, x - 0.07, z, y, y + wallHeight);
     bars(x + width + 0.07, right - 0.12, z, y, y + wallHeight);
@@ -577,7 +599,6 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     const cx = -17 - (45 - n) * 5.5;
     wall([0.35, 4.2, 9.3], [cx - 2.75, 2, -6.7]);
     cellEntrance(CELL_ROOMS.find((c) => c.number === n)!);
-    label(staticWorld, `C / 0${n}`, [cx, 3.65, -2]);
     environment.add("Bunk", cx + 1.7, -0.05, -8.4, Math.PI);
     environment.add("Toilet", cx - 1.6, -0.05, -9.85, Math.PI);
     environment.add("Sink", cx - 2.2, 0, -7.8, -Math.PI / 2);
@@ -594,13 +615,6 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     const { left, right, centerX: cx, doorX, front, number } = cell;
     wall([0.35, 4.2, 9.5], [left, 2, front + 4.75]);
     cellEntrance(cell);
-    const sign = label(
-      staticWorld,
-      `C / 0${number}${cell.medical ? " / MEDICAL" : ""}`,
-      [cx, 3.65, front - 0.09],
-      cell.medical ? 2.2 : 1.8,
-    );
-    sign.rotation.y = Math.PI;
     environment.add("Bunk", cx + 1.65, -0.05, front + 6.4);
     environment.add("Toilet", cx - 1.6, -0.05, front + 8.3);
     environment.add("Sink", left + 0.53, 0, front + 6.1, -Math.PI / 2);
@@ -616,13 +630,6 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     const roomZ = (front + rear) / 2;
     wall([0.35, 2.9, 9.5], [left, y + 1.45, roomZ]);
     cellEntrance(cell);
-    const sign = label(
-      staticWorld,
-      `C / 0${number}`,
-      [cx, y + 2.78, front + (side === "north" ? 0.2 : -0.2)],
-      1.4,
-    );
-    if (side === "south") sign.rotation.y = Math.PI;
     const tableZ = rear + (side === "north" ? 3.1 : -3.1),
       toiletZ = rear + (side === "north" ? 1.65 : -1.2);
     environment.add(
@@ -738,8 +745,6 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
       (x === -4.25 ? bed : toilet).add(shadow);
     } else staticWorld.add(shadow);
   }
-  label(staticWorld, "C / 047", [-5.8, 3.65, -2]);
-  label(staticWorld, "C / 046", [-11.4, 3.65, -2]);
   label(staticWorld, "DAY 412  /  LOW TIDE", [-6, 1.7, -11.19], 2.5);
   const pickupMeshes = new Map<string, THREE.Object3D>();
   // A complete metal key silhouette, lying behind the examining officer.
@@ -863,6 +868,35 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   for (const x of [-11.05, -10.35])
     for (const z of [-6, -5.5])
       cylinder(staticWorld, 0.035, 0.88, [x, 0.44, z]);
+  const pistolPickup = new THREE.Group();
+  pistolPickup.name = "Cell46_Pistol10mm";
+  pistolPickup.position.set(-10.85, 0.965, -5.75);
+  pistolPickup.rotation.z = Math.PI / 2;
+  scene.add(pistolPickup);
+  pickupMeshes.set("pistol_10mm_pickup", pistolPickup);
+  const canPickup = new THREE.Group();
+  canPickup.name = "Cell46_SodaCan";
+  canPickup.position.set(-10.45, 0.945, -5.75);
+  scene.add(canPickup);
+  pickupMeshes.set("can_attach", canPickup);
+  interaction(
+    "pistol_10mm_pickup",
+    "10mm pistol",
+    "Take the 10mm pistol",
+    -10.85,
+    -5.75,
+    "pickup",
+  );
+  interactables.at(-1)!.position[1] = 1.0;
+  interaction(
+    "can_attach",
+    "Soda can",
+    "Attach can to the equipped pistol",
+    -10.45,
+    -5.75,
+    "interact",
+  );
+  interactables.at(-1)!.position[1] = 1.0;
   interaction(
     "boulder_npc",
     "Boulder",
@@ -1287,26 +1321,24 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
         a: -25,
         b: -53,
       },
-    ].map(
-      ({ id, name, y, z, a, b }): GuardData => ({
-        id,
-        name,
-        type: "patrol_dunne",
-        position: [a, y, z],
-        rotationY: (Math.sign(b - a) * Math.PI) / 2,
-        patrolRoute: [
-          [a, y, z],
-          [b, y, z],
-        ],
-        currentWaypoint: 1,
-        state: "patrol",
-        suspicion: 0,
-        visionAngle: 76,
-        visionRange: 10,
-        hearingMultiplier: 1,
-        stateTimer: 0,
-      }),
-    ),
+    ].map(({ id, name, y, z, a, b }): GuardData => ({
+      id,
+      name,
+      type: "patrol_dunne",
+      position: [a, y, z],
+      rotationY: (Math.sign(b - a) * Math.PI) / 2,
+      patrolRoute: [
+        [a, y, z],
+        [b, y, z],
+      ],
+      currentWaypoint: 1,
+      state: "patrol",
+      suspicion: 0,
+      visionAngle: 76,
+      visionRange: 10,
+      hearingMultiplier: 1,
+      stateTimer: 0,
+    })),
   );
   const guardMeshes = new Map<string, THREE.Group>();
   for (const g of guards) {

@@ -1,0 +1,422 @@
+{
+  "captures": [
+    {
+      "name": "01-corridor",
+      "position": [
+        -6.5,
+        1.65,
+        0
+      ],
+      "target": [
+        -65,
+        1.4,
+        4
+      ],
+      "hp": 200,
+      "inventory": [],
+      "ammo": 24,
+      "attached": false,
+      "signs": 48,
+      "fog": 0.033,
+      "dead": [],
+      "animations": [
+        {
+          "id": "guard_dunne",
+          "clip": "Examine"
+        },
+        {
+          "id": "guard_captain",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_upper_west",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_upper_east",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_lower_north_east",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_lower_north_west",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_lower_south_east",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_lower_south_west",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_lower_center",
+          "clip": "Idle"
+        }
+      ],
+      "triangles": 3725063,
+      "calls": 593,
+      "icons": []
+    },
+    {
+      "name": "02-cell46-table",
+      "position": [
+        -10.7,
+        1.48,
+        -4.1
+      ],
+      "target": [
+        -10.7,
+        1.03,
+        -5.75
+      ],
+      "hp": 200,
+      "inventory": [],
+      "ammo": 24,
+      "attached": false,
+      "signs": 48,
+      "fog": 0.033,
+      "dead": [],
+      "animations": [
+        {
+          "id": "guard_dunne",
+          "clip": "Examine"
+        },
+        {
+          "id": "guard_captain",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_upper_west",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_upper_east",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_lower_north_east",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_lower_north_west",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_lower_south_east",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_lower_south_west",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_lower_center",
+          "clip": "Idle"
+        }
+      ],
+      "triangles": 2428030,
+      "calls": 277,
+      "icons": []
+    },
+    {
+      "name": "03-can-equipped",
+      "position": [
+        -6.5,
+        1.65,
+        0
+      ],
+      "target": [
+        -65,
+        1.4,
+        4
+      ],
+      "hp": 200,
+      "inventory": [
+        "pistol_10mm"
+      ],
+      "ammo": 24,
+      "attached": true,
+      "signs": 48,
+      "fog": 0.033,
+      "dead": [],
+      "animations": [
+        {
+          "id": "guard_dunne",
+          "clip": "Examine"
+        },
+        {
+          "id": "guard_captain",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_upper_west",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_upper_east",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_lower_north_east",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_lower_north_west",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_lower_south_east",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_lower_south_west",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_lower_center",
+          "clip": "Idle"
+        }
+      ],
+      "triangles": 3747284,
+      "calls": 603,
+      "icons": [
+        {
+          "width": 160,
+          "height": 160
+        }
+      ]
+    },
+    {
+      "name": "04-boxing-cross",
+      "position": [
+        -35,
+        -1.58,
+        2.2
+      ],
+      "target": [
+        -35,
+        -1.95,
+        4
+      ],
+      "hp": 200,
+      "inventory": [
+        "pistol_10mm"
+      ],
+      "ammo": 24,
+      "attached": true,
+      "signs": 48,
+      "fog": 0.033,
+      "dead": [],
+      "animations": [
+        {
+          "id": "guard_dunne",
+          "clip": "Examine"
+        },
+        {
+          "id": "guard_captain",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_upper_west",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_upper_east",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_lower_north_east",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_lower_north_west",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_lower_south_east",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_lower_south_west",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_lower_center",
+          "clip": "Cross"
+        }
+      ],
+      "triangles": 2306428,
+      "calls": 301,
+      "icons": [
+        {
+          "width": 160,
+          "height": 160
+        }
+      ]
+    },
+    {
+      "name": "05-persistent-body",
+      "position": [
+        -35,
+        -1.85,
+        1
+      ],
+      "target": [
+        -35,
+        -2.8,
+        4
+      ],
+      "hp": 200,
+      "inventory": [
+        "pistol_10mm"
+      ],
+      "ammo": 22,
+      "attached": true,
+      "signs": 48,
+      "fog": 0.033,
+      "dead": [
+        {
+          "id": "guard_lower_center",
+          "health": 0,
+          "position": [
+            -35,
+            -3.2,
+            4
+          ]
+        }
+      ],
+      "animations": [
+        {
+          "id": "guard_dunne",
+          "clip": "Examine"
+        },
+        {
+          "id": "guard_captain",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_upper_west",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_upper_east",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_lower_north_east",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_lower_north_west",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_lower_south_east",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_lower_south_west",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_lower_center",
+          "clip": "Collapse"
+        }
+      ],
+      "triangles": 2363074,
+      "calls": 331,
+      "icons": [
+        {
+          "width": 160,
+          "height": 160
+        }
+      ]
+    },
+    {
+      "name": "06-mobile-pistol",
+      "position": [
+        -24,
+        -1.55,
+        1
+      ],
+      "target": [
+        -48,
+        -1.7,
+        3.5
+      ],
+      "hp": 200,
+      "inventory": [
+        "pistol_10mm"
+      ],
+      "ammo": 24,
+      "attached": true,
+      "signs": 48,
+      "fog": 0.033,
+      "dead": [],
+      "animations": [
+        {
+          "id": "guard_dunne",
+          "clip": "Examine"
+        },
+        {
+          "id": "guard_captain",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_upper_west",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_upper_east",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_lower_north_east",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_lower_north_west",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_lower_south_east",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_lower_south_west",
+          "clip": "Idle"
+        },
+        {
+          "id": "guard_lower_center",
+          "clip": "Idle"
+        }
+      ],
+      "triangles": 2527290,
+      "calls": 486,
+      "icons": [
+        {
+          "width": 160,
+          "height": 160
+        }
+      ]
+    }
+  ],
+  "pickups": {
+    "gunFocus": "pistol_10mm_pickup",
+    "canFocus": "can_attach",
+    "inventory": [
+      "pistol_10mm"
+    ],
+    "attached": true
+  },
+  "combat": {
+    "first": 100,
+    "second": 0,
+    "dead": true
+  },
+  "errors": []
+}

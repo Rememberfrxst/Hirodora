@@ -277,6 +277,12 @@ export function HUD({ engine, onPause }: Props) {
           {engine.equippedItem === "dart_pistol" && (
             <b>{stats.dartAmmo} DARTS</b>
           )}
+          {engine.equippedItem === "pistol_10mm" && (
+            <b>
+              {stats.pistolAmmo} ROUNDS
+              {engine.gameFlags.can_attached ? " · CAN" : ""}
+            </b>
+          )}
         </button>
       </div>
       <nav
@@ -463,15 +469,24 @@ export function HUD({ engine, onPause }: Props) {
                 )}
               </button>
             )}
-            {engine.equippedItem === "dart_pistol" && (
+            {(engine.equippedItem === "dart_pistol" ||
+              engine.equippedItem === "pistol_10mm") && (
               <button
                 className="custom-control touch-fire"
                 style={placementStyle(layout.controls.fire)}
-                aria-label="Fire dart"
-                onClick={() => engine.fireDart()}
+                aria-label={
+                  engine.equippedItem === "pistol_10mm"
+                    ? "Fire pistol"
+                    : "Fire dart"
+                }
+                onClick={() => engine.fireWeapon()}
               >
                 <Crosshair />
-                <small>DART</small>
+                <small>
+                  {engine.equippedItem === "pistol_10mm"
+                    ? `FIRE ${stats.pistolAmmo}`
+                    : "DART"}
+                </small>
               </button>
             )}
           </div>

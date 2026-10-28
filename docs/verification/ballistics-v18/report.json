@@ -1,0 +1,263 @@
+{
+  "version": "0.18.0",
+  "unitPassed": 74,
+  "selectedBrowserCasesPassed": 21,
+  "wholeBrowserSuiteRerun": false,
+  "runs": [
+    {
+      "file": "browser-1.json",
+      "stats": {
+        "startTime": "2026-10-28T05:27:07.551Z",
+        "duration": 364937.21,
+        "expected": 7,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "browser-2.json",
+      "stats": {
+        "startTime": "2026-10-28T05:34:02.066Z",
+        "duration": 817639.9149999999,
+        "expected": 13,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "browser-3.json",
+      "stats": {
+        "startTime": "2026-10-28T05:41:13.044Z",
+        "duration": 56475.704,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "browser-4.json",
+      "stats": {
+        "startTime": "2026-10-28T05:47:37.650Z",
+        "duration": 123917.313,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "Cell 46 actual gun/can models require aim and E, attach at the muzzle and persist",
+      "status": "passed"
+    },
+    {
+      "name": "actual skin ray hits deal 100 twice or one headshot, corpses persist and New game resets them",
+      "status": "passed"
+    },
+    {
+      "name": "bullets cannot pass closed grilles, pause or fire without ammunition",
+      "status": "passed"
+    },
+    {
+      "name": "boxing cycles jab/cross/hook with high guard between strikes and preserves 200 player HP rules",
+      "status": "passed"
+    },
+    {
+      "name": "supplied cargo matches physical bounds, leaves cell lanes clear and uses real wooden stairs",
+      "status": "passed"
+    },
+    {
+      "name": "guard strikes have windup, can miss, respect walls/floors and reduce 200 HP until defeat",
+      "status": "passed"
+    },
+    {
+      "name": "HP persists through checkpoints, old saves get 200, and searches kneel without replacing AI",
+      "status": "passed"
+    },
+    {
+      "name": "stairs support actual player movement, gates are independent, and equipped tools persist",
+      "status": "passed"
+    },
+    {
+      "name": "touch pickups, can attachment and Fire pistol consume one round without stuck joystick",
+      "status": "passed"
+    },
+    {
+      "name": "48 independent wide gates frame both floors and all rows load real fixtures",
+      "status": "passed"
+    },
+    {
+      "name": "rigged officers animate independently, patrol, switch LOD and retain non-lethal dart hits",
+      "status": "passed"
+    },
+    {
+      "name": "production assets load from a subdirectory and the game reloads offline",
+      "status": "passed"
+    },
+    {
+      "name": "downloaded standalone HTML runs in an offline browser without network requests",
+      "status": "passed"
+    },
+    {
+      "name": "new-game cinematic fires once, pauses safely, closes gate and releases a playable checkpoint",
+      "status": "passed"
+    },
+    {
+      "name": "Cell 47 key twist, quiet bed, tool, toilet, passage, save and return",
+      "status": "passed"
+    },
+    {
+      "name": "reference corridor, fog and gloved grips retain saved equipment through quick slots",
+      "status": "passed"
+    },
+    {
+      "name": "mobile pocket icons remain tappable and clear of left controls on small landscape screens",
+      "status": "passed"
+    },
+    {
+      "name": "full barred cell fronts retain collision while small doors slide, protect actors and restore",
+      "status": "passed"
+    },
+    {
+      "name": "adaptive resolution, paused preset changes and mobile resize never present a cleared frame",
+      "status": "passed"
+    },
+    {
+      "name": "noise stays at its impact source; guard reacts while a puzzle is open",
+      "status": "passed"
+    },
+    {
+      "name": "two-handed weapon grip follows the active skeleton across officer LOD and returns to idle hands",
+      "status": "passed"
+    }
+  ],
+  "comparison": {
+    "position": [
+      -6.5,
+      1.65,
+      0
+    ],
+    "target": [
+      -65,
+      1.4,
+      4
+    ],
+    "before": "docs/screenshots/cargo-v17/01-corridor.png",
+    "after": "docs/screenshots/ballistics-v18/01-corridor.png",
+    "beforeSHA256": "6a3ad76b943ea213b21c08fc1a633d730b0ecb1d3543a17102271ed9e0e13417",
+    "afterSHA256": "554366897212035595315cac850b1667ed4ef8c4c65d05d05311a5eee3fa07c3"
+  },
+  "assets": {
+    "sources": [
+      {
+        "author": "Christian S (https://sketchfab.com/ChristianSX)",
+        "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+        "source": "https://sketchfab.com/3d-models/gun-10mm-a1ba71cee9fd4fd9832a567c6fa9e209",
+        "title": "Gun 10mm",
+        "file": "pistol-10mm.glb",
+        "bytes": 1974396,
+        "sourceSHA256": "1eb372e990cbdbab9d659236df1d698e61a7705d291b9da0ae4e136aa5351bce",
+        "runtimeSHA256": "5bed9f1c99804f9c4b6aed02f07a1040abcf7ecdbe91c149a0a6b8ce68be4183",
+        "bounds": {
+          "min": [
+            -0.022228513565229955,
+            -0.09431752562522888,
+            -0.0891476422548294
+          ],
+          "max": [
+            0.022228513565229955,
+            0.06771404107698165,
+            0.15085235238075256
+          ]
+        },
+        "changes": "World transforms baked into real metre geometry; source UV/PBR retained; normals transformed; embedded WebP and meshopt. Gun +Z is muzzle, can +Y is its long axis."
+      },
+      {
+        "author": "Michael (https://sketchfab.com/SgtBlitz)",
+        "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+        "source": "https://sketchfab.com/3d-models/coca-cola-can-4k-texture-de345f65a5264d3aa69e1d84bf03911a",
+        "title": "Coca-Cola Can (4K Texture)",
+        "file": "soda-can.glb",
+        "bytes": 953084,
+        "sourceSHA256": "f192a2a248d2b26106ecc909b8a6ac2b2e68fe5d9bc202ac366ba2a79f5a7a9c",
+        "runtimeSHA256": "11bac9bd57c431f3fafe1d00bb9bab1091f6fd470840f617d4f1e444c8932a00",
+        "bounds": {
+          "min": [
+            -0.03199765399163427,
+            0,
+            -0.03199765399163427
+          ],
+          "max": [
+            0.03199765399163427,
+            0.125,
+            0.03199765399163427
+          ]
+        },
+        "changes": "World transforms baked into real metre geometry; source UV/PBR retained; normals transformed; embedded WebP and meshopt. Gun +Z is muzzle, can +Y is its long axis."
+      }
+    ],
+    "muzzle": [
+      0,
+      0.044,
+      0.151
+    ],
+    "canHeight": 0.125
+  },
+  "sound": {
+    "uploadedClipPublished": false,
+    "blockedHostname": "mixkit.co",
+    "error": "CONNECT HTTP 403: not allowlisted",
+    "fallback": "Existing credited local guard-gunshot recording; filtered/quieter with can",
+    "privateAudition": {
+      "sourceFile": "mixkit-game-gun-shot-1662 (1).mp3",
+      "sourceSHA256": "12db59879dead8e6ffebc28b1fbe8abc5ed43dd0d44b1cb3841b4bdf39dbc0d6",
+      "activeSourceSeconds": [
+        0.107347,
+        0.425079
+      ],
+      "cropSeconds": [
+        0.095,
+        0.49
+      ],
+      "duration": 0.395,
+      "filter": "atrim=start=0.095:end=0.49,asetpts=PTS-STARTPTS,highpass=f=55,afade=t=in:d=0.002,afade=t=out:st=0.37:d=0.025,alimiter=limit=0.84:level=false",
+      "bytes": 8388,
+      "sha256": "5c5f36c5af04aaa824d3d5b3c869e8dcb18d485a593836c11f11c9f48c8f9d22",
+      "publication": "held: official license hostname mixkit.co denied by environment proxy (CONNECT HTTP 403); not included in shipped builds"
+    }
+  },
+  "artifacts": {
+    "web": {
+      "version": "0.18.0",
+      "archive": "Hirodora-0.18.0-offline.zip",
+      "html": "Hirodora-0.18.0.html",
+      "sha256": "2044a3955a4cdcc626d9f0253aaece5c80b065cd4475b9081096ec467a6ae226",
+      "bytes": 31978864
+    },
+    "android": {
+      "version": "0.18.0",
+      "file": "Hirodora-0.18.0-android.apk",
+      "bytes": 32227782,
+      "sha256": "adf7ab105e11518c92cc52cb9c86705b12aadda0076070bf6f3f0f2238363c4d",
+      "certificateSHA256": "d7175da40c348c91e8a8663635d3a130115aba916e5ce889e40b646c009f33ca",
+      "minAndroid": "8.0 (API 26)",
+      "targetApi": 35,
+      "architecture": "Universal; uses installed Android System WebView",
+      "distribution": "Signed release APK; offline assets included; no network permission"
+    }
+  },
+  "androidLint": {
+    "errors": 0,
+    "warnings": 10
+  },
+  "limits": [
+    "Software-rendered Chromium, not physical-phone FPS/thermal certification.",
+    "Authored skeletal boxing, not new motion capture, physics melee or advanced footwork.",
+    "Only selected browser scenarios rerun; retained run files include any focused reruns.",
+    "Uploaded Mixkit derivative remains private pending source-license verification."
+  ]
+}

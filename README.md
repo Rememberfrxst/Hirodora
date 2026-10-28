@@ -8,15 +8,21 @@
 
 **Every sound has a consequence.**
 
-**v0.17.0 · Wooden Stairs / Cargo Cover / 200 HP**
+**v0.18.0 · Cell 46 Sidearm / Can Attachment / Boxing**
 
-**[↓ DOWNLOAD ANDROID APK](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.17.0-android.apk)**
+**[↓ DOWNLOAD ANDROID APK](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.18.0-android.apk)**
 
-[↓ Offline web ZIP](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.17.0-offline.zip) · [Single-file HTML download](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.17.0.html) · [ZIP checksum](downloads/latest.json) · [APK checksums](downloads/android-latest.json) · [Android installation](docs/ANDROID.md)
+[↓ Offline web ZIP](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.18.0-offline.zip) · [Single-file HTML download](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.18.0.html) · [ZIP checksum](downloads/latest.json) · [APK checksums](downloads/android-latest.json) · [Android installation](docs/ANDROID.md)
 
 </div>
 
 ## A playable prison atrium
+
+**Cell 46's table holds the uploaded textured 10mm pistol and soda can.** Aim at the gun and press **E / Interact**, then aim at the can with the pistol equipped and press E. The can attaches to the muzzle as a fictional game effect. The pistol starts with **24 rounds**: **100 damage per body hit, two body hits to defeat a 200 HP guard, or one headshot**. Actual skin weights distinguish the head from raised hands. Walls and closed grilles stop bullets. Dead officers stay where they fell and persist through checkpoints; New game resets them. The legacy dart pistol remains non-lethal.
+
+Officers alternate **jab, cross and hook**, with a high-guard stance between strikes. These are authored skeletal clips, not new motion capture or physics boxing. The black-gloved hand/forearm is 12% larger. Every cell has its own `C / 047`-style sign and recessed masonry above the grille; cell and sliding-door sizes remain unchanged. Green fog is modestly denser (0.028 → 0.033).
+
+**Uploaded sound pending:** the supplied MP3 was cropped to a 0.395s private audition. Its official license page at `mixkit.co` is blocked by the proxy (CONNECT HTTP 403), so that derivative is **not published/bundled** until its license is supplied or verified. This build uses the existing credited local gunshot, quieter/filtered with the can. [Current implementation and verification](docs/BALLISTICS-V18.md).
 
 **Cell 46's gate now stays open in the current opening chapter**, including previously closed saves. Complete the Cell 47 passage, choose **Explore Cell 46**, then walk through its open gate to inspect both floors. The gate's Close action is disabled so it stays available for testing. Guards remain active. [Exploration patch](docs/CELL46-EXPLORATION.md).
 
@@ -30,30 +36,30 @@ The top-right HUD has only **Hint** and **Pause**. The bulb and up-arrow referen
 
 **Police replacement remains pending:** a local 69-bone conversion of the supplied mesh has been prepared for inspection. Complete source/license details are required before publishing it; grip/deformation polishing remains open. This release ships the previously licensed officers. The Warrior is static source geometry; breathing presentation does not imply a new skeletal performance.
 
-[Current implementation and verification](docs/CARGO-COMBAT-V17.md) · [Gloves / pocket HUD](docs/REFERENCE-V16.md) · [Character credits](docs/GUARD-ASSETS.md) · [New asset credits](src/assets/environment/CARGO-LICENSES.txt)
+[Current implementation and verification](docs/BALLISTICS-V18.md) · [Wooden cargo / player HP](docs/CARGO-COMBAT-V17.md) · [Character credits](docs/GUARD-ASSETS.md) · [Gun / can credits](src/assets/ballistics/LICENSES.txt)
 
 ## Latest screenshots — exactly six
 
-Six actual game renders, not generated artwork. [Camera positions and render statistics](docs/screenshots/cargo-v17/capture.json).
+Six actual game renders, not generated artwork. [Camera positions and render statistics](docs/screenshots/ballistics-v18/capture.json).
 
-Identical-camera comparisons: [previous corridor](docs/screenshots/reference-v16/01-corridor.png) → [narrower corridor](docs/screenshots/cargo-v17/01-corridor.png); [concrete stairs before](docs/screenshots/reference-v16/03-lower-hall.png) → [supplied wooden stairs after](docs/screenshots/cargo-v17/03-wooden-stairs.png). Inventory and HP displays differ with the new features. Historical captures remain available.
+Identical-camera comparison: [v0.17 corridor](docs/screenshots/cargo-v17/01-corridor.png) → [v0.18 signage / fog](docs/screenshots/ballistics-v18/01-corridor.png). Historical captures remain available.
 
 <table>
-<tr><td width="50%"><img src="docs/screenshots/cargo-v17/01-corridor.png" alt="Narrower corridor with consistent green fog" /></td><td width="50%"><img src="docs/screenshots/cargo-v17/02-cargo-cover.png" alt="Supplied wooden crates and strapped pallets in the lower hall" /></td></tr>
-<tr><td align="center"><sub>6-METRE OPENING · 48 CELLS</sub></td><td align="center"><sub>REAL GLB CARGO · CROUCH COVER</sub></td></tr>
-<tr><td><img src="docs/screenshots/cargo-v17/03-wooden-stairs.png" alt="Imported wooden stairs connecting both floors" /></td><td><img src="docs/screenshots/cargo-v17/04-officer-walk.png" alt="Rigged officer mid-stride" /></td></tr>
-<tr><td align="center"><sub>WOODEN STAIRS · REAL TREAD HEIGHTS</sub></td><td align="center"><sub>DISTANCE-DRIVEN WALK CYCLE</sub></td></tr>
-<tr><td><img src="docs/screenshots/cargo-v17/05-officer-kneel.png" alt="Officer kneeling to inspect the prisoner" /></td><td><img src="docs/screenshots/cargo-v17/06-mobile-health.png" alt="Close-range guard attack and 175 out of 200 HP on mobile" /></td></tr>
-<tr><td align="center"><sub>KNEEL · BODY INSPECTION</sub></td><td align="center"><sub>MOBILE · TIMED STRIKES · 200 HP</sub></td></tr>
+<tr><td width="50%"><img src="docs/screenshots/ballistics-v18/01-corridor.png" alt="Cell signs and denser fog" /></td><td width="50%"><img src="docs/screenshots/ballistics-v18/02-cell46-table.png" alt="Uploaded pistol and can on Cell 46 table" /></td></tr>
+<tr><td align="center"><sub>48 CELL SIGNS · MASONRY REVEALS</sub></td><td align="center"><sub>CELL 46 · PISTOL + CAN</sub></td></tr>
+<tr><td><img src="docs/screenshots/ballistics-v18/03-can-equipped.png" alt="Muzzle-mounted can and larger gloved hand" /></td><td><img src="docs/screenshots/ballistics-v18/04-boxing-cross.png" alt="Officer cross with support hand raised" /></td></tr>
+<tr><td align="center"><sub>REAL GLB EQUIPMENT · GLOVED GRIP</sub></td><td align="center"><sub>JAB · CROSS · HOOK · HIGH GUARD</sub></td></tr>
+<tr><td><img src="docs/screenshots/ballistics-v18/05-persistent-body.png" alt="Defeated officer remains in the corridor" /></td><td><img src="docs/screenshots/ballistics-v18/06-mobile-pistol.png" alt="Mobile pistol and touch fire control" /></td></tr>
+<tr><td align="center"><sub>200 GUARD HP · PERSISTENT BODY</sub></td><td align="center"><sub>MOBILE · FIRE · 24 ROUNDS</sub></td></tr>
 </table>
 
 ## Play on mobile
 
 Download the APK above, open it in Android Files and allow installation from that source when prompted. Requires **Android 8.0+**, an updated Android System WebView and WebGL 2. The app opens horizontally and includes all models, textures and audio offline, with **no Internet, storage, microphone or tracking permission**.
 
-Version 0.17.0 uses the existing release certificate and versionCode **1700**. Older saves migrate to safe walkways and fitted stair treads, retaining inventory and puzzles. Install over an earlier release to retain app-local saves and settings; uninstalling clears them.
+Version 0.18.0 uses the existing release certificate and versionCode **1800**. Older saves migrate to safe walkways and fitted stair treads, retaining inventory and puzzles. Install over an earlier release to retain app-local saves and settings; uninstalling clears them.
 
-For the web edition, download through the direct ZIP link above, extract it and open `Hirodora-0.17.0.html` in a full WebGL 2 browser. The links bypass GitHub's large-file preview. File handling depends on your device. On iPhone/iPad, use the hosted PWA; a local HTML viewer may block scripts. Portrait play pauses behind a rotate notice.
+For the web edition, download through the direct ZIP link above, extract it and open `Hirodora-0.18.0.html` in a full WebGL 2 browser. The links bypass GitHub's large-file preview. File handling depends on your device. On iPhone/iPad, use the hosted PWA; a local HTML viewer may block scripts. Portrait play pauses behind a rotate notice.
 
 ## How to finish the current chapter
 
@@ -100,17 +106,20 @@ To regenerate the supplied-asset derivatives:
 ```sh
 node scripts/prepare-uploaded-assets.mjs rock_wall_16_2k.zip basic_table.glb dirty_toilet.glb free_screwdriver.glb
 node scripts/prepare-cargo-assets.mjs wooden_stairs_5_mb.glb wood_box.glb wood__boxes_strapped_on_palet.glb
+node scripts/prepare-ballistics-assets.mjs gun_10mm.glb coca-cola_can_4k_texture.glb
 ```
 
 The offline pipeline needs ffmpeg and preserves attribution. Original source uploads are not required at runtime. Textures are shared across rooms; superseded bunk/toilet meshes are excluded from the loaded fixture library. The build enforces a 100 MiB offline budget; exact download sizes and hashes are in [the manifests](downloads/android-latest.json).
 
 ## Quality and release status
 
-Asset/logic tests, browser gameplay tests, production packaging and signed-APK validation are documented in [CARGO-COMBAT-V17.md](docs/CARGO-COMBAT-V17.md). The current checks cover real stair surfaces/cargo bounds, 200 HP combat, both floors, patrol movement, the opening and legacy campaign, HUD, checkpoints, intro, stealth and offline startup. See the [release verification report](docs/verification/cargo-v17/report.json) for exact run outcomes; physical-phone testing is separate.
+Asset/logic tests, selected browser regressions and packaging validation are documented in [BALLISTICS-V18.md](docs/BALLISTICS-V18.md). The current suite has 74 unit/asset checks. The [release verification report](docs/verification/ballistics-v18/report.json) records exact selected browser outcomes and reruns; physical-phone testing is separate.
 
 Physical-phone frame rate, thermal behavior and device-specific WebView/GPU compatibility still need hardware testing. Software-rendered browser checks are not Android-device certification or a promise of glitch-free gameplay. Existing licensed guard models are preserved; the supplied police replacement still needs its source/license details and grip polish. The supplied Warrior is integrated.
 
 ## Sources and credits
+
+New sidearm/can: [Christian S / Gun 10mm](https://sketchfab.com/3d-models/gun-10mm-a1ba71cee9fd4fd9832a567c6fa9e209) and [Michael / Coca-Cola Can](https://sketchfab.com/3d-models/coca-cola-can-4k-texture-de345f65a5264d3aa69e1d84bf03911a), both CC BY 4.0. [Full attribution and adaptations](src/assets/ballistics/LICENSES.txt). The unverified uploaded Mixkit derivative is not distributed.
 
 | Asset                                                                                                            | Creator                 | License   |
 | ---------------------------------------------------------------------------------------------------------------- | ----------------------- | --------- |

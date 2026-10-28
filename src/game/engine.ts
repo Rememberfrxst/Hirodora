@@ -52,6 +52,8 @@ import {
 import { WarriorActor } from "./warrior";
 import { FirstPersonView } from "./viewmodel";
 import { COMBAT, checkpointHealth, stepMelee } from "./combat";
+import { BALLISTICS, bulletDamage } from "./ballistics";
+import { loadBallisticsAssets } from "./ballistics-assets";
 import {
   nextCellSlide,
   positionCellSlider,
@@ -81,6 +83,14 @@ import {
 } from "./opening";
 
 export const ALL_ITEMS: Record<ItemId, InventoryItem> = {
+  pistol_10mm: {
+    id: "pistol_10mm",
+    name: "10mm pistol",
+    description:
+      "Cell 46 sidearm. Body hits deal 100 damage; head hits are lethal. The table's can is a fictional game attachment.",
+    icon: "Crosshair",
+    category: "weapon",
+  },
   cell_key: {
     id: "cell_key",
     name: "Cell key",
@@ -295,6 +305,8 @@ export class GameEngine {
   public stats: PlayerStats = this.freshStats();
   public damageFeedback = 0;
   private damageGrace = 0;
+  private nextPistolShot = 0;
+  public lastBulletHit: "head" | "body" | null = null;
 
   private freshStats(): PlayerStats {
     return {
@@ -306,6 +318,7 @@ export class GameEngine {
       isInHidingSpot: false,
       hidingSpotName: null,
       dartAmmo: 3,
+      pistolAmmo: BALLISTICS.ammo,
       alarmsTriggered: 0,
       timesCaught: 0,
       hintsUsed: 0,
@@ -420,10 +433,14 @@ export class GameEngine {
     this.emitChange();
     try {
       await this.worldData.loadEnvironment();
+      const ballisticsModels = await loadBallisticsAssets(
+        this.worldData.pickupMeshes,
+      );
       await this.firstPerson.load(
         this.worldData.pickupMeshes.get("screwdriver_pickup")!,
         this.worldData.pickupMeshes.get("cell_key_pickup")!,
         this.worldData.pickupMeshes,
+        ballisticsModels,
       );
       if (!this.warriorActor) {
         this.warriorActor = new WarriorActor(this.worldData.cell46NPC);
@@ -647,7 +664,7 @@ export class GameEngine {
         sound.resume();
         if (document.pointerLockElement !== canvas)
           canvas.requestPointerLock?.()?.catch(() => {});
-        else if (this.equippedItem === "dart_pistol") this.fireDart();
+        else this.fireWeapon();
       },
       { signal },
     );
@@ -1067,6 +1084,30 @@ export class GameEngine {
       best = Infinity;
     for (const obj of this.worldData.interactables) {
       if (obj.disabled) continue;
+      if (obj.id === "pistol_10mm_pickup" || obj.id === "can_attach") {
+        const root = this.worldData.pickupMeshes.get(obj.id)!;
+        root.updateWorldMatrix(true, true);
+        const aim = new THREE.Raycaster();
+        aim.setFromCamera(new THREE.Vector2(), this.camera);
+        const hit = aim.ray.intersectBox(
+          new THREE.Box3().setFromObject(root).expandByScalar(0.035),
+          new THREE.Vector3(),
+        );
+        if (!hit) continue;
+        const distance = hit.distanceTo(this.camera.position);
+        if (distance > 2.3 || distance >= best) continue;
+        const blocked = this.blockers().some((b) => {
+          const point = aim.ray.intersectBox(b, new THREE.Vector3());
+          return (
+            point && point.distanceTo(this.camera.position) < distance - 0.055
+          );
+        });
+        if (!blocked) {
+          closest = obj;
+          best = distance;
+        }
+        continue;
+      }
       if (obj.id === "cell_key_pickup" && !this.worldData.guards[0].examining)
         continue;
       if (
@@ -1153,6 +1194,7 @@ export class GameEngine {
       this.reducedMotion,
       near,
       this.gameState === "playing" || this.gameState === "paused",
+      !!this.gameFlags.can_attached,
     );
     this.renderer.render(this.scene, this.camera);
     const calls = this.renderer.info.render.calls,
@@ -1177,6 +1219,37 @@ export class GameEngine {
     }
     const obj = this.findClosestInteractable();
     if (!obj) return;
+    if (obj.id === "pistol_10mm_pickup") {
+      if (!this.inventory.includes("pistol_10mm"))
+        this.inventory.push("pistol_10mm");
+      this.equippedItem = "pistol_10mm";
+      this.notice(
+        "10mm pistol collected. Aim at the can and press E to attach it.",
+      );
+      sound.playObject("metal", 0, 0.25, obj.position);
+      this.syncWorld();
+      this.saveCheckpoint();
+      this.emitChange();
+      return;
+    }
+    if (obj.id === "can_attach") {
+      if (this.equippedItem !== "pistol_10mm") {
+        this.notice(
+          this.inventory.includes("pistol_10mm")
+            ? "Equip the 10mm pistol first."
+            : "Take the pistol from the table first.",
+        );
+        return;
+      }
+      this.gameFlags.can_attached = true;
+      this.notice("Can attached. Shots are quieter, not silent.");
+      sound.playObject("metal", 0, 0.25, obj.position);
+      this.syncWorld();
+      this.saveCheckpoint();
+      this.renderFrame(0);
+      this.emitChange();
+      return;
+    }
     if (this.gameFlags.opening_v3 && this.interactOpening(obj.id)) return;
     if (
       obj.actionRequiredItem &&
@@ -1682,6 +1755,8 @@ export class GameEngine {
     }
     this.collisionSignature = -1;
     const disabled: Record<string, boolean> = {
+      pistol_10mm_pickup: this.inventory.includes("pistol_10mm"),
+      can_attach: !!this.gameFlags.can_attached,
       vent_bolts_interact: !!this.gameFlags.vent_unbolted,
       boulder_npc: !!this.gameFlags.boulder_pacified,
       cell_46_locker: !!this.gameFlags.locker_open,
@@ -1789,6 +1864,12 @@ export class GameEngine {
     this.checkpoint = {
       id: "checkpoint",
       layoutVersion: LAYOUT_VERSION,
+      guardCombat: this.worldData.guards.map((g) => ({
+        id: g.id,
+        health: g.health ?? BALLISTICS.guardHP,
+        position: [...g.position],
+        rotationY: g.rotationY,
+      })),
       equippedItem: this.equippedItem,
       openingProgress: { ...this.openingProgress },
       name: this.activeObjective,
@@ -1848,8 +1929,13 @@ export class GameEngine {
     };
     this.stats.act = cp.act;
     this.stats.health = checkpointHealth(cp.stats?.health);
+    this.stats.pistolAmmo = Number.isInteger(cp.stats?.pistolAmmo)
+      ? Math.max(0, Math.min(BALLISTICS.ammo, cp.stats!.pistolAmmo))
+      : BALLISTICS.ammo;
     this.damageGrace = 0;
     this.damageFeedback = 0;
+    this.nextPistolShot = 0;
+    this.lastBulletHit = null;
     this.playerPos = migratePosition(cp.playerPosition, cp.layoutVersion);
     this.playerRotY = cp.playerRotationY;
     this.cameraPitch = 0;
@@ -1905,6 +1991,15 @@ export class GameEngine {
       g.attackElapsed = undefined;
       g.attackCooldown = 0;
       g.crouchInspect = false;
+      const combat = cp.guardCombat?.find((saved) => saved.id === g.id);
+      g.health =
+        combat && Number.isFinite(combat.health)
+          ? Math.max(0, Math.min(200, combat.health))
+          : BALLISTICS.guardHP;
+      g.dead = g.health === 0;
+      g.deathElapsed = g.dead ? 10 : 0;
+      g.attackIndex = 0;
+      g.attackKind = 0;
       g.state = "patrol";
       g.suspicion = 0;
       g.currentWaypoint = 1;
@@ -1919,6 +2014,19 @@ export class GameEngine {
       mesh.rotation.x = 0;
       mesh.position.set(...g.position);
       this.guardActors.get(g.id)?.reset();
+      if (g.dead) {
+        g.state = "knocked_out";
+        g.stateTimer = Infinity;
+        g.examining = false;
+        if (
+          combat?.position?.length === 3 &&
+          combat.position.every(Number.isFinite)
+        )
+          g.position = migratePosition(combat.position, cp.layoutVersion);
+        g.rotationY = Number.isFinite(combat?.rotationY)
+          ? combat!.rotationY
+          : g.rotationY;
+      }
     }
     this.paths.clear();
     this.syncWorld(true);
@@ -1948,6 +2056,81 @@ export class GameEngine {
       }
     }
     this.clearInput();
+    this.emitChange();
+  }
+  public fireWeapon() {
+    if (this.equippedItem === "pistol_10mm") this.firePistol();
+    else if (this.equippedItem === "dart_pistol") this.fireDart();
+  }
+  public firePistol() {
+    if (
+      this.gameState !== "playing" ||
+      this.overlayOpen ||
+      this.activeMiniGame ||
+      this.equippedItem !== "pistol_10mm" ||
+      this.activeHold ||
+      this.stats.isInHidingSpot ||
+      this.elapsed < this.nextPistolShot
+    )
+      return;
+    if (this.stats.pistolAmmo <= 0) {
+      sound.playLockClick(false);
+      this.notice("No 10mm rounds remaining.");
+      return;
+    }
+    this.nextPistolShot = this.elapsed + BALLISTICS.cooldown;
+    this.stats.pistolAmmo--;
+    this.lastBulletHit = null;
+    const suppressed = !!this.gameFlags.can_attached;
+    sound.playPistolShot(suppressed);
+    this.emitNoise(suppressed ? 45 : 100, "10mm-shot");
+    if (!suppressed) this.stats.alarmsTriggered++;
+    this.firstPerson.shoot();
+    this.scene.updateMatrixWorld(true);
+    const ray = new THREE.Raycaster();
+    ray.setFromCamera(new THREE.Vector2(), this.camera);
+    let stop = BALLISTICS.range as number;
+    for (const b of this.blockers()) {
+      const p = ray.ray.intersectBox(b, new THREE.Vector3());
+      if (p) stop = Math.min(stop, p.distanceTo(this.camera.position));
+    }
+    const hits = this.worldData.guards
+      .map((g) => ({
+        g,
+        hit: ray.intersectObject(
+          this.guardActors.get(g.id)!.hitTarget,
+          true,
+        )[0],
+      }))
+      .filter((h) => h.hit && h.hit.distance < stop)
+      .sort((a, b) => a.hit.distance - b.hit.distance);
+    if (hits[0] && !hits[0].g.dead) {
+      const { g, hit } = hits[0];
+      const head = this.guardActors.get(g.id)!.isHeadHit(hit.point, hit);
+      const result = bulletDamage(g.health, head);
+      g.health = result.health;
+      g.dead = result.dead;
+      this.lastBulletHit = head ? "head" : "body";
+      if (g.dead) {
+        g.state = "knocked_out";
+        g.stateTimer = Infinity;
+        g.suspicion = 0;
+        g.attackElapsed = undefined;
+        g.examining = false;
+        g.cinematicAim = false;
+        g.crouchInspect = false;
+        g.deathElapsed = 0;
+        g.rotationY = this.worldData.guardMeshes.get(g.id)!.rotation.y;
+        this.paths.delete(g.id);
+        this.pathGoals.delete(g.id);
+      } else {
+        g.state = "chase";
+        g.suspicion = 100;
+        g.lastKnownPosition = [...this.playerPos];
+      }
+      sound.playObject("cloth", 0, 0.3, g.position);
+    }
+    this.saveCheckpoint();
     this.emitChange();
   }
   public fireDart() {
@@ -2276,6 +2459,13 @@ export class GameEngine {
         ];
     for (const guard of this.worldData.guards) {
       const mesh = this.worldData.guardMeshes.get(guard.id)!;
+      if (guard.dead) {
+        guard.deathElapsed = Math.min(10, (guard.deathElapsed ?? 0) + dt);
+        this.guardActors
+          .get(guard.id)
+          ?.update(guard, 0, dt, this.camera, this.guardQuality, this.mobile);
+        continue;
+      }
       const examiner =
         !!this.gameFlags.opening_v3 && guard.id === "guard_dunne";
       const approach = (point: [number, number, number] | undefined) =>
@@ -2350,8 +2540,11 @@ export class GameEngine {
         dt,
         guard.state === "chase",
       );
-      if (guard.attackElapsed === undefined && strike.elapsed !== undefined)
+      if (guard.attackElapsed === undefined && strike.elapsed !== undefined) {
+        guard.attackKind = ((guard.attackIndex ?? 0) % 3) as 0 | 1 | 2;
+        guard.attackIndex = (guard.attackIndex ?? 0) + 1;
         sound.playObject("cloth", 0, 0.25, guard.position);
+      }
       guard.attackElapsed = strike.elapsed;
       guard.attackCooldown = strike.cooldown;
       if (

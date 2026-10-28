@@ -1,0 +1,17 @@
+{
+  "sourceFile": "mixkit-game-gun-shot-1662 (1).mp3",
+  "sourceSHA256": "12db59879dead8e6ffebc28b1fbe8abc5ed43dd0d44b1cb3841b4bdf39dbc0d6",
+  "activeSourceSeconds": [
+    0.107347,
+    0.425079
+  ],
+  "cropSeconds": [
+    0.095,
+    0.49
+  ],
+  "duration": 0.395,
+  "filter": "atrim=start=0.095:end=0.49,asetpts=PTS-STARTPTS,highpass=f=55,afade=t=in:d=0.002,afade=t=out:st=0.37:d=0.025,alimiter=limit=0.84:level=false",
+  "bytes": 8388,
+  "sha256": "5c5f36c5af04aaa824d3d5b3c869e8dcb18d485a593836c11f11c9f48c8f9d22",
+  "publication": "held: official license hostname mixkit.co denied by environment proxy (CONNECT HTTP 403); not included in shipped builds"
+}

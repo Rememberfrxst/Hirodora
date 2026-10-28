@@ -43,6 +43,9 @@ async function finishHold(page: Page, id: string) {
 test("Cell 47 key twist, quiet bed, tool, toilet, passage, save and return", async ({
   page,
 }) => {
+  // This scenario loads the complete PBR/rig scene twice. Give software GPU CI
+  // total setup headroom without relaxing interaction or puzzle assertions.
+  test.setTimeout(180_000);
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/");

@@ -5,6 +5,7 @@ import { createSidearm } from "./sidearm";
 import type { ItemId } from "./types";
 import { gripStyle, poseGrip } from "./grip";
 import armURL from "../assets/guards/first-person-arm.glb";
+import ballistics from "../assets/ballistics/manifest.json";
 
 /** A separate stable-FOV scene keeps the arm readable on wide mobile screens. */
 export class FirstPersonView {
@@ -18,6 +19,9 @@ export class FirstPersonView {
   private rest = new Map<string, THREE.Quaternion>();
   private transition = 0;
   private disposed = false;
+  private can?: THREE.Group;
+  private recoil = 0;
+  private muzzleFlash?: THREE.Mesh;
   private shared = new Set<
     THREE.BufferGeometry | THREE.Material | THREE.Texture
   >();
@@ -32,12 +36,14 @@ export class FirstPersonView {
     screwdriver: THREE.Object3D,
     keyTemplate: THREE.Object3D,
     pickups: Map<string, THREE.Object3D>,
+    ballisticsModels?: { gun: THREE.Object3D; can: THREE.Object3D },
   ) {
     if (this.arm) return;
     const gltf = await new GLTFLoader()
       .setMeshoptDecoder(MeshoptDecoder)
       .loadAsync(armURL);
     this.arm = gltf.scene;
+    this.arm.scale.setScalar(1.12);
     this.root.add(this.arm);
     const forearm = this.arm.getObjectByName("RightForeArm")!;
     this.arm.updateMatrixWorld(true);
@@ -90,6 +96,36 @@ export class FirstPersonView {
     pistol.getObjectByProperty("type", "PointLight")?.removeFromParent();
     this.hand.add(pistol);
     this.items.set("dart_pistol", pistol);
+    if (ballisticsModels) {
+      const gun = this.normalizeTool(ballisticsModels.gun, false);
+      // Retain the source palm origin, rather than recentering the grip.
+      gun.children[0].position.set(0, 0, 0);
+      gun.quaternion.copy(pistol.quaternion);
+      gun.position.copy(pistol.position);
+      this.can = this.normalizeTool(ballisticsModels.can, false);
+      this.can.name="CanAttachment";
+      this.can.children[0].position.set(0, 0, 0);
+      this.can.rotation.x = Math.PI / 2;
+      this.can.position.set(...(ballistics.muzzle as [number, number, number]));
+      this.can.position.z -= 0.012;
+      gun.add(this.can);
+      this.muzzleFlash = new THREE.Mesh(
+        new THREE.SphereGeometry(0.014, 8, 6),
+        new THREE.MeshBasicMaterial({
+          color: 0xffd18b,
+          transparent: true,
+          opacity: 0.8,
+        }),
+      );
+      this.muzzleFlash.name="MuzzleFlash";
+      this.muzzleFlash.position.set(
+        ...(ballistics.muzzle as [number, number, number]),
+      );
+      this.muzzleFlash.scale.z = 2;
+      gun.add(this.muzzleFlash);
+      this.hand.add(gun);
+      this.items.set("pistol_10mm", gun);
+    }
     // Remaining tools are separate authored profiles, never inventory-card images.
     const metal = new THREE.MeshStandardMaterial({
       color: 0x939b9d,
@@ -232,6 +268,7 @@ export class FirstPersonView {
     reduced: boolean,
     nearWall: boolean,
     visible: boolean,
+    canAttached = false,
   ) {
     if (item !== this.selected) {
       this.selected = item;
@@ -239,16 +276,30 @@ export class FirstPersonView {
       if (this.arm) poseGrip(this.arm, this.rest, gripStyle(item));
     }
     this.transition = Math.max(0, this.transition - dt);
+    this.recoil = Math.max(0, this.recoil - dt);
+    if (this.can) this.can.visible = canAttached;
+    if (this.muzzleFlash) {
+      this.muzzleFlash.visible = item === "pistol_10mm" && this.recoil > 0.14;
+      this.muzzleFlash.position.z =
+        ballistics.muzzle[2] + (canAttached ? 0.118 : 0.01);
+    }
     this.root.visible = visible && !!item && this.items.has(item);
     for (const model of new Set(this.items.values()))
       model.visible = model === this.items.get(item!);
     const sway = moving && !reduced ? Math.sin(time * 8) * 0.009 : 0;
     this.root.position.set(
       sway,
-      -this.transition * 1.4 - (nearWall ? 0.1 : 0),
-      nearWall ? 0.1 : 0,
+      -this.transition * 1.4 - (nearWall ? 0.1 : 0) + this.recoil * 0.12,
+      (nearWall ? 0.1 : 0) + this.recoil * 0.18,
     );
-    this.root.rotation.set(nearWall ? -0.25 : 0, 0, sway * 0.5);
+    this.root.rotation.set(
+      (nearWall ? -0.25 : 0) + this.recoil * 0.4,
+      0,
+      sway * 0.5,
+    );
+  }
+  shoot() {
+    this.recoil = 0.18;
   }
   render(renderer: THREE.WebGLRenderer, aspect: number) {
     if (!this.root.visible) return;

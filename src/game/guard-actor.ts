@@ -287,6 +287,22 @@ export class GuardActor {
         hero.scene,
         hero.animations.find((c) => c.name === "Idle")!,
       ),
+      makeStrikeClip(
+        hero.scene,
+        hero.animations.find((c) => c.name === "Idle")!,
+        1,
+      ),
+      makeStrikeClip(
+        hero.scene,
+        hero.animations.find((c) => c.name === "Idle")!,
+        2,
+      ),
+      makeStrikeClip(
+        hero.scene,
+        hero.animations.find((c) => c.name === "Idle")!,
+        0,
+        true,
+      ),
       new THREE.AnimationClip("Aim", 1, [
         ...hero.animations
           .find((c) => c.name === "Idle")!
@@ -309,7 +325,7 @@ export class GuardActor {
         actions = new Map<string, THREE.AnimationAction>();
       for (const clip of animations) {
         const action = mixer.clipAction(clip);
-        if (clip.name === "Collapse" || clip.name === "Strike") {
+        if (["Collapse", "Strike", "Cross", "Hook"].includes(clip.name)) {
           action.setLoop(THREE.LoopOnce, 1);
           action.clampWhenFinished = true;
         }
@@ -354,16 +370,19 @@ export class GuardActor {
       : quality === "mobile" || (quality === "auto" && mobile)
         ? "mobile"
         : "hero";
-    const nextClip: GuardClip =
-      guard.attackElapsed !== undefined
-        ? "Strike"
+    const nextClip: GuardClip = guard.dead
+      ? "Collapse"
+      : guard.attackElapsed !== undefined
+        ? (["Strike", "Cross", "Hook"] as const)[guard.attackKind ?? 0]
         : guard.cinematicAim
           ? "Aim"
           : guard.examining
             ? "Examine"
             : guard.crouchInspect
               ? "Kneel"
-              : guardClip(guard.state, speed, turn);
+              : guard.state === "chase" && speed < 0.1
+                ? "Boxing"
+                : guardClip(guard.state, speed, turn);
     if (nextClip === "Walk" || nextClip === "Run")
       this.stridePhase =
         (this.stridePhase +
@@ -427,9 +446,15 @@ export class GuardActor {
     if (!visible || (this.tier === "distant" && this.accumulated < 1 / 15))
       return;
     view.mixer.update(this.accumulated);
-    if (nextClip === "Strike" || nextClip === "Walk" || nextClip === "Run") {
-      this.current.time =
-        nextClip === "Strike"
+    if (
+      ["Strike", "Cross", "Hook"].includes(nextClip) ||
+      guard.dead ||
+      nextClip === "Walk" ||
+      nextClip === "Run"
+    ) {
+      this.current.time = guard.dead
+        ? Math.min(guard.deathElapsed ?? 10, this.current.getClip().duration)
+        : ["Strike", "Cross", "Hook"].includes(nextClip)
           ? guard.attackElapsed!
           : this.stridePhase * this.current.getClip().duration;
       view.mixer.update(0);
@@ -472,6 +497,32 @@ export class GuardActor {
           if (index !== undefined) face.morphTargetInfluences![index] = blink;
         }
     }
+  }
+  isHeadHit(point: THREE.Vector3, hit?: THREE.Intersection) {
+    // A raised boxing hand is not a headshot: classify the actual hit triangle
+    // using the rig's head weights before the anatomical fallback.
+    if (hit?.object instanceof THREE.SkinnedMesh && hit.face) {
+      const mesh = hit.object,
+        indices = mesh.geometry.getAttribute("skinIndex"),
+        weights = mesh.geometry.getAttribute("skinWeight");
+      if (indices && weights) {
+        let headWeight = 0;
+        for (const v of [hit.face.a, hit.face.b, hit.face.c])
+          for (let j = 0; j < 4; j++)
+            if (
+              /^(Head|Jaw|LeftEye|RightEye)/.test(
+                mesh.skeleton.bones[indices.getComponent(v, j)]?.name ?? "",
+              )
+            )
+              headWeight += weights.getComponent(v, j);
+        return headWeight / 3 > 0.55;
+      }
+    }
+    const head = this.views.get(this.tier)!.head;
+    if (!head) return false;
+    const center = head.getWorldPosition(new THREE.Vector3());
+    center.y += 0.1;
+    return point.y > center.y - 0.12 && point.distanceTo(center) < 0.19;
   }
   /** Visual two-bone IK: the weapon follows the palm, both hands close on its grip. */
   weaponGrip(target: THREE.Vector3) {

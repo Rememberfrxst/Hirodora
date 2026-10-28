@@ -37,6 +37,12 @@ export function decideGuard(
   seconds: number,
 ): GuardDecision {
   const dt = Math.max(0, Math.min(1, seconds));
+  if (g.dead)
+    return {
+      next: { state: "knocked_out", suspicion: 0 },
+      speed: 0,
+      caughtPlayer: false,
+    };
   let state = g.state,
     suspicion = g.suspicion,
     timer = g.stateTimer,

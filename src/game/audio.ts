@@ -14,21 +14,9 @@ interface AudioHandle {
   spatial?: { position: AudioPosition; volume: number };
 }
 export type Surface =
-  | "concrete"
-  | "tile"
-  | "metal"
-  | "wood"
-  | "wet"
-  | "dirt"
-  | "gravel"
-  | "water";
+  "concrete" | "tile" | "metal" | "wood" | "wet" | "dirt" | "gravel" | "water";
 export type AudioBus =
-  | "music"
-  | "sfx"
-  | "footsteps"
-  | "ambience"
-  | "dialogue"
-  | "ui";
+  "music" | "sfx" | "footsteps" | "ambience" | "dialogue" | "ui";
 export const audioBuses: AudioBus[] = [
   "music",
   "sfx",
@@ -580,12 +568,7 @@ class SoundManager {
   }
   public cue(
     event:
-      | "keys"
-      | "bed-drag"
-      | "screwdriver"
-      | "ceramic-drag"
-      | "hinge"
-      | "paper",
+      "keys" | "bed-drag" | "screwdriver" | "ceramic-drag" | "hinge" | "paper",
     position?: Position,
     volume = 0.6,
   ) {
@@ -770,6 +753,17 @@ class SoundManager {
   }
   public playDartShot(silenced: boolean) {
     this.playObject(silenced ? "cloth" : "metal");
+  }
+  public playPistolShot(suppressed: boolean) {
+    // A licensed local fallback remains until the uploaded Mixkit license is
+    // supplied/verified. No stock recording is fetched at runtime.
+    this.play(
+      "guard-gunshot",
+      "sfx",
+      suppressed ? 0.28 : 0.75,
+      undefined,
+      suppressed ? 1 : 0,
+    );
   }
   public playVictoryFanfare() {
     this.play(this.choose("impactGeneric_light_"), "ui", 0.3);

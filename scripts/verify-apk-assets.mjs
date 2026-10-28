@@ -84,6 +84,70 @@ await page.getByRole("button", { name: /Skip intro/ }).tap();
 await page.getByRole("button", { name: "Pause game", exact: true }).waitFor();
 // Give asynchronous sound decoding a chance to exercise bundled OGG URLs too.
 await page.waitForTimeout(1500);
+let pistol;
+if (process.env.VERIFY_PISTOL === "true") {
+  const weaponCheckpoint = await page.evaluate(() => {
+    const key = "hirodora-checkpoint-v3",
+      cp = JSON.parse(localStorage.getItem(key) || "null");
+    if (!cp) throw Error("No real APK checkpoint to extend");
+    cp.inventory.push("pistol_10mm");
+    cp.equippedItem = "pistol_10mm";
+    cp.flags.can_attached = true;
+    cp.flags.intro_done = true;
+    cp.flags.intro_pending = false;
+    cp.stats.pistolAmmo = 24;
+    return cp;
+  });
+  // Install after unload handlers have saved the old live session, but before
+  // the replacement application's constructor reads its checkpoint.
+  await page.addInitScript(
+    (cp) => localStorage.setItem("hirodora-checkpoint-v3", JSON.stringify(cp)),
+    weaponCheckpoint,
+  );
+  await page.reload();
+  await page.locator("[data-start]").tap({ timeout: 120000 });
+  const fire = page.getByRole("button", { name: "Fire pistol", exact: true });
+  try {
+    await fire.waitFor({ timeout: 120000 });
+  } catch (error) {
+    await page.screenshot({ path: `${captureDir}/pistol-start-failure.png` });
+    await writeFile(
+      `${captureDir}/pistol-start-failure.json`,
+      JSON.stringify(
+        await page.evaluate(() => ({
+          text: document.body.innerText,
+          checkpoint: JSON.parse(
+            localStorage.getItem("hirodora-checkpoint-v3") || "null",
+          ),
+        })),
+        null,
+        2,
+      ),
+    );
+    await browser.close();
+    throw error;
+  }
+  const before = await fire.innerText();
+  await fire.tap();
+  await page.waitForFunction(() =>
+    document.querySelector(".touch-fire")?.textContent?.includes("23"),
+  );
+  const after = await fire.innerText();
+  const icons = page.locator(".pocket-item img");
+  await icons.first().waitFor();
+  await icons.evaluateAll(async (list) =>
+    Promise.all(list.map((i) => i.decode())),
+  );
+  pistol = {
+    before,
+    after,
+    iconsDecoded: await icons.evaluateAll((list) =>
+      list.every((i) => i.naturalWidth > 0),
+    ),
+  };
+  if (!before.includes("24") || !after.includes("23") || !pistol.iconsDecoded)
+    throw Error("APK pistol UI failed");
+}
 const workers = await page.evaluate(
   async () => (await navigator.serviceWorker.getRegistrations()).length,
 );
@@ -99,6 +163,7 @@ const report = {
   missing: unavailable,
   pageErrors: errors,
   serviceWorkers: workers,
+  pistol,
 };
 await writeFile(
   `${captureDir}/apk-assets-smoke.json`,

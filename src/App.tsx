@@ -8,6 +8,7 @@ import { HUD } from "./components/HUD";
 import { HudEditor } from "./components/HudEditor";
 import environmentAssets from "./assets/environment/manifest.json";
 import cargoAssets from "./assets/environment/cargo-manifest.json";
+import ballisticAssets from "./assets/ballistics/manifest.json";
 import { MiniGames } from "./components/MiniGames";
 import {
   GameOverModal,
@@ -296,6 +297,10 @@ export default function App() {
                       {[
                         ...environmentAssets.uploadedAssets.models,
                         ...cargoAssets.sources,
+                        ...ballisticAssets.sources.map((s) => ({
+                          ...s,
+                          name: s.title,
+                        })),
                       ].map((asset) => (
                         <p
                           key={asset.name}

@@ -1,0 +1,13 @@
+Gun 10mm
+Author: Christian S (https://sketchfab.com/ChristianSX)
+Source: https://sketchfab.com/3d-models/gun-10mm-a1ba71cee9fd4fd9832a567c6fa9e209
+License: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+Changes: World transforms baked into real metre geometry; source UV/PBR retained; normals transformed; embedded WebP and meshopt. Gun +Z is muzzle, can +Y is its long axis.
+
+Coca-Cola Can (4K Texture)
+Author: Michael (https://sketchfab.com/SgtBlitz)
+Source: https://sketchfab.com/3d-models/coca-cola-can-4k-texture-de345f65a5264d3aa69e1d84bf03911a
+License: CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+Changes: World transforms baked into real metre geometry; source UV/PBR retained; normals transformed; embedded WebP and meshopt. Gun +Z is muzzle, can +Y is its long axis.
+
+Coca-Cola names/label remain trademarks of their respective owner. No endorsement is implied.

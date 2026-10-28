@@ -1,0 +1,17 @@
+Verifies
+Verified using v1 scheme (JAR signing): false
+Verified using v2 scheme (APK Signature Scheme v2): true
+Verified using v3 scheme (APK Signature Scheme v3): false
+Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+Verified using v4 scheme (APK Signature Scheme v4): false
+Verified for SourceStamp: false
+Number of signers: 1
+Signer #1 certificate DN: CN=Hirodora Android Release, OU=Independent Game, O=Hirodora, C=IN
+Signer #1 certificate SHA-256 digest: d7175da40c348c91e8a8663635d3a130115aba916e5ce889e40b646c009f33ca
+Signer #1 certificate SHA-1 digest: 9552d1e9ac53069e0f9d930d6ac2ac6f103ff9ad
+Signer #1 certificate MD5 digest: b2350da828b58a45868b82e296b11467
+Signer #1 key algorithm: RSA
+Signer #1 key size (bits): 3072
+Signer #1 public key SHA-256 digest: 7b88912e5c98a44ad72136777087dbbbbfb91df3c66380ad074d1886e437b1e2
+Signer #1 public key SHA-1 digest: 982ffd17331e989c0c44e9aad0519fd4a8fa0713
+Signer #1 public key MD5 digest: 91e70e687997dc92c645679a88ab121e

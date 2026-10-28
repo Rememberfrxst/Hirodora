@@ -1,5 +1,5 @@
 {
-  "source": "Actual in-game tool mesh renders; original tool geometry and supplied screwdriver retain their existing licenses in environment/UPLOADED-ASSET-LICENSES.txt",
+  "source": "Actual in-game tool mesh renders; original tool geometry and supplied screwdriver retain their existing licenses in environment/UPLOADED-ASSET-LICENSES.txt and ballistics/LICENSES.txt",
   "icons": [
     "cell_key",
     "screwdriver",
@@ -11,7 +11,8 @@
     "stethoscope",
     "steel_wool",
     "rubber_washer",
-    "silencer"
+    "silencer",
+    "pistol_10mm"
   ],
   "size": 160
 }

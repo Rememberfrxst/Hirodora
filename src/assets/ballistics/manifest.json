@@ -1,0 +1,56 @@
+{
+  "sources": [
+    {
+      "author": "Christian S (https://sketchfab.com/ChristianSX)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/gun-10mm-a1ba71cee9fd4fd9832a567c6fa9e209",
+      "title": "Gun 10mm",
+      "file": "pistol-10mm.glb",
+      "bytes": 1974396,
+      "sourceSHA256": "1eb372e990cbdbab9d659236df1d698e61a7705d291b9da0ae4e136aa5351bce",
+      "runtimeSHA256": "5bed9f1c99804f9c4b6aed02f07a1040abcf7ecdbe91c149a0a6b8ce68be4183",
+      "bounds": {
+        "min": [
+          -0.022228513565229955,
+          -0.09431752562522888,
+          -0.0891476422548294
+        ],
+        "max": [
+          0.022228513565229955,
+          0.06771404107698165,
+          0.15085235238075256
+        ]
+      },
+      "changes": "World transforms baked into real metre geometry; source UV/PBR retained; normals transformed; embedded WebP and meshopt. Gun +Z is muzzle, can +Y is its long axis."
+    },
+    {
+      "author": "Michael (https://sketchfab.com/SgtBlitz)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/coca-cola-can-4k-texture-de345f65a5264d3aa69e1d84bf03911a",
+      "title": "Coca-Cola Can (4K Texture)",
+      "file": "soda-can.glb",
+      "bytes": 953084,
+      "sourceSHA256": "f192a2a248d2b26106ecc909b8a6ac2b2e68fe5d9bc202ac366ba2a79f5a7a9c",
+      "runtimeSHA256": "11bac9bd57c431f3fafe1d00bb9bab1091f6fd470840f617d4f1e444c8932a00",
+      "bounds": {
+        "min": [
+          -0.03199765399163427,
+          0,
+          -0.03199765399163427
+        ],
+        "max": [
+          0.03199765399163427,
+          0.125,
+          0.03199765399163427
+        ]
+      },
+      "changes": "World transforms baked into real metre geometry; source UV/PBR retained; normals transformed; embedded WebP and meshopt. Gun +Z is muzzle, can +Y is its long axis."
+    }
+  ],
+  "muzzle": [
+    0,
+    0.044,
+    0.151
+  ],
+  "canHeight": 0.125
+}

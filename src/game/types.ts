@@ -46,9 +46,15 @@ export interface GuardData {
   attackElapsed?: number;
   attackCooldown?: number;
   crouchInspect?: boolean;
+  health?: number;
+  dead?: boolean;
+  deathElapsed?: number;
+  attackIndex?: number;
+  attackKind?: 0 | 1 | 2;
 }
 
 export type ItemId =
+  | "pistol_10mm"
   | "cell_key"
   | "screwdriver"
   | "small_key"
@@ -114,6 +120,7 @@ export interface PlayerStats {
   isInHidingSpot: boolean;
   hidingSpotName: string | null;
   dartAmmo: number;
+  pistolAmmo: number;
   alarmsTriggered: number;
   timesCaught: number;
   hintsUsed: number;
@@ -135,6 +142,12 @@ export interface InteractiveObject {
 }
 
 export interface GameCheckpoint {
+  guardCombat?: {
+    id: string;
+    health: number;
+    position: [number, number, number];
+    rotationY: number;
+  }[];
   layoutVersion?: number;
   equippedItem?: ItemId | null;
   openingProgress?: { bed: number; bolts: number; toilet: number };

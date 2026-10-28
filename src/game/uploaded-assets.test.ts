@@ -80,6 +80,16 @@ test("Rock Wall 16 is a complete 2K dielectric PBR set with correct hashes and v
     await readFile(new URL("manifest.json", base), "utf8"),
   );
   assert.equal(manifest.uploadedAssets.wall.license, "CC0-1.0");
+  const mobile = JSON.parse(await readFile(new URL('mobile-materials.json', base), 'utf8'));
+  assert.equal(mobile.license, 'CC0-1.0');
+  for (const entry of mobile.records) {
+    const bytes = await readFile(new URL(entry.file, base));
+    assert.equal(createHash('sha256').update(bytes).digest('hex'), entry.sha256);
+    const info = await sharp(bytes).metadata();
+    assert.equal(info.width, 1024);
+    assert.equal(info.height, 1024);
+    assert.ok(entry.bytes < entry.originalBytes);
+  }
   for (const file of [
     "rock16-albedo.webp",
     "rock16-normal.webp",

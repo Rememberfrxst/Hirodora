@@ -10,6 +10,10 @@ import bridgeURL from "../assets/environment/metal-bridge.glb";
 import rockColor from "../assets/environment/rock16-albedo.webp";
 import rockNormal from "../assets/environment/rock16-normal.webp";
 import rockORM from "../assets/environment/rock16-orm.webp";
+import mobileColor from "../assets/environment/rock16-mobile-albedo.webp";
+import mobileNormal from "../assets/environment/rock16-mobile-normal.webp";
+import mobileORM from "../assets/environment/rock16-mobile-orm.webp";
+import { isAppleMobile } from "./platform";
 import metalColor from "../assets/environment/metal-albedo.webp";
 import metalNormal from "../assets/environment/metal-normal.webp";
 import metalORM from "../assets/environment/metal-orm.webp";
@@ -52,7 +56,14 @@ export function createEnvironment(scene: THREE.Scene) {
     });
   }
   // One shared 2K scanned texture set, not duplicate GPU images per room/surface.
-  const masonry = surface(rockColor, rockNormal, rockORM);
+  const mobile =
+    typeof window !== "undefined" &&
+    (isAppleMobile() || matchMedia("(pointer: coarse)").matches);
+  const masonry = surface(
+    mobile ? mobileColor : rockColor,
+    mobile ? mobileNormal : rockNormal,
+    mobile ? mobileORM : rockORM,
+  );
   masonry.name = "RockWall16";
   masonry.normalScale.set(0.65, 0.65);
   masonry.aoMapIntensity = 0.65;
@@ -104,27 +115,51 @@ export function createEnvironment(scene: THREE.Scene) {
     anchors.push({ name, root });
     return root;
   };
-  const load = () => {
+  const load = (onProgress?: (completed: number, total: number) => void) => {
     if (loaded || disposed) return Promise.resolve();
     if (pending) return pending;
+    let completed = 0;
+    const track = <T>(task: Promise<T>) =>
+      task.then((value) => {
+        onProgress?.(++completed, textures.length + 6);
+        return value;
+      });
     pending = Promise.all([
       Promise.all(
-        textures.map(async ({ url, target }) => {
-          const image = await loader.loadAsync(url);
-          if (disposed) {
-            image.dispose();
-            return;
-          }
-          target.image = image.image;
-          target.needsUpdate = true;
-        }),
+        textures.map(({ url, target }) =>
+          track(
+            (async () => {
+              const image = await loader.loadAsync(url);
+              if (disposed) {
+                image.dispose();
+                return;
+              }
+              target.image = image.image;
+              target.needsUpdate = true;
+            })(),
+          ),
+        ),
       ),
-      new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(modelURL),
-      new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(uploadedURL),
-      new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(stairsURL),
-      new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(boxURL),
-      new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(palletURL),
-      new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(bridgeURL),
+      track(
+        new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(modelURL),
+      ),
+      track(
+        new GLTFLoader()
+          .setMeshoptDecoder(MeshoptDecoder)
+          .loadAsync(uploadedURL),
+      ),
+      track(
+        new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(stairsURL),
+      ),
+      track(
+        new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(boxURL),
+      ),
+      track(
+        new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(palletURL),
+      ),
+      track(
+        new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(bridgeURL),
+      ),
     ])
       .then(([, gltf, uploaded, stairs, box, pallet, bridge]) => {
         if (disposed) {
@@ -153,6 +188,8 @@ export function createEnvironment(scene: THREE.Scene) {
             throw Error(`Missing environment model ${anchor.name}`);
           const clone = template.clone(true);
           clone.name = `CellAsset_${suppliedName}`;
+          if (anchor.name === "Toilet")
+            clone.scale.multiply(new THREE.Vector3(1.08, 1.04, 1.08));
           // Supplied roots contain metre/floor normalization: preserve transforms.
           if (
             ![

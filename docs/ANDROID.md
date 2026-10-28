@@ -1,8 +1,10 @@
-# Hirodora Android 0.20.0
+# Hirodora Android 0.21.0
 
 The APK is an installable, signed Android application. It embeds the existing Three.js game inside a hardware-accelerated Android System WebView; Java handles the Android lifecycle, local asset delivery, landscape orientation, immersive display and Android Back. This release does not migrate the renderer to Unity or C++.
 
-Download `downloads/Hirodora-0.20.0-android.apk` from the main branch's README, allow installation from your browser/Files application when Android prompts, then install. Requires Android 8.0+, an updated Android System WebView and WebGL 2 support. All assets are local. The manifest requests **no Internet, storage, microphone or tracking permissions**. VersionCode 2000 reuses the existing release certificate. Install over an earlier version to preserve app-local saves and HUD settings; older layout saves migrate safely. Uninstalling clears saves. Browser saves do not transfer automatically.
+Download `downloads/Hirodora-0.21.0-android.apk` from the main branch's README, allow installation from your browser/Files application when Android prompts, then install. Requires Android 8.0+, an updated Android System WebView and WebGL 2 support. All assets are local. The manifest requests **no Internet, storage, microphone or tracking permissions**. VersionCode 2100 reuses the existing release certificate. Install over an earlier version to preserve app-local saves and HUD settings; older layout saves migrate safely. Uninstalling clears saves. Browser saves do not transfer automatically.
+
+Version 0.21.0 includes the original new architectural H logo, actual loading progress through audio/shader preparation, shared 1K mobile PBR maps, a movable/resizable 50%-background ammo card, cleaner bottom HP area, recalibrated pistol fingers, pooled shot effects and larger toilet/mounting hardware. See [v21](UPDATE-V21.md). The APK is approximately 37 MiB; exact bytes and hashes are in the download manifest.
 
 Version 0.20.0 moves stairs to Cell 048/036, deepens the lower floor by 0.6m for readable sign bands, integrates the supplied rigged hands with reload-only left-hand visibility, adds a six-round magazine/unlimited reserve/manual reload and reference-style pickup/dialogue/weapon HUD. All 70 runtime recordings are MP3 for broader Safari decoding compatibility; Android also uses those same recordings. Checkpoint layout 18 migrates lower-floor/stair saves. See [implementation](UPDATE-V20.md) and [separate iPhone/Safari guide](IOS.md); this APK is Android only.
 

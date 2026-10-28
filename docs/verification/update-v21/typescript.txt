@@ -1,0 +1,3 @@
+
+> hirodora@0.21.0 lint
+> tsc --noEmit

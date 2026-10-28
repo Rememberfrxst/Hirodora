@@ -1,22 +1,17 @@
 import { useRef, useState } from "react";
-import { GameEngine, ALL_ITEMS } from "../game/engine";
-import { loadLayout, placementStyle, pocketBottom } from "../game/hud-layout";
+import { GameEngine } from "../game/engine";
+import {
+  loadLayout,
+  placementStyle,
+  pocketBottom,
+  weaponPlacementStyle,
+} from "../game/hud-layout";
 import { ControlIcon, HintIcon } from "./ControlIcon";
 import { ItemIcon } from "./ItemIcon";
 import { COMBAT } from "../game/combat";
 import { BALLISTICS } from "../game/ballistics";
 import weaponIcon from "../assets/equipment/pistol-hud.webp";
-import {
-  Eye,
-  Volume2,
-  Pause,
-  Footprints,
-  Crosshair,
-  Backpack,
-  X,
-  Hand,
-  Move,
-} from "lucide-react";
+import { Pause, Crosshair, Hand, Move } from "lucide-react";
 
 interface Props {
   engine: GameEngine;
@@ -38,7 +33,6 @@ export function HUD({ engine, onPause }: Props) {
   const investigating = engine.worldData.guards.some(
     (g) => g.state === "suspicious",
   );
-  const [satchel, setSatchel] = useState(false);
   const [layout] = useState(loadLayout);
   const joystick = useRef<{
     id: number;
@@ -129,7 +123,11 @@ export function HUD({ engine, onPause }: Props) {
         </nav>
       </header>
       {engine.equippedItem === "pistol_10mm" && (
-        <section className="weapon-hud" aria-label="10mm pistol magazine">
+        <section
+          className="weapon-hud"
+          aria-label="10mm pistol magazine"
+          style={weaponPlacementStyle(layout.weapon)}
+        >
           <div className="weapon-ammo">
             <strong>{stats.pistolAmmo}</strong>
             <span>/ {BALLISTICS.ammo}</span>
@@ -272,59 +270,6 @@ export function HUD({ engine, onPause }: Props) {
           )}
         </div>
       )}
-      <div className="hud-bottom">
-        <div className="stealth-meters">
-          <div className="meter-label">
-            <Volume2 size={13} /> ACOUSTIC FOOTPRINT{" "}
-            <b>{Math.round(stats.noiseLevel)}</b>
-          </div>
-          <div className="noise-bars">
-            {Array.from({ length: 24 }, (_, i) => (
-              <i
-                key={i}
-                className={
-                  stats.noiseLevel > i * 4 ? (i > 12 ? "loud" : "lit") : ""
-                }
-              />
-            ))}
-          </div>
-          <div className="awareness">
-            <Eye size={13} />
-            <span>GUARD AWARENESS</span>
-            <div>
-              <i style={{ width: suspicion + "%" }} />
-            </div>
-            <b>{Math.round(suspicion)}%</b>
-          </div>
-          <small>
-            <Footprints size={12} />{" "}
-            {stats.isCrouching ? "CROUCHED · QUIET" : "STANDING"}{" "}
-            <span>CHECKPOINTS AUTOSAVE</span>
-          </small>
-        </div>
-        <button
-          className="satchel-button"
-          onClick={() => {
-            setSatchel(!satchel);
-            engine.overlayOpen = !satchel;
-            engine.clearInput();
-          }}
-        >
-          <Backpack size={18} />
-          <span>
-            SATCHEL<small>{engine.inventory.length} ITEMS</small>
-          </span>
-          {engine.equippedItem === "dart_pistol" && (
-            <b>{stats.dartAmmo} DARTS</b>
-          )}
-          {engine.equippedItem === "pistol_10mm" && (
-            <b>
-              {stats.pistolAmmo} ROUNDS
-              {engine.gameFlags.can_attached ? " · CAN" : ""}
-            </b>
-          )}
-        </button>
-      </div>
       <nav
         className={"pocket-strip" + (engine.mobile ? " mobile-pockets" : "")}
         aria-label="Carried items"
@@ -365,52 +310,7 @@ export function HUD({ engine, onPause }: Props) {
           })}
         </div>
       </nav>
-      {satchel && (
-        <div className="satchel-panel">
-          <header>
-            <span>PRISONER 047 / SATCHEL</span>
-            <button
-              onClick={() => {
-                setSatchel(false);
-                engine.overlayOpen = false;
-              }}
-              aria-label="Close satchel"
-            >
-              <X size={18} />
-            </button>
-          </header>
-          {engine.inventory.length === 0 && (
-            <div className="satchel-empty">
-              <Backpack size={28} />
-              <strong>Your pockets are empty.</strong>
-              <p>Tools, keys and evidence you collect will appear here.</p>
-            </div>
-          )}
-          {engine.inventory.map((id, index) => (
-            <div key={id} className="inventory-card">
-              <span className="item-index">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-              <div>
-                <strong>{engine.getItem(id).name}</strong>
-                <p>{engine.getItem(id).description}</p>
-                {engine.getItem(id).category !== "document" && (
-                  <button
-                    className="equip-button"
-                    aria-pressed={engine.equippedItem === id}
-                    onClick={() =>
-                      engine.equipItem(engine.equippedItem === id ? null : id)
-                    }
-                  >
-                    {engine.equippedItem === id ? "Unequip" : "Equip"}
-                  </button>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-      {engine.mobile && !satchel && (
+      {engine.mobile && (
         <div className="touch-controls custom-touch-area">
           <div
             className="custom-control custom-joystick"

@@ -1,0 +1,144 @@
+{
+  "captures": [
+    {
+      "name": "01-real-loading",
+      "actualStage": 2,
+      "totalStages": 8,
+      "method": "Capture holds the real arm request to inspect genuine pending asset work."
+    },
+    {
+      "name": "02-toilet-bolts",
+      "position": [
+        -6.5,
+        1.35,
+        -8.8
+      ],
+      "target": [
+        -8,
+        0.55,
+        -9.6
+      ],
+      "item": null,
+      "reload": false,
+      "shot": false,
+      "fov": 70,
+      "drawCalls": 451,
+      "triangles": 3161001,
+      "leftVisible": false,
+      "flash": false
+    },
+    {
+      "name": "03-pistol-grip",
+      "position": [
+        -39,
+        1.65,
+        0
+      ],
+      "target": [
+        -39,
+        1.5,
+        10
+      ],
+      "item": "pistol_10mm",
+      "reload": false,
+      "shot": false,
+      "fov": 70,
+      "drawCalls": 307,
+      "triangles": 2211259,
+      "leftVisible": false,
+      "flash": false
+    },
+    {
+      "name": "04-shot-effect",
+      "position": [
+        -39,
+        1.65,
+        0
+      ],
+      "target": [
+        -39,
+        1.5,
+        10
+      ],
+      "item": "pistol_10mm",
+      "reload": false,
+      "shot": true,
+      "fov": 70,
+      "drawCalls": 307,
+      "triangles": 2207958,
+      "leftVisible": false,
+      "flash": true
+    },
+    {
+      "name": "05-reload",
+      "position": [
+        -39,
+        1.65,
+        0
+      ],
+      "target": [
+        -39,
+        1.5,
+        10
+      ],
+      "item": "pistol_10mm",
+      "reload": true,
+      "shot": false,
+      "fov": 70,
+      "drawCalls": 309,
+      "triangles": 2214284,
+      "leftVisible": true,
+      "flash": false
+    },
+    {
+      "name": "06-mobile-custom-hud",
+      "layout": {
+        "version": 1,
+        "preset": "compact",
+        "controls": {
+          "move": {
+            "x": 11,
+            "y": 72,
+            "size": 106
+          },
+          "sprint": {
+            "x": 84,
+            "y": 61,
+            "size": 58
+          },
+          "jump": {
+            "x": 94,
+            "y": 61,
+            "size": 58
+          },
+          "crouch": {
+            "x": 84,
+            "y": 83,
+            "size": 58
+          },
+          "interact": {
+            "x": 94,
+            "y": 83,
+            "size": 64
+          },
+          "fire": {
+            "x": 73,
+            "y": 83,
+            "size": 54
+          }
+        },
+        "weapon": {
+          "x": 31.642512077294683,
+          "y": 28.609625668449198,
+          "size": 160
+        }
+      },
+      "viewport": [
+        844,
+        390
+      ]
+    }
+  ],
+  "errors": [],
+  "method": "Actual game renders and loading UI; fixed camera for desktop grip, recoil and reload; mobile card moved through the real Custom HUD editor."
+}

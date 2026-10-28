@@ -1,0 +1,4 @@
+Archive:  downloads/Hirodora-0.21.0-offline.zip
+    testing: Hirodora-0.21.0.html     OK
+    testing: Hirodora-0.21.0-README.txt   OK
+No errors detected in compressed data of downloads/Hirodora-0.21.0-offline.zip.

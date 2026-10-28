@@ -20,7 +20,9 @@ export interface PrisonWorldData {
   cells: readonly CellRoom[];
   scene: THREE.Scene;
   cargo: THREE.Group[];
-  loadEnvironment: () => Promise<void>;
+  loadEnvironment: (
+    onProgress?: (completed: number, total: number) => void,
+  ) => Promise<void>;
   disposeEnvironment: () => void;
   windowLight: THREE.SpotLight;
   colliders: THREE.Box3[];
@@ -149,7 +151,7 @@ function buildTableBounds() {
 
 function buildLegacyToiletBounds() {
   const group = new THREE.Group();
-  box(group, [0.55888, 0.98, 0.87176], [0, 0.44, 0], ceramic);
+  box(group, [0.6036, 1.0192, 0.9415], [0, 0.4596, 0], ceramic);
   return group;
 }
 
@@ -797,18 +799,44 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
   environment.add("Bunk", -13, -0.05, -8.4, Math.PI);
   const toilet = environment.add("Toilet", -8.05, -0.05, -9.7, -Math.PI / 2);
   const bolts: THREE.Mesh[] = [];
-  for (const x of [-0.105, 0.105])
-    for (const z of [-0.165, 0.125]) {
+  const boltSteel = new THREE.MeshStandardMaterial({
+    color: 0xa5a39a,
+    metalness: 0.85,
+    roughness: 0.45,
+  });
+  const boltSlot = new THREE.MeshStandardMaterial({
+    color: 0x171917,
+    roughness: 0.85,
+  });
+  for (const x of [-0.18, 0.18])
+    for (const z of [-0.22, 0.19]) {
       const head = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.018, 0.018, 0.018, 6),
-        iron,
+        new THREE.CylinderGeometry(0.024, 0.024, 0.022, 6),
+        boltSteel,
       );
-      head.position.set(x, 0.055, z);
+      head.name = "ToiletMountingBolt";
+      head.position.set(x, 0.08, z);
+      // Rounded mounting lugs connect the pedestal to its floor anchors.
+      const flange = new THREE.Shape();
+      flange.absellipse(0, 0, 0.115, 0.046, 0, Math.PI * 2, false, 0);
+      const mountingFoot = new THREE.Mesh(new THREE.ExtrudeGeometry(flange, {
+        depth: 0.012, bevelEnabled: true, bevelThickness: 0.002,
+        bevelSize: 0.003, bevelSegments: 2, steps: 1, curveSegments: 12,
+      }), iron);
+      mountingFoot.rotation.x = -Math.PI / 2;
+      mountingFoot.position.set(Math.sign(x) * 0.115, 0.05, z);
+      toilet.add(mountingFoot);
+      const washer = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.037, 0.037, 0.007, 20),
+        boltSteel,
+      );
+      washer.position.y = -0.014;
+      head.add(washer);
       const slot = new THREE.Mesh(
-        new THREE.BoxGeometry(0.021, 0.0015, 0.003),
-        iron,
+        new THREE.BoxGeometry(0.028, 0.0015, 0.004),
+        boltSlot,
       );
-      slot.position.y = 0.0095;
+      slot.position.y = 0.0115;
       head.add(slot);
       toilet.add(head);
       bolts.push(head);

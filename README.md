@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="src/assets/branding/hirodora-icon.webp" width="110" alt="Hirodora prison key emblem" />
+<img src="src/assets/branding/hirodora-icon.webp" width="110" alt="Hirodora architectural H escape emblem" />
 
 # H I R O D O R A
 
@@ -8,17 +8,21 @@
 
 **Every sound has a consequence.**
 
-**v0.20.0 · Cell 048 / 036 Stairs · Rigged Hands · Six-Shot Reload · Safari Audio**
+**v0.21.0 · Real Loading Progress · Mobile Optimization · Custom Ammo HUD · WebKit Verified**
 
-**[↓ DOWNLOAD ANDROID APK](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.20.0-android.apk)**
+**[↓ DOWNLOAD ANDROID APK](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.21.0-android.apk)**
 
-[↓ Offline web ZIP](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.20.0-offline.zip) · [Single-file HTML download](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.20.0.html) · [ZIP checksum](downloads/latest.json) · [APK checksums](downloads/android-latest.json) · [Android installation](docs/ANDROID.md)
+[↓ Offline web ZIP](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.21.0-offline.zip) · [Single-file HTML download](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.21.0.html) · [ZIP checksum](downloads/latest.json) · [APK checksums](downloads/android-latest.json) · [Android installation](docs/ANDROID.md)
 
 </div>
 
 ## A playable prison atrium
 
-**v0.20.0 moves the two stair tops in front of Cell 048 and Cell 036.** The uploaded wooden stair models, real floor openings, safety rails, physical movement and guard navigation are fitted together. The lower floor is **0.6m deeper**, giving **3.5m clear height** beneath the upper slab. Every lower cell now has a larger, readable number on a proper masonry band above its gate.
+**v0.21.0 adds a black loading screen with real asset-preparation progress**, waiting for models, textures, recordings and shaders. Mobile uses a shared 1K version of the same PBR materials; desktop retains 2K. The ammo card has the settings panel's colour at 50% background alpha and can be dragged/resized in Custom HUD. HP remains at the bottom; backpack/noise/awareness/standing blocks are removed. A new original architectural H logo is included in Android and iPhone/Home Screen icons.
+
+The new finger pose seats the pistol into the hand and aligns the trigger/thumb contact. Shots produce flash, smoke and damped recoil; breathing/walking/reload animation keeps the arm and weapon together. The supplied toilet is slightly larger, with matching collision bounds, washers, hex anchors and rounded mounting lugs. [Implementation and verification](docs/UPDATE-V21.md).
+
+The two stair tops remain in front of Cell 048 and Cell 036. The uploaded wooden stair models, real floor openings, safety rails, physical movement and guard navigation are fitted together. The lower floor has **3.5m clear height** beneath the upper slab. Every lower cell has a readable number on a masonry band above its gate.
 
 **Your uploaded “Hands model rigged” is now the first-person mesh**, retaining its real skin textures, normal/roughness maps and finger joints. Only the right hand is visible during ordinary tool/gun use. The left support hand enters during the authored reload animation, then disappears. The screwdriver, keys and 10mm use separate anatomical grips. This replaces the previous MakeHuman-derived black-glove player arm; guards keep their existing licensed models.
 
@@ -34,28 +38,28 @@ Player health is **200 HP**; guard melee has a visible wind-up and **25-damage**
 
 **Safari compatibility:** all 70 licensed recordings now have MP3 runtime derivatives, fixing the Ogg Vorbis compatibility gap in older iOS Safari. Touch/landscape handling also recognises desktop-mode iPads, and interrupted Safari audio can resume after a user gesture. See the [iPhone/iPad guide](docs/IOS.md) for installation and the remaining verification limits.
 
-[Current implementation / verification](docs/UPDATE-V20.md) · [Previous bridge update](docs/BRIDGE-V19.md) · [Gun / can / boxing](docs/BALLISTICS-V18.md) · [Character credits](docs/GUARD-ASSETS.md)
+[Current implementation / verification](docs/UPDATE-V21.md) · [Previous stairs/hands update](docs/UPDATE-V20.md) · [Previous bridge update](docs/BRIDGE-V19.md) · [Gun / can / boxing](docs/BALLISTICS-V18.md) · [Character credits](docs/GUARD-ASSETS.md)
 
 ## Latest screenshots — exactly six
 
-Six actual game renders, not generated artwork. [Camera positions and render statistics](docs/screenshots/update-v20/capture.json). The pickup/dialogue image stages the reference UI state; it is not a recording of spoken dialogue. Historical galleries are preserved separately.
+Six actual rendered captures, including the real loading interface. [Camera positions and render statistics](docs/screenshots/update-v21/capture.json). Shot/reload views freeze the presentation at the shown moment; loading capture holds an actual file request. Historical galleries remain separate.
 
 <table>
-<tr><td width="50%"><img src="docs/screenshots/update-v20/01-cell048-stairs.png" alt="Stairs rising in front of Cell 048" /></td><td width="50%"><img src="docs/screenshots/update-v20/02-cell036-stairs.png" alt="Opposite staircase in front of Cell 036" /></td></tr>
-<tr><td align="center"><sub>CELL 048 · EAST STAIR</sub></td><td align="center"><sub>CELL 036 · WEST STAIR</sub></td></tr>
-<tr><td><img src="docs/screenshots/update-v20/03-lower-numbers.png" alt="Readable lower-floor cell number and taller wall band" /></td><td><img src="docs/screenshots/update-v20/04-right-hand-pistol.png" alt="Uploaded right hand holding the pistol and six-shot HUD" /></td></tr>
-<tr><td align="center"><sub>LOWER CELLS · VISIBLE NUMBERS</sub></td><td align="center"><sub>RIGGED RIGHT HAND · 6 / ∞</sub></td></tr>
-<tr><td><img src="docs/screenshots/update-v20/05-pickup-dialogue.png" alt="Key pickup cue and bottom-centre guard dialogue" /></td><td><img src="docs/screenshots/update-v20/06-reload-support-hand.png" alt="Support hand enters during reload" /></td></tr>
-<tr><td align="center"><sub>[E] TAKE · BOTTOM DIALOGUE</sub></td><td align="center"><sub>RELOAD · LEFT SUPPORT HAND</sub></td></tr>
+<tr><td width="50%"><img src="docs/screenshots/update-v21/01-real-loading.png" alt="Actual loading task progress" /></td><td width="50%"><img src="docs/screenshots/update-v21/02-toilet-bolts.png" alt="Larger supplied toilet and mounting anchors" /></td></tr>
+<tr><td align="center"><sub>REAL LOADING PROGRESS</sub></td><td align="center"><sub>TOILET · MOUNTING HARDWARE</sub></td></tr>
+<tr><td><img src="docs/screenshots/update-v21/03-pistol-grip.png" alt="Recalibrated pistol grip and clean HUD" /></td><td><img src="docs/screenshots/update-v21/04-shot-effect.png" alt="Muzzle flash and recoil" /></td></tr>
+<tr><td align="center"><sub>PISTOL GRIP · CLEAN HUD</sub></td><td align="center"><sub>SHOT · FLASH AND RECOIL</sub></td></tr>
+<tr><td><img src="docs/screenshots/update-v21/05-reload.png" alt="Left support hand during reload" /></td><td><img src="docs/screenshots/update-v21/06-mobile-custom-hud.png" alt="Mobile controls and repositioned gun card" /></td></tr>
+<tr><td align="center"><sub>RELOAD · SUPPORT HAND</sub></td><td align="center"><sub>MOBILE · CUSTOM AMMO POSITION</sub></td></tr>
 </table>
 
 ## Play on mobile
 
-**Android:** download the APK above, open it in Files and allow installation from that source. Requires Android 8.0+, an updated Android System WebView and WebGL 2. All models, textures and audio are included, with no Internet, storage, microphone or tracking permission. v0.20.0 / versionCode **2000** reuses the existing release certificate. Install over the previous release to preserve app-local saves/settings; uninstalling clears them. Old lower-floor/stair checkpoints migrate to the new layout.
+**Android:** download the APK above, open it in Files and allow installation from that source. Requires Android 8.0+, an updated Android System WebView and WebGL 2. All models, textures and audio are included, with no Internet, storage, microphone or tracking permission. v0.21.0 / versionCode **2100** reuses the existing release certificate. Install over the previous release to preserve app-local saves/settings; uninstalling clears them. Old lower-floor/stair checkpoints migrate to the new layout.
 
-**iPhone/iPad:** use an HTTPS-hosted game in **Safari → Share → Add to Home Screen**, then turn off Portrait Orientation Lock and rotate horizontally. An APK cannot install on iOS; the Files HTML preview is not a supported runtime. [Installation, intended hosted URL and testing blockers](docs/IOS.md). A native IPA/TestFlight release still requires macOS/Xcode and Apple signing; none is claimed here.
+**iPhone/iPad:** WebKit gameplay and production offline-cache checks pass. The public link still returns 404 because Pages is not configured: the repository owner must select **Settings → Pages → Source: GitHub Actions**, then rerun the Pages workflow. Once published, open the HTTPS game in **Safari → Share → Add to Home Screen**, turn off Portrait Orientation Lock and rotate horizontally. [iOS guide and exact hosting blocker](docs/IOS.md). Physical iPhone testing and a native signed IPA are still pending.
 
-For desktop/offline web play, extract the ZIP and open `Hirodora-0.20.0.html` in a full WebGL 2 browser. Download links bypass GitHub's large-file preview. Exact sizes and SHA-256 checksums are in the download manifests.
+For desktop/offline web play, extract the ZIP and open `Hirodora-0.21.0.html` in a full WebGL 2 browser. Download links bypass GitHub's large-file preview. Exact sizes and SHA-256 checksums are in the download manifests.
 
 ## How to finish the current chapter
 
@@ -106,15 +110,16 @@ node scripts/prepare-ballistics-assets.mjs gun_10mm.glb coca-cola_can_4k_texture
 node scripts/prepare-bridge-asset.mjs bridge__metal_10_mb.glb
 node scripts/prepare-hands-asset.mjs hands_model_rigged.glb
 node scripts/prepare-audio-compat.mjs
+node scripts/prepare-mobile-materials.mjs
 ```
 
 The offline pipeline needs ffmpeg and preserves attribution. Original source uploads are not required at runtime. Textures are shared across rooms; superseded bunk/toilet meshes are excluded from the loaded fixture library. The build enforces a 100 MiB offline budget; exact download sizes and hashes are in [the manifests](downloads/android-latest.json).
 
 ## Quality and release status
 
-Asset/logic tests, selected browser regressions and packaging validation are documented in [UPDATE-V20.md](docs/UPDATE-V20.md). The current suite has **80 unit/asset checks**. The [release verification report](docs/verification/update-v20/report.json) records exact selected browser outcomes and focused reruns; it does not claim the whole browser suite was rerun.
+Asset/logic tests, selected Chromium/WebKit regressions and packaging validation are documented in [UPDATE-V21.md](docs/UPDATE-V21.md). The suite has **80 unit/asset checks**. The [release verification report](docs/verification/update-v21/report.json) records exact selected browser outcomes and focused reruns; the whole historical browser suite was not rerun.
 
-**iOS/Safari certification is still pending.** This cloud environment blocked WebKit downloads at `cdn.playwright.dev` / `playwright.download.prss.microsoft.com` and hosted-site inspection at `rememberfrxst.github.io` with HTTP 403. Chromium iPhone emulation is not real Safari or physical-phone testing. GPU compatibility, frame rate, thermals and extended Android/iPhone playtesting remain open. The supplied police replacement still needs source/license details and grip polish; the supplied Warrior remains integrated.
+**Real WebKit engine checks pass; physical-device certification is pending.** Public hosting requires the owner action described above. Device GPU performance, thermals and extended Android/iPhone playtesting remain open. The supplied police replacement still needs source/license details; the supplied Warrior remains integrated.
 
 ## Sources and credits
 

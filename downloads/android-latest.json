@@ -1,8 +1,8 @@
 {
-  "version": "0.20.0",
-  "file": "Hirodora-0.20.0-android.apk",
-  "bytes": 35655695,
-  "sha256": "5e678592e77c5c6f02a8b61d0efc95f706671fbd38c4f4881c8a2bbbc4b69395",
+  "version": "0.21.0",
+  "file": "Hirodora-0.21.0-android.apk",
+  "bytes": 38573667,
+  "sha256": "af8a706cac28f977e326f1b8cc8a52af7e2e1d421c135886d1d0511ac6ae09ca",
   "certificateSHA256": "d7175da40c348c91e8a8663635d3a130115aba916e5ce889e40b646c009f33ca",
   "minAndroid": "8.0 (API 26)",
   "targetApi": 35,

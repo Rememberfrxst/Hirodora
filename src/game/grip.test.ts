@@ -105,7 +105,7 @@ test("uploaded right hand reaches key pads/10mm trigger without wrist twisting o
   poseGrip(arm, rest, "pistol10");
   assert.ok(
     point("RightHandIndex3").distanceTo(
-      new THREE.Vector3(-0.028, 0.14, 0.048),
+      new THREE.Vector3(-0.028, 0.17, 0.048),
     ) < 0.006,
     JSON.stringify({
       point: point("RightHandIndex3").toArray(),

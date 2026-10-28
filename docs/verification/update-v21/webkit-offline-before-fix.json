@@ -1,0 +1,193 @@
+{
+  "config": {
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "/workspace/Hirodora/node_modules/.bin/playwright",
+      "test",
+      "--config",
+      "playwright.webkit.config.ts",
+      "tests/ios-production.spec.ts",
+      "--reporter=json",
+      "--output=/workspace/hirodora-v21-production-webkit-results"
+    ],
+    "configFile": "/workspace/Hirodora/playwright.webkit.config.ts",
+    "rootDir": "/workspace/Hirodora/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/workspace/hirodora-v21-production-webkit-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/workspace/Hirodora/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 180000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/workspace/hirodora-v21-production-webkit-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "/workspace/Hirodora/tests",
+        "snapshotDir": "/workspace/Hirodora/tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 180000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3830",
+          "viewport": {
+            "width": 1100,
+            "height": 720
+          },
+          "launchOptions": {},
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "browserName": "webkit"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "ios-production.spec.ts",
+      "file": "ios-production.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "production Safari web app starts under repository path and reopens from its offline cache",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 40284,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 26\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/water-3-Ff-In2RS.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/ventilation-CE8IqPs_.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/drips-TUGDivml.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/guard-stop-0HwsoTTA.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/guard-hey-9vo-OpGA.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/bed-drag-DkNXNkvH.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/screwdriver-DC14Zm4O.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/ceramic-drag-CHKJ-Lok.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/plastic-Dx_16rM1.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/keys-InvqjJ3W.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/paper-Dx7GV4PH.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/fabric-BbF6jXug.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/hinge-DQawOAGN.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/guard-gunshot-BUFKUwxd.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/bed-creak-0-DjSHifNl.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/bed-creak-1-BukfViFB.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/toilet-scrape-B9m_yLTT.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/gate-close-q5NcPi51.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/cell-lock-CPRWyzqn.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/lock-turn-9NmzVGUs.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/bolt-ratchet-DbseuI1o.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/heavy-bolt-Bfxg5liN.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/bed-slide-C0_Ma94t.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/table-slide-BuNUGikw.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 26\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/water-3-Ff-In2RS.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/ventilation-CE8IqPs_.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/drips-TUGDivml.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/guard-stop-0HwsoTTA.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/guard-hey-9vo-OpGA.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/bed-drag-DkNXNkvH.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/screwdriver-DC14Zm4O.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/ceramic-drag-CHKJ-Lok.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/plastic-Dx_16rM1.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/keys-InvqjJ3W.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/paper-Dx7GV4PH.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/fabric-BbF6jXug.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/hinge-DQawOAGN.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/guard-gunshot-BUFKUwxd.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/bed-creak-0-DjSHifNl.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/bed-creak-1-BukfViFB.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/toilet-scrape-B9m_yLTT.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/gate-close-q5NcPi51.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/cell-lock-CPRWyzqn.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/lock-turn-9NmzVGUs.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/bolt-ratchet-DbseuI1o.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/heavy-bolt-Bfxg5liN.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/bed-slide-C0_Ma94t.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/table-slide-BuNUGikw.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at /workspace/Hirodora/tests/ios-production.spec.ts:30:50",
+                    "location": {
+                      "file": "/workspace/Hirodora/tests/ios-production.spec.ts",
+                      "column": 50,
+                      "line": 30
+                    },
+                    "snippet": "  28 |   const skip=page.getByRole('button',{name:/Skip intro/});if(await skip.isVisible())await skip.tap();\n  29 |   await expect(page.getByRole('region',{name:'Movement joystick'})).toBeVisible();\n> 30 |   await context.setOffline(false);expect(errors).toEqual([]);\n     |                                                  ^\n  31 | });\n  32 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/workspace/Hirodora/tests/ios-production.spec.ts",
+                        "column": 50,
+                        "line": 30
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 26\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/water-3-Ff-In2RS.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/ventilation-CE8IqPs_.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/drips-TUGDivml.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/guard-stop-0HwsoTTA.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/guard-hey-9vo-OpGA.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/bed-drag-DkNXNkvH.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/screwdriver-DC14Zm4O.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/ceramic-drag-CHKJ-Lok.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/plastic-Dx_16rM1.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/keys-InvqjJ3W.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/paper-Dx7GV4PH.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/fabric-BbF6jXug.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/hinge-DQawOAGN.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/guard-gunshot-BUFKUwxd.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/bed-creak-0-DjSHifNl.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/bed-creak-1-BukfViFB.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/toilet-scrape-B9m_yLTT.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/gate-close-q5NcPi51.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/cell-lock-CPRWyzqn.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/lock-turn-9NmzVGUs.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/bolt-ratchet-DbseuI1o.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/heavy-bolt-Bfxg5liN.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/bed-slide-C0_Ma94t.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+   \"/127.0.0.1:3831/Hirodora/assets/table-slide-BuNUGikw.mp3 due to access control checks.\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  28 |   const skip=page.getByRole('button',{name:/Skip intro/});if(await skip.isVisible())await skip.tap();\n  29 |   await expect(page.getByRole('region',{name:'Movement joystick'})).toBeVisible();\n> 30 |   await context.setOffline(false);expect(errors).toEqual([]);\n     |                                                  ^\n  31 | });\n  32 |\n    at /workspace/Hirodora/tests/ios-production.spec.ts:30:50"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [
+                    {
+                      "text": "Skipping host requirements validation logic because `PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS` env variable is set.\n"
+                    }
+                  ],
+                  "retry": 0,
+                  "startTime": "2026-10-28T13:10:48.268Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/workspace/hirodora-v21-production-webkit-results/ios-production-production--ae796-pens-from-its-offline-cache/test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/workspace/hirodora-v21-production-webkit-results/ios-production-production--ae796-pens-from-its-offline-cache/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/workspace/hirodora-v21-production-webkit-results/ios-production-production--ae796-pens-from-its-offline-cache/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/workspace/Hirodora/tests/ios-production.spec.ts",
+                    "column": 50,
+                    "line": 30
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "9dab93cbad43002eb016-a0888959c128a07d94f7",
+          "file": "ios-production.spec.ts",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-28T13:10:43.600Z",
+    "duration": 47881.864,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

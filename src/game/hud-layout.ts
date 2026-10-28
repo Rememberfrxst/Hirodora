@@ -18,6 +18,7 @@ export interface HudLayout {
   version: 1;
   preset: HudPreset;
   controls: Record<ControlId, ControlPlacement>;
+  weapon: ControlPlacement;
 }
 export const controlNames: Record<ControlId, string> = {
   move: "Move",
@@ -25,7 +26,7 @@ export const controlNames: Record<ControlId, string> = {
   jump: "Jump",
   crouch: "Crouch",
   interact: "Interact",
-  fire: "Dart",
+  fire: "Fire",
 };
 export function presetLayout(preset: HudPreset = "compact"): HudLayout {
   const large = preset === "large";
@@ -44,7 +45,7 @@ export function presetLayout(preset: HudPreset = "compact"): HudLayout {
   }
   if (preset === "left")
     for (const c of Object.values(controls)) c.x = 100 - c.x;
-  return { version: 1, preset, controls };
+  return { version: 1, preset, controls, weapon: { x: 6, y: 8, size: 160 } };
 }
 export function parseLayout(raw: string | null): HudLayout {
   try {
@@ -55,6 +56,16 @@ export function parseLayout(raw: string | null): HudLayout {
     )
       return presetLayout();
     const result = presetLayout(value.preset);
+    if (
+      value.weapon &&
+      [value.weapon.x, value.weapon.y, value.weapon.size].every(Number.isFinite)
+    ) {
+      result.weapon = {
+        x: Math.max(0, Math.min(100, value.weapon.x)),
+        y: Math.max(0, Math.min(100, value.weapon.y)),
+        size: Math.max(140, Math.min(210, value.weapon.size)),
+      };
+    }
     for (const id of controlIds) {
       const p = value.controls?.[id];
       if (p && [p.x, p.y, p.size].every(Number.isFinite))
@@ -95,6 +106,14 @@ export function placementStyle(p: ControlPlacement) {
     width: p.size,
     height: p.size,
     transform: "translate(-50%, -50%)",
+  };
+}
+/** Percent coordinates match the editor and account for iPhone safe areas. */
+export function weaponPlacementStyle(p: ControlPlacement) {
+  return {
+    left: `clamp(calc(env(safe-area-inset-left) + 8px), calc(${p.x}% - ${p.size / 2}px), calc(100% - env(safe-area-inset-right) - ${p.size + 8}px))`,
+    top: `clamp(calc(env(safe-area-inset-top) + 8px), calc(${p.y}% - 55px), calc(100% - env(safe-area-inset-bottom) - 118px))`,
+    width: p.size,
   };
 }
 /** Dock pockets at the bottom left when possible; lift above the left controls

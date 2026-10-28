@@ -1,0 +1,25 @@
+# v0.21.0 — loading, mobile HUD and equipment presentation
+
+The opening stays behind a black loading screen until actual asset preparation finishes. Progress advances on completed environment downloads/decodes and eight preparation stages (environment, ballistics, hands, Cell 46 character, officers, opening character, audio, shaders). It is task progress, not a byte-accurate download meter or a timer. Errors retain a retry action. World and equipment shaders are prepared before the menu becomes playable, and incomplete scenes are not rendered repeatedly while loading.
+
+All 70 recordings are prepared before play, with Web Audio resumed by New game/Continue/Resume gestures. This fixes a production WebKit offline race: previously switching offline immediately after reaching gameplay could interrupt pending MP3 requests. The production test now opens the game under the repository path, installs its service-worker cache, disables the network, reloads and starts playing again.
+
+Mobile loads 1K derivatives of the same CC0 Rock Wall 16 albedo, tangent normal and packed AO/roughness/metal maps. Desktop retains 2K. Textures remain shared across rooms. Three RGBA8 maps plus mipmaps are approximately 16 MiB at 1K versus 64 MiB at 2K (an estimate for these maps only). Provenance, byte sizes and hashes: [mobile-materials.json](../src/assets/environment/mobile-materials.json). Regenerate with `node scripts/prepare-mobile-materials.mjs`. Universal APK/PWA caching includes both sets; installed size is not reduced by that full ratio.
+
+The ammo card uses the exact settings surface RGB (3,4,3) at 50% background alpha, preserving readable text. Custom HUD includes a draggable/resizable Gun info card with saved per-device placement, safe-area clamps and migration of older six-control layouts. The editor reserves space below its toolbar for the card preview. HP sits at the bottom; satchel/backpack, acoustic footprint, awareness and stance blocks are removed. Collected item icons, pause/hint, contextual actions and backend stealth logic remain.
+
+The supplied rigged hand keeps its original skin/PBR and joint weights. The 10mm grip now sits further into the curled fingers, with a separate anatomical finger pose and recalibrated trigger/thumb targets. Wrist orientation stays fixed; equipment changes cannot accumulate deformation. Locomotion sway, idle breathing and damped recoil move the arm and weapon together. Reload introduces the left support hand; otherwise it remains hidden. The left-hand reload is an authored support gesture, not a detachable-magazine or motion-captured animation.
+
+Shots use bounded pooled muzzle flash, short point-light illumination, expanding smoke and damped kick. Suppressed presentation is smaller. Presentation delta follows actual rendered frame time, so mobile's 30 fps cap does not double animation/effect durations. Damage, infinite reserve/six-shot reload, authoritative AI, stair/bridge navigation and checkpoints remain intact.
+
+Toilets retain the supplied textured GLB, enlarged 8% across the footprint and 4% vertically, with matching collision bounds. Cell 47's four screw-driven hex anchors now have washers, dark slots and rounded mounting lugs connected to the pedestal. Puzzle unbolting still removes four bolts in sequence, then permits moving the toilet and entering Cell 46.
+
+The new architectural H icon was generated for this project and is used consistently in Android launcher densities, Safari/Home Screen icons, favicon, offline bundles and README. It is original branding artwork; gameplay screenshots are actual rendered game captures, not generated artwork.
+
+## Verification and limits
+
+[Retained report](verification/update-v21/report.json) contains unit/asset checks, selected Chromium regressions, real WebKit runs, production offline-cache coverage, APK payload smoke, package hashes and screenshot cameras. The initial broad browser run overlapped live source edits: one reload case detached during a Vite refresh, and the loading assertion still expected seven stages before audio became its own eighth stage. Those cases and the affected mobile case were rerun against a stable server with HMR disabled; final outcomes are recorded separately. This does not claim the entire historical browser suite was rerun.
+
+Exactly six new images are published in [update-v21](screenshots/update-v21). The pistol camera matches the private pre-change capture at [-39,1.65,0] → [-39,1.5,10], FOV 70. Loading capture temporarily holds the actual hand-file response to show pending work; shot/reload views freeze presentation at the documented state.
+
+Public iOS hosting remains blocked by **Pages configuration, not network policy**: the URL returns 404 and the Pages workflow reports the site is not configured. Owner action: repository Settings → Pages → Source: GitHub Actions, then rerun the Pages workflow. Native IPA/TestFlight requires macOS/Xcode and Apple signing. Physical-device FPS, thermals and long-session testing remain pending; Linux WebKit coverage is not a physical iPhone claim.

@@ -1,0 +1,338 @@
+{
+  "version": "0.21.0",
+  "unitPassed": 80,
+  "chromiumSelectedPassed": 17,
+  "webkitSelectedPassed": 4,
+  "wholeBrowserSuiteRerun": false,
+  "runs": [
+    {
+      "file": "chromium-initial.json",
+      "engine": "chromium",
+      "stats": {
+        "startTime": "2026-10-28T13:05:09.357Z",
+        "duration": 744428.06,
+        "expected": 14,
+        "skipped": 0,
+        "unexpected": 3,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "chromium-final.json",
+      "engine": "chromium",
+      "stats": {
+        "startTime": "2026-10-28T13:18:00.523Z",
+        "duration": 101313.884,
+        "expected": 3,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "webkit-final.json",
+      "engine": "webkit",
+      "stats": {
+        "startTime": "2026-10-28T13:15:55.839Z",
+        "duration": 107459.42199999999,
+        "expected": 4,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "webkit-production-release.json",
+      "engine": "webkit",
+      "stats": {
+        "startTime": "2026-10-28T13:24:59.827Z",
+        "duration": 23513.122000000003,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "chromium: Cell 46 actual gun/can models require aim and E, attach at the muzzle and persist",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: actual skin ray hits deal 100 twice or one headshot, corpses persist and New game resets them",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: bullets cannot pass closed grilles, pause or fire without ammunition",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: boxing cycles jab/cross/hook with high guard between strikes and preserves 200 player HP rules",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: touch pickups, can attachment and Fire pistol consume one round without stuck joystick",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: all HUD presets fit a small landscape screen without overlapping controls",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: custom HUD saves drag and size, cancels edits, survives reload and resets presets",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: Cell 47 key twist, quiet bed, tool, toilet, passage, save and return",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: audio recordings decode, blocked movement is silent and channels persist",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: hard pushing alerts the examining guard, then he returns to the body without crossing bars",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: mobile contextual holding releases on cancel and rotation without stuck input",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: Cell 048 and 036 stairs work in both directions, lower signs are below the slab, checkpoint remains stable",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: six shots, unlimited reloads, pause/cancel, right-hand-only idle and support hand during reload",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: Safari install guidance, MP3 decode, landscape controls, touch reload and bottom dialogue",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: loading reports actual unfinished work, prevents start, then releases a complete scene",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: clean HUD, larger toilet bolts, anatomical pistol grip and pooled shot effects",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: ammo card drags, resizes and persists; mobile uses the 1K PBR maps",
+      "status": "passed"
+    },
+    {
+      "name": "webkit: production Safari web app starts under repository path and reopens from its offline cache",
+      "status": "passed"
+    },
+    {
+      "name": "webkit: Safari install guidance, MP3 decode, landscape controls, touch reload and bottom dialogue",
+      "status": "passed"
+    },
+    {
+      "name": "webkit: loading reports actual unfinished work, prevents start, then releases a complete scene",
+      "status": "passed"
+    },
+    {
+      "name": "webkit: ammo card drags, resizes and persists; mobile uses the 1K PBR maps",
+      "status": "passed"
+    }
+  ],
+  "captures": [
+    {
+      "name": "01-real-loading",
+      "actualStage": 2,
+      "totalStages": 8,
+      "method": "Capture holds the real arm request to inspect genuine pending asset work."
+    },
+    {
+      "name": "02-toilet-bolts",
+      "position": [
+        -6.5,
+        1.35,
+        -8.8
+      ],
+      "target": [
+        -8,
+        0.55,
+        -9.6
+      ],
+      "item": null,
+      "reload": false,
+      "shot": false,
+      "fov": 70,
+      "drawCalls": 451,
+      "triangles": 3161001,
+      "leftVisible": false,
+      "flash": false
+    },
+    {
+      "name": "03-pistol-grip",
+      "position": [
+        -39,
+        1.65,
+        0
+      ],
+      "target": [
+        -39,
+        1.5,
+        10
+      ],
+      "item": "pistol_10mm",
+      "reload": false,
+      "shot": false,
+      "fov": 70,
+      "drawCalls": 307,
+      "triangles": 2211259,
+      "leftVisible": false,
+      "flash": false
+    },
+    {
+      "name": "04-shot-effect",
+      "position": [
+        -39,
+        1.65,
+        0
+      ],
+      "target": [
+        -39,
+        1.5,
+        10
+      ],
+      "item": "pistol_10mm",
+      "reload": false,
+      "shot": true,
+      "fov": 70,
+      "drawCalls": 307,
+      "triangles": 2207958,
+      "leftVisible": false,
+      "flash": true
+    },
+    {
+      "name": "05-reload",
+      "position": [
+        -39,
+        1.65,
+        0
+      ],
+      "target": [
+        -39,
+        1.5,
+        10
+      ],
+      "item": "pistol_10mm",
+      "reload": true,
+      "shot": false,
+      "fov": 70,
+      "drawCalls": 309,
+      "triangles": 2214284,
+      "leftVisible": true,
+      "flash": false
+    },
+    {
+      "name": "06-mobile-custom-hud",
+      "layout": {
+        "version": 1,
+        "preset": "compact",
+        "controls": {
+          "move": {
+            "x": 11,
+            "y": 72,
+            "size": 106
+          },
+          "sprint": {
+            "x": 84,
+            "y": 61,
+            "size": 58
+          },
+          "jump": {
+            "x": 94,
+            "y": 61,
+            "size": 58
+          },
+          "crouch": {
+            "x": 84,
+            "y": 83,
+            "size": 58
+          },
+          "interact": {
+            "x": 94,
+            "y": 83,
+            "size": 64
+          },
+          "fire": {
+            "x": 73,
+            "y": 83,
+            "size": 54
+          }
+        },
+        "weapon": {
+          "x": 31.642512077294683,
+          "y": 28.609625668449198,
+          "size": 160
+        }
+      },
+      "viewport": [
+        844,
+        390
+      ]
+    }
+  ],
+  "comparison": {
+    "camera": [
+      -39,
+      1.65,
+      0
+    ],
+    "target": [
+      -39,
+      1.5,
+      10
+    ],
+    "fov": 70,
+    "beforeStage": "Commit 9b6118f, before v21 implementation",
+    "beforeLocalPath": "/workspace/hirodora-v21-before/04-right-hand-pistol.png",
+    "beforeSHA256": "4530572d308015a2f6f5942d958e7712a772bf7d7f59d354c3be3b64819f6042",
+    "afterPath": "docs/screenshots/update-v21/03-pistol-grip.png",
+    "afterSHA256": "d9e08a5331ec5c96da4d16517f6453d31a412f26cc1203b26042e94e00036c83"
+  },
+  "mobileArchitecturalMaps": {
+    "desktopBytes": 11354026,
+    "mobileBytes": 3016806,
+    "estimatedRGBA8MipMiB": {
+      "desktop": 64,
+      "mobile": 16
+    },
+    "physicalDeviceFPSMeasured": false
+  },
+  "web": {
+    "version": "0.21.0",
+    "archive": "Hirodora-0.21.0-offline.zip",
+    "html": "Hirodora-0.21.0.html",
+    "sha256": "6658b4eac6332024d6150637dd5ae53e5023f0f063feaadf68bdb0816c603b7a",
+    "bytes": 38577727
+  },
+  "apk": {
+    "version": "0.21.0",
+    "file": "Hirodora-0.21.0-android.apk",
+    "bytes": 38573667,
+    "sha256": "af8a706cac28f977e326f1b8cc8a52af7e2e1d421c135886d1d0511ac6ae09ca",
+    "certificateSHA256": "d7175da40c348c91e8a8663635d3a130115aba916e5ce889e40b646c009f33ca",
+    "minAndroid": "8.0 (API 26)",
+    "targetApi": 35,
+    "architecture": "Universal; uses installed Android System WebView",
+    "distribution": "Signed release APK; offline assets included; no network permission"
+  },
+  "knownLimits": [
+    "Public Pages URL returns 404; repository owner must enable Pages from GitHub Actions. Latest inspected Pages run 40676807758 reports Get Pages site failed / Not Found.",
+    "No physical iPhone or Android hardware performance/thermal certification.",
+    "No signed native IPA; macOS/Xcode and Apple signing are unavailable."
+  ],
+  "testNotes": [
+    "Initial broad Chromium run overlapped source edits: reload/mobile refresh detachment and obsolete seven-stage assertion were rerun against stable DISABLE_HMR=true servers; latest outcomes above supersede them.",
+    "Retained initial WebKit production offline failure showed pending audio requests. Loading now waits for recordings; final production offline test passes.",
+    "The system ldconfig validator cannot see local browser libraries. Official Debian dependencies were installed in the browser bundle and validated through actual WebKit execution."
+  ]
+}

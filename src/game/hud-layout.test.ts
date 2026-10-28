@@ -22,6 +22,11 @@ test("damaged or unavailable stored HUD restores a valid default", () => {
   const restored = parseLayout(JSON.stringify(l));
   assert.deepEqual(restored.controls.jump, { x: 0, y: 100, size: 100 });
   assert.match(placementStyle(restored.controls.jump).left, /clamp/);
+  const legacy = JSON.parse(JSON.stringify(l));
+  delete legacy.weapon;
+  assert.deepEqual(parseLayout(JSON.stringify(legacy)).weapon, presetLayout().weapon);
+  legacy.weapon = {x:500, y:-1, size:999};
+  assert.deepEqual(parseLayout(JSON.stringify(legacy)).weapon, {x:100,y:0,size:210});
 });
 test("left handed preset mirrors the action cluster and movement zone", () => {
   const left = presetLayout("left"),

@@ -1,0 +1,866 @@
+{
+  "config": {
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "/workspace/Hirodora/node_modules/.bin/playwright",
+      "test",
+      "tests/update21.spec.ts",
+      "tests/hud.spec.ts",
+      "tests/update20.spec.ts",
+      "tests/opening.spec.ts",
+      "tests/ballistics.spec.ts",
+      "--reporter=json",
+      "--output=/workspace/hirodora-v21-chromium-results"
+    ],
+    "configFile": "/workspace/Hirodora/playwright.config.ts",
+    "rootDir": "/workspace/Hirodora/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/workspace/hirodora-v21-chromium-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/workspace/Hirodora/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/workspace/hirodora-v21-chromium-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "/workspace/Hirodora/tests",
+        "snapshotDir": "/workspace/Hirodora/tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 120000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3810",
+          "viewport": {
+            "width": 1100,
+            "height": 720
+          },
+          "launchOptions": {
+            "executablePath": "/usr/bin/chromium",
+            "args": [
+              "--no-sandbox",
+              "--use-angle=swiftshader",
+              "--enable-unsafe-swiftshader"
+            ]
+          },
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "ballistics.spec.ts",
+      "file": "ballistics.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Cell 46 actual gun/can models require aim and E, attach at the muzzle and persist",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 29615,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T13:05:31.331Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "318c54d6ab8f2090ffbb-c3a219cdf8d24576c627",
+          "file": "ballistics.spec.ts",
+          "line": 64,
+          "column": 1
+        },
+        {
+          "title": "actual skin ray hits deal 100 twice or one headshot, corpses persist and New game resets them",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 23898,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T13:06:00.974Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "318c54d6ab8f2090ffbb-96b5ca5f1d5d8881ee02",
+          "file": "ballistics.spec.ts",
+          "line": 112,
+          "column": 1
+        },
+        {
+          "title": "bullets cannot pass closed grilles, pause or fire without ammunition",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 34823,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T13:06:24.887Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "318c54d6ab8f2090ffbb-b504f74031c6dcbe7baa",
+          "file": "ballistics.spec.ts",
+          "line": 196,
+          "column": 1
+        },
+        {
+          "title": "boxing cycles jab/cross/hook with high guard between strikes and preserves 200 player HP rules",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 36688,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T13:06:59.734Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "318c54d6ab8f2090ffbb-9d91b75904cfc7081a08",
+          "file": "ballistics.spec.ts",
+          "line": 235,
+          "column": 1
+        }
+      ],
+      "suites": [
+        {
+          "title": "mobile pistol",
+          "file": "ballistics.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "touch pickups, can attachment and Fire pistol consume one round without stuck joystick",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 19251,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-28T13:05:11.612Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "318c54d6ab8f2090ffbb-566176b5f859ba326307",
+              "file": "ballistics.spec.ts",
+              "line": 9,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "hud.spec.ts",
+      "file": "hud.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "all HUD presets fit a small landscape screen without overlapping controls",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 19288,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T13:07:36.471Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6688962e6db485c2fb1e-8a78f870b1afa1248081",
+          "file": "hud.spec.ts",
+          "line": 10,
+          "column": 1
+        },
+        {
+          "title": "custom HUD saves drag and size, cancels edits, survives reload and resets presets",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 39592,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T13:07:55.787Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6688962e6db485c2fb1e-0283d0764cf2235a85c0",
+          "file": "hud.spec.ts",
+          "line": 49,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "opening.spec.ts",
+      "file": "opening.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Cell 47 key twist, quiet bed, tool, toilet, passage, save and return",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 48486,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T13:08:35.409Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0dd38654c2908fb5f757-9bc8f055f4bda2f4077d",
+          "file": "opening.spec.ts",
+          "line": 43,
+          "column": 1
+        },
+        {
+          "title": "audio recordings decode, blocked movement is silent and channels persist",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 24660,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T13:09:23.907Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0dd38654c2908fb5f757-d830321fe51560f7ce9e",
+          "file": "opening.spec.ts",
+          "line": 149,
+          "column": 1
+        },
+        {
+          "title": "hard pushing alerts the examining guard, then he returns to the body without crossing bars",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 31280,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T13:09:48.592Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0dd38654c2908fb5f757-4827682a3108d36c078b",
+          "file": "opening.spec.ts",
+          "line": 180,
+          "column": 1
+        },
+        {
+          "title": "mobile contextual holding releases on cancel and rotation without stuck input",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 22166,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T13:10:19.896Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0dd38654c2908fb5f757-e79ab054109e860b337c",
+          "file": "opening.spec.ts",
+          "line": 229,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "update20.spec.ts",
+      "file": "update20.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Cell 048 and 036 stairs work in both directions, lower signs are below the slab, checkpoint remains stable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 33110,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "v20 stairs: {\"flights\":[{\"cell\":48,\"down\":[-5.95,-3.8,-1.4700000000000084],\"up\":[-5.95,0,9.496000000000008],\"model\":true},{\"cell\":36,\"down\":[-66.5,-3.8,9.518000000000008],\"up\":[-66.5,0,-1.4480000000000082],\"model\":true}],\"signs\":[{\"number\":47,\"y\":3.38},{\"number\":46,\"y\":3.38},{\"number\":45,\"y\":3.38},{\"number\":44,\"y\":3.38},{\"number\":43,\"y\":3.38},{\"number\":42,\"y\":3.38},{\"number\":41,\"y\":3.38},{\"number\":40,\"y\":3.38},{\"number\":39,\"y\":3.38},{\"number\":38,\"y\":3.38},{\"number\":37,\"y\":3.38},{\"number\":36,\"y\":3.38},{\"number\":48,\"y\":3.38},{\"number\":49,\"y\":3.38},{\"number\":50,\"y\":3.38},{\"number\":51,\"y\":3.38},{\"number\":52,\"y\":3.38},{\"number\":53,\"y\":3.38},{\"number\":54,\"y\":3.38},{\"number\":55,\"y\":3.38},{\"number\":56,\"y\":3.38},{\"number\":57,\"y\":3.38},{\"number\":58,\"y\":3.38},{\"number\":59,\"y\":3.38},{\"number\":23,\"y\":-0.6799999999999997},{\"number\":24,\"y\":-0.6799999999999997},{\"number\":22,\"y\":-0.6799999999999997},{\"number\":25,\"y\":-0.6799999999999997},{\"number\":21,\"y\":-0.6799999999999997},{\"number\":26,\"y\":-0.6799999999999997},{\"number\":20,\"y\":-0.6799999999999997},{\"number\":27,\"y\":-0.6799999999999997},{\"number\":19,\"y\":-0.6799999999999997},{\"number\":28,\"y\":-0.6799999999999997},{\"number\":18,\"y\":-0.6799999999999997},{\"number\":29,\"y\":-0.6799999999999997},{\"number\":17,\"y\":-0.6799999999999997},{\"number\":30,\"y\":-0.6799999999999997},{\"number\":16,\"y\":-0.6799999999999997},{\"number\":31,\"y\":-0.6799999999999997},{\"number\":15,\"y\":-0.6799999999999997},{\"number\":32,\"y\":-0.6799999999999997},{\"number\":14,\"y\":-0.6799999999999997},{\"number\":33,\"y\":-0.6799999999999997},{\"number\":13,\"y\":-0.6799999999999997},{\"number\":34,\"y\":-0.6799999999999997},{\"number\":12,\"y\":-0.6799999999999997},{\"number\":35,\"y\":-0.6799999999999997}],\"restored\":[-39,0,4],\"version\":18}\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T13:10:42.097Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3ab8f9276e183e94154f-080d4fbc7387bf6f0e75",
+          "file": "update20.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "six shots, unlimited reloads, pause/cancel, right-hand-only idle and support hand during reload",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "timedOut",
+                  "duration": 125529,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 120000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 120000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 120000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "/workspace/Hirodora/tests/helpers.ts",
+                        "column": 42,
+                        "line": 4
+                      },
+                      "message": "Error: locator.click: Test timeout of 120000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: /Skip intro/ })\u001b[22m\n\u001b[2m    - locator resolved to <button>Skip intro ⟶</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m  - element was detached from the DOM, retrying\u001b[22m\n\u001b[2m    - waiting for \"http://127.0.0.1:3810/\" navigation to finish...\u001b[22m\n\u001b[2m    - navigated to \"http://127.0.0.1:3810/\"\u001b[22m\n\n\n   at helpers.ts:4\n\n  2 | export async function skipOpening(page: Page) {\n  3 |   const skip = page.getByRole(\"button\", { name: /Skip intro/ });\n> 4 |   if (await skip.isVisible()) await skip.click();\n    |                                          ^\n  5 | }\n  6 | export async function openHudEditor(page: Page) {\n  7 |   await page.getByRole(\"button\", { name: \"Settings\", exact: true }).click();\n    at skipOpening (/workspace/Hirodora/tests/helpers.ts:4:42)\n    at /workspace/Hirodora/tests/update20.spec.ts:73:3"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T13:11:15.238Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/workspace/hirodora-v21-chromium-results/update20-six-shots-unlimit-4aef9--support-hand-during-reload/test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/workspace/hirodora-v21-chromium-results/update20-six-shots-unlimit-4aef9--support-hand-during-reload/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/workspace/hirodora-v21-chromium-results/update20-six-shots-unlimit-4aef9--support-hand-during-reload/trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "3ab8f9276e183e94154f-dc72838409320cb7ab1d",
+          "file": "update20.spec.ts",
+          "line": 68,
+          "column": 1
+        }
+      ],
+      "suites": [
+        {
+          "title": "iPhone-sized touch compatibility (Chromium emulation, not Safari certification)",
+          "file": "update20.spec.ts",
+          "line": 152,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Safari install guidance, MP3 decode, landscape controls, touch reload and bottom dialogue",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 35508,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-28T13:13:24.505Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3ab8f9276e183e94154f-64ae6e2a4461ab49e8bc",
+              "file": "update20.spec.ts",
+              "line": 160,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "update21.spec.ts",
+      "file": "update21.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "loading reports actual unfinished work, prevents start, then releases a complete scene",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 31855,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m7\u001b[39m\nReceived: \u001b[31m8\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m7\u001b[39m\nReceived: \u001b[31m8\u001b[39m\n    at /workspace/Hirodora/tests/update21.spec.ts:18:73",
+                    "location": {
+                      "file": "/workspace/Hirodora/tests/update21.spec.ts",
+                      "column": 73,
+                      "line": 18
+                    },
+                    "snippet": "  16 |   await expect(\n  17 |     page.getByRole(\"progressbar\", { name: \"Game assets loaded\" }),\n> 18 |   ).toHaveAttribute(\"value\", \"2\", { timeout: 60000 });\n     |                                                       ^\n  19 |   await expect(\n  20 |     page.getByRole(\"button\", { name: \"New game\", exact: true }),\n  21 |   ).toBeDisabled();"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/workspace/Hirodora/tests/update21.spec.ts",
+                        "column": 73,
+                        "line": 18
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m7\u001b[39m\nReceived: \u001b[31m8\u001b[39m\n\n  16 |   await expect(\n  17 |     page.getByRole(\"progressbar\", { name: \"Game assets loaded\" }),\n> 18 |   ).toHaveAttribute(\"value\", \"2\", { timeout: 60000 });\n     |                                                       ^\n  19 |   await expect(\n  20 |     page.getByRole(\"button\", { name: \"New game\", exact: true }),\n  21 |   ).toBeDisabled();\n    at /workspace/Hirodora/tests/update21.spec.ts:18:73"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T13:14:00.310Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/workspace/hirodora-v21-chromium-results/update21-loading-reports-a-9fa8f-n-releases-a-complete-scene/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/workspace/hirodora-v21-chromium-results/update21-loading-reports-a-9fa8f-n-releases-a-complete-scene/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/workspace/Hirodora/tests/update21.spec.ts",
+                    "column": 73,
+                    "line": 18
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "3a8d4a1feb19071b08cf-f6c249d82d7009d39e50",
+          "file": "update21.spec.ts",
+          "line": 4,
+          "column": 1
+        },
+        {
+          "title": "clean HUD, larger toilet bolts, anatomical pistol grip and pooled shot effects",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 47125,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-28T13:14:39.562Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "3a8d4a1feb19071b08cf-cc64078ece1abf3d700d",
+          "file": "update21.spec.ts",
+          "line": 21,
+          "column": 1
+        }
+      ],
+      "suites": [
+        {
+          "title": "mobile HUD",
+          "file": "update21.spec.ts",
+          "line": 42,
+          "column": 6,
+          "specs": [
+            {
+              "title": "ammo card drags, resizes and persists; mobile uses the 1K PBR maps",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 124006,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 120000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 120000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 120000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "/workspace/Hirodora/tests/helpers.ts",
+                            "column": 42,
+                            "line": 4
+                          },
+                          "message": "Error: locator.click: Test timeout of 120000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: /Skip intro/ })\u001b[22m\n\u001b[2m    - locator resolved to <button>Skip intro ⟶</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m    - element is not stable\u001b[22m\n\u001b[2m  - retrying click action\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m  - element was detached from the DOM, retrying\u001b[22m\n\n\n   at helpers.ts:4\n\n  2 | export async function skipOpening(page: Page) {\n  3 |   const skip = page.getByRole(\"button\", { name: /Skip intro/ });\n> 4 |   if (await skip.isVisible()) await skip.click();\n    |                                          ^\n  5 | }\n  6 | export async function openHudEditor(page: Page) {\n  7 |   await page.getByRole(\"button\", { name: \"Settings\", exact: true }).click();\n    at skipOpening (/workspace/Hirodora/tests/helpers.ts:4:42)\n    at /workspace/Hirodora/tests/update21.spec.ts:47:69"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-28T13:15:27.303Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/workspace/hirodora-v21-chromium-results/update21-mobile-HUD-ammo-c-0feb0-mobile-uses-the-1K-PBR-maps/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/workspace/hirodora-v21-chromium-results/update21-mobile-HUD-ammo-c-0feb0-mobile-uses-the-1K-PBR-maps/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/workspace/hirodora-v21-chromium-results/update21-mobile-HUD-ammo-c-0feb0-mobile-uses-the-1K-PBR-maps/trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "3a8d4a1feb19071b08cf-c089535d7c94b5ded737",
+              "file": "update21.spec.ts",
+              "line": 44,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-28T13:05:09.357Z",
+    "duration": 744428.06,
+    "expected": 14,
+    "skipped": 0,
+    "unexpected": 3,
+    "flaky": 0
+  }
+}

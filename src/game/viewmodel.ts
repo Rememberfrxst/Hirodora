@@ -26,6 +26,9 @@ export class FirstPersonView {
   private can?: THREE.Group;
   private recoil = 0;
   private muzzleFlash?: THREE.Mesh;
+  private muzzleLight?: THREE.PointLight;
+  private shotAge = 10;
+  private muzzleSmoke?: THREE.Sprite;
   private shared = new Set<
     THREE.BufferGeometry | THREE.Material | THREE.Texture
   >();
@@ -110,7 +113,7 @@ export class FirstPersonView {
       // Retain the source palm origin, rather than recentering the grip.
       gun.children[0].position.set(0, 0, 0);
       gun.quaternion.copy(pistol.quaternion);
-      gun.position.copy(pistol.position);
+      gun.position.set(-0.028, 0.15, 0.027);
       this.can = this.normalizeTool(ballisticsModels.can, false);
       this.can.name = "CanAttachment";
       this.can.children[0].position.set(0, 0, 0);
@@ -121,9 +124,11 @@ export class FirstPersonView {
       this.muzzleFlash = new THREE.Mesh(
         new THREE.SphereGeometry(0.014, 8, 6),
         new THREE.MeshBasicMaterial({
-          color: 0xffd18b,
+          color: 0xffe0a6,
           transparent: true,
-          opacity: 0.8,
+          opacity: 0.9,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
         }),
       );
       this.muzzleFlash.name = "MuzzleFlash";
@@ -132,6 +137,25 @@ export class FirstPersonView {
       );
       this.muzzleFlash.scale.z = 2;
       gun.add(this.muzzleFlash);
+      this.muzzleLight = new THREE.PointLight(0xffbe73, 0, 1.2, 2);
+      gun.add(this.muzzleLight);
+      const canvas = document.createElement("canvas");
+      canvas.width = canvas.height = 64;
+      const ctx = canvas.getContext("2d")!;
+      const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+      gradient.addColorStop(0, "#c9c8bd88");
+      gradient.addColorStop(1, "#c9c8bd00");
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, 64, 64);
+      this.muzzleSmoke = new THREE.Sprite(
+        new THREE.SpriteMaterial({
+          map: new THREE.CanvasTexture(canvas),
+          transparent: true,
+          opacity: 0,
+          depthWrite: false,
+        }),
+      );
+      gun.add(this.muzzleSmoke);
       this.hand.add(gun);
       this.items.set("pistol_10mm", gun);
     }
@@ -311,25 +335,57 @@ export class FirstPersonView {
     }
     this.transition = Math.max(0, this.transition - dt);
     this.recoil = Math.max(0, this.recoil - dt);
+    this.shotAge = Math.min(10, this.shotAge + dt);
     if (this.can) this.can.visible = canAttached;
     if (this.muzzleFlash) {
-      this.muzzleFlash.visible = item === "pistol_10mm" && this.recoil > 0.14;
+      this.muzzleFlash.visible = item === "pistol_10mm" && this.shotAge < 0.075;
       this.muzzleFlash.position.z =
         ballistics.muzzle[2] + (canAttached ? 0.118 : 0.01);
+      this.muzzleFlash.scale.set(
+        canAttached ? 0.55 : 1,
+        canAttached ? 0.55 : 1,
+        2.6,
+      );
+      if (this.muzzleLight) {
+        this.muzzleLight.position.copy(this.muzzleFlash.position);
+        this.muzzleLight.intensity = this.muzzleFlash.visible
+          ? canAttached
+            ? 0.15
+            : 0.6
+          : 0;
+      }
+      if (this.muzzleSmoke) {
+        const p = Math.min(1, this.shotAge / 0.35);
+        this.muzzleSmoke.visible =
+          this.shotAge < 0.35 && item === "pistol_10mm";
+        this.muzzleSmoke.position
+          .copy(this.muzzleFlash.position)
+          .add(new THREE.Vector3(0, p * 0.025, p * 0.06));
+        this.muzzleSmoke.scale.setScalar(0.025 + p * 0.09);
+        (this.muzzleSmoke.material as THREE.SpriteMaterial).opacity =
+          (1 - p) * 0.4;
+      }
     }
     this.root.visible = visible && !!item && this.items.has(item);
     for (const model of new Set(this.items.values()))
       model.visible = model === this.items.get(item!);
-    const sway = moving && !reduced ? Math.sin(time * 8) * 0.009 : 0;
+    const sway = moving && !reduced ? Math.sin(time * 7) * 0.012 : 0;
+    const breath = reduced ? 0 : Math.sin(time * 1.8) * 0.0025;
+    const kick =
+      Math.exp(-this.shotAge * 23) * Math.min(1, this.shotAge / 0.016);
     this.root.position.set(
       sway,
-      -this.transition * 1.4 - (nearWall ? 0.1 : 0) + this.recoil * 0.12,
-      (nearWall ? 0.1 : 0) + this.recoil * 0.18,
+      -this.transition * 1.4 -
+        (nearWall ? 0.1 : 0) +
+        breath +
+        (moving && !reduced ? Math.cos(time * 14) * 0.004 : 0) +
+        kick * 0.012,
+      (nearWall ? 0.1 : 0) + kick * 0.045,
     );
     this.root.rotation.set(
-      (nearWall ? -0.25 : 0) + this.recoil * 0.4,
-      0,
-      sway * 0.5,
+      (nearWall ? -0.25 : 0) + kick * 0.11,
+      sway * 0.3,
+      sway * 0.5 - kick * 0.025,
     );
     const reload = item === "pistol_10mm" && reloadProgress !== null;
     if (this.leftMesh) this.leftMesh.visible = reload;
@@ -342,8 +398,8 @@ export class FirstPersonView {
     ) {
       const p = Math.max(0, Math.min(1, reloadProgress)),
         envelope = Math.sin(Math.PI * p);
-      this.root.rotation.z -= envelope * 0.18;
-      this.root.rotation.x += envelope * 0.08;
+      this.root.rotation.z -= envelope * 0.26;
+      this.root.rotation.x += envelope * 0.12;
       this.root.position.y -= envelope * 0.015;
       this.leftForearm.position.copy(this.leftRest);
       const leftY = new THREE.Vector3(0.7, 0.5, -0.5).normalize(),
@@ -372,6 +428,20 @@ export class FirstPersonView {
   }
   shoot() {
     this.recoil = 0.18;
+    this.shotAge = 0;
+  }
+  async prepare(renderer: THREE.WebGLRenderer) {
+    const models = [...new Set(this.items.values())];
+    const visibility = models.map(m => m.visible);
+    const visible = this.root.visible;
+    this.root.visible = true;
+    models.forEach(m => m.visible = true);
+    try {
+      await renderer.compileAsync(this.scene, this.camera);
+    } finally {
+      models.forEach((m,i) => m.visible = visibility[i]);
+      this.root.visible = visible;
+    }
   }
   render(renderer: THREE.WebGLRenderer, aspect: number) {
     if (!this.root.visible) return;
@@ -385,6 +455,10 @@ export class FirstPersonView {
   }
   dispose() {
     this.disposed = true;
+    if (this.muzzleSmoke) {
+      (this.muzzleSmoke.material as THREE.SpriteMaterial).map?.dispose();
+      this.muzzleSmoke.material.dispose();
+    }
     // Tool meshes share their source resources with the world. Only the unique arm
     // and authored tools are disposed here; the engine owns shared world textures.
     const geometries = new Set<THREE.BufferGeometry>(),

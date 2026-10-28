@@ -433,28 +433,46 @@ export class GameEngine {
     void this.loadGuardAssets();
   }
 
+  public loadingCompleted = 0;
+  public loadingLabel = "Prison geometry and materials";
   public async loadGuardAssets() {
     if (this.guardsReady || this.disposed) return;
     this.guardLoadError = "";
+    this.loadingCompleted = 0;
+    const stage = (done: number, label: string) => {
+      this.loadingCompleted = done;
+      this.loadingLabel = label;
+      if (!this.disposed) this.emitChange();
+    };
     this.emitChange();
     try {
-      await this.worldData.loadEnvironment();
+      await this.worldData.loadEnvironment((completed, total) =>
+        stage(
+          completed / total,
+          `Prison materials and models · ${completed}/${total}`,
+        ),
+      );
+      stage(1, "Pistol and equipment");
       const ballisticsModels = await loadBallisticsAssets(
         this.worldData.pickupMeshes,
       );
+      stage(2, "Rigged hands");
       await this.firstPerson.load(
         this.worldData.pickupMeshes.get("screwdriver_pickup")!,
         this.worldData.pickupMeshes.get("cell_key_pickup")!,
         this.worldData.pickupMeshes,
         ballisticsModels,
       );
+      stage(3, "Cell 46 character");
       if (!this.warriorActor) {
         this.warriorActor = new WarriorActor(this.worldData.cell46NPC);
         await this.warriorActor.load();
       }
+      stage(4, "Guard models and animations");
       await this.guardAssets.preload(
         Math.min(8, this.renderer.capabilities.getMaxAnisotropy()),
       );
+      stage(5, "Opening character");
       if (this.disposed || this.guardsReady) return;
       for (const guard of this.worldData.guards) {
         if (this.guardActors.has(guard.id)) continue;
@@ -478,8 +496,16 @@ export class GameEngine {
         this.bodyActor,
         this.reducedMotion,
       );
-      this.guardsReady = true;
       this.syncWorld();
+      stage(6, "Preparing sound recordings");
+      sound.init();
+      await sound.preload();
+      stage(7, "Preparing lighting and shaders");
+      await this.renderer.compileAsync(this.scene, this.camera);
+      await this.firstPerson.prepare(this.renderer);
+      if (this.disposed) return;
+      stage(8, "Ready");
+      this.guardsReady = true;
     } catch (error) {
       if (!this.disposed) {
         console.error("Officer asset preload failed", error);
@@ -2257,6 +2283,12 @@ export class GameEngine {
   private tick = (now: number) => {
     const dt = Math.min((now - this.lastTime) / 1000, 0.05);
     this.lastTime = now;
+    // The loading overlay is opaque. Avoid drawing untextured rooms and compiling
+    // incomplete materials on every frame while downloads/decoders are working.
+    if (!this.guardsReady) {
+      this.frameId = requestAnimationFrame(this.tick);
+      return;
+    }
     if (this.orientationBlocked) {
       this.frameId = requestAnimationFrame(this.tick);
       return;
@@ -2328,7 +2360,9 @@ export class GameEngine {
         }
       }
       const renderStart = performance.now();
-      this.renderFrame(dt);
+      // Presentation runs at the render cadence (30 fps on mobile), rather
+      // than inheriting half a frame from the 60 Hz simulation tick.
+      this.renderFrame(Math.min(0.1, renderInterval / 1000));
       this.frameAverage =
         this.frameAverage * 0.95 + (performance.now() - renderStart) * 0.05;
     }

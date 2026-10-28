@@ -1,0 +1,41 @@
+{
+  "source": "https://polyhaven.com/a/rock_wall_16",
+  "author": "Amal Kumar / Poly Haven",
+  "license": "CC0-1.0",
+  "changes": "Resized existing licensed 2K PBR maps to 1K; albedo remains sRGB, normal and ORM remain linear; same texture sources shared across all prison surfaces.",
+  "records": [
+    {
+      "role": "albedo",
+      "source": "rock16-albedo.webp",
+      "file": "rock16-mobile-albedo.webp",
+      "sourceSHA256": "238a22b6a21316d2224b6200a8614d746cce58a17735cdedc7c0fde106e7f83c",
+      "sha256": "641f7e8e9377f370bbbead5f58aa6b4d7ca1de41824e569370f6a4f6d18fdf83",
+      "originalBytes": 866270,
+      "bytes": 175836,
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "role": "normal",
+      "source": "rock16-normal.webp",
+      "file": "rock16-mobile-normal.webp",
+      "sourceSHA256": "c21325cb171f36e539764a8ca15cb1905866f6bef0ece98f42116a3443a7f9c4",
+      "sha256": "236b1702de38c20655ee10823379045ccf5a527dd598db4ffe25791d06dd4ea4",
+      "originalBytes": 7020578,
+      "bytes": 1888314,
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "role": "orm",
+      "source": "rock16-orm.webp",
+      "file": "rock16-mobile-orm.webp",
+      "sourceSHA256": "291fb2c0c723bb6a6dca13e3c925ddbd27a3961483f65f8e01129331b356b9ca",
+      "sha256": "1a0aea9836bc73c1fa1d1d420ecda9e69290eadb7252f913fc126be0403e70ae",
+      "originalBytes": 3467178,
+      "bytes": 952656,
+      "width": 1024,
+      "height": 1024
+    }
+  ]
+}

@@ -3,6 +3,7 @@ import { GameEngine } from "./game/engine";
 import { requestLandscape } from "./game/display";
 import { Expand, RotateCw, Smartphone } from "lucide-react";
 import { TitleScreen } from "./components/TitleScreen";
+import { LoadingScreen } from "./components/LoadingScreen";
 import { SettingsPanel } from "./components/SettingsPanel";
 import { HUD } from "./components/HUD";
 import { HudEditor } from "./components/HudEditor";
@@ -155,9 +156,10 @@ export default function App() {
             </div>
           </div>
         ) : !engine ? (
-          <div className="loading-screen">PREPARING THE NIGHT SHIFT…</div>
+          <LoadingScreen />
         ) : (
           <>
+            {!engine.guardsReady && <LoadingScreen completed={engine.loadingCompleted} label={engine.loadingLabel} error={engine.guardLoadError} onRetry={() => void engine.loadGuardAssets()} />}
             {engine.gameState === "title" && !settingsOpen && !hudEditor && (
               <TitleScreen
                 hasSave={engine.hasSave}

@@ -8,6 +8,7 @@
   --gold: #d0b47d;
   --muted: #94a49f;
   --line: #ffffff20;
+  --settings-surface: 3 4 3;
   color-scheme: dark;
 }
 * {
@@ -2194,7 +2195,7 @@ input[type="range"] {
   width: min(550px, 76vw);
   height: min(280px, 58vh);
   min-height: 230px;
-  background: #030403;
+  background: rgb(var(--settings-surface));
   border-radius: 4px;
   box-shadow: 0 4px 8px #0004;
 }
@@ -2547,7 +2548,6 @@ input[type="range"] {
   max-width: min(64vw, 700px);
   pointer-events: auto;
 }
-.game-hud .satchel-button { display: none; }
 .health-hud {
   position: absolute;
   top: auto;
@@ -2712,6 +2712,68 @@ input[type="range"] {
 .game-hud .hud-top {
   justify-content: flex-end;
 }
+.asset-loading {
+  position: absolute;
+  inset: 0;
+  z-index: 90;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #f5f5ef;
+  font:
+    16px Georgia,
+    serif;
+}
+.asset-loading h1 {
+  font:
+    24px Georgia,
+    serif;
+  margin: 0 0 12px;
+}
+.asset-loading progress {
+  appearance: none;
+  width: min(280px, 66vw);
+  height: 10px;
+  border: 1px solid #777;
+  background: #282828;
+  border-radius: 2px;
+}
+.asset-loading progress::-webkit-progress-bar {
+  background: #282828;
+}
+.asset-loading progress::-webkit-progress-value {
+  background: #f5f5ef;
+}
+.asset-loading progress::-moz-progress-bar {
+  background: #f5f5ef;
+}
+.asset-loading p {
+  color: #a5a69f;
+  font:
+    12px/1.5 Georgia,
+    serif;
+  margin: 12px 20px;
+  text-align: center;
+}
+.asset-loading button {
+  padding: 10px 22px;
+  border: 1px solid #666;
+  background: #242522;
+  border-radius: 3px;
+}
+.editor-weapon {
+  pointer-events: auto;
+  touch-action: none;
+  height: 110px;
+  align-content: center;
+  cursor: move;
+  z-index: 2;
+}
+.editor-weapon[aria-pressed="true"] {
+  border-color: var(--gold);
+}
 .weapon-hud {
   position: absolute;
   top: max(20px, env(safe-area-inset-top));
@@ -2720,14 +2782,13 @@ input[type="range"] {
   padding: 12px;
   border: 1px solid #c4d1c780;
   border-radius: 3px;
-  background: rgb(9 10 11 / 50%);
+  background: rgb(var(--settings-surface) / 50%);
   color: #fff;
   pointer-events: auto;
   display: grid;
   grid-template-columns: 55px 1fr;
   gap: 7px 10px;
   box-shadow: 0 5px 18px #0006;
-  backdrop-filter: blur(3px);
 }
 .weapon-hud > img {
   width: 85px;
@@ -2735,6 +2796,7 @@ input[type="range"] {
   object-fit: contain;
   filter: brightness(0) invert(1);
   transform: none;
+  max-width: 100%;
 }
 .weapon-ammo {
   display: flex;

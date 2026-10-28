@@ -6,6 +6,7 @@ import {
   placementStyle,
   presetLayout,
   storeLayout,
+  weaponPlacementStyle,
   type ControlId,
   type HudLayout,
   type HudPreset,
@@ -14,11 +15,12 @@ import { ControlIcon } from "./ControlIcon";
 
 export function HudEditor({ onClose }: { onClose: () => void }) {
   const [layout, setLayout] = useState(loadLayout);
-  const [selected, setSelected] = useState<ControlId>("move");
+  type EditableId = ControlId | "weapon";
+  const [selected, setSelected] = useState<EditableId>("move");
   const [message, setMessage] = useState("");
   const area = useRef<HTMLDivElement>(null);
   const drag = useRef<{
-    id: ControlId;
+    id: EditableId;
     pointer: number;
     x: number;
     y: number;
@@ -26,12 +28,16 @@ export function HudEditor({ onClose }: { onClose: () => void }) {
     startY: number;
   } | null>(null);
   const update = (
-    id: ControlId,
+    id: EditableId,
     patch: Partial<HudLayout["controls"][ControlId]>,
   ) =>
     setLayout((l) => ({
       ...l,
-      controls: { ...l.controls, [id]: { ...l.controls[id], ...patch } },
+      ...(id === "weapon"
+        ? { weapon: { ...l.weapon, ...patch } }
+        : {
+            controls: { ...l.controls, [id]: { ...l.controls[id], ...patch } },
+          }),
     }));
   return (
     <section
@@ -63,13 +69,23 @@ export function HudEditor({ onClose }: { onClose: () => void }) {
           </select>
         </label>
         <label>
-          {controlNames[selected]} · {layout.controls[selected].size}px
+          {selected === "weapon" ? "Gun info" : controlNames[selected]} ·{" "}
+          {
+            (selected === "weapon" ? layout.weapon : layout.controls[selected])
+              .size
+          }
+          px
           <input
             aria-label="Selected control size"
             type="range"
-            min={selected === "move" ? 80 : 44}
-            max={selected === "move" ? 160 : 100}
-            value={layout.controls[selected].size}
+            min={selected === "weapon" ? 140 : selected === "move" ? 80 : 44}
+            max={selected === "weapon" ? 210 : selected === "move" ? 160 : 100}
+            value={
+              (selected === "weapon"
+                ? layout.weapon
+                : layout.controls[selected]
+              ).size
+            }
             onChange={(e) => update(selected, { size: +e.target.value })}
           />
         </label>
@@ -91,13 +107,24 @@ export function HudEditor({ onClose }: { onClose: () => void }) {
         </button>
       </header>
       <div className="custom-touch-area editor-touch-area" ref={area}>
-        {controlIds.map((id) => (
+        {([...controlIds, "weapon"] as EditableId[]).map((id) => (
           <button
             key={id}
-            aria-label={`Move ${controlNames[id]} control`}
+            aria-label={`Move ${id === "weapon" ? "Gun info" : controlNames[id]} control`}
             aria-pressed={selected === id}
-            className={`custom-control editor-control ${id === "move" ? "custom-joystick" : ""}`}
-            style={placementStyle(layout.controls[id])}
+            className={
+              id === "weapon"
+                ? "weapon-hud editor-weapon"
+                : `custom-control editor-control ${id === "move" ? "custom-joystick" : ""}`
+            }
+            style={
+              id === "weapon"
+                ? {
+                    ...weaponPlacementStyle(layout.weapon),
+                    top: `max(100px, ${weaponPlacementStyle(layout.weapon).top})`,
+                  }
+                : placementStyle(layout.controls[id])
+            }
             onPointerDown={(e) => {
               const r = e.currentTarget.getBoundingClientRect(),
                 a = area.current!.getBoundingClientRect();
@@ -134,14 +161,23 @@ export function HudEditor({ onClose }: { onClose: () => void }) {
             onPointerCancel={() => (drag.current = null)}
             onLostPointerCapture={() => (drag.current = null)}
           >
-            <ControlIcon id={id} />
-            <small>{controlNames[id]}</small>
+            {id === "weapon" ? (
+              <>
+                <strong>6 / 6 ∞</strong>
+                <span>Gun info</span>
+              </>
+            ) : (
+              <>
+                <ControlIcon id={id} />
+                <small>{controlNames[id]}</small>
+              </>
+            )}
           </button>
         ))}
       </div>
       <p className="hud-editor-note" role="status">
         {message ||
-          "Preview includes the Dart button; it appears in play when equipped. Layout stays on this device."}
+          "Drag Gun info to move the ammo card. Fire appears when a weapon is equipped. Layout stays on this device."}
       </p>
     </section>
   );

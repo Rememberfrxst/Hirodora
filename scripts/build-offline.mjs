@@ -5,7 +5,6 @@ import { join } from "node:path";
 // Only ship what the game actually uses. Concept-art references remain in the repo.
 const publicFiles = [
   "manifest.webmanifest",
-  "icon.svg",
   "icon-192.png",
   "icon-180.png",
   "icon-512.png",

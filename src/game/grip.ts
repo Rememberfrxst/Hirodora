@@ -59,29 +59,35 @@ export function poseGrip(
             [-0.18, -0.98, 0],
             [0.78, -0.63, 0],
           ]
-        : trigger10
+        : style === "pistol10" && !trigger10
           ? [
-              [0, 0.9, 0.33],
-              [-0.92, 0.05, 0.39],
-              [0.35, -0.8, 0],
+              [-0.82, 0.4, 0],
+              [-0.2, -0.98, 0],
+              [0.9, -0.35, 0],
             ]
-          : trigger
+          : trigger10
             ? [
-                [-0.35, 0.94, 0.04],
-                [-0.5, 0.86, 0],
-                [-0.7, 0.71, 0],
+                [0, 0.9, 0.33],
+                [-0.92, 0.05, 0.39],
+                [0.35, -0.8, 0],
               ]
-            : pinch
+            : trigger
               ? [
-                  [-0.45, 0.89, 0],
-                  [-0.95, 0.3, 0],
-                  [-0.6, -0.8, 0],
+                  [-0.35, 0.94, 0.04],
+                  [-0.5, 0.86, 0],
+                  [-0.7, 0.71, 0],
                 ]
-              : [
-                  [-0.72, 0.69, 0],
-                  [-0.92, -0.39, 0],
-                  [0.08, -1, 0],
-                ];
+              : pinch
+                ? [
+                    [-0.45, 0.89, 0],
+                    [-0.95, 0.3, 0],
+                    [-0.6, -0.8, 0],
+                  ]
+                : [
+                    [-0.72, 0.69, 0],
+                    [-0.92, -0.39, 0],
+                    [0.08, -1, 0],
+                  ];
     directions.forEach((d, i) => aim(`${side}Hand${finger}${i + 1}`, d));
   }
   aim(side + "HandThumb1", [-0.7, 0.65, 0.3]);
@@ -126,12 +132,14 @@ export function poseGrip(
       reach("Index", new THREE.Vector3(-0.045, 0.145, 0.045));
       reach("Thumb", new THREE.Vector3(-0.035, 0.123, 0.045));
     }
-    if ((style === "power" || style === "pistol10") && side === "Right")
+    if (style === "power" && side === "Right")
       reach("Thumb", new THREE.Vector3(-0.005, 0.12, 0.03));
+    if (style === "pistol10" && side === "Right")
+      reach("Thumb", new THREE.Vector3(-0.012, 0.142, 0.033));
     if (style === "pistol10") {
       // Solve the two proximal segments to the actual 10mm trigger socket.
       const a = point(side + "HandIndex1"),
-        target = new THREE.Vector3(-0.028, 0.14, 0.048),
+        target = new THREE.Vector3(-0.028, 0.17, 0.048),
         direction = target.clone().sub(a),
         distance = direction.length(),
         unit = direction.normalize();

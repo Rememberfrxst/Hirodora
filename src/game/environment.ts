@@ -188,8 +188,9 @@ export function createEnvironment(scene: THREE.Scene) {
             throw Error(`Missing environment model ${anchor.name}`);
           const clone = template.clone(true);
           clone.name = `CellAsset_${suppliedName}`;
-          if (anchor.name === "Toilet")
-            clone.scale.multiply(new THREE.Vector3(1.08, 1.04, 1.08));
+          if (anchor.name === "Toilet") clone.scale.multiplyScalar(1.16);
+          if (anchor.name === "Bunk")
+            clone.scale.multiply(new THREE.Vector3(1.12, 1, 1.12));
           // Supplied roots contain metre/floor normalization: preserve transforms.
           if (
             ![

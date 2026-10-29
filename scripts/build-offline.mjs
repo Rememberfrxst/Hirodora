@@ -65,7 +65,7 @@ await writeFile(
         runtime: compatAudio.records.find((r) => r.source === a.file),
         conversion: compatAudio.reason,
       })),
-      ...introAudio.sources.map((a) => ({
+      ...[...introAudio.sources,...(introAudio.reactions||[])].map((a) => ({
         ...a,
         license: introAudio.license,
         provenance: introAudio.provenance,

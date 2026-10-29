@@ -11,6 +11,7 @@ import distantURL from "../assets/guards/officer-distant.glb";
 import type { GuardData } from "./types";
 import { angleDelta, guardClip, type GuardClip } from "./guard-motion";
 import { makeStrikeClip } from "./guard-action-clips";
+import { strideLength } from "./locomotion";
 
 export type GuardQuality = "auto" | "desktop" | "mobile";
 type Tier = "hero" | "mobile" | "distant";
@@ -315,7 +316,7 @@ export class GuardActor {
       // Actual unposed bounds normalize feet-to-scalp to the gameplay height.
       const bounds = new THREE.Box3().setFromObject(model);
       model.scale.setScalar(
-        (captain ? 1.99 : 1.95) / (bounds.max.y - bounds.min.y),
+        (captain ? 2.08 : 2.04) / (bounds.max.y - bounds.min.y),
       );
       model.position.y = -bounds.min.y * model.scale.y;
       model.name = "Officer_" + tier;
@@ -376,7 +377,7 @@ export class GuardActor {
         ? (["Strike", "Cross", "Hook"] as const)[guard.attackKind ?? 0]
         : guard.cinematicAim
           ? "Aim"
-          : guard.examining
+          : guard.examining && !guard.beltDuty
             ? "Examine"
             : guard.crouchInspect
               ? "Kneel"
@@ -385,9 +386,9 @@ export class GuardActor {
                 : guardClip(guard.state, speed, turn);
     if (nextClip === "Walk" || nextClip === "Run")
       this.stridePhase =
-        (this.stridePhase +
-          (speed * dt) / (nextClip === "Walk" ? 1.42 : 2.35)) %
-        1;
+        guard.gaitPhase ??
+        (this.stridePhase + (speed * dt) / strideLength(nextClip === "Run")) %
+          1;
     const changedTier = nextTier !== this.tier;
     const previousTime = this.current?.time || 0;
     if (changedTier) {

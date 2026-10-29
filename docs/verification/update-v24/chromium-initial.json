@@ -1,0 +1,261 @@
+{
+  "config": {
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "/workspace/Hirodora/node_modules/.bin/playwright",
+      "test",
+      "tests/update24.spec.ts",
+      "--output=/workspace/hirodora-v24-chromium-artifacts",
+      "--reporter=json"
+    ],
+    "configFile": "/workspace/Hirodora/playwright.config.ts",
+    "rootDir": "/workspace/Hirodora/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/workspace/hirodora-v24-chromium-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/workspace/Hirodora/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/workspace/hirodora-v24-chromium-artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "/workspace/Hirodora/tests",
+        "snapshotDir": "/workspace/Hirodora/tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 120000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4202",
+          "viewport": {
+            "width": 1100,
+            "height": 720
+          },
+          "launchOptions": {
+            "executablePath": "/usr/bin/chromium",
+            "args": [
+              "--no-sandbox",
+              "--use-angle=swiftshader",
+              "--enable-unsafe-swiftshader"
+            ]
+          },
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "update24.spec.ts",
+      "file": "update24.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "belt key voice, push-only risk, visible screwdriver, four independent bolts and passage",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 30112,
+                  "error": {
+                    "message": "Error: page.evaluate: Error: Aim toilet_bolt_2: got null, at -6.8,0,-9.7, object -7.8100000000000005,1.03,-9.44\n    at aim (eval at evaluate (:370:30), <anonymous>:25:44)\n    at eval (eval at evaluate (:370:30), <anonymous>:67:7)\n    at async <anonymous>:396:30",
+                    "stack": "Error: page.evaluate: Error: Aim toilet_bolt_2: got null, at -6.8,0,-9.7, object -7.8100000000000005,1.03,-9.44\n    at aim (eval at evaluate (:370:30), <anonymous>:25:44)\n    at eval (eval at evaluate (:370:30), <anonymous>:67:7)\n    at async <anonymous>:396:30\n    at aim (eval at evaluate (:370:30), <anonymous>:25:44)\n    at eval (eval at evaluate (:370:30), <anonymous>:67:7)\n    at async <anonymous>:396:30\n    at /workspace/Hirodora/tests/update24.spec.ts:5:22",
+                    "location": {
+                      "file": "eval at evaluate (:370:30), <anonymous>",
+                      "column": 44,
+                      "line": 25
+                    }
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "eval at evaluate (:370:30), <anonymous>",
+                        "column": 44,
+                        "line": 25
+                      },
+                      "message": "Error: page.evaluate: Error: Aim toilet_bolt_2: got null, at -6.8,0,-9.7, object -7.8100000000000005,1.03,-9.44\n    at aim (eval at evaluate (:370:30), <anonymous>:25:44)\n    at eval (eval at evaluate (:370:30), <anonymous>:67:7)\n    at async <anonymous>:396:30\n    at aim (eval at evaluate (:370:30), <anonymous>:25:44)\n    at eval (eval at evaluate (:370:30), <anonymous>:67:7)\n    at async <anonymous>:396:30\n    at /workspace/Hirodora/tests/update24.spec.ts:5:22"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T07:32:22.040Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/workspace/hirodora-v24-chromium-artifacts/update24-belt-key-voice-pu-8829d-dependent-bolts-and-passage/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/workspace/hirodora-v24-chromium-artifacts/update24-belt-key-voice-pu-8829d-dependent-bolts-and-passage/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "eval at evaluate (:370:30), <anonymous>",
+                    "column": 44,
+                    "line": 25
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "5643acc39e54dc3af940-8b5838580e9b1653d72d",
+          "file": "update24.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "push UI has only Caught-meter; bolt UI only its own progress and Hold Unscrew",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 32947,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('progressbar', { name: 'Action progress', exact: true })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('progressbar', { name: 'Action progress', exact: true }) with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('progressbar', { name: 'Action progress', exact: true })\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('progressbar', { name: 'Action progress', exact: true })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('progressbar', { name: 'Action progress', exact: true }) with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('progressbar', { name: 'Action progress', exact: true })\u001b[22m\n\n    at /workspace/Hirodora/tests/update24.spec.ts:69:83",
+                    "location": {
+                      "file": "/workspace/Hirodora/tests/update24.spec.ts",
+                      "column": 83,
+                      "line": 69
+                    },
+                    "snippet": "  67 |   await page.evaluate(()=>{const e=window.__HIRODORA__ as any;e.inventory=['screwdriver'];e.syncWorld();e.playerPos=[-6.8,0,-9.7];const b=e.worldData.opening.toilet.userData.bolts[0],p=b.getWorldPosition(e.camera.position.clone());e.playerRotY=Math.atan2(-(p.x-e.playerPos[0]),-(p.z-e.playerPos[2]));e.cameraPitch=Math.atan2(e.playerPos[1]+1.68-p.y,Math.hypot(p.x-e.playerPos[0],p.z-e.playerPos[2]));e.move(0);e.emitChange();});\n  68 |   await expect(page.getByRole('progressbar',{name:'Noise risk',exact:true})).toHaveCount(0);\n> 69 |   await expect(page.getByRole('progressbar',{name:'Action progress',exact:true})).toBeVisible();\n     |                                                                                   ^\n  70 |   await expect(page.locator('.interact-prompt')).toContainText('Bolt 1 / 4');\n  71 |   await expect(page.locator('.interact-prompt')).toContainText('Unscrew');\n  72 | });"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/workspace/Hirodora/tests/update24.spec.ts",
+                        "column": 83,
+                        "line": 69
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('progressbar', { name: 'Action progress', exact: true })\nExpected: visible\nTimeout: 10000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByRole('progressbar', { name: 'Action progress', exact: true }) with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('progressbar', { name: 'Action progress', exact: true })\u001b[22m\n\n\n  67 |   await page.evaluate(()=>{const e=window.__HIRODORA__ as any;e.inventory=['screwdriver'];e.syncWorld();e.playerPos=[-6.8,0,-9.7];const b=e.worldData.opening.toilet.userData.bolts[0],p=b.getWorldPosition(e.camera.position.clone());e.playerRotY=Math.atan2(-(p.x-e.playerPos[0]),-(p.z-e.playerPos[2]));e.cameraPitch=Math.atan2(e.playerPos[1]+1.68-p.y,Math.hypot(p.x-e.playerPos[0],p.z-e.playerPos[2]));e.move(0);e.emitChange();});\n  68 |   await expect(page.getByRole('progressbar',{name:'Noise risk',exact:true})).toHaveCount(0);\n> 69 |   await expect(page.getByRole('progressbar',{name:'Action progress',exact:true})).toBeVisible();\n     |                                                                                   ^\n  70 |   await expect(page.locator('.interact-prompt')).toContainText('Bolt 1 / 4');\n  71 |   await expect(page.locator('.interact-prompt')).toContainText('Unscrew');\n  72 | });\n    at /workspace/Hirodora/tests/update24.spec.ts:69:83"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T07:32:54.908Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/workspace/hirodora-v24-chromium-artifacts/update24-push-UI-has-only--8663a-n-progress-and-Hold-Unscrew/test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/workspace/hirodora-v24-chromium-artifacts/update24-push-UI-has-only--8663a-n-progress-and-Hold-Unscrew/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/workspace/hirodora-v24-chromium-artifacts/update24-push-UI-has-only--8663a-n-progress-and-Hold-Unscrew/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/workspace/Hirodora/tests/update24.spec.ts",
+                    "column": 83,
+                    "line": 69
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "5643acc39e54dc3af940-1f553b5b24e0c0d940ee",
+          "file": "update24.spec.ts",
+          "line": 60,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-29T07:32:19.802Z",
+    "duration": 70089.481,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

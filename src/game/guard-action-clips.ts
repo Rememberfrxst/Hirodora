@@ -15,7 +15,7 @@ export function makeStrikeClip(
     tracks: THREE.KeyframeTrack[] = [],
     times = stance
       ? [0, 0.3, 0.6, 0.9, 1.2]
-      : [0, 0.18, COMBAT.windup, 0.5, COMBAT.duration];
+      : [0, 0.12, COMBAT.windup, 0.56, COMBAT.duration];
   const guardArms: Record<string, number[]> = {
     RightArm: [-0.28, -0.28, 0.7],
     RightForeArm: [0.1, 0.9, 0.5],
@@ -49,11 +49,15 @@ export function makeStrikeClip(
       const q = bind.get(o.name);
       if (q) o.quaternion.copy(q);
     });
-    const effort = stance ? 0 : [0, 0.35, 1, 0.3, 0][i];
+    const effort = stance ? 0 : [0, -0.15, 1, 0.2, 0][i];
     const yaw = effort * (kind === 0 ? -0.16 : kind === 1 ? 0.28 : 0.4);
     spine.quaternion.multiply(
       new THREE.Quaternion().setFromEuler(
-        new THREE.Euler(0.07 + effort * 0.06, yaw, 0),
+        new THREE.Euler(
+          0.07 + effort * 0.06,
+          yaw,
+          effort * (kind === 0 ? 0.025 : -0.04),
+        ),
       ),
     );
     spineValues.push(...spine.quaternion.toArray());

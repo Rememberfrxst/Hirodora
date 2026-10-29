@@ -52,7 +52,7 @@ test("five original voice recordings decode, play once across pause/resume and m
     "guard-dead",
   ]);
   expect(result.plays.every((c) => c.ok)).toBe(true);
-  expect(result.samples).toBe(75);
+  expect(result.samples).toBe(76);
   expect(result.failures).toEqual([]);
   expect(result.paused).toBe(true);
   expect(result.wake.clip).toBe("Idle");
@@ -101,8 +101,13 @@ test("object meter fills, release cools without losing work, threshold sends rea
       e.updateGuards(1 / 30);
     }
     const cooled = e.caughtMeter;
-    const movedTable = e.worldData.interactables.find((o:any)=>o.id==='bed_push');
-    e.playerRotY = Math.atan2(-(movedTable.position[0]-e.playerPos[0]),-(movedTable.position[2]-e.playerPos[2]));
+    const movedTable = e.worldData.interactables.find(
+      (o: any) => o.id === "bed_push",
+    );
+    e.playerRotY = Math.atan2(
+      -(movedTable.position[0] - e.playerPos[0]),
+      -(movedTable.position[2] - e.playerPos[2]),
+    );
     e.move(0);
     e.emitChange();
     return { full, cooled, saved, progress: e.openingProgress.bed };
@@ -118,7 +123,7 @@ test("object meter fills, release cools without losing work, threshold sends rea
   ).toBeVisible();
   await expect(
     page.getByRole("progressbar", { name: "Action progress", exact: true }),
-  ).toBeVisible();
+  ).toHaveCount(0);
 });
 
 test.describe("touch object meters", () => {
@@ -127,7 +132,7 @@ test.describe("touch object meters", () => {
     hasTouch: true,
     isMobile: true,
   });
-  test("white bolt progress and red risk stay visible on touch; releasing retains progress", async ({
+  test("white bolt progress without red risk on touch; releasing retains progress", async ({
     page,
   }) => {
     await page.goto("/");
@@ -145,13 +150,19 @@ test.describe("touch object meters", () => {
       e.syncWorld();
       e.playerPos = [-6.8, 0, -9.7];
       const o = e.worldData.interactables.find(
-        (o: any) => o.id === "toilet_bolts",
+        (o: any) => o.id === "toilet_bolt_0",
       );
       e.playerRotY = Math.atan2(
         -(o.position[0] - e.playerPos[0]),
         -(o.position[2] - e.playerPos[2]),
       );
-      e.cameraPitch = 0;
+      e.cameraPitch = -Math.atan2(
+        1.68 - (o.position[1] - 1),
+        Math.hypot(
+          o.position[0] - e.playerPos[0],
+          o.position[2] - e.playerPos[2],
+        ),
+      );
       e.move(0);
       e.emitChange();
     });
@@ -172,13 +183,12 @@ test.describe("touch object meters", () => {
         name: "Action progress",
         exact: true,
       });
-    await expect(red).toBeVisible();
+    await expect(red).toHaveCount(0);
     await expect(white).toBeVisible();
-    expect(Number(await red.getAttribute("aria-valuenow"))).toBeGreaterThan(0);
     expect(Number(await white.getAttribute("value"))).toBeGreaterThan(0);
-    const box = (await red.boundingBox())!;
+    const box = (await white.boundingBox())!;
     expect(box.y).toBeGreaterThan(60);
-    expect(box.y + box.height).toBeLessThan(190);
+    expect(box.y + box.height).toBeLessThan(370);
     await page.mouse.up();
     expect(
       await page.evaluate(() => window.__HIRODORA__.activeHold),

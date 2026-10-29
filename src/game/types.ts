@@ -55,6 +55,8 @@ export interface GuardData {
   armed?: boolean;
   shotWindup?: number;
   shotCooldown?: number;
+  gaitPhase?: number;
+  beltDuty?: boolean;
 }
 
 export type ItemId =
@@ -155,7 +157,7 @@ export interface GameCheckpoint {
   }[];
   layoutVersion?: number;
   equippedItem?: ItemId | null;
-  openingProgress?: { bed: number; bolts: number; toilet: number };
+  openingProgress?: { bed: number; bolts: number; toilet: number; boltSteps?: number[] };
   stats?: PlayerStats;
   id: string;
   name: string;

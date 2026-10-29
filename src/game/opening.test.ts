@@ -1,10 +1,15 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { advanceHold, openingObjective, stepCaughtMeter } from "./opening";
+import {
+  advanceHold,
+  openingObjective,
+  stepCaughtMeter,
+  restoreBolts,
+} from "./opening";
 import { readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 test("opening reveals the key identity only after trying the door and keeps the tool sequence", () => {
-  assert.match(openingObjective({}, []), /key behind/);
+  assert.match(openingObjective({}, []), /belt/);
   assert.equal(
     openingObjective({}, ["cell_key"]),
     "Try the key on your cell door.",
@@ -38,7 +43,7 @@ test("hold progress is bounded, incremental and frame-rate independent at suppor
   assert.ok(Math.abs(slow - fast) < 1e-10);
 });
 test("caught meter rises with contact, cools when released, and is independent of saved work", () => {
-  for (const action of ["bed_push", "toilet_move", "toilet_bolts"] as const) {
+  for (const action of ["bed_push", "toilet_move"] as const) {
     let risk = 0,
       progress = 0;
     for (let i = 0; i < 200; i++) risk = stepCaughtMeter(risk, 0.05, action);
@@ -46,8 +51,8 @@ test("caught meter rises with contact, cools when released, and is independent o
     for (let i = 0; i < 80; i++) risk = stepCaughtMeter(risk, 0.05, null);
     assert.equal(risk, 0);
     assert.ok(
-      stepCaughtMeter(20, 0.05, action, true) >
-        stepCaughtMeter(20, 0.05, action, false),
+      stepCaughtMeter(20, 0.05, action, 1) >
+        stepCaughtMeter(20, 0.05, action, 0),
     );
     let a = 0,
       b = 0;
@@ -58,6 +63,12 @@ test("caught meter rises with contact, cools when released, and is independent o
     assert.ok(progress > 0);
     assert.equal(stepCaughtMeter(1, -2, null), 1);
   }
+  assert.ok(stepCaughtMeter(20, 0.05, "toilet_bolts") < 20);
+});
+test("four bolts migrate legacy aggregate progress and retain independent partial work", () => {
+  assert.deepEqual(restoreBolts(0.375), [1, 0.5, 0, 0]);
+  assert.deepEqual(restoreBolts(0, [0.2, 1, 0.4, 0]), [0.2, 1, 0.4, 0]);
+  assert.deepEqual(restoreBolts(1), [1, 1, 1, 1]);
 });
 test("all audio recordings have verified local bytes, redistribution licenses and attribution", async () => {
   const manifest = JSON.parse(

@@ -2908,6 +2908,14 @@ input[type="range"] {
     serif;
   text-shadow: 0 2px 4px #000;
 }
+.game-hud .context-actions .push-contact {
+  width: 190px;
+  height: 100px;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  opacity: 0;
+}
 .game-hud .context-actions .hard-push {
   position: absolute;
   top: 0;

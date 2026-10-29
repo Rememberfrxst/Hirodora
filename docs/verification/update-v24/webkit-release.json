@@ -1,0 +1,285 @@
+{
+  "config": {
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "/workspace/Hirodora/node_modules/.bin/playwright",
+      "test",
+      "--config",
+      "playwright.webkit.config.ts",
+      "tests/update24.spec.ts",
+      "tests/update22.spec.ts",
+      "--grep",
+      "belt key|push UI|white bolt",
+      "--output=/workspace/hirodora-v24-release-webkit",
+      "--reporter=json"
+    ],
+    "configFile": "/workspace/Hirodora/playwright.webkit.config.ts",
+    "rootDir": "/workspace/Hirodora/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/workspace/hirodora-v24-release-webkit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/workspace/Hirodora/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 180000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/workspace/hirodora-v24-release-webkit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "/workspace/Hirodora/tests",
+        "snapshotDir": "/workspace/Hirodora/tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 180000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4208",
+          "viewport": {
+            "width": 1100,
+            "height": 720
+          },
+          "launchOptions": {},
+          "screenshot": "only-on-failure",
+          "trace": "retain-on-failure",
+          "browserName": "webkit"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "update22.spec.ts",
+      "file": "update22.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "touch object meters",
+          "file": "update22.spec.ts",
+          "line": 129,
+          "column": 6,
+          "specs": [
+            {
+              "title": "white bolt progress without red risk on touch; releasing retains progress",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 27923,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [
+                        {
+                          "text": "Skipping host requirements validation logic because `PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS` env variable is set.\n"
+                        }
+                      ],
+                      "retry": 0,
+                      "startTime": "2026-10-29T07:41:24.048Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "9c988d04dedd91ff297f-2d041c5a0a48ca9f6aed",
+              "file": "update22.spec.ts",
+              "line": 135,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "update24.spec.ts",
+      "file": "update24.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "belt key voice, push-only risk, visible screwdriver, four independent bolts and passage",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 46938,
+                  "error": {
+                    "message": "Error: page.evaluate: Error: Aim cell_key_pickup: got cell47_lock, at -4.4,0,-2.45, object -3.995573949080678,1.1469727382540842,-1.098032843672171",
+                    "stack": "Error: page.evaluate: Error: Aim cell_key_pickup: got cell47_lock, at -4.4,0,-2.45, object -3.995573949080678,1.1469727382540842,-1.098032843672171\n    at /workspace/Hirodora/tests/update24.spec.ts:10:24",
+                    "location": {
+                      "file": "/workspace/Hirodora/tests/update24.spec.ts",
+                      "column": 24,
+                      "line": 10
+                    },
+                    "snippet": "   8 |   await page.locator(\"[data-start]\").click();\n   9 |   await skipOpening(page);\n> 10 |   const r = await page.evaluate(async () => {\n     |                        ^\n  11 |     const e = window.__HIRODORA__ as any;\n  12 |     cancelAnimationFrame(e.frameId);\n  13 |     e.overlayOpen = false;"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/workspace/Hirodora/tests/update24.spec.ts",
+                        "column": 24,
+                        "line": 10
+                      },
+                      "message": "Error: page.evaluate: Error: Aim cell_key_pickup: got cell47_lock, at -4.4,0,-2.45, object -3.995573949080678,1.1469727382540842,-1.098032843672171\n\n   8 |   await page.locator(\"[data-start]\").click();\n   9 |   await skipOpening(page);\n> 10 |   const r = await page.evaluate(async () => {\n     |                        ^\n  11 |     const e = window.__HIRODORA__ as any;\n  12 |     cancelAnimationFrame(e.frameId);\n  13 |     e.overlayOpen = false;\n    at /workspace/Hirodora/tests/update24.spec.ts:10:24"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-29T07:41:52.356Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/workspace/hirodora-v24-release-webkit/update24-belt-key-voice-pu-8829d-dependent-bolts-and-passage/test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/workspace/hirodora-v24-release-webkit/update24-belt-key-voice-pu-8829d-dependent-bolts-and-passage/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/workspace/hirodora-v24-release-webkit/update24-belt-key-voice-pu-8829d-dependent-bolts-and-passage/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/workspace/Hirodora/tests/update24.spec.ts",
+                    "column": 24,
+                    "line": 10
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "5643acc39e54dc3af940-8b5838580e9b1653d72d",
+          "file": "update24.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "push UI has only Caught-meter; bolt UI only its own progress and Hold Unscrew",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 36875,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [
+                    {
+                      "text": "Skipping host requirements validation logic because `PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS` env variable is set.\n"
+                    }
+                  ],
+                  "retry": 0,
+                  "startTime": "2026-10-29T07:42:46.092Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "5643acc39e54dc3af940-1f553b5b24e0c0d940ee",
+          "file": "update24.spec.ts",
+          "line": 133,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-29T07:41:17.207Z",
+    "duration": 126430.092,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

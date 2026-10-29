@@ -8,15 +8,19 @@
 
 **Every sound has a consequence.**
 
-**v0.23.0 · Cell 015 Security Wing · Armed Island Patrols · Boat Escape**
+**v0.24.0 · Clean Push Meter · Four Bolts · Belt Key · Distance-Synced Steps**
 
-**[↓ DOWNLOAD ANDROID APK](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.23.0-android.apk)**
+**[↓ DOWNLOAD ANDROID APK](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.24.0-android.apk)**
 
-[↓ Offline web ZIP](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.23.0-offline.zip) · [Single-file HTML download](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.23.0.html) · [ZIP checksum](downloads/latest.json) · [APK checksums](downloads/android-latest.json) · [Android installation](docs/ANDROID.md)
+[↓ Offline web ZIP](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.24.0-offline.zip) · [Single-file HTML download](https://raw.githubusercontent.com/Rememberfrxst/Hirodora/main/downloads/Hirodora-0.24.0.html) · [ZIP checksum](downloads/latest.json) · [APK checksums](downloads/android-latest.json) · [Android installation](docs/ANDROID.md)
 
 </div>
 
 ## A playable prison atrium
+
+**v0.24.0 cleans up the opening puzzle.** Table/toilet pushing shows **only the red Caught-meter**, without Move/Hold text, a white work bar or Push hard button. Hold E / the touch hand to push slowly; prolonged pushing accelerates risk, so stop to cool down. Each of the **four real toilet bolts** is a separate aim/hold target with its own white progress, **Bolt / Hold Unscrew**, and no red meter. Partial work and arbitrary removal order survive saves.
+
+The table footprint is larger, the supplied toilet is uniformly enlarged without changing its proportions, and the screwdriver now lies above the floor rather than underneath it. Nearby available items have a subtle depth-tested glint and material sheen. The opening officer starts farther away on screen-left, then keeps a left-hand post: the key hangs on his actual belt. Taking it plays the newly supplied Max recording, **“Where is key?”**, with matching dialogue text. Officers are now 2.04m (captains 2.08m). Walking/running poses and footstep contacts share distance-based phase, including the escaping cellmate; melee has a revised wind-up/recovery. These remain authored animations, not new motion capture. [Changes and verification](docs/UPDATE-V24.md).
 
 **v0.23.0 adds a playable Cell 015 → security wing → underground tunnel → island defence compound → escape boat route.** Take the pistol from Cell 46, use the existing stairs to the lower floor and open Cell 015. Its rear service door leads to three locked security rooms with six armed officers. Clear each pair to release the next bulkhead; the command hatch leads down to a real service tunnel. Climb out into a 110 × 70m compound with ten armed sentries, barracks, towers and cargo cover. Secure the compound, release the eastern dock gate and board the boat.
 
@@ -46,36 +50,36 @@ Player health is **200 HP**; guard melee has a visible wind-up and **25-damage**
 
 **Safari compatibility:** all 70 licensed recordings now have MP3 runtime derivatives, fixing the Ogg Vorbis compatibility gap in older iOS Safari. Touch/landscape handling also recognises desktop-mode iPads, and interrupted Safari audio can resume after a user gesture. See the [iPhone/iPad guide](docs/IOS.md) for installation and the remaining verification limits.
 
-[Current implementation / verification](docs/UPDATE-V23.md) · [Voiced intro / caught meter](docs/UPDATE-V22.md) · [Loading/HUD update](docs/UPDATE-V21.md) · [Previous stairs/hands update](docs/UPDATE-V20.md) · [Previous bridge update](docs/BRIDGE-V19.md) · [Character credits](docs/GUARD-ASSETS.md)
+[Current implementation / verification](docs/UPDATE-V24.md) · [Island route](docs/UPDATE-V23.md) · [Voiced intro](docs/UPDATE-V22.md) · [Loading/HUD update](docs/UPDATE-V21.md) · [Previous stairs/hands update](docs/UPDATE-V20.md) · [Character credits](docs/GUARD-ASSETS.md)
 
 ## Latest screenshots — exactly six
 
-Six actual game renders with fixed inspection cameras and frozen patrol poses. [Capture cameras and states](docs/screenshots/update-v23/capture.json). These are not recorded playthroughs or physical-phone benchmarks; separate browser tests verify the route and combat. Historical galleries remain separate.
+Six actual game renders with fixed intro seeks and inspection cameras. [Capture cameras and puzzle states](docs/screenshots/update-v24/capture.json). These are not recorded playthroughs or physical-phone benchmarks; separate browser tests verify the interactions. Historical galleries remain separate.
 
 <table>
-<tr><td width="50%"><img src="docs/screenshots/update-v23/01-pistol-and-taller-officer.png" alt="Revised pistol fingers and taller officer" /></td><td width="50%"><img src="docs/screenshots/update-v23/02-cell015-hidden-door.png" alt="Cell 015 concealed rear door" /></td></tr>
-<tr><td align="center"><sub>PISTOL GRIP · TALLER OFFICERS</sub></td><td align="center"><sub>CELL 015 · HIDDEN DOOR</sub></td></tr>
-<tr><td><img src="docs/screenshots/update-v23/03-security-wing.png" alt="Armed officers in the hidden security rooms" /></td><td><img src="docs/screenshots/update-v23/04-underground-passage.png" alt="Below-floor escape tunnel" /></td></tr>
-<tr><td align="center"><sub>SECURITY WING</sub></td><td align="center"><sub>UNDERGROUND PASSAGE</sub></td></tr>
-<tr><td><img src="docs/screenshots/update-v23/05-island-military.png" alt="Island defence compound and sentries" /></td><td><img src="docs/screenshots/update-v23/06-escape-boat.png" alt="Island evacuation dock and escape boat" /></td></tr>
-<tr><td align="center"><sub>ISLAND DEFENCE</sub></td><td align="center"><sub>ESCAPE BOAT</sub></td></tr>
+<tr><td width="50%"><img src="docs/screenshots/update-v24/01-intro-left-sentry.png" alt="Escaping cellmate and distant left-hand sentry" /></td><td width="50%"><img src="docs/screenshots/update-v24/02-belt-key.png" alt="Key attached to the officer belt" /></td></tr>
+<tr><td align="center"><sub>INTRO · LEFT SENTRY</sub></td><td align="center"><sub>BELT KEY</sub></td></tr>
+<tr><td><img src="docs/screenshots/update-v24/03-table-caught-only.png" alt="Table pushing shows only caught meter" /></td><td><img src="docs/screenshots/update-v24/04-visible-screwdriver.png" alt="Visible screwdriver with collectible glint" /></td></tr>
+<tr><td align="center"><sub>TABLE · CAUGHT METER ONLY</sub></td><td align="center"><sub>SCREWDRIVER · REVEAL</sub></td></tr>
+<tr><td><img src="docs/screenshots/update-v24/05-individual-bolt.png" alt="Individual bolt unscrewing without red meter" /></td><td><img src="docs/screenshots/update-v24/06-toilet-caught-only.png" alt="Larger supplied toilet and caught meter only" /></td></tr>
+<tr><td align="center"><sub>BOLT · HOLD UNSCREW</sub></td><td align="center"><sub>TOILET · CAUGHT METER ONLY</sub></td></tr>
 </table>
 
 ## Play on mobile
 
-**Android:** download the APK above, open it in Files and allow installation from that source. Requires Android 8.0+, an updated Android System WebView and WebGL 2. All models, textures and audio are included, with no Internet, storage, microphone or tracking permission. v0.23.0 / versionCode **2300** reuses the existing release certificate. Install over the previous release to preserve app-local saves/settings; uninstalling clears them. Existing prison saves can explore the new Cell 015 route without starting over.
+**Android:** download the APK above, open it in Files and allow installation from that source. Requires Android 8.0+, an updated Android System WebView and WebGL 2. All models, textures and audio are included, with no Internet, storage, microphone or tracking permission. v0.24.0 / versionCode **2400** reuses the existing release certificate. Install over the previous release to preserve app-local saves/settings; uninstalling clears them. Existing prison saves and aggregate bolt progress migrate safely.
 
 **iPhone/iPad:** WebKit gameplay and production offline-cache checks pass. The public link still returns 404 because Pages is not configured: the repository owner must select **Settings → Pages → Source: GitHub Actions**, then rerun the Pages workflow. Once published, open the HTTPS game in **Safari → Share → Add to Home Screen**, turn off Portrait Orientation Lock and rotate horizontally. [iOS guide and exact hosting blocker](docs/IOS.md). Physical iPhone testing and a native signed IPA are still pending.
 
-For desktop/offline web play, extract the ZIP and open `Hirodora-0.23.0.html` in a full WebGL 2 browser. Download links bypass GitHub's large-file preview. Exact sizes and SHA-256 checksums are in the download manifests.
+For desktop/offline web play, extract the ZIP and open `Hirodora-0.24.0.html` in a full WebGL 2 browser. Download links bypass GitHub's large-file preview. Exact sizes and SHA-256 checksums are in the download manifests.
 
 ## How to finish the current chapter
 
-1. Start in Cell 47 after the intro. While the officer examines the prisoner outside, aim at the key behind him and press **E / Interact**.
+1. Start in Cell 47 after the intro. Approach the left side of the frontage, aim at the key hanging from the officer's belt and press **E / Interact**.
 2. Try it on your cell lock. The notice reveals that it belongs to **Cell 42**, not Cell 47.
-3. Aim at the **table**. Hold **E / Interact** in short bursts, release to cool red risk and track the moving table. White progress is retained. **R / Push hard** is faster but fills risk much faster.
+3. Aim at the **table**. Hold **E / Interact** in short bursts; release to cool red risk and track the moving table. Work is retained internally, with no white push-progress bar or Push hard mode.
 4. Collect the screwdriver revealed beneath the table.
-5. Hold the action on the toilet bolts, then hold **Move toilet**. Both have the same stop/start risk mechanic.
+5. Aim at each of the four toilet bolts and hold Unscrew. Each has its own white progress, without red risk. Then push the toilet carefully using the red Caught-meter.
 6. Aim at the exposed opening and select **Penetrate** to enter Cell 46. The chapter checkpoint is saved; **Explore Cell 46** lets you continue exploring or return through the passage.
 
 Cells 45–42 are present but their story progression remains unfinished. Older v2 campaign saves remain supported.
@@ -86,13 +90,13 @@ Cells 45–42 are present but their story progression remains unfinished. Older 
 | ---------------------- | ------------------- | -------------------- |
 | Move / look            | WASD / mouse        | Joystick / drag      |
 | Interact / hold        | E                   | Interact             |
-| Push harder            | R                   | Push hard            |
+| Reload pistol          | R                   | Reload               |
 | Crouch / sprint / jump | C / Shift / Space   | Action buttons       |
 | Pause                  | Escape / pause icon | Pause / Android Back |
 
 Settings has Game, Audio, Graphics and Controls tabs. **Controls → Custom HUD** supports drag, resize, presets and saved layouts. Graphics has Low, Medium, High and Ultra presets, render scale and FOV. Pause → Retry checkpoint restarts a checkpoint; **New game** resets progress after confirmation.
 
-Guards use wall-aware vision, suspicion, spatial hearing, last-known-position searches and sight-loss/reacquisition. Skeletal animation follows authoritative AI decisions. Cell 47 is quiet at rest; **75 local recordings** include the original 70 licensed effects/dialogue plus five owner-supplied intro recordings with separately documented ElevenLabs provenance.
+Guards use wall-aware vision, suspicion, spatial hearing, last-known-position searches and sight-loss/reacquisition. Skeletal animation follows authoritative AI decisions. Cell 47 is quiet at rest; **76 local recordings** include the original 70 licensed effects/dialogue plus six owner-supplied ElevenLabs recordings with separately documented provenance.
 
 ## Development
 

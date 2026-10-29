@@ -14,6 +14,11 @@ async function aim(page: Page, id: string, x: number, z: number) {
       e.playerPos = [x, 0, z];
       e.playerRotY = Math.atan2(-(o.position[0] - x), -(o.position[2] - z));
       e.cameraPitch = 0;
+      if (id.startsWith("toilet_bolt_"))
+        e.cameraPitch = -Math.atan2(
+          1.68 - (o.position[1] - 1),
+          Math.hypot(o.position[0] - x, o.position[2] - z),
+        );
       e.stats.subtitle = null;
       (e as any).move(0);
       e.emitChange();
@@ -27,14 +32,13 @@ async function aim(page: Page, id: string, x: number, z: number) {
 async function finishHold(page: Page, id: string) {
   await expect
     .poll(() => page.evaluate(() => window.__HIRODORA__.activeHold))
-    .toBe(id);
+    .toBe(id.startsWith("toilet_bolt_") ? "toilet_bolts" : id);
   // Advance the real simulation at a fixed contact timestep. SwiftShader is far
   // slower than real-time, so wall-clock holding would test CI's GPU speed.
   await page.evaluate((id) => {
     const e = window.__HIRODORA__ as any;
-    const hard = e.hardPush;
     for (let i = 0; i < 420 && e.activeHold; i++) {
-      if (!hard && e.caughtMeter >= 65) {
+      if (e.caughtMeter >= 65) {
         e.endInteract();
         for (let cool = 0; cool < 65; cool++) {
           e.updateOpening(1 / 30);
@@ -75,7 +79,7 @@ test("Cell 47 key twist, quiet bed, tool, toilet, passage, save and return", asy
       page.evaluate(() => window.__HIRODORA__.worldData.guards[0].examining),
     )
     .toBe(true);
-  await aim(page, "cell_key_pickup", -5.8, -2.7);
+  await aim(page, "cell_key_pickup", -4.4, -2.45);
   await page.keyboard.press("KeyE");
   expect(
     await page.evaluate(() =>
@@ -114,9 +118,12 @@ test("Cell 47 key twist, quiet bed, tool, toilet, passage, save and return", asy
   ).toBe("patrol");
   await aim(page, "screwdriver_pickup", -5.8, -9.0);
   await page.keyboard.press("KeyE");
-  await aim(page, "toilet_bolts", -6.8, -9.7);
-  await page.keyboard.down("KeyE");
-  await finishHold(page, "toilet_bolts");
+  for (let i = 0; i < 4; i++) {
+    await aim(page, `toilet_bolt_${i}`, -6.8, -9.7);
+    await page.keyboard.down("KeyE");
+    await finishHold(page, `toilet_bolt_${i}`);
+    await page.keyboard.up("KeyE");
+  }
   await expect
     .poll(
       () => page.evaluate(() => window.__HIRODORA__.gameFlags.toilet_unbolted),
@@ -193,7 +200,7 @@ test("audio recordings decode, blocked movement is silent and channels persist",
   expect(result.played).toBe(0);
   expect(result.level).toBe(0.24);
 });
-test("hard pushing alerts the examining guard, then he returns to the body without crossing bars", async ({
+test("prolonged normal pushing alerts the guard, who returns to his left-hand post without crossing bars", async ({
   page,
 }) => {
   await page.goto("/");
@@ -206,9 +213,17 @@ test("hard pushing alerts the examining guard, then he returns to the body witho
     e.syncWorld();
   });
   await aim(page, "bed_push", -5.6, -8.1);
-  await page.keyboard.down("KeyR");
-  await finishHold(page, "bed_push");
-  await page.keyboard.up("KeyR");
+  await page.evaluate(() => {
+    const e = window.__HIRODORA__ as any;
+    cancelAnimationFrame(e.frameId);
+    e.beginInteract();
+    for (let i = 0; i < 180; i++) {
+      e.updateOpening(0.05);
+      e.move(0.05);
+      e.updateGuards(0.05);
+    }
+    e.endInteract();
+  });
   const result = await page.evaluate(() => {
     const e = window.__HIRODORA__ as any,
       g = e.worldData.guards[0];

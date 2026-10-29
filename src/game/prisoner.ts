@@ -56,6 +56,15 @@ export class PrisonerActor {
     this.mixer.update(0);
     this.root.updateMatrixWorld(true);
   }
+  travelPose(clip: string, distance: number, time: number) {
+    const action = this.actions.get(clip);
+    this.pose(
+      clip,
+      action && (clip === "Run" || clip === "Walk")
+        ? (distance / (clip === "Run" ? 2.1 : 1.4)) * action.getClip().duration
+        : time,
+    );
+  }
   wakeGesture(amount: number) {
     if (!this.model || amount <= 0) return;
     this.root.updateMatrixWorld(true);

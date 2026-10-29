@@ -145,13 +145,13 @@ function label(
 // but do not leave an invisible two-metre-high bunk collider above the table.
 function buildTableBounds() {
   const group = new THREE.Group();
-  box(group, [1.2821, 0.82, 2.1643], [0, 0.36, 0], iron);
+  box(group, [1.435952, 0.82, 2.423216], [0, 0.36, 0], iron);
   return group;
 }
 
 function buildLegacyToiletBounds() {
   const group = new THREE.Group();
-  box(group, [0.6036, 1.0192, 0.9415], [0, 0.4596, 0], ceramic);
+  box(group, [0.648294, 1.1368, 1.011226], [0, 0.5184, 0], ceramic);
   return group;
 }
 
@@ -808,8 +808,8 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     color: 0x171917,
     roughness: 0.85,
   });
-  for (const x of [-0.18, 0.18])
-    for (const z of [-0.22, 0.19]) {
+  for (const x of [-0.26, 0.26])
+    for (const z of [-0.24, 0.24]) {
       const head = new THREE.Mesh(
         new THREE.CylinderGeometry(0.024, 0.024, 0.022, 6),
         boltSteel,
@@ -819,12 +819,20 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
       // Rounded mounting lugs connect the pedestal to its floor anchors.
       const flange = new THREE.Shape();
       flange.absellipse(0, 0, 0.115, 0.046, 0, Math.PI * 2, false, 0);
-      const mountingFoot = new THREE.Mesh(new THREE.ExtrudeGeometry(flange, {
-        depth: 0.012, bevelEnabled: true, bevelThickness: 0.002,
-        bevelSize: 0.003, bevelSegments: 2, steps: 1, curveSegments: 12,
-      }), iron);
+      const mountingFoot = new THREE.Mesh(
+        new THREE.ExtrudeGeometry(flange, {
+          depth: 0.012,
+          bevelEnabled: true,
+          bevelThickness: 0.002,
+          bevelSize: 0.003,
+          bevelSegments: 2,
+          steps: 1,
+          curveSegments: 12,
+        }),
+        iron,
+      );
       mountingFoot.rotation.x = -Math.PI / 2;
-      mountingFoot.position.set(Math.sign(x) * 0.115, 0.05, z);
+      mountingFoot.position.set(Math.sign(x) * 0.19, 0.05, z);
       toilet.add(mountingFoot);
       const washer = new THREE.Mesh(
         new THREE.CylinderGeometry(0.037, 0.037, 0.007, 20),
@@ -933,7 +941,7 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     -8.1,
     "interact",
   );
-  const screwdriver = environment.add("Screwdriver", -4.45, -0.044, -8.7, 0.3);
+  const screwdriver = environment.add("Screwdriver", -4.45, 0.012, -8.7, 0.3);
   pickupMeshes.set("screwdriver_pickup", screwdriver);
   interaction(
     "screwdriver_pickup",
@@ -943,15 +951,16 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
     -8.7,
     "pickup",
   );
-  interaction(
-    "toilet_bolts",
-    "Toilet bolts",
-    "Unbolt · hold",
-    -7.65,
-    -9.7,
-    "interact",
-    "screwdriver",
-  );
+  for (let i = 0; i < 4; i++)
+    interaction(
+      `toilet_bolt_${i}`,
+      `Bolt ${i + 1}`,
+      "Hold to unscrew bolt",
+      -7.65,
+      -9.7,
+      "interact",
+      "screwdriver",
+    );
   interaction(
     "toilet_move",
     "Toilet",
@@ -1469,24 +1478,26 @@ export function buildPrisonWorld(scene: THREE.Scene): PrisonWorldData {
         a: -25,
         b: -53,
       },
-    ].map(({ id, name, y, z, a, b }): GuardData => ({
-      id,
-      name,
-      type: "patrol_dunne",
-      position: [a, y, z],
-      rotationY: (Math.sign(b - a) * Math.PI) / 2,
-      patrolRoute: [
-        [a, y, z],
-        [b, y, z],
-      ],
-      currentWaypoint: 1,
-      state: "patrol",
-      suspicion: 0,
-      visionAngle: 76,
-      visionRange: 10,
-      hearingMultiplier: 1,
-      stateTimer: 0,
-    })),
+    ].map(
+      ({ id, name, y, z, a, b }): GuardData => ({
+        id,
+        name,
+        type: "patrol_dunne",
+        position: [a, y, z],
+        rotationY: (Math.sign(b - a) * Math.PI) / 2,
+        patrolRoute: [
+          [a, y, z],
+          [b, y, z],
+        ],
+        currentWaypoint: 1,
+        state: "patrol",
+        suspicion: 0,
+        visionAngle: 76,
+        visionRange: 10,
+        hearingMultiplier: 1,
+        stateTimer: 0,
+      }),
+    ),
   );
   const guardMeshes = new Map<string, THREE.Group>();
   for (const g of guards) {

@@ -11,7 +11,7 @@ import { ItemIcon } from "./ItemIcon";
 import { COMBAT } from "../game/combat";
 import { BALLISTICS } from "../game/ballistics";
 import weaponIcon from "../assets/equipment/pistol-hud.webp";
-import type { HoldAction } from "../game/opening";
+import { boltIndex, isPush, type HoldAction } from "../game/opening";
 import { Pause, Crosshair, Hand, Move } from "lucide-react";
 
 interface Props {
@@ -43,11 +43,13 @@ export function HUD({ engine, onPause }: Props) {
   } | null>(null);
   const [stick, setStick] = useState([0, 0]);
   const work = (
-    ["bed_push", "toilet_bolts", "toilet_move"].includes(
-      engine.contextualAction || "",
-    )
-      ? engine.contextualAction
-      : engine.activeHold
+    boltIndex(engine.contextualAction) !== null
+      ? "toilet_bolts"
+      : ["bed_push", "toilet_bolts", "toilet_move"].includes(
+            engine.contextualAction || "",
+          )
+        ? engine.contextualAction
+        : engine.activeHold
   ) as HoldAction | null;
   const workName =
     work === "bed_push" ? "Table" : work === "toilet_bolts" ? "Bolt" : "Toilet";
@@ -58,7 +60,7 @@ export function HUD({ engine, onPause }: Props) {
       ? "Penetrate"
       : engine.contextualAction === "bed_push"
         ? "Push"
-        : engine.contextualAction === "toilet_bolts"
+        : boltIndex(engine.contextualAction) !== null
           ? "Unbolt"
           : engine.contextualAction === "toilet_move"
             ? "Move"
@@ -187,36 +189,32 @@ export function HUD({ engine, onPause }: Props) {
       </div>
       {work && (
         <>
-          <div
-            className={
-              "caught-meter" + (engine.caughtMeter >= 90 ? " at-risk" : "")
-            }
-          >
-            <span>Caught-meter</span>
+          {isPush(work) && (
             <div
-              role="progressbar"
-              aria-label="Noise risk"
-              aria-valuemin={0}
-              aria-valuemax={100}
-              aria-valuenow={Math.round(engine.caughtMeter)}
+              className={
+                "caught-meter" + (engine.caughtMeter >= 90 ? " at-risk" : "")
+              }
             >
-              <i style={{ width: `${engine.caughtMeter}%` }} />
+              <span>Caught-meter</span>
+              <div
+                role="progressbar"
+                aria-label="Noise risk"
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={Math.round(engine.caughtMeter)}
+              >
+                <i style={{ width: `${engine.caughtMeter}%` }} />
+              </div>
             </div>
-          </div>
-          <progress
-            className="object-work-progress"
-            aria-label="Action progress"
-            max={1}
-            value={
-              engine.openingProgress[
-                work === "bed_push"
-                  ? "bed"
-                  : work === "toilet_bolts"
-                    ? "bolts"
-                    : "toilet"
-              ]
-            }
-          />
+          )}
+          {work === "toilet_bolts" && (
+            <progress
+              className="object-work-progress"
+              aria-label="Action progress"
+              max={1}
+              value={engine.boltProgress}
+            />
+          )}
         </>
       )}
       {stats.act === 3 && (
@@ -253,7 +251,13 @@ export function HUD({ engine, onPause }: Props) {
             <button
               className={
                 "interact-prompt" +
+                (isPush(work) ? " push-contact" : "") +
                 (actionLabel === "Take" || work ? " pickup-prompt" : "")
+              }
+              aria-label={
+                isPush(work)
+                  ? `Hold to push ${workName.toLowerCase()}`
+                  : undefined
               }
               onPointerDown={(e) => {
                 e.currentTarget.setPointerCapture(e.pointerId);
@@ -263,11 +267,11 @@ export function HUD({ engine, onPause }: Props) {
               onPointerCancel={() => engine.endInteract()}
               onLostPointerCapture={() => engine.endInteract()}
             >
-              {work ? (
+              {isPush(work) ? null : work ? (
                 <>
-                  <strong>{workName}</strong>
+                  <strong>Bolt {(engine.focusedBolt ?? 0) + 1} / 4</strong>
                   <span>
-                    {engine.mobile ? "[Hold]" : "[E]"} {workVerb}
+                    {engine.mobile ? "[Hold]" : "[Hold E]"} {workVerb}
                   </span>
                 </>
               ) : actionLabel === "Take" ? (
@@ -303,21 +307,6 @@ export function HUD({ engine, onPause }: Props) {
                   }
                 />
               )}
-            </button>
-          )}
-          {engine.contextualAction === "bed_push" && (
-            <button
-              className="hard-push"
-              onPointerDown={(e) => {
-                e.currentTarget.setPointerCapture(e.pointerId);
-                engine.beginInteract(true);
-              }}
-              onPointerUp={() => engine.endInteract()}
-              onPointerCancel={() => engine.endInteract()}
-              onLostPointerCapture={() => engine.endInteract()}
-            >
-              Push hard{" "}
-              <small>{engine.mobile ? "HOLD · LOUD" : "HOLD R · LOUD"}</small>
             </button>
           )}
         </div>
@@ -443,7 +432,7 @@ export function HUD({ engine, onPause }: Props) {
                 ) : (
                   <Hand size={25} />
                 )}
-                <small>{actionLabel}</small>
+                {!isPush(work) && <small>{actionLabel}</small>}
                 {engine.activeHold && !work && (
                   <progress
                     aria-label="Action progress"

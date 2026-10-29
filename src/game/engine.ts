@@ -43,6 +43,9 @@ import {
   type EscapeRegion,
 } from "./escape-route";
 import { createSidearm } from "./sidearm";
+import { advanceStride, OPENING_DUTY } from "./locomotion";
+import { attachBeltKey } from "./key-belt";
+import { InteractableShine } from "./interactable-shine";
 import { angleDelta } from "./guard-motion";
 import { PrisonerActor } from "./prisoner";
 import { OpeningCinematic } from "./cinematic";
@@ -87,6 +90,9 @@ import {
 import {
   advanceHold,
   stepCaughtMeter,
+  boltIndex,
+  restoreBolts,
+  isPush,
   openingObjective,
   openingStart,
   wrongKeyNotice,
@@ -106,7 +112,7 @@ export const ALL_ITEMS: Record<ItemId, InventoryItem> = {
   cell_key: {
     id: "cell_key",
     name: "Cell key",
-    description: "A key taken from behind the busy guard. Try it on your door.",
+    description: "A key taken from the guard's belt. Try it on your door.",
     icon: "Key",
     category: "key",
   },
@@ -272,7 +278,17 @@ export class GameEngine {
   public activeHold: HoldAction | null = null;
   public caughtMeter = 0;
   private caughtClatterLatched = false;
-  private hardPush = false;
+  private pushStrain = 0;
+  public activeBolt: number | null = null;
+  public get focusedBolt() {
+    return this.activeBolt ?? boltIndex(this.contextualAction);
+  }
+  public get boltProgress() {
+    return restoreBolts(
+      this.openingProgress.bolts,
+      this.openingProgress.boltSteps,
+    )[this.focusedBolt ?? 0];
+  }
   public contextualAction: string | null = null;
   private transit: {
     from: number;
@@ -290,6 +306,7 @@ export class GameEngine {
   public graphicsPreset: GraphicsPreset = "high";
   public guardActors = new Map<string, GuardActor>();
   public region?: EscapeRegion;
+  private shine?: InteractableShine;
   public escapeWorld: EscapeWorld;
   public respawnRemaining = 0;
   private mainVisibility = new Map<THREE.Object3D, boolean>();
@@ -524,6 +541,7 @@ export class GameEngine {
       sound.init();
       await sound.preload();
       stage(7, "Preparing lighting and shaders");
+      this.shine ??= new InteractableShine(this.worldData);
       await this.renderer.compileAsync(this.scene, this.camera);
       await this.firstPerson.prepare(this.renderer);
       if (this.disposed) return;
@@ -652,8 +670,6 @@ export class GameEngine {
         if (e.code === "KeyE") this.beginInteract();
         if (e.code === "KeyR") {
           if (this.equippedItem === "pistol_10mm") this.reloadPistol();
-          else if (this.contextualAction === "bed_push")
-            this.beginInteract(true);
         }
         if (e.code === "KeyC") this.toggleCrouch();
         if (e.code === "Space") this.jump();
@@ -844,7 +860,7 @@ export class GameEngine {
   public clearInput() {
     sound.stopObjectActions();
     this.activeHold = null;
-    this.hardPush = false;
+    this.activeBolt = null;
     this.keys = {};
     this.touchMove = [0, 0];
     this.drag = null;
@@ -899,7 +915,7 @@ export class GameEngine {
     this.triggerSubtitle(
       "KABIR RAO · PRISONER 047",
       this.gameFlags.opening_v3
-        ? "A prisoner down outside my door. The officer is busy checking him. That key behind him… this might be my chance."
+        ? "The officer stands to the left, turned away. A key on his belt… this might be my chance."
         : "Voss framed me. Iyer needs the ledger. A sharpened spoon beneath the table… that’s where I start.",
       "monologue",
       7,
@@ -927,7 +943,7 @@ export class GameEngine {
     this.move(0);
     this.triggerSubtitle(
       "KABIR RAO · PRISONER 047",
-      "He's checking the body. That key behind him… this might be my chance.",
+      "The guard is turned away on the left. I can reach the key hanging from his belt.",
       "monologue",
       5,
     );
@@ -1161,6 +1177,35 @@ export class GameEngine {
       ? this.escapeWorld.actions.get(this.region) || []
       : this.worldData.interactables) {
       if (obj.disabled) continue;
+      const bolt = boltIndex(obj.id);
+      if (bolt !== null) {
+        const mesh = (
+          this.worldData.opening.toilet.userData.bolts as THREE.Mesh[]
+        )[bolt];
+        mesh.updateWorldMatrix(true, true);
+        const ray = new THREE.Raycaster();
+        ray.setFromCamera(new THREE.Vector2(), this.camera);
+        const hit = ray.ray.intersectBox(
+          new THREE.Box3().setFromObject(mesh).expandByScalar(0.055),
+          new THREE.Vector3(),
+        );
+        if (!hit) continue;
+        const d = hit.distanceTo(this.camera.position);
+        if (
+          d < 2.5 &&
+          d < best &&
+          !this.blockers()
+            .filter((b) => b !== this.worldData.opening.toiletBounds)
+            .some((b) => {
+              const p = ray.ray.intersectBox(b, new THREE.Vector3());
+              return p && p.distanceTo(this.camera.position) < d - 0.08;
+            })
+        ) {
+          closest = obj;
+          best = d;
+        }
+        continue;
+      }
       if (obj.id === "pistol_10mm_pickup" || obj.id === "can_attach") {
         const root = this.worldData.pickupMeshes.get(obj.id)!;
         root.updateWorldMatrix(true, true);
@@ -1210,7 +1255,7 @@ export class GameEngine {
         ].includes(obj.id);
       const facing =
         this.activeHold === obj.id ||
-        distance < 0.65 ||
+        (distance < 0.65 && !focused) ||
         (-Math.sin(this.playerRotY) * dx - Math.cos(this.playerRotY) * dz) /
           distance >
           (focused ? 0.88 : 0.15);
@@ -1246,6 +1291,12 @@ export class GameEngine {
     this.emitChange();
   }
   public renderFrame(dt = 0.016) {
+    this.shine?.update(
+      this.camera,
+      this.elapsed,
+      this.contextualAction,
+      !!this.region,
+    );
     // Weapon IK follows the displayed frame, not every AI tick (mobile is 30 fps).
     for (const g of this.activeGuards) if (g.armed) this.updateEnemyWeapon(g);
     const item =
@@ -1500,7 +1551,7 @@ export class GameEngine {
         }
       : ALL_ITEMS[id];
   }
-  public beginInteract(hard = false) {
+  public beginInteract() {
     if (
       this.gameState !== "playing" ||
       this.overlayOpen ||
@@ -1512,7 +1563,8 @@ export class GameEngine {
     if (
       this.gameFlags.opening_v3 &&
       obj &&
-      ["bed_push", "toilet_bolts", "toilet_move"].includes(obj.id)
+      (["bed_push", "toilet_move"].includes(obj.id) ||
+        boltIndex(obj.id) !== null)
     ) {
       if (
         obj.actionRequiredItem &&
@@ -1521,8 +1573,9 @@ export class GameEngine {
         this.notice("Required: " + this.getItem(obj.actionRequiredItem).name);
         return;
       }
-      this.activeHold = obj.id as HoldAction;
-      this.hardPush = hard;
+      this.activeBolt = boltIndex(obj.id);
+      this.activeHold =
+        this.activeBolt === null ? (obj.id as HoldAction) : "toilet_bolts";
       sound.objectAction({
         id: obj.id,
         kind:
@@ -1533,7 +1586,7 @@ export class GameEngine {
               : "bolts",
         phase: "start",
         position: this.holdAudioPosition(obj.id),
-        intensity: hard ? 1 : 0.32,
+        intensity: 0.32,
       });
       this.emitChange();
     } else this.interact();
@@ -1542,7 +1595,7 @@ export class GameEngine {
     if (!this.activeHold) return;
     sound.stopObjectActions();
     this.activeHold = null;
-    this.hardPush = false;
+    this.activeBolt = null;
     this.saveCheckpoint();
     this.emitChange();
   }
@@ -1555,6 +1608,9 @@ export class GameEngine {
         this.worldData.interactables.find((o) => o.id === id)!.position,
       );
       this.notice("Cell key added to your satchel. Try your door.");
+      const guard = this.worldData.guards[0];
+      sound.playIntroVoice("guard-key-missing", 0, guard.position);
+      this.triggerSubtitle(guard.name, "Where is key?", "dialogue", 3);
     } else if (id === "cell47_lock") {
       if (!this.inventory.includes("cell_key")) {
         this.notice("Find a key first.");
@@ -1634,14 +1690,22 @@ export class GameEngine {
       return;
     }
     const action = this.activeHold;
+    this.pushStrain = Math.max(
+      0,
+      Math.min(1, this.pushStrain + dt * (isPush(action) ? 0.25 : -0.7)),
+    );
     this.caughtMeter = stepCaughtMeter(
       this.caughtMeter,
       dt,
       action,
-      this.hardPush,
+      this.pushStrain,
     );
     if (this.caughtMeter < 55) this.caughtClatterLatched = false;
-    if (action && this.caughtMeter >= 100 && !this.caughtClatterLatched) {
+    if (
+      isPush(action) &&
+      this.caughtMeter >= 100 &&
+      !this.caughtClatterLatched
+    ) {
       this.caughtClatterLatched = true;
       const position = this.holdAudioPosition(action);
       this.stats.noiseLevel = Math.max(this.stats.noiseLevel, 100);
@@ -1650,7 +1714,10 @@ export class GameEngine {
       this.notice("Too loud! The guard heard that. Stop and listen.");
     }
     if (!action) return;
-    if (this.findClosestInteractable()?.id !== action) {
+    if (
+      this.findClosestInteractable()?.id !==
+      (action === "toilet_bolts" ? `toilet_bolt_${this.activeBolt}` : action)
+    ) {
       this.endInteract();
       return;
     }
@@ -1660,23 +1727,34 @@ export class GameEngine {
         : action === "toilet_bolts"
           ? "bolts"
           : "toilet";
-    this.openingProgress[field] = advanceHold(
-      this.openingProgress[field],
-      dt,
-      action === "bed_push"
-        ? this.hardPush
-          ? 2.5
-          : 9
-        : action === "toilet_bolts"
-          ? 7
-          : 4,
-    );
+    if (action === "toilet_bolts") {
+      const steps = restoreBolts(
+        this.openingProgress.bolts,
+        this.openingProgress.boltSteps,
+      );
+      steps[this.activeBolt!] = advanceHold(steps[this.activeBolt!], dt, 2.4);
+      this.openingProgress.boltSteps = steps;
+      this.openingProgress.bolts = steps.reduce((a, b) => a + b, 0) / 4;
+    } else
+      this.openingProgress[field] = advanceHold(
+        this.openingProgress[field],
+        dt,
+        action === "bed_push" ? 12 : 8,
+      );
     this.stats.noiseLevel = Math.max(
       this.stats.noiseLevel,
-      this.caughtClatterLatched ? 100 : action === "toilet_move" ? 13 : 5,
+      isPush(action) && this.caughtClatterLatched
+        ? 100
+        : action === "toilet_move"
+          ? 13
+          : 5,
     );
     this.emitNoise(
-      this.caughtClatterLatched ? 100 : action === "toilet_move" ? 13 : 5,
+      isPush(action) && this.caughtClatterLatched
+        ? 100
+        : action === "toilet_move"
+          ? 13
+          : 5,
       action,
       this.worldData.interactables.find((o) => o.id === action)?.position ??
         this.playerPos,
@@ -1691,8 +1769,16 @@ export class GameEngine {
             : "bolts",
       phase: "update",
       position: this.holdAudioPosition(action),
-      intensity: this.hardPush ? 1 : 0.32,
+      intensity: isPush(action) ? 0.2 + this.pushStrain * 0.4 : 0.2,
     });
+    if (
+      action === "toilet_bolts" &&
+      this.boltProgress >= 1 &&
+      this.openingProgress.bolts < 1
+    ) {
+      this.endInteract();
+      this.notice("Bolt removed. Aim at the next mounting bolt.");
+    }
     if (this.openingProgress[field] >= 1) {
       sound.objectAction({
         id: action,
@@ -1714,7 +1800,7 @@ export class GameEngine {
             : "passage_open"
       ] = true;
       this.activeHold = null;
-      this.hardPush = false;
+      this.activeBolt = null;
       this.activeObjective = openingObjective(this.gameFlags, this.inventory);
       this.notice(
         action === "bed_push"
@@ -1828,13 +1914,13 @@ export class GameEngine {
     // Park the wider scanned fixture diagonally away from the washstand, not
     // through it. The collider follows both the translation and the rotation.
     o.toilet.rotation.y = opening ? -Math.PI / 2 + p.toilet * Math.PI : Math.PI;
-    o.bedBounds.min.z = -9.48215 + p.bed * 1.4;
-    o.bedBounds.max.z = -7.31785 + p.bed * 1.4;
+    o.bedBounds.min.z = -9.611608 + p.bed * 1.4;
+    o.bedBounds.max.z = -7.188392 + p.bed * 1.4;
     const yaw = o.toilet.rotation.y,
       halfX =
-        Math.abs(Math.cos(yaw)) * 0.27944 + Math.abs(Math.sin(yaw)) * 0.43588,
+        Math.abs(Math.cos(yaw)) * 0.324147 + Math.abs(Math.sin(yaw)) * 0.505613,
       halfZ =
-        Math.abs(Math.sin(yaw)) * 0.27944 + Math.abs(Math.cos(yaw)) * 0.43588;
+        Math.abs(Math.sin(yaw)) * 0.324147 + Math.abs(Math.cos(yaw)) * 0.505613;
     o.toiletBounds.min.set(
       o.toilet.position.x - halfX,
       -0.05,
@@ -1842,13 +1928,16 @@ export class GameEngine {
     );
     o.toiletBounds.max.set(
       o.toilet.position.x + halfX,
-      0.93,
+      1.0868,
       o.toilet.position.z + halfZ,
     );
     o.passageSeal.visible = !this.gameFlags.passage_open;
     o.legacyVent.visible = !opening && !this.gameFlags.vent_unbolted;
     (o.toilet.userData.bolts as THREE.Mesh[]).forEach((bolt, index) => {
-      bolt.visible = opening && index >= Math.floor(p.bolts * 4);
+      const progress = restoreBolts(p.bolts, p.boltSteps)[index];
+      bolt.visible = opening && progress < 1;
+      bolt.rotation.y = progress * Math.PI * 8;
+      bolt.position.y = 0.08 + progress * 0.04;
     });
     o.body.visible = opening;
     if (this.gameState !== "intro") {
@@ -1888,6 +1977,19 @@ export class GameEngine {
               ["pipe", "steel_wool", "rubber_washer"].includes(pickups[obj.id]))
           : false);
     for (const obj of this.worldData.interactables) {
+      const bolt = boltIndex(obj.id);
+      if (bolt !== null) {
+        obj.disabled =
+          !opening ||
+          !this.inventory.includes("screwdriver") ||
+          restoreBolts(p.bolts, p.boltSteps)[bolt] >= 1;
+        o.toilet.updateMatrixWorld(true);
+        const point = (o.toilet.userData.bolts as THREE.Mesh[])[
+          bolt
+        ].getWorldPosition(new THREE.Vector3());
+        obj.position = [point.x, point.y + 1, point.z];
+        continue;
+      }
       const latch = obj.id.match(/^cell_latch_(\d+)$/);
       if (latch) {
         const number = Number(latch[1]);
@@ -2306,6 +2408,8 @@ export class GameEngine {
     } catch {}
   }
   public restoreCheckpoint(cp: GameCheckpoint) {
+    this.pushStrain = 0;
+    this.activeBolt = null;
     this.setRegion(
       cp.region === "secret" || cp.region === "military"
         ? cp.region
@@ -2363,6 +2467,10 @@ export class GameEngine {
       ),
     };
     this.transit = null;
+    this.openingProgress.boltSteps = restoreBolts(
+      this.openingProgress.bolts,
+      progress?.boltSteps,
+    );
     this.activeObjective =
       cp.name === "Cell 47"
         ? this.gameFlags.opening_v3
@@ -2407,9 +2515,11 @@ export class GameEngine {
       g.currentWaypoint = 1;
       g.position = [...g.patrolRoute[0]];
       g.cinematicAim = false;
+      g.gaitPhase = 0;
+      g.beltDuty = !!this.gameFlags.opening_v3 && g.id === "guard_dunne";
       g.examining = !!this.gameFlags.opening_v3 && g.id === "guard_dunne";
       if (g.examining) {
-        g.position = [-5.7, 0, -0.7];
+        g.position = [...OPENING_DUTY];
         g.rotationY = 0;
       }
       const mesh = this.worldData.guardMeshes.get(g.id)!;
@@ -2960,7 +3070,7 @@ export class GameEngine {
               oldTarget[2] - guard.position[2],
               oldTarget[1] - guard.position[1],
             ) < 0.4,
-          dutyPoint: examiner ? [-5.7, 0, -0.7] : undefined,
+          dutyPoint: examiner ? OPENING_DUTY : undefined,
         },
         dt,
       );
@@ -3187,11 +3297,16 @@ export class GameEngine {
           guard.position[2] - beforeZ,
         ),
         speed = dt > 0 ? travelled / dt : 0;
+      const gait = advanceStride(guard.gaitPhase ?? 0, travelled, speed > 2.2);
+      guard.gaitPhase = gait.phase;
       guard.examining =
         examiner &&
         guard.state === "patrol" &&
         speed < 0.05 &&
-        Math.hypot(guard.position[0] + 5.7, guard.position[2] + 0.7) < 0.4;
+        Math.hypot(
+          guard.position[0] - OPENING_DUTY[0],
+          guard.position[2] - OPENING_DUTY[2],
+        ) < 0.4;
       if (guard.examining) guard.rotationY = 0;
       guard.crouchInspect =
         guard.state === "searching" &&
@@ -3200,11 +3315,10 @@ export class GameEngine {
       this.guardActors
         .get(guard.id)
         ?.update(guard, speed, dt, this.camera, this.guardQuality, this.mobile);
+      if (guard.id === "guard_dunne" && !this.region)
+        attachBeltKey(this.worldData, this.guardActors.get(guard.id));
       mesh.userData.stride = (mesh.userData.stride ?? 0) + travelled;
-      if (
-        travelled > 0 &&
-        mesh.userData.stride >= (guard.state === "chase" ? 1.2 : 0.67)
-      ) {
+      if (travelled > 0 && gait.contacts > 0) {
         sound.guardFootstep(
           guard.position,
           guard.state === "chase",
@@ -3251,6 +3365,7 @@ export class GameEngine {
   }
   public dispose() {
     this.disposed = true;
+    this.shine?.dispose();
     for (const weapon of this.enemyWeapons.values()) {
       weapon.root.traverse((o) => {
         if (o instanceof THREE.Mesh) {

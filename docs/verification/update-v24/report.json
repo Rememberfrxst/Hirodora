@@ -1,0 +1,313 @@
+{
+  "version": "0.24.0",
+  "unitPassed": 87,
+  "chromiumSelectedPassed": 9,
+  "webkitSelectedPassed": 3,
+  "wholeBrowserSuiteRerun": false,
+  "runs": [
+    {
+      "file": "chromium-initial.json",
+      "engine": "chromium",
+      "stats": {
+        "startTime": "2026-10-29T07:32:19.802Z",
+        "duration": 70089.481,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 2,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "chromium-meter-focused.json",
+      "engine": "chromium",
+      "stats": {
+        "startTime": "2026-10-29T07:35:49.677Z",
+        "duration": 113687.71800000001,
+        "expected": 5,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "chromium-release.json",
+      "engine": "chromium",
+      "stats": {
+        "startTime": "2026-10-29T07:40:52.567Z",
+        "duration": 334917.662,
+        "expected": 6,
+        "skipped": 0,
+        "unexpected": 2,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "webkit-release.json",
+      "engine": "webkit",
+      "stats": {
+        "startTime": "2026-10-29T07:41:17.207Z",
+        "duration": 126430.092,
+        "expected": 2,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "chromium-final.json",
+      "engine": "chromium",
+      "stats": {
+        "startTime": "2026-10-29T07:49:19.448Z",
+        "duration": 215872.09,
+        "expected": 3,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    },
+    {
+      "file": "webkit-final.json",
+      "engine": "webkit",
+      "stats": {
+        "startTime": "2026-10-29T07:49:21.153Z",
+        "duration": 48484.397,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "chromium: belt key voice, push-only risk, visible screwdriver, four independent bolts and passage",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: push UI has only Caught-meter; bolt UI only its own progress and Hold Unscrew",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: five original voice recordings decode, play once across pause/resume and match the new intro",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: object meter fills, release cools without losing work, threshold sends real noise to the guard",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: white bolt progress without red risk on touch; releasing retains progress",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: new-game cinematic fires once, pauses safely, closes gate and releases a playable checkpoint",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: Cell 47 key twist, quiet bed, tool, toilet, passage, save and return",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: prolonged normal pushing alerts the guard, who returns to his left-hand post without crossing bars",
+      "status": "passed"
+    },
+    {
+      "name": "webkit: white bolt progress without red risk on touch; releasing retains progress",
+      "status": "passed"
+    },
+    {
+      "name": "webkit: belt key voice, push-only risk, visible screwdriver, four independent bolts and passage",
+      "status": "passed"
+    },
+    {
+      "name": "webkit: push UI has only Caught-meter; bolt UI only its own progress and Hold Unscrew",
+      "status": "passed"
+    },
+    {
+      "name": "chromium: Cell 015 route: real entry, gated rooms, 50-damage gunfire, checkpoint respawn, tunnel and boat",
+      "status": "passed"
+    }
+  ],
+  "captures": [
+    {
+      "name": "01-intro-left-sentry",
+      "time": 10.9,
+      "position": [
+        -6.3,
+        1.65,
+        -4.8336
+      ],
+      "caption": "Prison Guard: Stay down!",
+      "keyPosition": [
+        -3.538080962924544,
+        1.1514206279659271,
+        3.267450839853628
+      ],
+      "sha256": "b163e70a075d3937cbe408c0f63c55d88f4b17b9948e9b4e610ad504e7e39c7e"
+    },
+    {
+      "name": "02-belt-key",
+      "time": 23,
+      "position": [
+        -4.8,
+        1.4,
+        -1.6
+      ],
+      "caption": "The officer stands to the left. His key hangs from his belt.",
+      "keyPosition": [
+        -4.1216794270178925,
+        1.1542906174712164,
+        -0.9832471089892865
+      ],
+      "sha256": "fcbd2c29472e7883a94a1b6b2f71622bb4f3c3e6ed83a4cbd08051c4646df076"
+    },
+    {
+      "name": "03-table-caught-only",
+      "action": "bed_push",
+      "seconds": 2.8,
+      "progress": {
+        "bed": 0.23333333333333364,
+        "bolts": 0,
+        "toilet": 0,
+        "boltSteps": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "risk": 53.32556249999999,
+      "position": [
+        -5.6,
+        1.6,
+        -6.9
+      ],
+      "selectedBolt": null,
+      "sha256": "632f5aed96b1ab04d8f2dc0edf11293aaa56c1e9ff6afda3afcf11a0ae40f8f5"
+    },
+    {
+      "name": "04-visible-screwdriver",
+      "action": "driver",
+      "seconds": 0,
+      "progress": {
+        "bed": 1,
+        "bolts": 0,
+        "toilet": 0,
+        "boltSteps": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "risk": 0,
+      "position": [
+        -5.4,
+        1.15,
+        -9.3
+      ],
+      "selectedBolt": null,
+      "sha256": "73e8b44043ba2991e5422b249b7eb4c570ff382f01c1ba415590ea5573a38a12"
+    },
+    {
+      "name": "05-individual-bolt",
+      "action": "toilet_bolt_0",
+      "seconds": 1.3,
+      "progress": {
+        "bed": 1,
+        "bolts": 0.13541666666666663,
+        "toilet": 0,
+        "boltSteps": [
+          0.5416666666666665,
+          0,
+          0,
+          0
+        ]
+      },
+      "risk": 0,
+      "position": [
+        -6.8,
+        1,
+        -9.7
+      ],
+      "selectedBolt": 0,
+      "sha256": "10f5c9f62cb77033d112b379805a4de28663dc2cab56fd640b895076318a19a9"
+    },
+    {
+      "name": "06-toilet-caught-only",
+      "action": "toilet_move",
+      "seconds": 2.5,
+      "progress": {
+        "bed": 1,
+        "bolts": 1,
+        "toilet": 0.3124999999999999,
+        "boltSteps": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "risk": 59.08476562500001,
+      "position": [
+        -6.2,
+        1.5,
+        -8.9
+      ],
+      "selectedBolt": null,
+      "sha256": "2aad437a50e4771d02a06cb8e6e8e3b9bf467fb85620e65657fb01178a90cb8e"
+    }
+  ],
+  "toiletSource": {
+    "originalFile": "dirty_toilet (1).glb",
+    "sourceSHA256": "6cc3a003d896fd512674001c7e098d3c8418c2a34b545125b57d35e000994dc4",
+    "identicalToPreviouslySupplied": true,
+    "uniformPresentationScale": 1.16,
+    "source": "https://sketchfab.com/3d-models/dirty-toilet-389d5427a1f344c4aa4883ec5a6aaf05",
+    "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)"
+  },
+  "reaction": {
+    "id": "guard-key-missing",
+    "file": "intro/guard-key-missing.mp3",
+    "originalFile": "ElevenLabs_2026-10-29T07_12_14_Max -  Informal and Instructive_pvc_sp87_s38_sb34_v4.mp3",
+    "speaker": "Prison Guard",
+    "text": "Where is key?",
+    "voice": "Max — Informal and Instructive",
+    "duration": 1.436735,
+    "bytes": 15872,
+    "sha256": "a8525dac07128b7b10d90502ef9905ee47f0fb9b4b676704975b901bb70f8478",
+    "sourceSHA256": "1882190f33143319f1d2ed7dae81e9abef970e72181f1cf1a331ba50017e96ce",
+    "trigger": "Once, immediately after taking the guard belt key",
+    "transcription": "Local Whisper tiny.en; original wording retained."
+  },
+  "runtimeRecordings": 76,
+  "web": {
+    "version": "0.24.0",
+    "archive": "Hirodora-0.24.0-offline.zip",
+    "html": "Hirodora-0.24.0.html",
+    "sha256": "f7353e3d4b41094411ca9ed815bad4308052cdca0c1ee1b0284f2a9ef3bdbcfa",
+    "bytes": 38713982
+  },
+  "apk": {
+    "version": "0.24.0",
+    "file": "Hirodora-0.24.0-android.apk",
+    "bytes": 38710918,
+    "sha256": "cff7200c2b7e9b2e78b9976d63b12611a5a116b0f6cb643336d91499219d3041",
+    "certificateSHA256": "d7175da40c348c91e8a8663635d3a130115aba916e5ce889e40b646c009f33ca",
+    "minAndroid": "8.0 (API 26)",
+    "targetApi": 35,
+    "architecture": "Universal; uses installed Android System WebView",
+    "distribution": "Signed release APK; offline assets included; no network permission"
+  },
+  "knownLimits": [
+    "Animations remain authored skeletal clips, not new motion capture or full foot-plant IK.",
+    "No physical iPhone/Android FPS, thermal or long-session certification; public Pages configuration remains owner-side."
+  ],
+  "testNotes": [
+    "Initial bolt fixtures aimed upward rather than downward; corrected camera sign in the tests.",
+    "Browser coverage exposed an actual lock-proximity priority problem next to the belt key. Focused puzzle actions now require aim, and key pickup wins when aimed at.",
+    "Final reruns cover arbitrary bolt order 3/1/4/2, independent partial progress/save restoration, clean push/bolt UI, voice decode/playback, quiet and loud pushing, original passage checkpoints and the existing island route.",
+    "Glint intensity was reduced after visual review to retain original material colours. Belt image uses an inspection camera just outside the bars; actual pickup is tested from inside the closed cell.",
+    "APK payload smoke extracts the actual signed package and restores the island chapter with all resources local; it is not a physical-device benchmark."
+  ]
+}

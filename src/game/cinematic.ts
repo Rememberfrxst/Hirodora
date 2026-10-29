@@ -4,6 +4,7 @@ import type { GuardActor } from "./guard-actor";
 import type { PrisonerActor } from "./prisoner";
 import { sound } from "./audio";
 import { introFrame, SHOT_TIME, WAKE_DURATION } from "./intro";
+import { attachBeltKey } from "./key-belt";
 import voices from "../assets/audio/intro-voice-manifest.json";
 import { createSidearm } from "./sidearm";
 import { positionCellSlider } from "./cell-gates";
@@ -43,13 +44,19 @@ export class OpeningCinematic {
     w.opening.body.visible = true;
     w.opening.body.position.set(...f.prisoner);
     w.opening.body.rotation.set(0, f.prisonerYaw, 0);
-    this.prisoner.pose(f.prisonerClip, f.prisonerTime);
+    this.prisoner.travelPose(
+      f.prisonerClip,
+      f.prisonerDistance,
+      f.prisonerTime,
+    );
     this.prisoner.wakeGesture(f.wakeGesture);
     positionCellSlider(w.doors.get("cell_47_door")!, f.doorOpen);
-    w.pickupMeshes.get("cell_key_pickup")!.visible = u >= 10.3;
+    w.pickupMeshes.get("cell_key_pickup")!.visible = true;
     g.position = f.guard;
     g.rotationY = f.guardYaw;
     g.examining = u >= 10.3;
+    g.beltDuty = true;
+    g.gaitPhase = f.guardPhase;
     g.cinematicAim = u >= 2.8 && u < 6.2;
     g.state = "patrol";
     const dolly = Math.max(0, Math.min(1, (u - 1.5) / 2));
@@ -87,6 +94,7 @@ export class OpeningCinematic {
     this.actors
       .get(g.id)
       ?.update(g, f.guardSpeed, dt, this.camera, "mobile", false);
+    attachBeltKey(w, this.actors.get(g.id));
     for (const other of w.guards.slice(1))
       this.actors
         .get(other.id)
@@ -119,26 +127,16 @@ export class OpeningCinematic {
                   : undefined,
             );
         }
-      if (
-        u >= 1.6 &&
-        u < 4.4 &&
-        Math.floor((u - 1.6) / 0.26) !==
-          Math.floor((previous - WAKE_DURATION - 1.6) / 0.26)
-      )
+      if (u < 4.4 && f.prisonerSteps > introFrame(previous).prisonerSteps)
         sound.playFootstep(false, true, "concrete", f.prisoner);
-      if (
-        u >= 6.2 &&
-        u < 8 &&
-        Math.floor((u - 6.2) / 0.46) !==
-          Math.floor((previous - WAKE_DURATION - 6.2) / 0.46)
-      )
+      if (u >= 6.2 && u < 8 && f.guardSteps > introFrame(previous).guardSteps)
         sound.playFootstep(false, false, "concrete", f.guard);
       if (t >= 2.5 && !this.opened) {
         sound.playDoorOpen([-6, 0, -2], false, "intro-gate");
         this.opened = true;
       }
       if (t >= SHOT_TIME && !this.fired) {
-        sound.playGunshot([-4, 1.5, 0.2]);
+        sound.playGunshot([f.guard[0], 1.5, f.guard[2]]);
         this.fired = true;
       }
       if (u >= 5.9 && !this.landed) {

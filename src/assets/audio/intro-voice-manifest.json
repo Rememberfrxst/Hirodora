@@ -68,5 +68,21 @@
       "sha256": "b21bc55f3c1fb388694ad1cf78c8c273be807d31e79228c54733c15348c155b4",
       "sourceSHA256": "d82dbd5f6200b1f40df03d7a43e885b1402fa9fb49a26e7b14d08515654be1e2"
     }
+  ],
+  "reactions": [
+    {
+      "id": "guard-key-missing",
+      "file": "intro/guard-key-missing.mp3",
+      "originalFile": "ElevenLabs_2026-10-29T07_12_14_Max -  Informal and Instructive_pvc_sp87_s38_sb34_v4.mp3",
+      "speaker": "Prison Guard",
+      "text": "Where is key?",
+      "voice": "Max — Informal and Instructive",
+      "duration": 1.436735,
+      "bytes": 15872,
+      "sha256": "a8525dac07128b7b10d90502ef9905ee47f0fb9b4b676704975b901bb70f8478",
+      "sourceSHA256": "1882190f33143319f1d2ed7dae81e9abef970e72181f1cf1a331ba50017e96ce",
+      "trigger": "Once, immediately after taking the guard belt key",
+      "transcription": "Local Whisper tiny.en; original wording retained."
+    }
   ]
 }

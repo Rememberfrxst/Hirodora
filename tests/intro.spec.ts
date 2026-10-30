@@ -64,7 +64,12 @@ test("new-game cinematic fires once, pauses safely, closes gate and releases a p
     const paused = e.cinematic.time === stopped;
     e.resumeGame();
     e.overlayOpen = true;
-    for (let i = 0; i < 260; i++) e.updateIntro(0.05);
+    let crouchedDuringInspection = false;
+    for (let i = 0; i < 260; i++) {
+      e.updateIntro(0.05);
+      crouchedDuringInspection ||=
+        e.guardActors.get("guard_dunne")?.animation === "CrouchInspect";
+    }
     return {
       shots,
       startsVisible,
@@ -74,6 +79,7 @@ test("new-game cinematic fires once, pauses safely, closes gate and releases a p
       pose: e.worldData.opening.body.userData.animation,
       done: e.gameFlags.intro_done,
       examining: e.worldData.guards[0].examining,
+      crouchedDuringInspection,
       inventory: e.inventory,
     };
   });
@@ -86,6 +92,7 @@ test("new-game cinematic fires once, pauses safely, closes gate and releases a p
     pose: "Death",
     done: true,
     examining: true,
+    crouchedDuringInspection: true,
     inventory: [],
   });
   await page.getByRole("button", { name: "Pause game", exact: true }).click();

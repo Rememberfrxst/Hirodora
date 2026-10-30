@@ -92,3 +92,33 @@ for (const tier of ["hero", "mobile", "distant"])
         "Lower LODs reuse hero clips",
       );
   });
+
+test("Mixamo crouching idle is a compact motion-only source for the officer", async () => {
+  const doc = await new NodeIO().read(
+    new URL("../assets/guards/crouch-inspect.glb", import.meta.url).pathname,
+  );
+  const root = doc.getRoot(),
+    animations = root.listAnimations();
+  assert.equal(root.listMeshes().length, 0, "does not duplicate guard geometry");
+  assert.equal(root.listTextures().length, 0, "does not duplicate guard textures");
+  assert.equal(animations.length, 1);
+  const channels = animations[0].listChannels();
+  assert.equal(channels.length, 65 * 3);
+  assert.ok(
+    channels.every(
+      (channel) =>
+        channel.getTargetNode() &&
+        channel.getTargetNode()!.getName().startsWith("mixamorig:"),
+    ),
+    "all source tracks retain their unambiguous Mixamo bone names",
+  );
+  const hips = channels.find(
+    (channel) =>
+      channel.getTargetNode()!.getName() === "mixamorig:Hips" &&
+      channel.getTargetPath() === "translation",
+  );
+  assert.ok(hips);
+  const times = hips.getSampler()!.getInput()!.getArray()!;
+  assert.ok(Math.abs(times[times.length - 1] - 2.5) < 1e-4);
+  assert.equal(times.length, 76, "the supplied 30 FPS take is preserved");
+});

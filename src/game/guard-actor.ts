@@ -4,10 +4,14 @@ import {
   type GLTF,
 } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
-import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
+import {
+  clone,
+  retargetClip,
+} from "three/examples/jsm/utils/SkeletonUtils.js";
 import heroURL from "../assets/guards/officer-hero.glb";
 import mobileURL from "../assets/guards/officer-mobile.glb";
 import distantURL from "../assets/guards/officer-distant.glb";
+import crouchURL from "../assets/guards/crouch-inspect.glb";
 import type { GuardData } from "./types";
 import { angleDelta, guardClip, type GuardClip } from "./guard-motion";
 import { makeStrikeClip } from "./guard-action-clips";
@@ -49,54 +53,116 @@ function disposeModels(models: Iterable<GLTF>) {
 /** One cache per engine. Clones share GPU geometry/textures, never bones or mixers. */
 export class GuardAssetPool {
   private templates = new Map<Tier, GLTF>();
+  private crouchClip?: THREE.AnimationClip;
+  private crouchSource?: GLTF;
   private pending?: Promise<void>;
   private disposed = false;
   async preload(anisotropy: number) {
     if (this.pending) return this.pending;
     this.pending = Promise.allSettled(
-      (Object.keys(urls) as Tier[]).map(async (tier) => {
-        if (this.templates.has(tier)) return;
-        const model = await new GLTFLoader()
-          .setMeshoptDecoder(MeshoptDecoder)
-          .loadAsync(urls[tier]);
-        if (this.disposed) {
-          disposeModels([model]);
-          return;
-        }
-        model.scene.traverse((object) => {
-          if (!(object instanceof THREE.Mesh)) return;
-          object.castShadow = object.receiveShadow = true;
-          // Conservative animation bounds include the grounded collapse pose.
-          if (object instanceof THREE.SkinnedMesh)
-            object.boundingSphere = new THREE.Sphere(
-              new THREE.Vector3(0, 0.9, 0),
-              2.1,
-            );
-          for (const mat of Array.isArray(object.material)
-            ? object.material
-            : [object.material]) {
-            if (mat instanceof THREE.MeshStandardMaterial) {
-              // Packed ORM maps remain authoritative; biological/fabric surfaces
-              // are dielectric even when a source export uses a factor of one.
-              if (
-                /Skin|Eyes|Eyebrow|Eyelash|Hair|Teeth|Tongue|Outfit|vest|Pouches|Boot shafts/i.test(
-                  mat.name,
-                )
-              )
-                mat.metalness = 0;
-              if (mat.name === "Outfit") mat.normalScale.set(0.65, 0.65);
-              if (mat.name === "Skin") mat.normalScale.set(0.7, 0.7);
-            }
-            for (const value of Object.values(mat))
-              if (value instanceof THREE.Texture) value.anisotropy = anisotropy;
+      [
+        ...(Object.keys(urls) as Tier[]).map(async (tier) => {
+          if (this.templates.has(tier)) return;
+          const model = await new GLTFLoader()
+            .setMeshoptDecoder(MeshoptDecoder)
+            .loadAsync(urls[tier]);
+          if (this.disposed) {
+            disposeModels([model]);
+            return;
           }
-        });
-        this.templates.set(tier, model);
-      }),
+          model.scene.traverse((object) => {
+            if (!(object instanceof THREE.Mesh)) return;
+            object.castShadow = object.receiveShadow = true;
+            // Conservative animation bounds include the grounded collapse pose.
+            if (object instanceof THREE.SkinnedMesh)
+              object.boundingSphere = new THREE.Sphere(
+                new THREE.Vector3(0, 0.9, 0),
+                2.1,
+              );
+            for (const mat of Array.isArray(object.material)
+              ? object.material
+              : [object.material]) {
+              if (mat instanceof THREE.MeshStandardMaterial) {
+                // Packed ORM maps remain authoritative; biological/fabric surfaces
+                // are dielectric even when a source export uses a factor of one.
+                if (
+                  /Skin|Eyes|Eyebrow|Eyelash|Hair|Teeth|Tongue|Outfit|vest|Pouches|Boot shafts/i.test(
+                    mat.name,
+                  )
+                )
+                  mat.metalness = 0;
+                if (mat.name === "Outfit") mat.normalScale.set(0.65, 0.65);
+                if (mat.name === "Skin") mat.normalScale.set(0.7, 0.7);
+              }
+              for (const value of Object.values(mat))
+                if (value instanceof THREE.Texture) value.anisotropy = anisotropy;
+            }
+          });
+          this.templates.set(tier, model);
+        }),
+        (async () => {
+          if (this.crouchSource || this.crouchClip) return;
+          this.crouchSource = await new GLTFLoader().loadAsync(crouchURL);
+        })(),
+      ],
     )
       .then((results) => {
         const failure = results.find((r) => r.status === "rejected");
         if (failure?.status === "rejected") throw failure.reason;
+        if (!this.crouchClip) {
+          const hero = this.templates.get("hero")!,
+            source = this.crouchSource!,
+            targetMesh = (() => {
+              let result: THREE.SkinnedMesh | undefined;
+              hero.scene.traverse((object) => {
+                if (!result && object instanceof THREE.SkinnedMesh)
+                  result = object;
+              });
+              return result!;
+            })(),
+            sourceBones: THREE.Bone[] = [];
+          source.scene.traverse((object) => {
+            if (object instanceof THREE.Bone) sourceBones.push(object);
+          });
+          const sourceSkeleton = new THREE.Skeleton(sourceBones),
+            sourceClip = source.animations[0];
+          if (!targetMesh || !sourceClip || !sourceBones.length)
+            throw new Error("Crouch inspection animation is incomplete");
+          hero.scene.updateMatrixWorld(true);
+          source.scene.updateMatrixWorld(true);
+          const point = (skeleton: THREE.Skeleton, name: string) =>
+              skeleton
+                .getBoneByName(name)!
+                .getWorldPosition(new THREE.Vector3()),
+            targetLeg = point(targetMesh.skeleton, "Hips").distanceTo(
+              point(targetMesh.skeleton, "LeftFoot")
+                .add(point(targetMesh.skeleton, "RightFoot"))
+                .multiplyScalar(0.5),
+            ),
+            sourceLeg = point(sourceSkeleton, "mixamorigHips").distanceTo(
+              point(sourceSkeleton, "mixamorigLeftFoot")
+                .add(point(sourceSkeleton, "mixamorigRightFoot"))
+                .multiplyScalar(0.5),
+            );
+          this.crouchClip = retargetClip(
+            targetMesh,
+            sourceSkeleton,
+            sourceClip,
+            {
+              fps: 30,
+              // GLTFLoader sanitizes the source `mixamorig:` prefix.
+              getBoneName: (bone: THREE.Bone) => `mixamorig${bone.name}`,
+              hip: "mixamorigHips",
+              scale: targetLeg / sourceLeg,
+            },
+          );
+          this.crouchClip.name = "CrouchInspect";
+          for (const track of this.crouchClip.tracks)
+            track.name = track.name.replace(/^\.bones\[([^\]]+)\]/, "$1");
+          targetMesh.skeleton.pose();
+          hero.scene.updateMatrixWorld(true);
+          this.crouchSource = undefined;
+        }
       })
       .finally(() => {
         this.pending = undefined;
@@ -104,12 +170,14 @@ export class GuardAssetPool {
     return this.pending;
   }
   create(root: THREE.Group, captain: boolean) {
-    return new GuardActor(root, this.templates, captain);
+    return new GuardActor(root, this.templates, captain, this.crouchClip!);
   }
   dispose() {
     this.disposed = true;
     disposeModels(this.templates.values());
     this.templates.clear();
+    this.crouchClip = undefined;
+    this.crouchSource = undefined;
   }
 }
 
@@ -146,6 +214,7 @@ export class GuardActor {
     public root: THREE.Group,
     templates: Map<Tier, GLTF>,
     captain: boolean,
+    crouchClip: THREE.AnimationClip,
   ) {
     const hero = templates.get("hero")!;
     const examination = clone(hero.scene);
@@ -278,6 +347,7 @@ export class GuardActor {
     }
     const animations = [
       ...hero.animations,
+      crouchClip,
       new THREE.AnimationClip("Examine", 6, tracks),
       new THREE.AnimationClip(
         "Kneel",
@@ -377,8 +447,8 @@ export class GuardActor {
         ? (["Strike", "Cross", "Hook"] as const)[guard.attackKind ?? 0]
         : guard.cinematicAim
           ? "Aim"
-          : guard.examining && !guard.beltDuty
-            ? "Examine"
+          : guard.examining
+            ? "CrouchInspect"
             : guard.crouchInspect
               ? "Kneel"
               : guard.state === "chase" && speed < 0.1
@@ -423,7 +493,10 @@ export class GuardActor {
           previous,
           nextClip === "Collapse" || nextClip === "Strike"
             ? 0.12
-            : nextClip === "Kneel" || previous.getClip().name === "Kneel"
+            : nextClip === "Kneel" ||
+                previous.getClip().name === "Kneel" ||
+                nextClip === "CrouchInspect" ||
+                previous.getClip().name === "CrouchInspect"
               ? 0.35
               : 0.24,
           false,

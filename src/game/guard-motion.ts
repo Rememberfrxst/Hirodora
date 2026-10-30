@@ -6,6 +6,7 @@ export type GuardClip =
   | "Hook"
   | "Boxing"
   | "Kneel"
+  | "CrouchInspect"
   | "Aim"
   | "Examine"
   | "Idle"

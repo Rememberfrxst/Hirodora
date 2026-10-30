@@ -1,0 +1,16 @@
+Guard Crouching Idle
+====================
+
+Source: user-supplied `Crouching Idle.fbx`, downloaded from Adobe Mixamo after
+uploading the Hirodora guard character.
+
+Runtime derivative: `crouch-inspect.glb`
+
+Changes: removed duplicate character geometry, textures, lights and camera;
+retained the 65-bone Mixamo source motion at 76 frames / 30 FPS. At load time the
+motion is retargeted once, with leg-length scaling, onto the existing 69-bone
+Hirodora officer rest rig. All officer LODs reuse that converted clip and their
+existing meshes/materials.
+
+The supplied file is treated as user-authorized project input. Adobe Mixamo
+content usage remains subject to the user's Adobe account and Mixamo terms.

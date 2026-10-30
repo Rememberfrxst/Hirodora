@@ -54,10 +54,10 @@ Player health is **200 HP**; guard melee has a visible wind-up and **25-damage**
 
 ## Latest screenshots — exactly six
 
-Six actual game renders with fixed intro seeks and inspection cameras. [Capture cameras and puzzle states](docs/screenshots/update-v24/capture.json). These are not recorded playthroughs or physical-phone benchmarks; separate browser tests verify the interactions. Historical galleries remain separate.
+Six actual game renders with fixed intro seeks and inspection cameras. The first shows the new supplied Mixamo crouch ([capture evidence](docs/screenshots/update-v25/capture.json)); the remaining five retain the prior puzzle evidence ([capture states](docs/screenshots/update-v24/capture.json)). These are not recorded playthroughs or physical-phone benchmarks; separate browser tests verify the interactions. Historical galleries remain separate.
 
 <table>
-<tr><td width="50%"><img src="docs/screenshots/update-v24/01-intro-left-sentry.png" alt="Escaping cellmate and distant left-hand sentry" /></td><td width="50%"><img src="docs/screenshots/update-v24/02-belt-key.png" alt="Key attached to the officer belt" /></td></tr>
+<tr><td width="50%"><img src="docs/screenshots/update-v25/01-guard-crouch-inspection.png" alt="Guard using the supplied Mixamo crouching idle beside the fallen cellmate" /></td><td width="50%"><img src="docs/screenshots/update-v24/02-belt-key.png" alt="Key attached to the officer belt" /></td></tr>
 <tr><td align="center"><sub>INTRO · LEFT SENTRY</sub></td><td align="center"><sub>BELT KEY</sub></td></tr>
 <tr><td><img src="docs/screenshots/update-v24/03-table-caught-only.png" alt="Table pushing shows only caught meter" /></td><td><img src="docs/screenshots/update-v24/04-visible-screwdriver.png" alt="Visible screwdriver with collectible glint" /></td></tr>
 <tr><td align="center"><sub>TABLE · CAUGHT METER ONLY</sub></td><td align="center"><sub>SCREWDRIVER · REVEAL</sub></td></tr>

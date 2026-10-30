@@ -1,0 +1,17 @@
+{
+  "method": "Actual rendered game after a fixed opening-cinematic seek. The camera is placed just inside Cell 47 for inspection; no generated image, pose override or post-processing edit was used.",
+  "captures": [
+    {
+      "name": "01-guard-crouch-inspection",
+      "time": 19,
+      "stage": "inspect",
+      "animation": "CrouchInspect",
+      "cameraPosition": [-3.9, 1.15, -2.6],
+      "cameraTarget": [-3.9, 0.62, -0.85],
+      "clipDuration": 2.5,
+      "sourceFrames": 76,
+      "sourceFps": 30
+    }
+  ],
+  "errors": []
+}
